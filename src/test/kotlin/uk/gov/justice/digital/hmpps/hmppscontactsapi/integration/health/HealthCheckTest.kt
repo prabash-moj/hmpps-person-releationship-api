@@ -1,7 +1,7 @@
-package uk.gov.justice.digital.hmpps.hmppstemplatepackagename.integration.health
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.health
 
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.hmppstemplatepackagename.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 
 class HealthCheckTest : IntegrationTestBase() {
 

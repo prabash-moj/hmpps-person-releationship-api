@@ -9,9 +9,10 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.wiremock.PrisonerSearchApiExtension
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
-@ExtendWith(HmppsAuthApiExtension::class)
+@ExtendWith(HmppsAuthApiExtension::class, PrisonerSearchApiExtension::class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles("test")
 abstract class IntegrationTestBase {
@@ -30,5 +31,6 @@ abstract class IntegrationTestBase {
 
   protected fun stubPingWithResponse(status: Int) {
     hmppsAuth.stubHealthPing(status)
+    PrisonerSearchApiExtension.server.stubHealthPing(status)
   }
 }

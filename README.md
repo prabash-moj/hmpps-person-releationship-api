@@ -1,49 +1,72 @@
 # hmpps-contacts-api
-[![repo standards badge](https://img.shields.io/badge/endpoint.svg?&style=flat&logo=github&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-contacts-api)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/hmpps-contacts-api "Link to report")
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-contacts-api/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-contacts-api)
-[![Docker Repository on Quay](https://img.shields.io/badge/quay.io-repository-2496ED.svg?logo=docker)](https://quay.io/repository/hmpps/hmpps-contacts-api)
-[![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://contacts-api-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
+[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-contacts-api)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-contacts-api "Link to report")
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/ministryofjustice/hmpps-contacts-api/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ministryofjustice/hmpps-contacts-api/tree/main)
+[![Docker Repository on Quay](https://quay.io/repository/hmpps/hmpps-contacts-api/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/hmpps-contacts-api)
+[![API docs](https://img.shields.io/badge/API_docs-view-85EA2D.svg?logo=swagger)](https://contacts-api-dev.prison.service.justice.gov.uk/swagger-ui/index.html#/)
 
-This is a skeleton project from which to create new kotlin projects from.
+API to support the front end service allowing court and probation users to manage contacts for the people in prison.
 
-# Instructions
+## Building the project
 
-If this is a HMPPS project then the project will be created as part of bootstrapping - 
-see https://github.com/ministryofjustice/dps-project-bootstrap.
+Tools required:
 
-## Creating a CloudPlatform namespace
+* JDK v21+
+* Kotlin (Intellij)
+* docker
+* docker-compose
 
-When deploying to a new namespace, you may wish to use this template kotlin project namespace as the basis for your new namespace:
+Useful tools but not essential:
 
-<https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-contacts-api>
+* KUBECTL not essential for building the project but will be needed for other tasks. Can be installed with `brew`.
+* [k9s](https://k9scli.io/) a terminal based UI to interact with your Kubernetes clusters. Can be installed with `brew`.
+* [jq](https://jqlang.github.io/jq/) a lightweight and flexible command-line JSON processor. Can be installed with `brew`.
 
-Copy this folder, update all the existing namespace references, and submit a PR to the CloudPlatform team. Further instructions from the CloudPlatform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
+## Install gradle and build the project
 
-## Renaming from Hmpps Contacts Api - github Actions
+```
+./gradlew
+```
 
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
+```
+./gradlew clean build
+```
 
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`.  This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review.  Review the PR and merge.
+## Running the service
 
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
+There are two key environment variables needed to run the service. The system client id and secret used to retrieve the OAuth 2.0 access token needed for service to service API calls can be set as local environment variables.
+This allows API calls made from this service that do not use the caller's token to successfully authenticate.
 
-## Manually renaming from Hmpps Contacts Api
+Add the following to a local `.env` file in the root folder of this project (_you can extract the credentials from the dev k8s project namespace_).
 
-Run the `rename-project.bash` and create a PR.
+N.B. you must escape any '$' characters with '\\$'
 
-The `rename-project.bash` script takes a single argument - the name of the project and calculates from it:
-* The main class name (project name converted to pascal case) 
-* The project description (class name with spaces between the words)
-* The main package name (project name with hyphens removed)
+```
+SYSTEM_CLIENT_ID=<system.client.id>
+SYSTEM_CLIENT_SECRET=<system.client.secret>
+```
 
-It then performs a search and replace and directory renames so the project is ready to be used.
+Start up the docker dependencies using the docker-compose file in the `hmpps-contacts-api` service.
 
-## Filling in the `productId`
+```
+docker-compose up --remove-orphans
+```
 
-To allow easy identification of an application, the product Id of the overall product should be set in `values.yaml`. 
-The Service Catalogue contains a list of these IDs and is currently in development here https://developer-portal.hmpps.service.justice.gov.uk/products
+There is a script to help, which sets local profiles, port and DB connection properties to the
+values required.
+
+```
+./run-local.sh
+```
+
+## Testing GOV Notify locally
+
+To test Gov Notify emails locally, you just need to add one more variable to your `.env` file.
+
+```
+export NOTIFY_API_KEY=<gov.notify.api.key>
+```
+If you have added it correctly, you will see the log on startup with the following output:
+
+```
+Gov Notify emails are enabled
+```

@@ -16,11 +16,12 @@ class HealthCheckTest : IntegrationTestBase() {
       .isOk
       .expectBody()
       .jsonPath("status").isEqualTo("UP")
+      .jsonPath("components.hmppsAuth.status").isEqualTo("UP")
   }
 
   @Test
   fun `Health page reports down`() {
-    stubPingWithResponse(503)
+    stubPingWithResponse(404)
 
     webTestClient.get()
       .uri("/health")

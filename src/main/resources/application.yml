@@ -8,6 +8,24 @@ spring:
   codec:
     max-in-memory-size: 10MB
 
+  datasource:
+    url: 'jdbc:postgresql://${DB_SERVER}/${DB_NAME}?sslmode=${DB_SSL_MODE}'
+    username: ${DB_USER}
+    password: ${DB_PASS}
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+  flyway:
+    locations: classpath:/migrations/common,classpath:/migrations/prod
+
   jackson:
     date-format: "yyyy-MM-dd HH:mm:ss"
     serialization:
@@ -20,6 +38,13 @@ spring:
           jwk-set-uri: ${hmpps-auth.url}/.well-known/jwks.json
 
       client:
+        registration:
+          prisoner-search:
+            provider: hmpps-auth
+            client-id: ${system.client.id}
+            client-secret: ${system.client.secret}
+            authorization-grant-type: client_credentials
+            scope: read
         provider:
           hmpps-auth:
             token-uri: ${hmpps-auth.url}/oauth/token

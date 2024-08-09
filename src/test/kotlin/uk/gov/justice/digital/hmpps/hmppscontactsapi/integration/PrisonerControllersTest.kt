@@ -1,19 +1,17 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 
-class ExampleResourceIntTest : IntegrationTestBase() {
+class PrisonerControllersTest : IntegrationTestBase() {
 
   @Nested
-  inner class TimeEndpoint {
+  inner class ContactsPrisonerEndpoint {
 
     @Test
     fun `should return unauthorized if no token`() {
       webTestClient.get()
-        .uri("/time")
+        .uri("/contacts/prisoner/P001")
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -22,7 +20,7 @@ class ExampleResourceIntTest : IntegrationTestBase() {
     @Test
     fun `should return forbidden if no role`() {
       webTestClient.get()
-        .uri("/time")
+        .uri("/contacts/prisoner/P001")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
@@ -32,7 +30,7 @@ class ExampleResourceIntTest : IntegrationTestBase() {
     @Test
     fun `should return forbidden if wrong role`() {
       webTestClient.get()
-        .uri("/time")
+        .uri("/contacts/prisoner/P001")
         .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
         .exchange()
         .expectStatus()
@@ -41,16 +39,16 @@ class ExampleResourceIntTest : IntegrationTestBase() {
 
     @Test
     fun `should return OK`() {
+      stubPrisonSearchWithResponse("P001")
       webTestClient.get()
-        .uri("/time")
-        .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__RO")))
+        .uri("/contacts/prisoner/P001")
+        .headers(setAuthorisation(roles = listOf("PRISONER_SEARCH")))
         .exchange()
         .expectStatus()
         .isOk
         .expectBody()
-        .jsonPath("$").value<String> {
-          assertThat(it).startsWith("${LocalDate.now()}")
-        }
+        .jsonPath("prisonerNumber").isEqualTo("P001")
+        .jsonPath("prisonId").isEqualTo("MDI")
     }
   }
 }

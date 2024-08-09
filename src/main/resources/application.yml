@@ -39,7 +39,7 @@ spring:
 
       client:
         registration:
-          prisoner-search:
+          prisoner-search-api:
             provider: hmpps-auth
             client-id: ${system.client.id}
             client-secret: ${system.client.secret}

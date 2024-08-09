@@ -33,18 +33,18 @@ class PrisonerSearchApiMockServer : MockServer(8092) {
 class PrisonerSearchApiExtension : BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
   companion object {
     @JvmField
-    val server = PrisonerSearchApiMockServer()
+    val prisonerSearchApiServer = PrisonerSearchApiMockServer()
   }
 
   override fun beforeAll(context: ExtensionContext) {
-    server.start()
+    prisonerSearchApiServer.start()
   }
 
   override fun beforeEach(context: ExtensionContext) {
-    server.resetAll()
+    prisonerSearchApiServer.resetAll()
   }
 
   override fun afterAll(context: ExtensionContext) {
-    server.stop()
+    prisonerSearchApiServer.stop()
   }
 }

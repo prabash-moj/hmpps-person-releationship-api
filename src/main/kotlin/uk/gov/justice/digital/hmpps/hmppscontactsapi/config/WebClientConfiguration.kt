@@ -25,5 +25,5 @@ class WebClientConfiguration(
 
   @Bean
   fun prisonerSearchApiWebClient(authorizedClientManager: OAuth2AuthorizedClientManager) =
-    builder.authorisedWebClient(authorizedClientManager, "prisoner-search", prisonerSearchBaseUri, timeout)
+    builder.authorisedWebClient(authorizedClientManager, "prisoner-search-api", prisonerSearchBaseUri, timeout)
 }

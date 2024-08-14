@@ -43,6 +43,13 @@ N.B. you must escape any '$' characters with '\\$'
 ```
 SYSTEM_CLIENT_ID=<system.client.id>
 SYSTEM_CLIENT_SECRET=<system.client.secret>
+HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+PRISON_SEARCH_API_URL=https://prisoner-search-dev.prison.service.justice.gov.uk
+DB_SERVER=localhost
+DB_NAME=contacts-db
+DB_USER=contacts
+DB_PASS=contacts
+DB_SSL_MODE=prefer
 ```
 
 Start up the docker dependencies using the docker-compose file in the `hmpps-contacts-api` service.
@@ -57,6 +64,8 @@ values required.
 ```
 ./run-local.sh
 ```
+
+or you can use the `Run API Locally` run config, which should be automatically picked up in intellij but is located in .run if you need to add it manually.
 
 ## Testing GOV Notify locally
 

@@ -1,32 +1,291 @@
 --
--- TABLES
+-- CONTACT DB TABLES
 --
 
 ---------------------------------------------------------------------------------------
--- Contains coded reference values, used to constrain the values of lists/validation.
--- e.g. Booking types, meeting types, hearing types, status etc..
+-- This is the core table for contacts - and holds the details of people who may
+-- visit, or are related to, people in prison. Contacts can be either SOCIAL
+-- (family, friends) or OFFICIAL (parole officer, social worker)
 ----------------------------------------------------------------------------------------
-
 
 CREATE TABLE contact
 (
     contact_id bigserial NOT NULL CONSTRAINT contact_id_pk PRIMARY KEY,
-    prison_id         bigint,
-    name              varchar(100) NOT NULL,
-    email             varchar(100),
-    telephone         varchar(20),
-    position          varchar(100),
-    enabled boolean   NOT NULL,
-    notes             varchar(200),
-    primary_contact   boolean NOT NULL,
+    contact_type_code varchar(10), -- Reference codes - CONTACT_TYPE (SOCIAL or OFFICIAL)
+    title varchar(12),
+    last_name  varchar(35) NOT NULL,
+    first_name varchar(35) NOT NULL,
+    middle_name varchar(35),
+    date_of_birth date,
+    place_of_birth varchar(25),
+    active boolean NOT NULL default true,
+    suspended boolean NOT NULL DEFAULT false,
+    staff_flag boolean NOT NULL DEFAULT false,
+    deceased_flag boolean NOT NULL DEFAULT false,
+    deceased_date date,
+    coroner_number varchar(32),
+    gender varchar(20),
+    marital_status varchar(12), -- Reference codes - MARITAL_STS
+    language_code varchar(12), -- Reference codes - LANGUAGE
+    interpreter_required boolean NOT NULL DEFAULT false,
+    comments varchar(200),
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_last_name ON contact(last_name);
+CREATE INDEX idx_contact_first_name ON contact(first_name);
+CREATE INDEX idx_contact_date_of_birth ON contact(date_of_birth);
+
+---------------------------------------------------------------------------------------
+-- Contacts may have one or more nationalities (dual nationality)
+-- This table holds the nationalities - usually one - for each contact.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_nationality
+(
+   contact_nationality_id bigserial NOT NULL CONSTRAINT contact_nationality_id_pk PRIMARY KEY,
+   contact_id bigint NOT NULL REFERENCES contact(contact_id),
+   nationality_code varchar(12) NOT NULL, -- Reference code - NATIONALITY
+   created_by varchar(100) NOT NULL,
+   created_time timestamp NOT NULL DEFAULT current_timestamp,
+   amended_by varchar(100),
+   amended_time timestamp
+);
+
+CREATE INDEX idx_contact_nationality_contact_id ON contact_nationality(contact_id);
+CREATE INDEX idx_contact_nationality_nationality ON contact_nationality(nationality_code);
+
+---------------------------------------------------------------------------------------
+-- Contacts need to provide one or more forms of ID.
+-- This table holds the details of the ID provided.
+-- e.g. Passport number, driving licence, national insurance number.
+-- There may be no proof of ID provided.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_identity
+(
+    contact_identity_id bigserial NOT NULL CONSTRAINT contact_identity_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    identity_type varchar(20), -- Reference codes - ID_TYPE
+    identity_value varchar(100), -- driving licence number, NI number, passport number
+    issuing_authority varchar(40), -- e.g. UK passport agency, DVLA
+    verified boolean NOT NULL DEFAULT false,
+    verified_by varchar(100),
+    verified_time timestamp,
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_identity_contact_id ON contact_identity(contact_id);
+CREATE INDEX idx_contact_identity_identity_value ON contact_identity(identity_value);
+
+---------------------------------------------------------------------------------------
+-- Contacts may have one or more addresses.
+-- This table holds the details of addresses provided for each contact.
+-- There may be no addresses provided.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_address
+(
+    contact_address_id bigserial NOT NULL CONSTRAINT contact_address_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    address_type varchar(12) NOT NULL, -- Reference code - ADDRESS_TYPE e.g. HOME, WORK, TEMPORARY
+    primary_address boolean NOT NULL DEFAULT false,
+    flat varchar(20), -- flat number (nullable)
+    property varchar(50) NOT NULL, -- house name or number
+    street varchar(160) NOT NULL, -- road or street
+    area varchar(70), -- locality (nullable)
+    city_code varchar(12) NOT NULL, -- Reference codes - CITY
+    county_code varchar(12) NOT NULL, -- Reference codes - COUNTY
+    post_code varchar(12),
+    country_code varchar(12) NOT NULL, -- Reference codes - COUNTRY
+    verified boolean NOT NULL default false, -- has the address been checked?
+    verified_by varchar(100),
+    verified_time timestamp,
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_address_contact_id ON contact_address(contact_id);
+CREATE INDEX idx_contact_address_post_code ON contact_address(post_code);
+CREATE INDEX idx_contact_address_street ON contact_address(street);
+CREATE INDEX idx_contact_address_property ON contact_address(property);
+
+---------------------------------------------------------------------------------------
+-- Contacts may have multiple email addresses.
+-- This table stores the email addresses related to a contact.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_email
+(
+    contact_email_id bigserial NOT NULL CONSTRAINT contact_email_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    email_type varchar(20) NOT NULL, -- Reference codes EMAIL_TYPE - e.g. WORK or PERSONAL
+    email_address varchar(240) NOT NULL,
+    primary_email boolean NOT NULL DEFAULT false,
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_email_contact_id ON contact_email(contact_id);
+CREATE INDEX idx_contact_email_address ON contact_email(email_address);
+
+---------------------------------------------------------------------------------------
+-- Contacts may have multiple telephone numbers.
+-- This table stores the telephone numbers related to a contact.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_phone
+(
+    contact_phone_id bigserial NOT NULL CONSTRAINT contact_phone_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    phone_type varchar(20) NOT NULL, -- Reference codes - PHONE_TYPE e.g. HOME, WORK or MOBILE
+    phone_number varchar(240) NOT NULL,
+    ext_number varchar(10),
+    primary_phone boolean NOT NULL DEFAULT false,
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_phone_contact_id ON contact_phone(contact_id);
+CREATE INDEX idx_contact_phone_number ON contact_phone(phone_number);
+
+---------------------------------------------------------------------------------------
+-- Contacts may have multiple websites.
+-- This table stores the websites related to a contact.
+-- This is likely to be used for professional contacts rather than social.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_website
+(
+    contact_website_id bigserial NOT NULL CONSTRAINT contact_website_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    url varchar(240) NOT NULL,
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_website_contact_id ON contact_website(contact_id);
+CREATE INDEX idx_contact_website_url ON contact_website(url);
+
+---------------------------------------------------------------------------------------
+-- Restrictions can exist against contacts (unrelated to any prisoners)
+-- This table holds the details of restrictions against contacts.
+-- In NOMIS this would be VISITOR_RESTRICTIONS.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_restriction
+(
+    contact_restriction_id bigserial NOT NULL CONSTRAINT contact_restriction_id_pk PRIMARY KEY,
+    contact_id        bigint NOT NULL REFERENCES contact(contact_id),
+    restriction_type  varchar(12) NOT NULL, -- Reference codes - RESTRICTION
+    start_date        date,
+    expiry_date       date,
+    comments          varchar(240),
     created_by        varchar(100) NOT NULL,
-    created_time      timestamp NOT NULL,
+    created_time      timestamp NOT NULL DEFAULT current_timestamp,
     amended_by        varchar(100),
     amended_time      timestamp
 );
 
-CREATE INDEX idx_prison_prison_id ON contact(prison_id);
-CREATE INDEX idx_contact_name ON contact(name);
-CREATE INDEX idx_contact_email ON contact(email);
+CREATE UNIQUE INDEX idx_contact_restriction_contact_id ON contact_restriction(contact_id);
+CREATE INDEX idx_contact_restriction_start_date ON contact_restriction(start_date);
+CREATE INDEX idx_contact_restriction_expiry_date ON contact_restriction(expiry_date);
 
--- END --
+---------------------------------------------------------------------------------------
+-- Prisoners can have a relationship with their contacts eg. MOTHER, SON, SISTER etc.
+-- They may also be professional relationships.
+-- This table holds the details of the relationships between people in prison and their contacts.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE prisoner_contact
+(
+    prisoner_contact_id bigserial NOT NULL CONSTRAINT prisoner_contact_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    prisoner_number varchar(7) NOT NULL, -- The prison number (NOMS id) e.g. A1234AA
+    active boolean NOT NULL DEFAULT true,
+    relationship_type varchar(12) NOT NULL, -- Reference codes - RELATIONSHIP
+    approved_visitor boolean NOT NULL DEFAULT false,
+    aware_of_charges boolean NOT NULL DEFAULT false,
+    can_be_contacted boolean NOT NULL DEFAULT false,
+    next_of_kin boolean NOT NULL DEFAULT false,
+    emergency_contact boolean NOT NULL DEFAULT false,
+    comments varchar(240),
+    approved_by varchar(100),
+    approved_time timestamp,
+    expiry_date date,
+    created_at_prison varchar(5), -- prison code where this contact was created (for info)
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_prisoner_contact_contact_id ON prisoner_contact(contact_id);
+CREATE INDEX idx_prisoner_contact_prisoner_number ON prisoner_contact(prisoner_number);
+CREATE INDEX idx_prisoner_contact_relationship_type on prisoner_contact(relationship_type);
+
+---------------------------------------------------------------------------------------
+-- Prisoners and their contacts can have restrictions placed on the relationship.
+-- This table holds the details of these restrictions.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE prisoner_contact_restriction
+(
+    prisoner_contact_restriction_id bigserial NOT NULL CONSTRAINT prisoner_contact_restriction_id_pk PRIMARY KEY,
+    prisoner_contact_id bigint NOT NULL REFERENCES prisoner_contact(prisoner_contact_id),
+    restriction_type varchar(12) NOT NULL, -- Reference code: RESTRICTION
+    start_date date,
+    expiry_date date,
+    comments varchar(255),
+    authorised_by varchar(100),
+    authorised_time timestamp,
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_prisoner_contact_restriction_contact_id ON prisoner_contact_restriction(prisoner_contact_id);
+CREATE INDEX idx_prisoner_contact_restriction_type ON prisoner_contact_restriction(restriction_type);
+CREATE INDEX idx_prisoner_contact_start_date ON prisoner_contact_restriction(start_date);
+CREATE INDEX idx_prisoner_contact_expiry_date ON prisoner_contact_restriction(expiry_date);
+
+---------------------------------------------------------------------------------------
+-- Contains coded reference values used to constrain the values of lists/validation.
+-- e.g. address types, phone types, county codes, country codes, relationship types etc..
+-- Still questions over reference data - who owns this? Other uses in NOMIS?
+-- One-way sync from DPS to NOMIS?
+-- Local maintenance of reference data? Forms/menu options? Roles to maintain?
+----------------------------------------------------------------------------------------
+
+CREATE TABLE reference_codes
+(
+    reference_code_id   bigserial NOT NULL CONSTRAINT reference_code_pk PRIMARY KEY,
+    group_code          varchar(40) NOT NULL,
+    code                varchar(40) NOT NULL,
+    description         varchar(100) NOT NULL,
+    created_by          varchar(100) NOT NULL,
+    created_time        timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by          varchar(100),
+    amended_time        timestamp
+);
+
+CREATE UNIQUE INDEX idx_reference_code_group ON reference_codes(group_code, code);
+
+---
+-- END
+---

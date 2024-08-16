@@ -14,6 +14,9 @@ export DB_NAME=contacts-db
 export DB_USER=contacts
 export DB_PASS=contacts
 export DB_SSL_MODE=prefer
+
+export HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+
 export $(cat .env | xargs)  # If you want to set or update the current shell environment e.g. system client and secret.
 
 # Run the application with stdout and local profiles active

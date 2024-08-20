@@ -38,4 +38,8 @@ abstract class IntegrationTestBase {
   protected fun stubPrisonSearchWithResponse(prisonerNumber: String) {
     prisonerSearchApiServer.stubGetPrisoner(prisonerNumber)
   }
+
+  protected fun stubPrisonSearchWithNotFoundResponse(prisonerNumber: String) {
+    prisonerSearchApiServer.stubGetPrisonerReturnNoResults(prisonerNumber)
+  }
 }

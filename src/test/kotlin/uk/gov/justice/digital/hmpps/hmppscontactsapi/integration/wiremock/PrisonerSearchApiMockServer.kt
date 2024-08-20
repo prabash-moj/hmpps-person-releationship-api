@@ -28,6 +28,17 @@ class PrisonerSearchApiMockServer : MockServer(8092) {
         ),
     )
   }
+
+  fun stubGetPrisonerReturnNoResults(prisonNumber: String, prisonId: String = "MDI") {
+    stubFor(
+      get("/prisoner/$prisonNumber")
+        .willReturn(
+          aResponse()
+            .withHeader("Content-Type", "application/json")
+            .withStatus(404),
+        ),
+    )
+  }
 }
 
 class PrisonerSearchApiExtension : BeforeAllCallback, AfterAllCallback, BeforeEachCallback {

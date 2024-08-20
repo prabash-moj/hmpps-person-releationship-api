@@ -17,20 +17,20 @@ values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'TIM'),
        (2, 2, 'PASSPORT', 'PP87878787878', 'TIM'),
        (3, 3, 'NI_NUMBER', 'NI989989AA', 'TIM');
 
-insert into contact_address(contact_address_id, contact_id, address_type, property, street, area, city_code, county_code, post_code, country_code, created_by)
-values (1, 1, 'HOME', '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (2, 2, 'HOME', '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (3, 3, 'HOME', '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM');
+insert into contact_address(contact_address_id, contact_id, address_type, primary_address, property, street, area, city_code, county_code, post_code, country_code, created_by)
+values (1, 1, 'HOME', true, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
+       (2, 2, 'HOME', true, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
+       (3, 3, 'HOME', true, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM');
 
-insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, created_by)
-values (1, 1, 'MOBILE', '07878 111111', 'TIM'),
-       (2, 2, 'MOBILE', '07878 222222', 'TIM'),
-       (3, 3, 'MOBILE', '07878 222222', 'TIM');
+insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, primary_phone, created_by)
+values (1, 1, 'MOBILE', '07878 111111', true, 'TIM'),
+       (2, 2, 'MOBILE', '07878 222222', true, 'TIM'),
+       (3, 3, 'MOBILE', '07878 222222', false, 'TIM');
 
-insert into contact_email(contact_email_id, contact_id, email_type, email_address, created_by)
-values (1, 1, 'PERSONAL', 'mr.last@hotmail.com', 'TIM'),
-       (2, 2, 'PERSONAL', 'miss.last@hotmail.com', 'TIM'),
-       (3, 3, 'PERSONAL', 'mrs.last@hotmail.com', 'TIM');
+insert into contact_email(contact_email_id, contact_id, email_type, email_address, primary_email, created_by)
+values (1, 1, 'PERSONAL', 'mr.last@hotmail.com', true, 'TIM'),
+       (2, 2, 'PERSONAL', 'miss.last@hotmail.com', true,  'TIM'),
+       (3, 3, 'PERSONAL', 'mrs.last@hotmail.com', false, 'TIM');
 
 insert into reference_codes(reference_code_id, group_code, code, description, created_by)
 values (1, 'CONTACT_TYPE', 'SOCIAL', 'Social contact', 'TIM'),
@@ -66,5 +66,8 @@ values (1, 'CONTACT_TYPE', 'SOCIAL', 'Social contact', 'TIM'),
        (31, 'RELATIONSHIP', 'FATHER', 'Father', 'TIM'),
        (32, 'RELATIONSHIP', 'MOTHER', 'Mother', 'TIM'),
        (33, 'RELATIONSHIP', 'FRIEND', 'Friend', 'TIM');
+
+insert into prisoner_contact (prisoner_contact_id, contact_id, prisoner_number, active, relationship_type, comments, created_at_prison, created_by, created_time)
+values (1, 1, 'A1234BB', true, 'FATHER', 'Comment', 'MDI', 'TIM', current_timestamp);
 
 -- End

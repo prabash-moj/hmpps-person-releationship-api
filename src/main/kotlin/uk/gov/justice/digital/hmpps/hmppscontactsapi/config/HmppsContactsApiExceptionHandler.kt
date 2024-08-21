@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestControllerAdvice
 class HmppsContactsApiExceptionHandler {
@@ -49,10 +51,10 @@ class HmppsContactsApiExceptionHandler {
     ).also { log.info("Entity not found exception: {}", e.message) }
 
   @ExceptionHandler(AccessDeniedException::class)
-  fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<uk.gov.justice.hmpps.kotlin.common.ErrorResponse> = ResponseEntity
+  fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(HttpStatus.FORBIDDEN)
     .body(
-      uk.gov.justice.hmpps.kotlin.common.ErrorResponse(
+      ErrorResponse(
         status = HttpStatus.FORBIDDEN,
         userMessage = "Forbidden: ${e.message}",
         developerMessage = e.message,
@@ -70,24 +72,17 @@ class HmppsContactsApiExceptionHandler {
       ),
     ).also { log.error("Unexpected exception", e) }
 
+  @ExceptionHandler(HttpMessageNotReadableException::class)
+  fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> =
+    ResponseEntity.status(BAD_REQUEST).body(
+      ErrorResponse(
+        status = BAD_REQUEST,
+        userMessage = "Validation failure: Couldn't read request body",
+        developerMessage = e.message,
+      ),
+    ).also { log.error("Validation failure: Couldn't read request body", e) }
+
   private companion object {
     private val log = LoggerFactory.getLogger(this::class.java)
   }
-}
-
-data class ErrorResponse(
-  val status: Int,
-  val errorCode: Int? = null,
-  val userMessage: String? = null,
-  val developerMessage: String? = null,
-  val moreInfo: String? = null,
-) {
-  constructor(
-    status: HttpStatus,
-    errorCode: Int? = null,
-    userMessage: String? = null,
-    developerMessage: String? = null,
-    moreInfo: String? = null,
-  ) :
-    this(status.value(), errorCode, userMessage, developerMessage, moreInfo)
 }

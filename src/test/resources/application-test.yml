@@ -9,7 +9,7 @@ spring:
     password: dummy
 
   flyway:
-    locations: classpath:/migrations/common
+    locations: classpath:/migrations/common,classpath:/migrations/test
 
   h2:
     console:

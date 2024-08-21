@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.config.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Prisoner Contacts Controller")
 @RestController

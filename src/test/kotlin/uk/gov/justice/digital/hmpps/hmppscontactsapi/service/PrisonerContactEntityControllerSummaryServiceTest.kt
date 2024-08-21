@@ -15,17 +15,21 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isBool
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class)
-class PrisonerContactSummaryServiceTest {
+class PrisonerContactEntityControllerSummaryServiceTest {
 
   @Mock
   private lateinit var prisonerContactRepository: PrisonerContactRepository
 
   @Mock
   private lateinit var prisonerService: PrisonerService
+
+  @Mock
+  private lateinit var contactRepository: ContactRepository
 
   @InjectMocks
   private lateinit var contactService: ContactService

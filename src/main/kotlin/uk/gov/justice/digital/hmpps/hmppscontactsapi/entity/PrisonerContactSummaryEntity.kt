@@ -9,7 +9,7 @@ import java.time.LocalDate
 @Entity
 @Immutable
 @Table(name = "v_prisoner_contacts")
-data class PrisonerContactDetail(
+data class PrisonerContactSummaryEntity(
   @Id
   val prisonerContactId: Long,
 

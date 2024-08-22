@@ -10,17 +10,14 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import java.time.LocalDate
 
 class ContactServiceTest {
 
   private val contactRepository: ContactRepository = mock()
-  private val prisonerContactRepository: PrisonerContactRepository = mock()
-  private val prisonerService: PrisonerService = mock()
-  private val service = ContactService(prisonerContactRepository, contactRepository, prisonerService)
+  private val service = ContactService(contactRepository)
 
   @Nested
   inner class CreateContact {

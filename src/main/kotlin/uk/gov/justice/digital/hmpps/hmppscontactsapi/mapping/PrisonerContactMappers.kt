@@ -1,9 +1,9 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactDetail
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.PrisonerContactSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 
-fun PrisonerContactDetail.toModel(): PrisonerContactSummary {
+fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
   return PrisonerContactSummary(
     prisonerContactId = this.prisonerContactId,
     contactId = this.contactId,
@@ -30,4 +30,4 @@ fun PrisonerContactDetail.toModel(): PrisonerContactSummary {
   )
 }
 
-fun List<PrisonerContactDetail>.toModel() = map { it.toModel() }
+fun List<PrisonerContactSummaryEntity>.toModel() = map { it.toModel() }

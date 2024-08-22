@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.PrisonerContactSummary
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerContactService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Prisoner Contacts Controller")
 @RestController
 @RequestMapping("/prisoner-contacts", produces = [MediaType.APPLICATION_JSON_VALUE])
-class PrisonerContactsController(
-  private val contactService: ContactService,
+class PrisonerContactController(
+  private val prisonerContactService: PrisonerContactService,
 ) {
 
   @Operation(summary = "Endpoint to fetch all contacts for a specific prisoner by prisoner number and active status")
@@ -74,5 +74,5 @@ class PrisonerContactsController(
   fun getAllContacts(
     @PathVariable prisonerNumber: String,
     @RequestParam(name = "active", defaultValue = "true") active: Boolean,
-  ): List<PrisonerContactSummary> = contactService.getAllContacts(prisonerNumber, active)
+  ): List<PrisonerContactSummary> = prisonerContactService.getAllContacts(prisonerNumber, active)
 }

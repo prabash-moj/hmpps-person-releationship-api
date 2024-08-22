@@ -10,17 +10,16 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactDetail
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isBool
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class)
-class PrisonerContactEntityControllerSummaryServiceTest {
+class PrisonerContactServiceTest {
 
   @Mock
   private lateinit var prisonerContactRepository: PrisonerContactRepository
@@ -28,17 +27,14 @@ class PrisonerContactEntityControllerSummaryServiceTest {
   @Mock
   private lateinit var prisonerService: PrisonerService
 
-  @Mock
-  private lateinit var contactRepository: ContactRepository
-
   @InjectMocks
-  private lateinit var contactService: ContactService
+  private lateinit var prisonerContactService: PrisonerContactService
 
   @Test
   fun `should fetch all contacts`() {
     // Given
 
-    val prisonerContactDetail1 = PrisonerContactDetail(
+    val prisonerContactSummaryEntity1 = PrisonerContactSummaryEntity(
       prisonerContactId = 1L,
       contactId = 2L,
       title = "Mr.",
@@ -75,7 +71,7 @@ class PrisonerContactEntityControllerSummaryServiceTest {
       comments = "No comments",
     )
 
-    val prisonerContactDetail2 = PrisonerContactDetail(
+    val prisonerContactSummaryEntity2 = PrisonerContactSummaryEntity(
       prisonerContactId = 1L,
       contactId = 2L,
       title = "Mr.",
@@ -117,17 +113,17 @@ class PrisonerContactEntityControllerSummaryServiceTest {
       prisonId = "somePrisonId",
     )
 
-    val contacts = listOf(prisonerContactDetail1, prisonerContactDetail2)
+    val contacts = listOf(prisonerContactSummaryEntity1, prisonerContactSummaryEntity2)
 
     `when`(prisonerService.getPrisoner("somePrisonerNumber")).thenReturn(prisoner)
     `when`(prisonerContactRepository.findPrisonerContacts("somePrisonerNumber", true)).thenReturn(contacts)
 
     // When
-    val result = contactService.getAllContacts("somePrisonerNumber", true)
+    val result = prisonerContactService.getAllContacts("somePrisonerNumber", true)
 
     // Then
     result hasSize 2
-    result.containsAll(listOf(prisonerContactDetail1.toModel(), prisonerContactDetail2.toModel())) isBool true
+    result.containsAll(listOf(prisonerContactSummaryEntity1.toModel(), prisonerContactSummaryEntity2.toModel())) isBool true
     verify(prisonerContactRepository).findPrisonerContacts("somePrisonerNumber", true)
   }
 
@@ -140,7 +136,7 @@ class PrisonerContactEntityControllerSummaryServiceTest {
     // When
 
     val exception = assertThrows<EntityNotFoundException> {
-      contactService.getAllContacts("somePrisonerNumber", true)
+      prisonerContactService.getAllContacts("somePrisonerNumber", true)
     }
 
     // Then

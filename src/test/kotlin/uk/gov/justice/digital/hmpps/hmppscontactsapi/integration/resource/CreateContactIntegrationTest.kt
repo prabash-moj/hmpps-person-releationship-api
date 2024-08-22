@@ -2,18 +2,13 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import java.time.LocalDate
 
 class CreateContactIntegrationTest : IntegrationTestBase() {
-
-  @Autowired
-  private lateinit var contactRepository: ContactRepository
 
   @Test
   fun `should return unauthorized if no token`() {
@@ -70,17 +65,10 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
   fun `should create the contact with minimal fields`() {
     val request = aMinimalCreateContactRequest()
 
-    webTestClient.post()
-      .uri("/contact")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-      .bodyValue(request)
-      .exchange()
-      .expectStatus()
-      .isCreated
+    val contactReturnedOnCreate = testAPIClient.createAContact(request)
 
-    assertThatContactIsCreated(request)
+    assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
+    assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
   }
 
   @Test
@@ -94,21 +82,13 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
       createdBy = "created",
     )
 
-    webTestClient.post()
-      .uri("/contact")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-      .bodyValue(request)
-      .exchange()
-      .expectStatus()
-      .isCreated
+    val contact = testAPIClient.createAContact(request)
 
-    assertThatContactIsCreated(request)
+    assertContactsAreEqualExcludingTimestamps(contact, request)
   }
 
-  private fun assertThatContactIsCreated(request: CreateContactRequest) {
-    with(contactRepository.findAll().maxBy(ContactEntity::contactId)) {
+  private fun assertContactsAreEqualExcludingTimestamps(contact: Contact, request: CreateContactRequest) {
+    with(contact) {
       assertThat(title).isEqualTo(request.title)
       assertThat(lastName).isEqualTo(request.lastName)
       assertThat(firstName).isEqualTo(request.firstName)

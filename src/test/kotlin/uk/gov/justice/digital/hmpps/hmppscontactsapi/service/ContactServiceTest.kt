@@ -35,12 +35,22 @@ class ContactServiceTest {
         dateOfBirth = LocalDate.of(1982, 6, 15),
         createdBy = "created",
       )
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
 
-      service.createContact(request)
+      val createdContact = service.createContact(request)
 
       val contactCaptor = argumentCaptor<ContactEntity>()
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
       with(contactCaptor.firstValue) {
+        assertThat(title).isEqualTo(request.title)
+        assertThat(lastName).isEqualTo(request.lastName)
+        assertThat(firstName).isEqualTo(request.firstName)
+        assertThat(middleName).isEqualTo(request.middleName)
+        assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
+        assertThat(createdBy).isEqualTo(request.createdBy)
+        assertThat(createdTime).isNotNull()
+      }
+      with(createdContact) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
         assertThat(firstName).isEqualTo(request.firstName)

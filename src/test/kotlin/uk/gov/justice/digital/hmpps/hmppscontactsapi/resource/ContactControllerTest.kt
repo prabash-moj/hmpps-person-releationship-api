@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
+import java.net.URI
 import java.time.LocalDateTime
 
 class ContactControllerTest {
@@ -27,10 +28,20 @@ class ContactControllerTest {
         firstName = "first",
         createdBy = "created",
       )
+      val expectedContact = Contact(
+        id = 99,
+        lastName = request.lastName,
+        firstName = request.firstName,
+        createdBy = request.createdBy,
+        createdTime = LocalDateTime.now(),
+      )
+      whenever(contactService.createContact(request)).thenReturn(expectedContact)
 
       val response = controller.createContact(request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
+      assertThat(response.body).isEqualTo(expectedContact)
+      assertThat(response.headers.location).isEqualTo(URI.create("/contact/99"))
       verify(contactService).createContact(request)
     }
 

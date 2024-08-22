@@ -18,12 +18,14 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Priso
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.PrisonNumberDoc
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Prisoner")
 @RestController
 @RequestMapping(value = ["prisoner"], produces = [MediaType.APPLICATION_JSON_VALUE])
+@AuthApiResponses
 class PrisonerController(
   private val prisonerService: PrisonerService,
   private val prisonerContactService: PrisonerContactService,
@@ -39,26 +41,6 @@ class PrisonerController(
           Content(
             mediaType = "application/json",
             schema = Schema(implementation = PrisonerContactSummary::class),
-          ),
-        ],
-      ),
-      ApiResponse(
-        responseCode = "401",
-        description = "Unauthorised, requires a valid Oauth2 token",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = ErrorResponse::class),
-          ),
-        ],
-      ),
-      ApiResponse(
-        responseCode = "403",
-        description = "Forbidden, requires an appropriate role",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = ErrorResponse::class),
           ),
         ],
       ),
@@ -80,26 +62,6 @@ class PrisonerController(
           Content(
             mediaType = "application/json",
             schema = Schema(implementation = PrisonerContactSummary::class),
-          ),
-        ],
-      ),
-      ApiResponse(
-        responseCode = "401",
-        description = "Unauthorised, requires a valid Oauth2 token",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = ErrorResponse::class),
-          ),
-        ],
-      ),
-      ApiResponse(
-        responseCode = "403",
-        description = "Forbidden, requires an appropriate role",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = ErrorResponse::class),
           ),
         ],
       ),

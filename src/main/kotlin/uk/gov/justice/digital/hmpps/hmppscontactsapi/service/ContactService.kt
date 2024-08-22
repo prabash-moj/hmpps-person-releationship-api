@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity.Companion.newContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
@@ -18,7 +19,7 @@ class ContactService(
   }
 
   @Transactional
-  fun createContact(request: CreateContactRequest) {
+  fun createContact(request: CreateContactRequest): Contact {
     val newContact = newContact(
       title = request.title,
       lastName = request.lastName,
@@ -27,23 +28,23 @@ class ContactService(
       dateOfBirth = request.dateOfBirth,
       createdBy = request.createdBy,
     )
-    contactRepository.saveAndFlush(newContact)
+    return mapEntityToContact(contactRepository.saveAndFlush(newContact))
       .also { logger.info("Created new contact {}", newContact) }
   }
 
   fun getContact(id: Long): Contact? {
     return contactRepository.findById(id).getOrNull()
-      ?.let { entity ->
-        Contact(
-          id = entity.contactId,
-          title = entity.title,
-          lastName = entity.lastName,
-          firstName = entity.firstName,
-          middleName = entity.middleName,
-          dateOfBirth = entity.dateOfBirth,
-          createdBy = entity.createdBy,
-          createdTime = entity.createdTime,
-        )
-      }
+      ?.let { entity -> mapEntityToContact(entity) }
   }
+
+  private fun mapEntityToContact(entity: ContactEntity) = Contact(
+    id = entity.contactId,
+    title = entity.title,
+    lastName = entity.lastName,
+    firstName = entity.firstName,
+    middleName = entity.middleName,
+    dateOfBirth = entity.dateOfBirth,
+    createdBy = entity.createdBy,
+    createdTime = entity.createdTime,
+  )
 }

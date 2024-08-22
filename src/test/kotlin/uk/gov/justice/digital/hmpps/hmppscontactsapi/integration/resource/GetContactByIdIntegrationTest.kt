@@ -2,17 +2,11 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDate
 
 class GetContactByIdIntegrationTest : IntegrationTestBase() {
-
-  @Autowired
-  private lateinit var contactRepository: ContactRepository
 
   @Test
   fun `should return unauthorized if no token`() {
@@ -58,16 +52,7 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
 
   @Test
   fun `should get the contact with all fields`() {
-    val contact = webTestClient.get()
-      .uri("/contact/1")
-      .accept(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-      .exchange()
-      .expectStatus()
-      .isOk
-      .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(Contact::class.java)
-      .returnResult().responseBody!!
+    val contact = testAPIClient.getContact(1)
 
     with(contact) {
       assertThat(id).isEqualTo(1)

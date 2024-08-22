@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity.Companion.newContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ContactService(
@@ -27,5 +29,21 @@ class ContactService(
     )
     contactRepository.saveAndFlush(newContact)
       .also { logger.info("Created new contact {}", newContact) }
+  }
+
+  fun getContact(id: Long): Contact? {
+    return contactRepository.findById(id).getOrNull()
+      ?.let { entity ->
+        Contact(
+          id = entity.contactId,
+          title = entity.title,
+          lastName = entity.lastName,
+          firstName = entity.firstName,
+          middleName = entity.middleName,
+          dateOfBirth = entity.dateOfBirth,
+          createdBy = entity.createdBy,
+          createdTime = entity.createdTime,
+        )
+      }
   }
 }

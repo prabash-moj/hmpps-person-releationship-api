@@ -19,7 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Contacts")
+@Tag(name = "Contact")
 @RestController
 @RequestMapping(value = ["contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ContactController(val contactService: ContactService) {

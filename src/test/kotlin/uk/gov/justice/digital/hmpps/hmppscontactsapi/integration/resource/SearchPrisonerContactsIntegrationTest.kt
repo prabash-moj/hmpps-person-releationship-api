@@ -7,9 +7,10 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 
-private const val GET_PRISONER_CONTACT = "/prisoner-contacts/prisoner/A1234BB"
-
 class SearchPrisonerContactsIntegrationTest : IntegrationTestBase() {
+  companion object {
+    private const val GET_PRISONER_CONTACT = "/prisoner/A1234BB/contact"
+  }
 
   @Test
   fun `should return unauthorized if no token`() {
@@ -23,7 +24,7 @@ class SearchPrisonerContactsIntegrationTest : IntegrationTestBase() {
   @Test
   fun `should return forbidden if no role`() {
     webTestClient.get()
-      .uri("/prisoner-contacts/prisoner/P001")
+      .uri("/prisoner/P001/contact")
       .headers(setAuthorisation())
       .exchange()
       .expectStatus()
@@ -33,7 +34,7 @@ class SearchPrisonerContactsIntegrationTest : IntegrationTestBase() {
   @Test
   fun `should return forbidden if wrong role`() {
     webTestClient.get()
-      .uri("/prisoner-contacts/prisoner/P001")
+      .uri("/prisoner/P001/contact")
       .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
       .exchange()
       .expectStatus()
@@ -45,7 +46,7 @@ class SearchPrisonerContactsIntegrationTest : IntegrationTestBase() {
     stubPrisonSearchWithNotFoundResponse("A1234BB")
 
     webTestClient.get()
-      .uri("/prisoner-contacts/prisoner/P001")
+      .uri("/prisoner/A1234BB/contact")
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
       .exchange()
       .expectStatus()

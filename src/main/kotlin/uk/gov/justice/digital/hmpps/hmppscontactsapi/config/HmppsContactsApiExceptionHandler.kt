@@ -1,5 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.config
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
@@ -10,10 +12,12 @@ import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
+import java.time.format.DateTimeParseException
 
 @RestControllerAdvice
 class HmppsContactsApiExceptionHandler {
@@ -73,14 +77,51 @@ class HmppsContactsApiExceptionHandler {
     ).also { log.error("Unexpected exception", e) }
 
   @ExceptionHandler(HttpMessageNotReadableException::class)
-  fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> =
-    ResponseEntity.status(BAD_REQUEST).body(
+  fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> {
+    val cause = e.cause
+    val message = if (cause is MismatchedInputException) {
+      "Validation failure: ${sanitiseMismatchInputException(cause)}"
+    } else {
+      "Validation failure: Couldn't read request body"
+    }
+    return ResponseEntity.status(BAD_REQUEST).body(
       ErrorResponse(
         status = BAD_REQUEST,
-        userMessage = "Validation failure: Couldn't read request body",
+        userMessage = message,
         developerMessage = e.message,
       ),
-    ).also { log.error("Validation failure: Couldn't read request body", e) }
+    ).also { log.error(message, e) }
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException::class)
+  fun handleValidationException(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(BAD_REQUEST)
+    .body(
+      ErrorResponse(
+        status = BAD_REQUEST,
+        userMessage = "Validation failure(s): ${
+          e.allErrors.map { it.defaultMessage }.distinct().sorted().joinToString(System.lineSeparator())
+        }",
+        developerMessage = e.message,
+      ),
+    )
+
+  @Suppress("DEPRECATION")
+  private fun sanitiseMismatchInputException(cause: MismatchedInputException): String {
+    val name = cause.path.fold("") { jsonPath, ref ->
+      val suffix = when {
+        ref.index > -1 -> "[${ref.index}]"
+        else -> ".${ref.fieldName}"
+      }
+      (jsonPath + suffix).removePrefix(".")
+    }
+    val problem = when {
+      cause.cause is DateTimeParseException -> "could not be parsed as a date"
+      cause is MissingKotlinParameterException -> "must not be null"
+      else -> "is invalid"
+    }
+    return "$name $problem"
+  }
 
   private companion object {
     private val log = LoggerFactory.getLogger(this::class.java)

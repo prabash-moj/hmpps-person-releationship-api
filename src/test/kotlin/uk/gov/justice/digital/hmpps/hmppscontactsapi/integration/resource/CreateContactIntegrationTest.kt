@@ -2,7 +2,12 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.MediaType
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
@@ -48,17 +53,77 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
       .isForbidden
   }
 
-  @Test
-  fun `should return bad request if required fields are null`() {
-    webTestClient.post()
+  @ParameterizedTest
+  @CsvSource(
+    value = [
+      "firstName must not be null;{\"firstName\": null, \"lastName\": \"last\", \"createdBy\": \"created\"}",
+      "firstName must not be null;{\"lastName\": \"last\", \"createdBy\": \"created\"}",
+      "lastName must not be null;{\"firstName\": \"first\", \"lastName\": null, \"createdBy\": \"created\"}",
+      "lastName must not be null;{\"firstName\": \"first\", \"createdBy\": \"created\"}",
+      "createdBy must not be null;{\"firstName\": \"first\", \"lastName\": \"last\", \"createdBy\": null}",
+      "createdBy must not be null;{\"firstName\": \"first\", \"lastName\": \"last\"}",
+    ],
+    delimiter = ';',
+  )
+  fun `should return bad request if required fields are null`(expectedMessage: String, json: String) {
+    val errors = webTestClient.post()
       .uri("/contact")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-      .bodyValue("{}")
+      .bodyValue(json)
       .exchange()
       .expectStatus()
       .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+  }
+
+  @ParameterizedTest
+  @MethodSource("allFieldConstraintViolations")
+  fun `should enforce field constraints`(expectedMessage: String, request: CreateContactRequest) {
+    val errors = webTestClient.post()
+      .uri("/contact")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+    value = [
+      "{\"firstName\": \"first\", \"lastName\": \"last\", \"createdBy\": \"created\", \"dateOfBirth\": \"1st Jan\"}",
+      "{\"firstName\": \"first\", \"lastName\": \"last\", \"createdBy\": \"created\", \"dateOfBirth\": \"01-01-1970\"}",
+    ],
+    delimiter = ';',
+  )
+  fun `should handle invalid dob formats`(json: String) {
+    val errors = webTestClient.post()
+      .uri("/contact")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(json)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: dateOfBirth could not be parsed as a date")
   }
 
   @Test
@@ -98,9 +163,34 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
     }
   }
 
-  private fun aMinimalCreateContactRequest() = CreateContactRequest(
-    lastName = "last",
-    firstName = "first",
-    createdBy = "created",
-  )
+  companion object {
+    @JvmStatic
+    fun allFieldConstraintViolations(): List<Arguments> {
+      return listOf(
+        Arguments.of("title must be <= 12 characters", aMinimalCreateContactRequest().copy(title = "".padStart(13))),
+        Arguments.of(
+          "lastName must be <= 35 characters",
+          aMinimalCreateContactRequest().copy(lastName = "".padStart(36)),
+        ),
+        Arguments.of(
+          "firstName must be <= 35 characters",
+          aMinimalCreateContactRequest().copy(firstName = "".padStart(36)),
+        ),
+        Arguments.of(
+          "middleName must be <= 35 characters",
+          aMinimalCreateContactRequest().copy(middleName = "".padStart(36)),
+        ),
+        Arguments.of(
+          "createdBy must be <= 100 characters",
+          aMinimalCreateContactRequest().copy(createdBy = "".padStart(101)),
+        ),
+      )
+    }
+
+    private fun aMinimalCreateContactRequest() = CreateContactRequest(
+      lastName = "last",
+      firstName = "first",
+      createdBy = "created",
+    )
+  }
 }

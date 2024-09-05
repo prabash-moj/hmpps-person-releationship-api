@@ -32,6 +32,9 @@ data class ContactEntity(
   @Column(name = "date_of_birth")
   val dateOfBirth: LocalDate?,
 
+  @Column(name = "is_over_eighteen")
+  val isOverEighteen: Boolean?,
+
   @Column(updatable = false, name = "created_by")
   val createdBy: String,
 
@@ -47,6 +50,7 @@ data class ContactEntity(
       lastName: String,
       middleName: String?,
       dateOfBirth: LocalDate?,
+      isOverEighteen: Boolean?,
       createdBy: String,
     ): ContactEntity {
       return ContactEntity(
@@ -56,6 +60,7 @@ data class ContactEntity(
         lastName,
         middleName,
         dateOfBirth,
+        isOverEighteen,
         createdBy,
         LocalDateTime.now(),
       )

@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import java.time.LocalDate
 
@@ -152,6 +154,22 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
     assertContactsAreEqualExcludingTimestamps(contact, request)
   }
 
+  @ParameterizedTest
+  @EnumSource(IsOverEighteen::class)
+  fun `should record the estimated date of birth if supplied`(isOverEighteen: IsOverEighteen) {
+    val request = CreateContactRequest(
+      lastName = "last",
+      firstName = "first",
+      dateOfBirth = null,
+      isOverEighteen = isOverEighteen,
+      createdBy = "created",
+    )
+
+    val contactReturnedOnCreate = testAPIClient.createAContact(request)
+    assertThat(contactReturnedOnCreate.isOverEighteen).isEqualTo(isOverEighteen)
+    assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
+  }
+
   private fun assertContactsAreEqualExcludingTimestamps(contact: Contact, request: CreateContactRequest) {
     with(contact) {
       assertThat(title).isEqualTo(request.title)
@@ -159,6 +177,9 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
       assertThat(firstName).isEqualTo(request.firstName)
       assertThat(middleName).isEqualTo(request.middleName)
       assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
+      if (request.isOverEighteen != null) {
+        assertThat(isOverEighteen).isEqualTo(request.isOverEighteen)
+      }
       assertThat(createdBy).isEqualTo(request.createdBy)
     }
   }

@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response
 
 import io.swagger.v3.oas.annotations.media.Schema
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -24,6 +25,9 @@ data class Contact(
 
   @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true)
   val dateOfBirth: LocalDate? = null,
+
+  @Schema(description = "Whether the contact is over 18, based on their date of birth if it is known", example = "YES")
+  val isOverEighteen: IsOverEighteen,
 
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,

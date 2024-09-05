@@ -9,6 +9,7 @@ import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import java.net.URI
@@ -32,6 +33,7 @@ class ContactControllerTest {
         id = 99,
         lastName = request.lastName,
         firstName = request.firstName,
+        isOverEighteen = IsOverEighteen.DO_NOT_KNOW,
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -67,6 +69,7 @@ class ContactControllerTest {
       id = id,
       lastName = "last",
       firstName = "first",
+      isOverEighteen = IsOverEighteen.DO_NOT_KNOW,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

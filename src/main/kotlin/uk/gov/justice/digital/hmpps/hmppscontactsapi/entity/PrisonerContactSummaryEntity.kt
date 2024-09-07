@@ -25,6 +25,8 @@ data class PrisonerContactSummaryEntity(
 
   val dateOfBirth: LocalDate?,
 
+  val isOverEighteen: Boolean?,
+
   val contactAddressId: Long?,
 
   val flat: String?,

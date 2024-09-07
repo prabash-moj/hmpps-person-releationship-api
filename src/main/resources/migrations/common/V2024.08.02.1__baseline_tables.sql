@@ -17,6 +17,7 @@ CREATE TABLE contact
     first_name varchar(35) NOT NULL,
     middle_name varchar(35),
     date_of_birth date,
+    is_over_eighteen boolean,
     place_of_birth varchar(25),
     active boolean NOT NULL default true,
     suspended boolean NOT NULL DEFAULT false,
@@ -25,8 +26,9 @@ CREATE TABLE contact
     deceased_date date,
     coroner_number varchar(32),
     gender varchar(20),
-    marital_status varchar(12), -- Reference codes - MARITAL_STS
-    language_code varchar(12), -- Reference codes - LANGUAGE
+    marital_status varchar(12), -- Reference codes - MARITAL_STS - nullable
+    language_code varchar(12), -- Reference codes - LANGUAGE - nullable
+    nationality_code varchar(12), -- Reference data - NATIONALITY - nullable
     interpreter_required boolean NOT NULL DEFAULT false,
     comments varchar(200),
     created_by varchar(100) NOT NULL,
@@ -38,25 +40,6 @@ CREATE TABLE contact
 CREATE INDEX idx_contact_last_name ON contact(last_name);
 CREATE INDEX idx_contact_first_name ON contact(first_name);
 CREATE INDEX idx_contact_date_of_birth ON contact(date_of_birth);
-
----------------------------------------------------------------------------------------
--- Contacts may have one or more nationalities (dual nationality)
--- This table holds the nationalities - usually one - for each contact.
-----------------------------------------------------------------------------------------
-
-CREATE TABLE contact_nationality
-(
-   contact_nationality_id bigserial NOT NULL CONSTRAINT contact_nationality_id_pk PRIMARY KEY,
-   contact_id bigint NOT NULL REFERENCES contact(contact_id),
-   nationality_code varchar(12) NOT NULL, -- Reference code - NATIONALITY
-   created_by varchar(100) NOT NULL,
-   created_time timestamp NOT NULL DEFAULT current_timestamp,
-   amended_by varchar(100),
-   amended_time timestamp
-);
-
-CREATE INDEX idx_contact_nationality_contact_id ON contact_nationality(contact_id);
-CREATE INDEX idx_contact_nationality_nationality ON contact_nationality(nationality_code);
 
 ---------------------------------------------------------------------------------------
 -- Contacts need to provide one or more forms of ID.
@@ -97,14 +80,14 @@ CREATE TABLE contact_address
     address_type varchar(12) NOT NULL, -- Reference code - ADDRESS_TYPE e.g. HOME, WORK, TEMPORARY
     primary_address boolean NOT NULL DEFAULT false,
     flat varchar(20), -- flat number (nullable)
-    property varchar(50) NOT NULL, -- house name or number
-    street varchar(160) NOT NULL, -- road or street
+    property varchar(50), -- house name or number - nullable
+    street varchar(160), -- road or street - nullable
     area varchar(70), -- locality (nullable)
-    city_code varchar(12) NOT NULL, -- Reference codes - CITY
-    county_code varchar(12) NOT NULL, -- Reference codes - COUNTY
+    city_code varchar(12), -- Reference codes - CITY - nullable
+    county_code varchar(12), -- Reference codes - COUNTY - nullable
     post_code varchar(12),
-    country_code varchar(12) NOT NULL, -- Reference codes - COUNTRY
-    verified boolean NOT NULL default false, -- has the address been checked?
+    country_code varchar(12), -- Reference codes - COUNTRY - nullable
+    verified boolean NOT NULL default false, -- has the address been PAF-checked?
     verified_by varchar(100),
     verified_time timestamp,
     created_by varchar(100) NOT NULL,
@@ -165,6 +148,7 @@ CREATE INDEX idx_contact_phone_number ON contact_phone(phone_number);
 -- Contacts may have multiple websites.
 -- This table stores the websites related to a contact.
 -- This is likely to be used for professional contacts rather than social.
+-- Can be empty, or populated if contacts in NOMIS have websites (table INTERNET_ADDRESSES)
 ----------------------------------------------------------------------------------------
 
 CREATE TABLE contact_website

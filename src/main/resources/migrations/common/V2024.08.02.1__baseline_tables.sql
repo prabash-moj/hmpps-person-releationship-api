@@ -270,6 +270,83 @@ CREATE TABLE reference_codes
 
 CREATE UNIQUE INDEX idx_reference_code_group ON reference_codes(group_code, code);
 
+---------------------------------------------------------------------------------------
+-- Nationality reference data exported from NOMIS enriched with ISO codes.
+-- This table holds the details from PROFILE_CODES where PROFILE_TYPE= 'NAT';.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE nationality_reference
+(
+    nationality_id          bigserial NOT NULL CONSTRAINT nationality_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12),
+    nomis_description VARCHAR(100),
+    iso_numeric             integer UNIQUE,
+    iso_alpha2              char(2) UNIQUE,
+    iso_alpha3              char(3) UNIQUE,
+    iso_nationality_desc    VARCHAR(100),
+    display_sequence        INTEGER
+);
+
+---------------------------------------------------------------------------------------
+-- Language reference data exported from NOMIS enriched with ISO codes.
+-- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%LANG%';
+----------------------------------------------------------------------------------------
+
+CREATE TABLE language_reference
+(
+    language_id         bigserial NOT NULL CONSTRAINT language_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12) NOT NULL UNIQUE,
+    nomis_description VARCHAR(100) NOT NULL,
+    iso_alpha2           char(2) UNIQUE,
+    iso_alpha3           char(3) UNIQUE,
+    iso_language_desc    VARCHAR(100) NOT NULL,
+    display_sequence     INTEGER NOT NULL
+);
+
+---------------------------------------------------------------------------------------
+-- Country reference data exported from NOMIS enriched with ISO codes.
+-- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%COUNTRY%' ;
+----------------------------------------------------------------------------------------
+
+CREATE TABLE country_reference
+(
+    country_id        bigserial NOT NULL CONSTRAINT country_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12)  NOT NULL UNIQUE,
+    nomis_description VARCHAR(100) NOT NULL,
+    iso_numeric       integer NOT NULL UNIQUE,
+    iso_alpha2        char(2) NOT NULL UNIQUE,
+    iso_alpha3        char(3) NOT NULL UNIQUE,
+    iso_country_desc  VARCHAR(100) NOT NULL,
+    display_sequence  INTEGER NOT NULL
+);
+
+---------------------------------------------------------------------------------------
+-- County reference data exported from NOMIS.
+-- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%COUNTY%' ;
+----------------------------------------------------------------------------------------
+
+CREATE TABLE county_reference
+(
+    county_id         bigserial NOT NULL CONSTRAINT county_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12) UNIQUE NOT NULL,
+    nomis_description VARCHAR(100) NOT NULL,
+    display_sequence  INTEGER NOT NULL
+);
+
+
+---------------------------------------------------------------------------------------
+-- City reference data exported from NOMIS.
+-- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%CITY' ;
+----------------------------------------------------------------------------------------
+
+CREATE TABLE city_reference
+(
+    city_id           bigserial NOT NULL CONSTRAINT city_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12) UNIQUE NOT NULL,
+    nomis_description VARCHAR(100) NOT NULL,
+    display_sequence  INTEGER NOT NULL
+);
+
 ---
 -- END
 ---

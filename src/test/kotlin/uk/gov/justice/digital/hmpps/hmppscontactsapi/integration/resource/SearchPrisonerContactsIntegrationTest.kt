@@ -57,7 +57,7 @@ class SearchPrisonerContactsIntegrationTest : IntegrationTestBase() {
   fun `should return OK`() {
     stubPrisonSearchWithResponse("A1234BB")
 
-    var contacts = webTestClient.getContacts(GET_PRISONER_CONTACT)
+    val contacts = webTestClient.getContacts(GET_PRISONER_CONTACT)
 
     assertThat(contacts).extracting("surname").contains("Last")
     assertThat(contacts).hasSize(1)

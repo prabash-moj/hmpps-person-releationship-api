@@ -17,14 +17,14 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactSummaryRepository
 import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class)
 class PrisonerContactServiceTest {
 
   @Mock
-  private lateinit var prisonerContactRepository: PrisonerContactRepository
+  private lateinit var prisonerContactSummaryRepository: PrisonerContactSummaryRepository
 
   @Mock
   private lateinit var prisonerService: PrisonerService
@@ -49,14 +49,14 @@ class PrisonerContactServiceTest {
     val contacts = listOf(c1, c2)
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
+    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
 
     val result = prisonerContactService.getAllContacts(prisonerNumber, true)
 
     result hasSize 2
     assertThat(result).containsAll(listOf(c1.toModel(), c2.toModel()))
 
-    verify(prisonerContactRepository).findPrisonerContacts(prisonerNumber, true)
+    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
   }
 
   @Test
@@ -66,7 +66,7 @@ class PrisonerContactServiceTest {
     val contacts = listOf(c1)
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
+    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
 
     val result = prisonerContactService.getAllContacts(prisonerNumber, true)
 
@@ -75,7 +75,7 @@ class PrisonerContactServiceTest {
       assertThat(isOverEighteen).isEqualTo(IsOverEighteen.YES)
     }
 
-    verify(prisonerContactRepository).findPrisonerContacts(prisonerNumber, true)
+    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
   }
 
   @Test
@@ -84,7 +84,7 @@ class PrisonerContactServiceTest {
     val contacts = listOf(c1)
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
+    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
 
     val result = prisonerContactService.getAllContacts(prisonerNumber, true)
 
@@ -93,7 +93,7 @@ class PrisonerContactServiceTest {
       assertThat(isOverEighteen).isEqualTo(IsOverEighteen.YES)
     }
 
-    verify(prisonerContactRepository).findPrisonerContacts(prisonerNumber, true)
+    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
   }
 
   @Test
@@ -102,7 +102,7 @@ class PrisonerContactServiceTest {
     val contacts = listOf(c1)
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
+    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
 
     val result = prisonerContactService.getAllContacts(prisonerNumber, true)
 
@@ -111,7 +111,7 @@ class PrisonerContactServiceTest {
       assertThat(isOverEighteen).isEqualTo(IsOverEighteen.DO_NOT_KNOW)
     }
 
-    verify(prisonerContactRepository).findPrisonerContacts(prisonerNumber, true)
+    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
   }
 
   @Test
@@ -121,7 +121,7 @@ class PrisonerContactServiceTest {
     val contacts = listOf(c1)
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
+    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
 
     val result = prisonerContactService.getAllContacts(prisonerNumber, true)
 
@@ -130,7 +130,7 @@ class PrisonerContactServiceTest {
       assertThat(isOverEighteen).isEqualTo(IsOverEighteen.NO)
     }
 
-    verify(prisonerContactRepository).findPrisonerContacts(prisonerNumber, true)
+    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
   }
 
   @Test

@@ -58,6 +58,11 @@ class ContactController(val contactService: ContactService) {
         description = "The request has invalid or missing fields",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
+      ApiResponse(
+        responseCode = "404",
+        description = "Could not find the prisoner that this contact has a relationship to",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")

@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
+import jakarta.persistence.EntityNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -13,11 +14,16 @@ import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -28,9 +34,11 @@ import java.util.*
 class ContactServiceTest {
 
   private val contactRepository: ContactRepository = mock()
+  private val prisonerContactRepository: PrisonerContactRepository = mock()
+  private val prisonerService: PrisonerService = mock()
   private val clock =
     Clock.fixed(ZonedDateTime.of(2000, 1, 1, 10, 30, 0, 0, ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC"))
-  private val service = ContactService(contactRepository, clock)
+  private val service = ContactService(contactRepository, prisonerContactRepository, prisonerService, clock)
 
   @Nested
   inner class CreateContact {
@@ -117,6 +125,39 @@ class ContactServiceTest {
     }
 
     @Test
+    fun `should create a contact with a relationship successfully`() {
+      val relationshipRequest = ContactRelationshipRequest(
+        prisonerNumber = "A1234BC",
+        relationshipCode = "FRI",
+        isNextOfKin = true,
+        isEmergencyContact = true,
+        comments = "some comments",
+      )
+      val request = CreateContactRequest(
+        lastName = "last",
+        firstName = "first",
+        createdBy = "created",
+        relationship = relationshipRequest,
+      )
+      whenever(prisonerService.getPrisoner(any())).thenReturn(Prisoner(relationshipRequest.prisonerNumber, prisonId = "MDI"))
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+      service.createContact(request)
+
+      verify(contactRepository).saveAndFlush(any())
+      val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
+      verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+      with(prisonerContactCaptor.firstValue) {
+        assertThat(prisonerNumber).isEqualTo("A1234BC")
+        assertThat(relationshipType).isEqualTo("FRI")
+        assertThat(nextOfKin).isEqualTo(true)
+        assertThat(emergencyContact).isEqualTo(true)
+        assertThat(comments).isEqualTo("some comments")
+      }
+    }
+
+    @Test
     fun `should propagate exceptions creating a contact`() {
       val request = CreateContactRequest(
         lastName = "last",
@@ -128,6 +169,58 @@ class ContactServiceTest {
       assertThrows<RuntimeException>("Bang!") {
         service.createContact(request)
       }
+    }
+
+    @Test
+    fun `should propagate exceptions creating a contact relationship`() {
+      val request = CreateContactRequest(
+        lastName = "last",
+        firstName = "first",
+        createdBy = "created",
+        relationship = ContactRelationshipRequest(
+          prisonerNumber = "A1234BC",
+          relationshipCode = "FRI",
+          isNextOfKin = true,
+          isEmergencyContact = true,
+          comments = "some comments",
+        ),
+      )
+      whenever(prisonerService.getPrisoner(any())).thenReturn(Prisoner("A1234BC", prisonId = "MDI"))
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(prisonerContactRepository.saveAndFlush(any())).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        service.createContact(request)
+      }
+
+      verify(contactRepository).saveAndFlush(any())
+      verify(prisonerContactRepository).saveAndFlush(any())
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when prisoner can't be found and save nothing`() {
+      val request = CreateContactRequest(
+        lastName = "last",
+        firstName = "first",
+        createdBy = "created",
+        relationship = ContactRelationshipRequest(
+          prisonerNumber = "A1234BC",
+          relationshipCode = "FRI",
+          isNextOfKin = true,
+          isEmergencyContact = true,
+          comments = "some comments",
+        ),
+      )
+      whenever(prisonerService.getPrisoner(any())).thenReturn(null)
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+      assertThrows<EntityNotFoundException>("Prisoner number A1234BC - not found") {
+        service.createContact(request)
+      }
+
+      verify(contactRepository, never()).saveAndFlush(any())
+      verify(prisonerContactRepository, never()).saveAndFlush(any())
     }
   }
 

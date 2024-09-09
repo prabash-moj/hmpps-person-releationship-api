@@ -29,7 +29,7 @@ fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
     nextOfKin = this.nextOfKin,
     emergencyContact = this.emergencyContact,
     awareOfCharges = this.awareOfCharges,
-    comments = this.comments ?: "",
+    comments = this.comments,
   )
 }
 

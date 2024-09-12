@@ -60,7 +60,7 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
 
     with(contact) {
       assertThat(id).isEqualTo(1)
-      assertThat(title).isEqualTo("Mr")
+      assertThat(title).isEqualTo("MR")
       assertThat(lastName).isEqualTo("Last")
       assertThat(firstName).isEqualTo("Jack")
       assertThat(middleName).isEqualTo("Middle")

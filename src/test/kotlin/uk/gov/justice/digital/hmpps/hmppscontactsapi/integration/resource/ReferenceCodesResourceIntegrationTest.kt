@@ -48,14 +48,14 @@ class ReferenceCodesResourceIntegrationTest : IntegrationTestBase() {
   @Test
   fun `should return a list of relationship type reference codes`() {
     val groupCode = "RELATIONSHIP"
-    referenceCodeRepository.findAllByGroupCodeEquals(groupCode) hasSize 7
+    referenceCodeRepository.findAllByGroupCodeEquals(groupCode) hasSize 36
 
     val listOfCodes = testAPIClient.getReferenceCodes(groupCode)
 
-    assertThat(listOfCodes).hasSize(7)
+    assertThat(listOfCodes).hasSize(36)
     assertThat(listOfCodes)
       .extracting("code")
-      .containsAll(listOf("MOTHER", "FATHER"))
+      .containsAll(listOf("MOT", "FA"))
     assertThat(listOfCodes).extracting("code").doesNotContainAnyElementsOf(listOf("WORK", "MOBILE", "HOME"))
   }
 

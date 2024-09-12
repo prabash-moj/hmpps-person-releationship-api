@@ -48,9 +48,9 @@ AS
   left join contact_phone cp ON cp.contact_id = c.contact_id AND cp.primary_phone = true
   left join contact_email ce ON ce.contact_id = c.contact_id AND ce.primary_email = true
   left join reference_codes rc1 ON rc1.group_code = 'TITLE' and rc1.code = c.title
-  left join reference_codes rc2 ON rc2.group_code = 'RELATIONSHIP' and rc2.code = pc.relationship_type
+  left join reference_codes rc2 ON rc2.group_code = 'PHONE_TYPE' and rc2.code = cp.phone_type
   left join reference_codes rc3 ON rc3.group_code = 'EMAIL_TYPE' and rc3.code = ce.email_type
-  left join reference_codes rc4 ON rc4.group_code = 'PHONE_TYPE' and rc4.code = cp.phone_type
+  left join reference_codes rc4 ON rc4.group_code = 'RELATIONSHIP' and rc4.code = pc.relationship_type
   where pc.contact_id = c.contact_id
   order by pc.created_time desc;
 

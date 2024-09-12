@@ -6,6 +6,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
 class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAuthHelper: JwtAuthorisationHelper) {
@@ -48,6 +49,16 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectHeader().contentType(MediaType.APPLICATION_JSON)
     .expectBodyList(PrisonerContactSummary::class.java)
     .returnResult().responseBody!!
+
+  fun getReferenceCodes(groupCode: String) = webTestClient.get()
+    .uri("/reference-codes/group/$groupCode")
+    .accept(MediaType.APPLICATION_JSON)
+    .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+    .exchange()
+    .expectStatus().isOk
+    .expectHeader().contentType(MediaType.APPLICATION_JSON)
+    .expectBodyList(ReferenceCode::class.java)
+    .returnResult().responseBody
 
   fun setAuthorisation(
     username: String? = "AUTH_ADM",

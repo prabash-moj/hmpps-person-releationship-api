@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -23,7 +23,7 @@ class CityControllerTest {
 
     val response: City = cityController.getCityById(cityId)
 
-    assertEquals(mockCity, response)
+    assertThat(response).isEqualTo(mockCity)
     verify(cityService).getCityById(cityId)
   }
 
@@ -48,7 +48,7 @@ class CityControllerTest {
 
     val response: List<City> = cityController.getAllCountries()
 
-    assertEquals(mockCountries, response)
+    assertThat(response).isEqualTo(mockCountries)
   }
 
   @Test
@@ -60,7 +60,7 @@ class CityControllerTest {
 
     val response: City = cityController.getCityByNomisCode(nomisCode)
 
-    assertEquals(mockCity, response)
+    assertThat(response).isEqualTo(mockCity)
     verify(cityService).getCityByNomisCode(nomisCode)
   }
 

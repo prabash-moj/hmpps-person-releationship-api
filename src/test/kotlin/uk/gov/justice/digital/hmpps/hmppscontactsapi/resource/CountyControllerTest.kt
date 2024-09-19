@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.County
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.CountyService
 
@@ -19,18 +19,18 @@ class CountyControllerTest {
     val countyId = 1L
     val mockCounty =
       getCountry(countyId)
-    `when`(countyService.getCountyById(countyId)).thenReturn(mockCounty)
+    whenever(countyService.getCountyById(countyId)).thenReturn(mockCounty)
 
     val response = countyController.getCountyById(countyId)
 
-    assertEquals(mockCounty, response)
+    assertThat(response).isEqualTo(mockCounty)
     verify(countyService).getCountyById(countyId)
   }
 
   @Test
   fun `getCountyById should return 404 when county not found`() {
     val countyId = 1L
-    `when`(countyService.getCountyById(countyId)).thenReturn(null)
+    whenever(countyService.getCountyById(countyId)).thenReturn(null)
 
     val response = countyController.getCountyById(countyId)
 
@@ -44,11 +44,11 @@ class CountyControllerTest {
       getCountry(1L),
       getCountry(2L),
     )
-    `when`(countyService.getAllCountries()).thenReturn(mockCountries)
+    whenever(countyService.getAllCountries()).thenReturn(mockCountries)
 
     val response = countyController.getAllCountries()
 
-    assertEquals(mockCountries, response)
+    assertThat(response).isEqualTo(mockCountries)
     verify(countyService).getAllCountries()
   }
 
@@ -57,11 +57,11 @@ class CountyControllerTest {
     val nomisCode = "GB"
     val mockCounty =
       getCountry(1L)
-    `when`(countyService.getCountyByNomisCode(nomisCode)).thenReturn(mockCounty)
+    whenever(countyService.getCountyByNomisCode(nomisCode)).thenReturn(mockCounty)
 
     val response = countyController.getCountyByNomisCode(nomisCode)
 
-    assertEquals(mockCounty, response)
+    assertThat(response).isEqualTo(mockCounty)
     verify(countyService).getCountyByNomisCode(nomisCode)
   }
 

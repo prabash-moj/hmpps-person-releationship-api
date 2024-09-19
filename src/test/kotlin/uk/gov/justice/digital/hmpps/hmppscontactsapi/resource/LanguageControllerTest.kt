@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.LanguageService
 
@@ -19,18 +19,18 @@ class LanguageControllerTest {
     val languageId = 1L
     val mockLanguage =
       getMockLanguage(languageId)
-    `when`(languageService.getLanguageById(languageId)).thenReturn(mockLanguage)
+    whenever(languageService.getLanguageById(languageId)).thenReturn(mockLanguage)
 
     val response = languageController.getLanguageById(languageId)
 
-    assertEquals(mockLanguage, response)
+    assertThat(response).isEqualTo(mockLanguage)
     verify(languageService).getLanguageById(languageId)
   }
 
   @Test
   fun `getLanguageById should return 404 when language not found`() {
     val languageId = 1L
-    `when`(languageService.getLanguageById(languageId)).thenReturn(null)
+    whenever(languageService.getLanguageById(languageId)).thenReturn(null)
 
     val response = languageController.getLanguageById(languageId)
 
@@ -44,11 +44,11 @@ class LanguageControllerTest {
       getMockLanguage(1L),
       getMockLanguage(2L),
     )
-    `when`(languageService.getAllCountries()).thenReturn(mockCountries)
+    whenever(languageService.getAllCountries()).thenReturn(mockCountries)
 
     val response = languageController.getAllCountries()
 
-    assertEquals(mockCountries, response)
+    assertThat(response).isEqualTo(mockCountries)
     verify(languageService).getAllCountries()
   }
 
@@ -57,11 +57,11 @@ class LanguageControllerTest {
     val nomisCode = "GB"
     val mockLanguage =
       getMockLanguage(1L)
-    `when`(languageService.getLanguageByNomisCode(nomisCode)).thenReturn(mockLanguage)
+    whenever(languageService.getLanguageByNomisCode(nomisCode)).thenReturn(mockLanguage)
 
     val response = languageController.getLanguageByNomisCode(nomisCode)
 
-    assertEquals(mockLanguage, response)
+    assertThat(response).isEqualTo(mockLanguage)
     verify(languageService).getLanguageByNomisCode(nomisCode)
   }
 
@@ -70,11 +70,11 @@ class LanguageControllerTest {
     val isoAlpha2 = "GB"
     val mockLanguage =
       getMockLanguage(1L)
-    `when`(languageService.getLanguageByIsoAlpha2(isoAlpha2)).thenReturn(mockLanguage)
+    whenever(languageService.getLanguageByIsoAlpha2(isoAlpha2)).thenReturn(mockLanguage)
 
     val response = languageController.getLanguageByIsoAlpha2(isoAlpha2)
 
-    assertEquals(mockLanguage, response)
+    assertThat(response).isEqualTo(mockLanguage)
     verify(languageService).getLanguageByIsoAlpha2(isoAlpha2)
   }
 
@@ -83,11 +83,11 @@ class LanguageControllerTest {
     val isoAlpha3 = "GBR"
     val mockLanguage =
       getMockLanguage(1L)
-    `when`(languageService.getLanguageByIsoAlpha3(isoAlpha3)).thenReturn(mockLanguage)
+    whenever(languageService.getLanguageByIsoAlpha3(isoAlpha3)).thenReturn(mockLanguage)
 
     val response = languageController.getLanguageByIsoAlpha3(isoAlpha3)
 
-    assertEquals(mockLanguage, response)
+    assertThat(response).isEqualTo(mockLanguage)
     verify(languageService).getLanguageByIsoAlpha3(isoAlpha3)
   }
 

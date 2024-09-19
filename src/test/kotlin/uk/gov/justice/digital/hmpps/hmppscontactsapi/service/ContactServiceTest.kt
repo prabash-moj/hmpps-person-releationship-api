@@ -16,19 +16,23 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
-import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.util.*
 
 class ContactServiceTest {
@@ -36,9 +40,13 @@ class ContactServiceTest {
   private val contactRepository: ContactRepository = mock()
   private val prisonerContactRepository: PrisonerContactRepository = mock()
   private val prisonerService: PrisonerService = mock()
-  private val clock =
-    Clock.fixed(ZonedDateTime.of(2000, 1, 1, 10, 30, 0, 0, ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC"))
-  private val service = ContactService(contactRepository, prisonerContactRepository, prisonerService, clock)
+  private val contactSearchRepository: ContactSearchRepository = mock()
+  private val service = ContactService(
+    contactRepository,
+    prisonerContactRepository,
+    prisonerService,
+    contactSearchRepository,
+  )
 
   @Nested
   inner class CreateContact {
@@ -139,7 +147,12 @@ class ContactServiceTest {
         createdBy = "created",
         relationship = relationshipRequest,
       )
-      whenever(prisonerService.getPrisoner(any())).thenReturn(Prisoner(relationshipRequest.prisonerNumber, prisonId = "MDI"))
+      whenever(prisonerService.getPrisoner(any())).thenReturn(
+        Prisoner(
+          relationshipRequest.prisonerNumber,
+          prisonId = "MDI",
+        ),
+      )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
 
@@ -229,10 +242,10 @@ class ContactServiceTest {
     private val id = 123456L
 
     @TestFactory
-    fun `should get a contact with a dob and is over 18 calculated given today is 1st January 2000`() = listOf(
-      LocalDate.of(1981, 12, 31) to IsOverEighteen.YES,
-      LocalDate.of(1982, 1, 1) to IsOverEighteen.YES,
-      LocalDate.of(1982, 1, 2) to IsOverEighteen.NO,
+    fun `should get a contact with a dob and is over 18 calculated`() = listOf(
+      LocalDate.now().minusYears(19) to IsOverEighteen.YES,
+      LocalDate.now().minusYears(18) to IsOverEighteen.YES,
+      LocalDate.now().minusYears(18).plusDays(1) to IsOverEighteen.NO,
     ).map { (dob, expectedIsOverEighteen) ->
       DynamicTest.dynamicTest("when dob is $dob then expected is $expectedIsOverEighteen") {
         val entity = ContactEntity(
@@ -313,5 +326,65 @@ class ContactServiceTest {
         service.getContact(id)
       }
     }
+  }
+
+  @Nested
+  inner class SearchContact {
+
+    @Test
+    fun `test searchContacts with lastName , firstName , middleName and date of birth`() {
+      // Given
+      val pageable = PageRequest.of(0, 10)
+      val contact = getContactEntity(1L)
+      val contactAddress = getContactAddressEntity(1L)
+
+      val results = listOf(arrayOf(contact, contactAddress))
+
+      val pageContacts = PageImpl(results, pageable, results.size.toLong())
+
+      // When
+      whenever(
+        contactSearchRepository.searchContacts(
+          ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)),
+          pageable,
+        ),
+      ).thenReturn(pageContacts)
+
+      // Act
+      val result: Page<ContactSearch> = service.searchContacts(
+        pageable,
+        ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)),
+      )
+
+      // Then
+      assertNotNull(result)
+      assertThat(result.totalElements).isEqualTo(1)
+      assertThat(result.content[0].lastName).isEqualTo("last")
+      assertThat(result.content[0].firstName).isEqualTo("first")
+    }
+
+    private fun getContactEntity(contactId: Long) = ContactEntity(
+      contactId = contactId,
+      title = "Mr",
+      lastName = "last",
+      middleName = "middle",
+      firstName = "first",
+      dateOfBirth = LocalDate.of(1980, 2, 1),
+      isOverEighteen = null,
+      createdBy = "user",
+      createdTime = LocalDateTime.now(),
+    )
+
+    private fun getContactAddressEntity(contactAddressId: Long) = ContactAddressEntity(
+      contactAddressId = contactAddressId,
+      flat = "Mr",
+      property = "last",
+      street = "middle",
+      area = "first",
+      cityCode = "",
+      countyCode = "null",
+      postCode = "user",
+      countryCode = "user",
+    )
   }
 }

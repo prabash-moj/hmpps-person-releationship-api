@@ -41,29 +41,4 @@ data class ContactEntity(
   @Column(updatable = false, name = "created_time")
   @CreationTimestamp
   val createdTime: LocalDateTime,
-) {
-
-  companion object {
-    fun newContact(
-      title: String?,
-      firstName: String,
-      lastName: String,
-      middleName: String?,
-      dateOfBirth: LocalDate?,
-      isOverEighteen: Boolean?,
-      createdBy: String,
-    ): ContactEntity {
-      return ContactEntity(
-        0,
-        title,
-        firstName,
-        lastName,
-        middleName,
-        dateOfBirth,
-        isOverEighteen,
-        createdBy,
-        LocalDateTime.now(),
-      )
-    }
-  }
-}
+)

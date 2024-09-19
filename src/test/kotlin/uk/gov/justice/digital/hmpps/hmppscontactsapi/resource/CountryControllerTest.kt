@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Country
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.CountryService
 
@@ -19,18 +19,18 @@ class CountryControllerTest {
     val countryId = 1L
     val mockCountry =
       getMockCountry(countryId)
-    `when`(countryService.getCountryById(countryId)).thenReturn(mockCountry)
+    whenever(countryService.getCountryById(countryId)).thenReturn(mockCountry)
 
     val response = countryController.getCountryById(countryId)
 
-    assertEquals(mockCountry, response)
+    assertThat(response).isEqualTo(mockCountry)
     verify(countryService).getCountryById(countryId)
   }
 
   @Test
   fun `getCountryById should return 404 when country not found`() {
     val countryId = 1L
-    `when`(countryService.getCountryById(countryId)).thenReturn(null)
+    whenever(countryService.getCountryById(countryId)).thenReturn(null)
 
     val response = countryController.getCountryById(countryId)
 
@@ -44,11 +44,11 @@ class CountryControllerTest {
       getMockCountry(1L),
       getMockCountry(2L),
     )
-    `when`(countryService.getAllCountries()).thenReturn(mockCountries)
+    whenever(countryService.getAllCountries()).thenReturn(mockCountries)
 
     val response = countryController.getAllCountries()
 
-    assertEquals(mockCountries, response)
+    assertThat(response).isEqualTo(mockCountries)
     verify(countryService).getAllCountries()
   }
 
@@ -57,11 +57,11 @@ class CountryControllerTest {
     val nomisCode = "GB"
     val mockCountry =
       getMockCountry(1L)
-    `when`(countryService.getCountryByNomisCode(nomisCode)).thenReturn(mockCountry)
+    whenever(countryService.getCountryByNomisCode(nomisCode)).thenReturn(mockCountry)
 
     val response = countryController.getCountryByNomisCode(nomisCode)
 
-    assertEquals(mockCountry, response)
+    assertThat(response).isEqualTo(mockCountry)
     verify(countryService).getCountryByNomisCode(nomisCode)
   }
 
@@ -70,11 +70,11 @@ class CountryControllerTest {
     val isoAlpha2 = "GB"
     val mockCountry =
       getMockCountry(1L)
-    `when`(countryService.getCountryByIsoAlpha2(isoAlpha2)).thenReturn(mockCountry)
+    whenever(countryService.getCountryByIsoAlpha2(isoAlpha2)).thenReturn(mockCountry)
 
     val response = countryController.getCountryByIsoAlpha2(isoAlpha2)
 
-    assertEquals(mockCountry, response)
+    assertThat(response).isEqualTo(mockCountry)
     verify(countryService).getCountryByIsoAlpha2(isoAlpha2)
   }
 
@@ -83,11 +83,11 @@ class CountryControllerTest {
     val isoAlpha3 = "GBR"
     val mockCountry =
       getMockCountry(1L)
-    `when`(countryService.getCountryByIsoAlpha3(isoAlpha3)).thenReturn(mockCountry)
+    whenever(countryService.getCountryByIsoAlpha3(isoAlpha3)).thenReturn(mockCountry)
 
     val response = countryController.getCountryByIsoAlpha3(isoAlpha3)
 
-    assertEquals(mockCountry, response)
+    assertThat(response).isEqualTo(mockCountry)
     verify(countryService).getCountryByIsoAlpha3(isoAlpha3)
   }
 

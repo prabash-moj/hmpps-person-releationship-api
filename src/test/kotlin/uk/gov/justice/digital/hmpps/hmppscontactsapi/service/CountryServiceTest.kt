@@ -1,15 +1,15 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.CountryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.CountryRepository
@@ -45,22 +45,22 @@ class CountryServiceTest {
         displaySequence = 123,
         isoNumeric = 111,
       )
-      `when`(countryRepository.findByCountryId(countryId)).thenReturn(Optional.of(country))
+      whenever(countryRepository.findByCountryId(countryId)).thenReturn(Optional.of(country))
 
       // When
       val result = countryService.getCountryById(countryId)
 
       // Then
       assertNotNull(result)
-      assertEquals("ABC", result.nomisCode)
-      assertEquals("Test Country", result.nomisDescription)
+      assertThat(result.nomisCode).isEqualTo("ABC")
+      assertThat(result.nomisDescription).isEqualTo("Test Country")
     }
 
     @Test
     fun `should return not found exception when country id does not exist`() {
       // Given
       val countryId = 1L
-      `when`(countryRepository.findByCountryId(countryId)).thenReturn(Optional.empty())
+      whenever(countryRepository.findByCountryId(countryId)).thenReturn(Optional.empty())
 
       // When
 
@@ -101,15 +101,15 @@ class CountryServiceTest {
           isoNumeric = 111,
         ),
       )
-      `when`(countryRepository.findAll()).thenReturn(countries)
+      whenever(countryRepository.findAll()).thenReturn(countries)
 
       // When
       val result = countryService.getAllCountries()
 
       // Then
-      assertEquals(2, result.size)
-      assertEquals("USA", result[0].nomisCode)
-      assertEquals("CAN", result[1].nomisCode)
+      assertThat(result.size).isEqualTo(2)
+      assertThat(result[0].nomisCode).isEqualTo("USA")
+      assertThat(result[1].nomisCode).isEqualTo("CAN")
     }
   }
 
@@ -130,22 +130,22 @@ class CountryServiceTest {
         nomisDescription = "Test Country",
         isoCountryDesc = "Test Country",
       )
-      `when`(countryRepository.findByIsoAlpha2(isoAlpha2)).thenReturn(Optional.of(country))
+      whenever(countryRepository.findByIsoAlpha2(isoAlpha2)).thenReturn(Optional.of(country))
 
       // When
       val result = countryService.getCountryByIsoAlpha2(isoAlpha2)
 
       // Then
       assertNotNull(result)
-      assertEquals("US", result.isoAlpha2)
-      assertEquals("USA", result.nomisCode)
+      assertThat(result.isoAlpha2).isEqualTo("US")
+      assertThat(result.nomisCode).isEqualTo("USA")
     }
 
     @Test
     fun `should return not found exception when ISO Alpha2 code does not exist`() {
       // Given
       val isoAlpha2 = "XX"
-      `when`(countryRepository.findByIsoAlpha2(isoAlpha2)).thenReturn(Optional.empty())
+      whenever(countryRepository.findByIsoAlpha2(isoAlpha2)).thenReturn(Optional.empty())
 
       // When
       val exception = assertThrows<EntityNotFoundException> {
@@ -174,22 +174,22 @@ class CountryServiceTest {
         nomisDescription = "Test Country",
         isoCountryDesc = "Test Country",
       )
-      `when`(countryRepository.findByIsoAlpha3(isoAlpha3)).thenReturn(Optional.of(country))
+      whenever(countryRepository.findByIsoAlpha3(isoAlpha3)).thenReturn(Optional.of(country))
 
       // When
       val result = countryService.getCountryByIsoAlpha3(isoAlpha3)
 
       // Then
       assertNotNull(result)
-      assertEquals("US", result.isoAlpha3)
-      assertEquals("USA", result.nomisCode)
+      assertThat(result.isoAlpha3).isEqualTo("US")
+      assertThat(result.nomisCode).isEqualTo("USA")
     }
 
     @Test
     fun `should return not found exception when ISO Alpha3 code does not exist`() {
       // Given
       val isoAlpha3 = "XXX"
-      `when`(countryRepository.findByIsoAlpha3(isoAlpha3)).thenReturn(Optional.empty())
+      whenever(countryRepository.findByIsoAlpha3(isoAlpha3)).thenReturn(Optional.empty())
 
       // When
       val exception = assertThrows<EntityNotFoundException> {
@@ -217,23 +217,23 @@ class CountryServiceTest {
         nomisDescription = "Test Country",
         isoCountryDesc = "Test Country",
       )
-      `when`(countryRepository.findByNomisCode(nomisCode)).thenReturn(Optional.of(country))
+      whenever(countryRepository.findByNomisCode(nomisCode)).thenReturn(Optional.of(country))
 
       // When
       val result = countryService.getCountryByNomisCode(nomisCode)
 
       // Then
       assertNotNull(result)
-      assertEquals("USA", result.nomisCode)
-      assertEquals("US", result.isoAlpha2)
-      assertEquals("USA", result.isoAlpha3)
+      assertThat(result.nomisCode).isEqualTo("USA")
+      assertThat(result.isoAlpha2).isEqualTo("US")
+      assertThat(result.isoAlpha3).isEqualTo("USA")
     }
 
     @Test
     fun `should return not found exception when nomis code does not exist`() {
       // Given
       val nomisCode = "XXX"
-      `when`(countryRepository.findByNomisCode(nomisCode)).thenReturn(Optional.empty())
+      whenever(countryRepository.findByNomisCode(nomisCode)).thenReturn(Optional.empty())
 
       // When
 

@@ -29,6 +29,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -182,13 +183,14 @@ class ContactController(val contactService: ContactService) {
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = Contact::class),
+            schema = Schema(implementation = ContactSearch::class),
           ),
         ],
       ),
       ApiResponse(
         responseCode = "400",
         description = "Invalid request",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
   )

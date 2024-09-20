@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.media.Schema
 
-data class ContactRelationshipRequest(
+data class ContactRelationship(
 
   @Schema(description = "Prisoner number (NOMS ID)", example = "A1234BC")
   val prisonerNumber: String,

@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.mapRelationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
@@ -22,7 +24,7 @@ class ContactService(
   private val contactRepository: ContactRepository,
   private val prisonerContactRepository: PrisonerContactRepository,
   private val prisonerService: PrisonerService,
-  val contactSearchRepository: ContactSearchRepository,
+  private val contactSearchRepository: ContactSearchRepository,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -30,10 +32,12 @@ class ContactService(
 
   @Transactional
   fun createContact(request: CreateContactRequest): Contact {
-    validate(request)
+    if (request.relationship != null) {
+      validateRelationship(request.relationship)
+    }
     val newContact = request.toModel()
     val createdContact = contactRepository.saveAndFlush(newContact).toModel()
-    val newRelationship = request.mapRelationship(createdContact)
+    val newRelationship = request.relationship?.toEntity(createdContact.id, request.createdBy)
       ?.let { prisonerContactRepository.saveAndFlush(it) }
 
     logger.info("Created new contact {}", createdContact)
@@ -49,10 +53,15 @@ class ContactService(
   fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearch> =
     contactSearchRepository.searchContacts(request, pageable).toModel()
 
-  private fun validate(request: CreateContactRequest) {
-    if (request.relationship != null) {
-      prisonerService.getPrisoner(request.relationship.prisonerNumber)
-        ?: throw EntityNotFoundException("Prisoner number ${request.relationship.prisonerNumber} - not found")
-    }
+  @Transactional
+  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest) {
+    validateRelationship(request.relationship)
+    getContact(contactId) ?: throw EntityNotFoundException("Contact ($contactId) could not be found")
+    prisonerContactRepository.saveAndFlush(request.relationship.toEntity(contactId, request.createdBy))
+  }
+
+  private fun validateRelationship(relationship: ContactRelationship) {
+    prisonerService.getPrisoner(relationship.prisonerNumber)
+      ?: throw EntityNotFoundException("Prisoner (${relationship.prisonerNumber}) could not be found")
   }
 }

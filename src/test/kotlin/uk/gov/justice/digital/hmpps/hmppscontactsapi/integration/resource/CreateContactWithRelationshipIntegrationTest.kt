@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 
@@ -51,7 +51,7 @@ class CreateContactWithRelationshipIntegrationTest : IntegrationTestBase() {
       lastName = RandomStringUtils.random(35),
       firstName = "a new guy",
       createdBy = "created",
-      relationship = ContactRelationshipRequest(
+      relationship = ContactRelationship(
         prisonerNumber = prisonerNumber,
         relationshipCode = "FRI",
         isNextOfKin = false,
@@ -73,14 +73,14 @@ class CreateContactWithRelationshipIntegrationTest : IntegrationTestBase() {
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
 
-    assertThat(errors.userMessage).isEqualTo("Entity not found : Prisoner number A1234AB - not found")
+    assertThat(errors.userMessage).isEqualTo("Entity not found : Prisoner (A1234AB) could not be found")
   }
 
   @Test
   fun `should create the contact relationship with minimal fields`() {
     val prisonerNumber = "A1234AB"
     stubPrisonSearchWithResponse(prisonerNumber)
-    val requestedRelationship = ContactRelationshipRequest(
+    val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
       relationshipCode = "FRI",
       isNextOfKin = false,
@@ -108,7 +108,7 @@ class CreateContactWithRelationshipIntegrationTest : IntegrationTestBase() {
   fun `should create the contact relationship with all fields`() {
     val prisonerNumber = "A1234AA"
     stubPrisonSearchWithResponse(prisonerNumber)
-    val requestedRelationship = ContactRelationshipRequest(
+    val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
       relationshipCode = "FRI",
       isNextOfKin = true,
@@ -133,7 +133,7 @@ class CreateContactWithRelationshipIntegrationTest : IntegrationTestBase() {
 
   private fun asserPrisonerContactEquals(
     prisonerContact: PrisonerContactSummary,
-    relationship: ContactRelationshipRequest,
+    relationship: ContactRelationship,
   ) {
     with(prisonerContact) {
       assertThat(relationshipCode).isEqualTo(relationship.relationshipCode)

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
@@ -108,6 +111,37 @@ class ContactControllerTest {
 
       assertThrows<RuntimeException>("Bang!") {
         controller.getContact(id)
+      }
+    }
+  }
+
+  @Nested
+  inner class AddContactRelationship {
+    private val id = 123456L
+    private val relationship = ContactRelationship(
+      prisonerNumber = "A1234BC",
+      relationshipCode = "MOT",
+      isNextOfKin = true,
+      isEmergencyContact = false,
+      comments = "Foo",
+    )
+    private val request = AddContactRelationshipRequest(relationship, "USER")
+
+    @Test
+    fun `should create a contact relationship successfully`() {
+      doNothing().whenever(contactService).addContactRelationship(id, request)
+
+      controller.addContactRelationship(id, request)
+
+      verify(contactService).addContactRelationship(id, request)
+    }
+
+    @Test
+    fun `should propagate exceptions getting a contact`() {
+      whenever(contactService.addContactRelationship(id, request)).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        controller.addContactRelationship(id, request)
       }
     }
   }

@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
@@ -62,6 +63,18 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectHeader().contentType(MediaType.APPLICATION_JSON)
     .expectBodyList(ReferenceCode::class.java)
     .returnResult().responseBody
+
+  fun addAContactRelationship(contactId: Long, request: AddContactRelationshipRequest) {
+    webTestClient.post()
+      .uri("/contact/$contactId/relationship")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isCreated
+  }
 
   fun getSearchContactResults(uri: URI) = webTestClient.get()
     .uri(uri.toString())

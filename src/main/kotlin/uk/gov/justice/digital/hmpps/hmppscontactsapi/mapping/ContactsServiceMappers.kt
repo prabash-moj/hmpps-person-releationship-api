@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageImpl
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
@@ -56,19 +57,18 @@ fun Array<Any>.toModel(): ContactSearch {
 
 fun PageImpl<Array<Any>>.toModel(): Page<ContactSearch> = map { it.toModel() }
 
-fun CreateContactRequest.mapRelationship(
-  createdContact: Contact,
-) = this.relationship?.let {
-  newPrisonerContact(
-    createdContact.id,
-    it.prisonerNumber,
-    it.relationshipCode,
-    it.isNextOfKin,
-    it.isEmergencyContact,
-    it.comments,
-    this.createdBy,
-  )
-}
+fun ContactRelationship.toEntity(
+  contactId: Long,
+  createdBy: String,
+) = newPrisonerContact(
+  contactId,
+  this.prisonerNumber,
+  this.relationshipCode,
+  this.isNextOfKin,
+  this.isEmergencyContact,
+  this.comments,
+  createdBy,
+)
 
 fun CreateContactRequest.toModel() =
   newContact(

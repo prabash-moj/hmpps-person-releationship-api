@@ -3,11 +3,11 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 
 class GetContactByIdIntegrationTest : IntegrationTestBase() {
@@ -65,27 +65,25 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
       assertThat(firstName).isEqualTo("Jack")
       assertThat(middleName).isEqualTo("Middle")
       assertThat(dateOfBirth).isEqualTo(LocalDate.of(2000, 11, 21))
-      assertThat(isOverEighteen).isEqualTo(IsOverEighteen.YES)
+      assertThat(estimatedIsOverEighteen).isNull()
       assertThat(createdBy).isEqualTo("TIM")
       assertThat(createdTime).isNotNull()
     }
   }
 
   @ParameterizedTest
-  @CsvSource(
-    "2024-01-01,NO",
-    "2004-01-01,YES",
-  )
-  fun `should calculate is over eighteen if the dob is known`(dateOfBirth: LocalDate, isOverEighteen: IsOverEighteen) {
+  @EnumSource(EstimatedIsOverEighteen::class)
+  fun `should is over eighteen present if the dob is known`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
     val createdContactId = testAPIClient.createAContact(
       CreateContactRequest(
         firstName = "First",
         lastName = "Last",
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = null,
+        estimatedIsOverEighteen = estimatedIsOverEighteen,
         createdBy = "USER1",
       ),
     ).id
     val contact = testAPIClient.getContact(createdContactId)
-    assertThat(contact.isOverEighteen).isEqualTo(isOverEighteen)
+    assertThat(contact.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
   }
 }

@@ -17,7 +17,7 @@ CREATE TABLE contact
     first_name varchar(35) NOT NULL,
     middle_name varchar(35),
     date_of_birth date,
-    is_over_eighteen boolean,
+    estimated_is_over_eighteen varchar(11),
     place_of_birth varchar(25),
     active boolean NOT NULL default true,
     suspended boolean NOT NULL DEFAULT false,

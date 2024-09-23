@@ -17,7 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
@@ -43,7 +43,7 @@ class ContactControllerTest {
         id = 99,
         lastName = request.lastName,
         firstName = request.firstName,
-        isOverEighteen = IsOverEighteen.DO_NOT_KNOW,
+        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -79,7 +79,7 @@ class ContactControllerTest {
       id = id,
       lastName = "last",
       firstName = "first",
-      isOverEighteen = IsOverEighteen.DO_NOT_KNOW,
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

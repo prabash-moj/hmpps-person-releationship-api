@@ -7,7 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
 import java.time.LocalDate
@@ -20,7 +20,7 @@ fun ContactEntity.toModel() = Contact(
   firstName = this.firstName,
   middleName = this.middleName,
   dateOfBirth = this.dateOfBirth,
-  isOverEighteen = mapIsOverEighteen(this),
+  estimatedIsOverEighteen = this.estimatedIsOverEighteen,
   createdBy = this.createdBy,
   createdTime = this.createdTime,
 )
@@ -77,40 +77,12 @@ fun CreateContactRequest.toModel() =
     firstName = this.firstName,
     middleName = this.middleName,
     dateOfBirth = this.dateOfBirth,
-    isOverEighteen = mapIsOverEighteen(this),
+    estimatedIsOverEighteen = mapIsOverEighteen(this),
     createdBy = this.createdBy,
   )
 
-private fun mapIsOverEighteen(entity: ContactEntity): IsOverEighteen {
-  return if (entity.dateOfBirth != null) {
-    if (isOver18(entity.dateOfBirth)) {
-      IsOverEighteen.YES
-    } else {
-      IsOverEighteen.NO
-    }
-  } else {
-    when (entity.isOverEighteen) {
-      true -> IsOverEighteen.YES
-      false -> IsOverEighteen.NO
-      null -> IsOverEighteen.DO_NOT_KNOW
-    }
-  }
-}
-
-private fun isOver18(dateOfBirth: LocalDate) = !dateOfBirth.isAfter(LocalDate.now().minusYears(18))
-
-private fun mapIsOverEighteen(request: CreateContactRequest): Boolean? {
-  return if (request.dateOfBirth != null) {
-    null
-  } else {
-    when (request.isOverEighteen) {
-      IsOverEighteen.YES -> true
-      IsOverEighteen.NO -> false
-      IsOverEighteen.DO_NOT_KNOW -> null
-      null -> null
-    }
-  }
-}
+private fun mapIsOverEighteen(entity: CreateContactRequest): EstimatedIsOverEighteen? =
+  if (entity.dateOfBirth != null) null else entity.estimatedIsOverEighteen
 
 private fun newContact(
   title: String?,
@@ -118,7 +90,7 @@ private fun newContact(
   lastName: String,
   middleName: String?,
   dateOfBirth: LocalDate?,
-  isOverEighteen: Boolean?,
+  estimatedIsOverEighteen: EstimatedIsOverEighteen?,
   createdBy: String,
 ): ContactEntity {
   return ContactEntity(
@@ -128,7 +100,7 @@ private fun newContact(
     lastName,
     middleName,
     dateOfBirth,
-    isOverEighteen,
+    estimatedIsOverEighteen,
     createdBy,
     LocalDateTime.now(),
   )

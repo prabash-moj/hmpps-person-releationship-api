@@ -11,7 +11,7 @@ import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import java.time.LocalDate
 
@@ -155,18 +155,18 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
   }
 
   @ParameterizedTest
-  @EnumSource(IsOverEighteen::class)
-  fun `should record the estimated date of birth if supplied`(isOverEighteen: IsOverEighteen) {
+  @EnumSource(EstimatedIsOverEighteen::class)
+  fun `should record the estimated date of birth if supplied`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
     val request = CreateContactRequest(
       lastName = "last",
       firstName = "first",
       dateOfBirth = null,
-      isOverEighteen = isOverEighteen,
+      estimatedIsOverEighteen = estimatedIsOverEighteen,
       createdBy = "created",
     )
 
     val contactReturnedOnCreate = testAPIClient.createAContact(request)
-    assertThat(contactReturnedOnCreate.isOverEighteen).isEqualTo(isOverEighteen)
+    assertThat(contactReturnedOnCreate.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
     assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
   }
 
@@ -177,8 +177,8 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
       assertThat(firstName).isEqualTo(request.firstName)
       assertThat(middleName).isEqualTo(request.middleName)
       assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
-      if (request.isOverEighteen != null) {
-        assertThat(isOverEighteen).isEqualTo(request.isOverEighteen)
+      if (request.estimatedIsOverEighteen != null) {
+        assertThat(estimatedIsOverEighteen).isEqualTo(request.estimatedIsOverEighteen)
       }
       assertThat(createdBy).isEqualTo(request.createdBy)
     }

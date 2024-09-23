@@ -1,9 +1,12 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.springframework.data.annotation.Immutable
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 
 @Entity
@@ -25,7 +28,8 @@ data class PrisonerContactSummaryEntity(
 
   val dateOfBirth: LocalDate?,
 
-  val isOverEighteen: Boolean?,
+  @Enumerated(EnumType.STRING)
+  val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
   val contactAddressId: Long?,
 

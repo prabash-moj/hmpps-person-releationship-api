@@ -16,7 +16,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSumma
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactSummaryRepository
 import java.time.LocalDate
 
@@ -44,8 +44,8 @@ class PrisonerContactServiceTest {
   @Test
   fun `should fetch all contacts for a prisoner`() {
     val dateOfBirth = LocalDate.of(1980, 5, 10)
-    val c1 = makePrisonerContact(id = 1L, contactId = 2L, dateOfBirth, firstName = "John", lastName = "Doe")
-    val c2 = makePrisonerContact(id = 2L, contactId = 2L, dateOfBirth, firstName = "David", lastName = "Doe")
+    val c1 = makePrisonerContact(id = 1L, contactId = 2L, dateOfBirth, firstName = "John", lastName = "Doe", EstimatedIsOverEighteen.DO_NOT_KNOW)
+    val c2 = makePrisonerContact(id = 2L, contactId = 2L, dateOfBirth, firstName = "David", lastName = "Doe", EstimatedIsOverEighteen.YES)
     val contacts = listOf(c1, c2)
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
@@ -55,80 +55,6 @@ class PrisonerContactServiceTest {
 
     result hasSize 2
     assertThat(result).containsAll(listOf(c1.toModel(), c2.toModel()))
-
-    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
-  }
-
-  @Test
-  fun `should set the over18 flag YES if the date of birth is greater than 18 years ago`() {
-    val dateOfBirth = LocalDate.of(1980, 5, 10)
-    val c1 = makePrisonerContact(id = 1L, contactId = 2L, dateOfBirth, firstName = "John", lastName = "Doe", isOverEighteen = false)
-    val contacts = listOf(c1)
-
-    whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
-
-    val result = prisonerContactService.getAllContacts(prisonerNumber, true)
-
-    result hasSize 1
-    with(result[0]) {
-      assertThat(isOverEighteen).isEqualTo(IsOverEighteen.YES)
-    }
-
-    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
-  }
-
-  @Test
-  fun `should set the over18 value from DB value when date of birth is null`() {
-    val c1 = makePrisonerContact(id = 1L, contactId = 2L, dateOfBirth = null, firstName = "John", lastName = "Doe", isOverEighteen = true)
-    val contacts = listOf(c1)
-
-    whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
-
-    val result = prisonerContactService.getAllContacts(prisonerNumber, true)
-
-    result hasSize 1
-    with(result[0]) {
-      assertThat(isOverEighteen).isEqualTo(IsOverEighteen.YES)
-    }
-
-    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
-  }
-
-  @Test
-  fun `should set the over18 value to NOT_KNOWN when not enough info to decide`() {
-    val c1 = makePrisonerContact(id = 1L, contactId = 2L, dateOfBirth = null, firstName = "John", lastName = "Doe", isOverEighteen = null)
-    val contacts = listOf(c1)
-
-    whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
-
-    val result = prisonerContactService.getAllContacts(prisonerNumber, true)
-
-    result hasSize 1
-    with(result[0]) {
-      assertThat(isOverEighteen).isEqualTo(IsOverEighteen.DO_NOT_KNOW)
-    }
-
-    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
-  }
-
-  @Test
-  fun `should set the over18 value to NO when date of birth is within 18 years`() {
-    val dateOfBirth = LocalDate.now().minusYears(12)
-    val c1 = makePrisonerContact(id = 1L, contactId = 2L, dateOfBirth, firstName = "John", lastName = "Doe", isOverEighteen = true)
-    val contacts = listOf(c1)
-
-    whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
-
-    val result = prisonerContactService.getAllContacts(prisonerNumber, true)
-
-    result hasSize 1
-    with(result[0]) {
-      assertThat(isOverEighteen).isEqualTo(IsOverEighteen.NO)
-    }
 
     verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
   }
@@ -148,7 +74,7 @@ class PrisonerContactServiceTest {
     dateOfBirth: LocalDate?,
     firstName: String,
     lastName: String,
-    isOverEighteen: Boolean? = true,
+    estimatedIsOverEighteen: EstimatedIsOverEighteen,
     active: Boolean = true,
   ): PrisonerContactSummaryEntity =
     PrisonerContactSummaryEntity(
@@ -159,7 +85,7 @@ class PrisonerContactServiceTest {
       middleName = "Any",
       lastName = lastName,
       dateOfBirth = dateOfBirth,
-      isOverEighteen = isOverEighteen,
+      estimatedIsOverEighteen = estimatedIsOverEighteen,
       contactAddressId = 3L,
       flat = "2B",
       property = "123",

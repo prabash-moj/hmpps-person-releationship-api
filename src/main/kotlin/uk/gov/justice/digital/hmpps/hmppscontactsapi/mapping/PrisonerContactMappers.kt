@@ -1,9 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
-import java.time.LocalDate
 
 fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
   return PrisonerContactSummary(
@@ -14,7 +12,7 @@ fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
     forename = this.firstName,
     middleName = this.middleName,
     dateOfBirth = this.dateOfBirth,
-    isOverEighteen = this.mapIsOverEighteen(),
+    estimatedIsOverEighteen = this.estimatedIsOverEighteen,
     relationshipCode = this.relationshipType,
     relationshipDescription = this.relationshipDescription ?: "",
     flat = this.flat ?: "",
@@ -34,21 +32,3 @@ fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
 }
 
 fun List<PrisonerContactSummaryEntity>.toModel() = map { it.toModel() }
-
-fun PrisonerContactSummaryEntity.mapIsOverEighteen(): IsOverEighteen {
-  return if (this.dateOfBirth != null) {
-    if (!this.dateOfBirth.isAfter(LocalDate.now().minusYears(18))) {
-      IsOverEighteen.YES
-    } else {
-      IsOverEighteen.NO
-    }
-  } else {
-    when (this.isOverEighteen) {
-      true -> IsOverEighteen.YES
-      false -> IsOverEighteen.NO
-      else -> {
-        IsOverEighteen.DO_NOT_KNOW
-      }
-    }
-  }
-}

@@ -2,19 +2,22 @@
 -- Reference data
 -- =============================================
 
-insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_name, date_of_birth, place_of_birth, gender, marital_status, language_code, comments, created_by, active)
-values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (2, 'SOCIAL',   'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (3, 'OFFICIAL', 'MRS', 'Last',    'Jane',       'Middle', '2000-11-23', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (4, 'SOCIAL',   'MR',   'Four',   'John',       'Middle', '2000-05-18', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (5, 'SOCIAL',   'MR',   'Five',   'Jon',        'Middle', '2000-09-21', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (6, 'SOCIAL',   'MR',   'Six',    'Johnny',     'Middle', '2000-10-23', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (7, 'SOCIAL',   'MR',   'Seven',  'Pete',       'Middle', '2015-08-29', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (8, 'SOCIAL',   'MR',   'Eight',  'Harry',      'Middle', '2015-12-23', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (9, 'SOCIAL',   'MR',   'Nine',   'Donald',     'Middle', '2000-11-23', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (10, 'SOCIAL',  'MS',   'Ten',    'Freya',      'Middle', '2000-11-24', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (11, 'SOCIAL',  'MS',   'Eleven', 'Suki',       'Middle', '2000-11-25', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
-       (12, 'SOCIAL',  'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false);
+insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_name, date_of_birth, estimated_is_over_eighteen, place_of_birth, gender, marital_status, language_code, comments, created_by, active)
+values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (2, 'SOCIAL',   'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (3, 'OFFICIAL', 'MRS', 'Last',    'Jane',       'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (4, 'SOCIAL',   'MR',   'Four',   'John',       'Middle', '2000-05-18', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (5, 'SOCIAL',   'MR',   'Five',   'Jon',        'Middle', '2000-09-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (6, 'SOCIAL',   'MR',   'Six',    'Johnny',     'Middle', '2000-10-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (7, 'SOCIAL',   'MR',   'Seven',  'Pete',       'Middle', '2015-08-29', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (8, 'SOCIAL',   'MR',   'Eight',  'Harry',      'Middle', '2015-12-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (9, 'SOCIAL',   'MR',   'Nine',   'Donald',     'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (10, 'SOCIAL',  'MS',   'Ten',    'Freya',      'Middle', '2000-11-24', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (11, 'SOCIAL',  'MS',   'Eleven', 'Suki',       'Middle', '2000-11-25', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
+       (12, 'SOCIAL',  'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
+       (13, 'SOCIAL',  'MRS',  'Thirteen', 'Mark',     'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
+       (14, 'SOCIAL',  'MRS',  'Fourteen', 'Phil',     'Middle', null, 'NO', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
+       (15, 'SOCIAL',  'MRS',  'Fifteen', 'Carl',      'Middle', null, 'DO_NOT_KMOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false);
 
 insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, created_by)
 values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'TIM'),
@@ -33,7 +36,10 @@ values (1,  1,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SY
        (9,  9,  'HOME', true, null, '36','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
        (10, 10, 'HOME', true, null, '38','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
        (11, 11, 'HOME', true, null, '40','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (12, 12, 'HOME', true, 'Flat 3b', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM');
+       (12, 12, 'HOME', true, 'Flat 3b', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
+       (13, 13, 'HOME', true, 'Flat 35b', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
+       (14, 14, 'HOME', true, 'Flat 3', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
+       (15, 15, 'HOME', true, 'Flat 32', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM');
 
 
 insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, primary_phone, created_by)

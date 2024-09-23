@@ -2,11 +2,14 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -17,28 +20,23 @@ data class ContactEntity(
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val contactId: Long,
 
-  @Column(name = "title")
   val title: String?,
 
-  @Column(name = "first_name")
   val firstName: String,
 
-  @Column(name = "last_name")
   val lastName: String,
 
-  @Column(name = "middle_name")
   val middleName: String?,
 
-  @Column(name = "date_of_birth")
   val dateOfBirth: LocalDate?,
 
-  @Column(name = "is_over_eighteen")
-  val isOverEighteen: Boolean?,
+  @Enumerated(EnumType.STRING)
+  val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
-  @Column(updatable = false, name = "created_by")
+  @Column(updatable = false)
   val createdBy: String,
 
-  @Column(updatable = false, name = "created_time")
+  @Column(updatable = false)
   @CreationTimestamp
   val createdTime: LocalDateTime,
 )

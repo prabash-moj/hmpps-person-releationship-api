@@ -4,13 +4,12 @@ import jakarta.persistence.EntityNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -27,7 +26,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
@@ -87,49 +86,41 @@ class ContactServiceTest {
       }
     }
 
-    @TestFactory
-    fun `should create a contact without a date of birth successfully`() = listOf(
-      IsOverEighteen.YES to true,
-      IsOverEighteen.NO to false,
-      IsOverEighteen.DO_NOT_KNOW to null,
-    ).map { (requestIsOverEighteen, expectedIsOverEighteen) ->
-      DynamicTest.dynamicTest("when is over eighteen is $requestIsOverEighteen then expected is $expectedIsOverEighteen") {
-        reset(contactRepository)
-        val request = CreateContactRequest(
-          title = "mr",
-          lastName = "last",
-          firstName = "first",
-          middleName = "middle",
-          dateOfBirth = null,
-          requestIsOverEighteen,
-          createdBy = "created",
-        )
-        whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+    @Test
+    fun `should create a contact without a date of birth successfully`() {
+      val request = CreateContactRequest(
+        title = "mr",
+        lastName = "last",
+        firstName = "first",
+        middleName = "middle",
+        dateOfBirth = null,
+        createdBy = "created",
+      )
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
 
-        val createdContact = service.createContact(request)
+      val createdContact = service.createContact(request)
 
-        val contactCaptor = argumentCaptor<ContactEntity>()
-        verify(contactRepository).saveAndFlush(contactCaptor.capture())
-        with(contactCaptor.firstValue) {
-          assertThat(title).isEqualTo(request.title)
-          assertThat(lastName).isEqualTo(request.lastName)
-          assertThat(firstName).isEqualTo(request.firstName)
-          assertThat(middleName).isEqualTo(request.middleName)
-          assertNull(dateOfBirth)
-          assertThat(isOverEighteen).isEqualTo(expectedIsOverEighteen)
-          assertThat(createdBy).isEqualTo(request.createdBy)
-          assertThat(createdTime).isNotNull()
-        }
-        with(createdContact) {
-          assertThat(title).isEqualTo(request.title)
-          assertThat(lastName).isEqualTo(request.lastName)
-          assertThat(firstName).isEqualTo(request.firstName)
-          assertThat(middleName).isEqualTo(request.middleName)
-          assertNull(dateOfBirth)
-          assertThat(isOverEighteen).isEqualTo(requestIsOverEighteen)
-          assertThat(createdBy).isEqualTo(request.createdBy)
-          assertThat(createdTime).isNotNull()
-        }
+      val contactCaptor = argumentCaptor<ContactEntity>()
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+      with(contactCaptor.firstValue) {
+        assertThat(title).isEqualTo(request.title)
+        assertThat(lastName).isEqualTo(request.lastName)
+        assertThat(firstName).isEqualTo(request.firstName)
+        assertThat(middleName).isEqualTo(request.middleName)
+        assertNull(dateOfBirth)
+        assertThat(estimatedIsOverEighteen).isEqualTo(request.estimatedIsOverEighteen)
+        assertThat(createdBy).isEqualTo(request.createdBy)
+        assertThat(createdTime).isNotNull()
+      }
+      with(createdContact) {
+        assertThat(title).isEqualTo(request.title)
+        assertThat(lastName).isEqualTo(request.lastName)
+        assertThat(firstName).isEqualTo(request.firstName)
+        assertThat(middleName).isEqualTo(request.middleName)
+        assertNull(dateOfBirth)
+        assertThat(estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
+        assertThat(createdBy).isEqualTo(request.createdBy)
+        assertThat(createdTime).isNotNull()
       }
     }
 
@@ -242,73 +233,33 @@ class ContactServiceTest {
   inner class GetContact {
     private val id = 123456L
 
-    @TestFactory
-    fun `should get a contact with a dob and is over 18 calculated`() = listOf(
-      LocalDate.now().minusYears(19) to IsOverEighteen.YES,
-      LocalDate.now().minusYears(18) to IsOverEighteen.YES,
-      LocalDate.now().minusYears(18).plusDays(1) to IsOverEighteen.NO,
-    ).map { (dob, expectedIsOverEighteen) ->
-      DynamicTest.dynamicTest("when dob is $dob then expected is $expectedIsOverEighteen") {
-        val entity = ContactEntity(
-          contactId = id,
-          title = "Mr",
-          lastName = "last",
-          middleName = "middle",
-          firstName = "first",
-          dateOfBirth = dob,
-          isOverEighteen = null,
-          createdBy = "user",
-          createdTime = LocalDateTime.now(),
-        )
-        whenever(contactRepository.findById(id)).thenReturn(Optional.of(entity))
-        val contact = service.getContact(id)
-        assertNotNull(contact)
-        with(contact!!) {
-          assertThat(id).isEqualTo(entity.contactId)
-          assertThat(title).isEqualTo(entity.title)
-          assertThat(lastName).isEqualTo(entity.lastName)
-          assertThat(firstName).isEqualTo(entity.firstName)
-          assertThat(middleName).isEqualTo(entity.middleName)
-          assertThat(dateOfBirth).isEqualTo(entity.dateOfBirth)
-          assertThat(isOverEighteen).isEqualTo(expectedIsOverEighteen)
-          assertThat(createdBy).isEqualTo(entity.createdBy)
-          assertThat(createdTime).isEqualTo(entity.createdTime)
-        }
-      }
-    }
-
-    @TestFactory
-    fun `should get a contact without dob successfully`() = listOf(
-      true to IsOverEighteen.YES,
-      false to IsOverEighteen.NO,
-      null to IsOverEighteen.DO_NOT_KNOW,
-    ).map { (storedIsOverEighteen, expectedIsOverEighteen) ->
-      DynamicTest.dynamicTest("when stored is $storedIsOverEighteen then expected is $expectedIsOverEighteen") {
-        val entity = ContactEntity(
-          contactId = id,
-          title = "Mr",
-          lastName = "last",
-          middleName = "middle",
-          firstName = "first",
-          dateOfBirth = null,
-          isOverEighteen = storedIsOverEighteen,
-          createdBy = "user",
-          createdTime = LocalDateTime.now(),
-        )
-        whenever(contactRepository.findById(id)).thenReturn(Optional.of(entity))
-        val contact = service.getContact(id)
-        assertNotNull(contact)
-        with(contact!!) {
-          assertThat(id).isEqualTo(entity.contactId)
-          assertThat(title).isEqualTo(entity.title)
-          assertThat(lastName).isEqualTo(entity.lastName)
-          assertThat(firstName).isEqualTo(entity.firstName)
-          assertThat(middleName).isEqualTo(entity.middleName)
-          assertThat(dateOfBirth).isNull()
-          assertThat(isOverEighteen).isEqualTo(expectedIsOverEighteen)
-          assertThat(createdBy).isEqualTo(entity.createdBy)
-          assertThat(createdTime).isEqualTo(entity.createdTime)
-        }
+    @ParameterizedTest
+    @EnumSource(EstimatedIsOverEighteen::class)
+    fun `should get a contact without dob successfully`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
+      val entity = ContactEntity(
+        contactId = id,
+        title = "Mr",
+        lastName = "last",
+        middleName = "middle",
+        firstName = "first",
+        dateOfBirth = null,
+        estimatedIsOverEighteen = estimatedIsOverEighteen,
+        createdBy = "user",
+        createdTime = LocalDateTime.now(),
+      )
+      whenever(contactRepository.findById(id)).thenReturn(Optional.of(entity))
+      val contact = service.getContact(id)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+        assertThat(title).isEqualTo(entity.title)
+        assertThat(lastName).isEqualTo(entity.lastName)
+        assertThat(firstName).isEqualTo(entity.firstName)
+        assertThat(middleName).isEqualTo(entity.middleName)
+        assertThat(dateOfBirth).isNull()
+        assertThat(estimatedIsOverEighteen).isEqualTo(entity.estimatedIsOverEighteen)
+        assertThat(createdBy).isEqualTo(entity.createdBy)
+        assertThat(createdTime).isEqualTo(entity.createdTime)
       }
     }
 
@@ -347,7 +298,7 @@ class ContactServiceTest {
       middleName = null,
       firstName = "first",
       dateOfBirth = null,
-      isOverEighteen = null,
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )
@@ -444,7 +395,7 @@ class ContactServiceTest {
       middleName = "middle",
       firstName = "first",
       dateOfBirth = LocalDate.of(1980, 2, 1),
-      isOverEighteen = null,
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

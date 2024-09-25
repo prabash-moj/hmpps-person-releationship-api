@@ -62,9 +62,11 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
 
     val body = testAPIClient.getSearchContactResults(url)
 
-    assertThat(body.content).isEmpty()
-    assertThat(body.totalElements).isEqualTo(0)
-    assertThat(body.totalPages).isEqualTo(0)
+    with(body!!) {
+      assertThat(content).isEmpty()
+      assertThat(totalElements).isEqualTo(0)
+      assertThat(totalPages).isEqualTo(0)
+    }
   }
 
   @Test
@@ -103,62 +105,65 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
 
     val body = testAPIClient.getSearchContactResults(url)
 
-    assertThat(body.content).isNotEmpty()
-    assertThat(body.content.size).isEqualTo(1)
-    assertThat(body.totalElements).isEqualTo(1)
+    with(body!!) {
+      assertThat(content).isNotEmpty()
+      assertThat(content.size).isEqualTo(1)
+      assertThat(totalElements).isEqualTo(1)
 
-    assertThat(body.totalPages).isEqualTo(1)
+      assertThat(totalPages).isEqualTo(1)
 
-    val contact = body.content.first()
-    assertThat(contact.id).isEqualTo(12)
-    assertThat(contact.firstName).isEqualTo("Jane")
-    assertThat(contact.lastName).isEqualTo("Twelve")
-    assertThat(contact.middleName).isEqualTo("Middle")
-    assertThat(contact.dateOfBirth).isEqualTo("2000-11-26")
-    assertThat(contact.createdBy).isEqualTo("TIM")
-    assertThat(contact.createdTime).isInThePast()
-    assertThat(contact.flat).isEqualTo("Flat 3b")
-    assertThat(contact.property).isEqualTo("42")
-    assertThat(contact.street).isEqualTo("Acacia Avenue")
-    assertThat(contact.area).isEqualTo("Bunting")
-    assertThat(contact.cityCode).isEqualTo("SHEF")
-    assertThat(contact.countyCode).isEqualTo("SYORKS")
-    assertThat(contact.postCode).isEqualTo("S2 3LK")
-    assertThat(contact.countryCode).isEqualTo("UK")
+      val contact = content.first()
+      assertThat(contact.id).isEqualTo(12)
+      assertThat(contact.firstName).isEqualTo("Jane")
+      assertThat(contact.lastName).isEqualTo("Twelve")
+      assertThat(contact.middleName).isEqualTo("Middle")
+      assertThat(contact.dateOfBirth).isEqualTo("2000-11-26")
+      assertThat(contact.createdBy).isEqualTo("TIM")
+      assertThat(contact.createdTime).isInThePast()
+      assertThat(contact.flat).isEqualTo("Flat 3b")
+      assertThat(contact.property).isEqualTo("42")
+      assertThat(contact.street).isEqualTo("Acacia Avenue")
+      assertThat(contact.area).isEqualTo("Bunting")
+      assertThat(contact.cityCode).isEqualTo("SHEF")
+      assertThat(contact.countyCode).isEqualTo("SYORKS")
+      assertThat(contact.postCode).isEqualTo("S2 3LK")
+      assertThat(contact.countryCode).isEqualTo("UK")
+    }
   }
 
   @Test
   fun `should get the contact with when search by first, middle, last and date of birth`() {
     val body = testAPIClient.getSearchContactResults(CONTACT_SEARCH_URL)
 
-    assertThat(body.content).isNotEmpty()
-    assertThat(body.content.size).isEqualTo(1)
-    assertThat(body.totalElements).isEqualTo(1)
-    assertThat(body.pageable.pageNumber).isEqualTo(0)
-    assertThat(body.pageable.pageSize).isEqualTo(10)
-    assertThat(body.pageable.sort.sorted).isEqualTo(true)
-    assertThat(body.sort.sorted).isEqualTo(true)
-    assertThat(body.first).isEqualTo(true)
-    assertThat(body.size).isEqualTo(10)
-    assertThat(body.number).isEqualTo(0)
+    with(body!!) {
+      assertThat(content).isNotEmpty()
+      assertThat(content.size).isEqualTo(1)
+      assertThat(totalElements).isEqualTo(1)
+      assertThat(pageable.pageNumber).isEqualTo(0)
+      assertThat(pageable.pageSize).isEqualTo(10)
+      assertThat(pageable.sort.sorted).isEqualTo(true)
+      assertThat(sort.sorted).isEqualTo(true)
+      assertThat(first).isEqualTo(true)
+      assertThat(size).isEqualTo(10)
+      assertThat(number).isEqualTo(0)
+      assertThat(totalPages).isEqualTo(1)
 
-    assertThat(body.totalPages).isEqualTo(1)
-
-    val contact = body.content.first()
-    assertThat(contact.id).isEqualTo(1)
-    assertThat(contact.firstName).isEqualTo("Jack")
-    assertThat(contact.lastName).isEqualTo("Last")
-    assertThat(contact.middleName).isEqualTo("Middle")
-    assertThat(contact.dateOfBirth).isEqualTo("2000-11-21")
-    assertThat(contact.createdBy).isEqualTo("TIM")
-    assertThat(contact.createdTime).isInThePast()
-    assertThat(contact.property).isEqualTo("24")
-    assertThat(contact.street).isEqualTo("Acacia Avenue")
-    assertThat(contact.area).isEqualTo("Bunting")
-    assertThat(contact.cityCode).isEqualTo("SHEF")
-    assertThat(contact.countyCode).isEqualTo("SYORKS")
-    assertThat(contact.postCode).isEqualTo("S2 3LK")
-    assertThat(contact.countryCode).isEqualTo("UK")
+      val contact = content.first()
+      assertThat(contact.id).isEqualTo(1)
+      assertThat(contact.firstName).isEqualTo("Jack")
+      assertThat(contact.lastName).isEqualTo("Last")
+      assertThat(contact.middleName).isEqualTo("Middle")
+      assertThat(contact.dateOfBirth).isEqualTo("2000-11-21")
+      assertThat(contact.createdBy).isEqualTo("TIM")
+      assertThat(contact.createdTime).isInThePast()
+      assertThat(contact.property).isEqualTo("24")
+      assertThat(contact.street).isEqualTo("Acacia Avenue")
+      assertThat(contact.area).isEqualTo("Bunting")
+      assertThat(contact.cityCode).isEqualTo("SHEF")
+      assertThat(contact.countyCode).isEqualTo("SYORKS")
+      assertThat(contact.postCode).isEqualTo("S2 3LK")
+      assertThat(contact.countryCode).isEqualTo("UK")
+    }
   }
 
   @Test
@@ -171,27 +176,29 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
 
     val body = testAPIClient.getSearchContactResults(uri)
 
-    assertThat(body.content).isNotEmpty()
-    assertThat(body.content.size).isEqualTo(1)
-    assertThat(body.totalElements).isEqualTo(1)
+    with(body!!) {
+      assertThat(content).isNotEmpty()
+      assertThat(content.size).isEqualTo(1)
+      assertThat(totalElements).isEqualTo(1)
 
-    assertThat(body.totalPages).isEqualTo(1)
+      assertThat(totalPages).isEqualTo(1)
 
-    val contact = body.content.first()
-    assertThat(contact.id).isEqualTo(1)
-    assertThat(contact.firstName).isEqualTo("Jack")
-    assertThat(contact.lastName).isEqualTo("Last")
-    assertThat(contact.middleName).isEqualTo("Middle")
-    assertThat(contact.dateOfBirth).isEqualTo("2000-11-21")
-    assertThat(contact.createdBy).isEqualTo("TIM")
-    assertThat(contact.createdTime).isInThePast()
-    assertThat(contact.property).isEqualTo("24")
-    assertThat(contact.street).isEqualTo("Acacia Avenue")
-    assertThat(contact.area).isEqualTo("Bunting")
-    assertThat(contact.cityCode).isEqualTo("SHEF")
-    assertThat(contact.countyCode).isEqualTo("SYORKS")
-    assertThat(contact.postCode).isEqualTo("S2 3LK")
-    assertThat(contact.countryCode).isEqualTo("UK")
+      val contact = content.first()
+      assertThat(contact.id).isEqualTo(1)
+      assertThat(contact.firstName).isEqualTo("Jack")
+      assertThat(contact.lastName).isEqualTo("Last")
+      assertThat(contact.middleName).isEqualTo("Middle")
+      assertThat(contact.dateOfBirth).isEqualTo("2000-11-21")
+      assertThat(contact.createdBy).isEqualTo("TIM")
+      assertThat(contact.createdTime).isInThePast()
+      assertThat(contact.property).isEqualTo("24")
+      assertThat(contact.street).isEqualTo("Acacia Avenue")
+      assertThat(contact.area).isEqualTo("Bunting")
+      assertThat(contact.cityCode).isEqualTo("SHEF")
+      assertThat(contact.countyCode).isEqualTo("SYORKS")
+      assertThat(contact.postCode).isEqualTo("S2 3LK")
+      assertThat(contact.countryCode).isEqualTo("UK")
+    }
   }
 
   @Test

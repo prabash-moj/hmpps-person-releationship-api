@@ -361,7 +361,7 @@ class ContactServiceTest {
       // Given
       val pageable = PageRequest.of(0, 10)
       val contact = getContactEntity(1L)
-      val contactAddress = getContactAddressEntity(1L)
+      val contactAddress = getContactAddressEntity(1L, 1L)
 
       val results = listOf(arrayOf(contact, contactAddress))
 
@@ -400,8 +400,12 @@ class ContactServiceTest {
       createdTime = LocalDateTime.now(),
     )
 
-    private fun getContactAddressEntity(contactAddressId: Long) = ContactAddressEntity(
+    private fun getContactAddressEntity(contactId: Long, contactAddressId: Long) = ContactAddressEntity(
       contactAddressId = contactAddressId,
+      contactId = contactId,
+      primaryAddress = true,
+      verified = false,
+      addressType = "HOME",
       flat = "Mr",
       property = "last",
       street = "middle",
@@ -410,6 +414,8 @@ class ContactServiceTest {
       countyCode = "null",
       postCode = "user",
       countryCode = "user",
+      createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
     )
   }
 }

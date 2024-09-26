@@ -7,7 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.mo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
@@ -106,7 +106,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
   private fun authorised() = setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN"))
 
   data class ContactSearchResponse(
-    val content: List<ContactSearch>,
+    val content: List<ContactSearchResultItem>,
     val pageable: Pageable,
     val last: Boolean,
     val totalPages: Int,

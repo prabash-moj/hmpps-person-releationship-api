@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "The details of a contact as an individual")
-data class ContactSearch(
+data class ContactSearchResultItem(
 
   @Schema(description = "The id of the contact", example = "123456")
   val id: Long,

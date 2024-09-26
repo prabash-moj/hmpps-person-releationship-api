@@ -17,7 +17,9 @@ values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', n
        (12, 'SOCIAL',  'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
        (13, 'SOCIAL',  'MRS',  'Thirteen', 'Mark',     'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
        (14, 'SOCIAL',  'MRS',  'Fourteen', 'Phil',     'Middle', null, 'NO', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
-       (15, 'SOCIAL',  'MRS',  'Fifteen', 'Carl',      'Middle', null, 'DO_NOT_KMOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false);
+       (15, 'SOCIAL',  'MRS',  'Fifteen', 'Carl',      'Middle', null, 'DO_NOT_KMOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
+       (16, 'SOCIAL',  'MRS',  'NoAddress', 'Liam',      'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
+       (17, 'SOCIAL',  'MRS',  'NoAddress', 'Hannah',    'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false);
 
 insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, created_by)
 values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'TIM'),

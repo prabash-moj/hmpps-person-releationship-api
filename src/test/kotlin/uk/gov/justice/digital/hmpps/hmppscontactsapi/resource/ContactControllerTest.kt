@@ -19,7 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import java.net.URI
 import java.time.LocalDate
@@ -167,7 +167,7 @@ class ContactControllerTest {
       ).thenReturn(pageContacts)
 
       // Act
-      val result: Page<ContactSearch> = controller.searchContacts(pageable, ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)))
+      val result: Page<ContactSearchResultItem> = controller.searchContacts(pageable, ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)))
 
       // Then
       assertNotNull(result)
@@ -177,7 +177,7 @@ class ContactControllerTest {
     }
   }
 
-  private fun getContact(contactId: Long) = ContactSearch(
+  private fun getContact(contactId: Long) = ContactSearchResultItem(
     id = contactId,
     lastName = "last",
     firstName = "first",

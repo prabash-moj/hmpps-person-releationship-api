@@ -13,7 +13,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
@@ -50,7 +50,7 @@ class ContactService(
       ?.toModel()
   }
 
-  fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearch> =
+  fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearchResultItem> =
     contactSearchRepository.searchContacts(request, pageable).toModel()
 
   @Transactional

@@ -2,14 +2,14 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -27,35 +27,25 @@ fun ContactEntity.toModel() = Contact(
 
 fun Page<ContactEntity>.toModel(): Page<Contact> = map { it.toModel() }
 
-fun Array<Any>.toModel(): ContactSearch {
-  val contact = this[0] as ContactEntity
-  val contactAddress = this[1] as ContactAddressEntity
-  return ContactSearch(
-    id = contact.contactId,
+fun ContactWithAddressEntity.toModel() = ContactSearchResultItem(
+  id = this.contactId,
+  lastName = this.lastName,
+  firstName = this.firstName,
+  middleName = this.middleName,
+  dateOfBirth = this.dateOfBirth,
+  createdBy = this.createdBy,
+  createdTime = this.createdTime,
+  flat = this.flat,
+  property = this.property,
+  street = this.street,
+  area = this.area,
+  cityCode = this.cityCode,
+  countyCode = this.countyCode,
+  postCode = this.postCode,
+  countryCode = this.countryCode,
+)
 
-    // Personal details
-    lastName = contact.lastName,
-    firstName = contact.firstName,
-    middleName = contact.middleName,
-    dateOfBirth = contact.dateOfBirth,
-
-    // Created details
-    createdBy = contact.createdBy,
-    createdTime = contact.createdTime,
-
-    // Address details
-    flat = contactAddress.flat,
-    property = contactAddress.property,
-    street = contactAddress.street,
-    area = contactAddress.area,
-    cityCode = contactAddress.cityCode,
-    countyCode = contactAddress.countyCode,
-    postCode = contactAddress.postCode,
-    countryCode = contactAddress.countryCode,
-  )
-}
-
-fun PageImpl<Array<Any>>.toModel(): Page<ContactSearch> = map { it.toModel() }
+fun PageImpl<ContactWithAddressEntity>.toModel(): Page<ContactSearchResultItem> = map { it.toModel() }
 
 fun ContactRelationship.toEntity(
   contactId: Long,

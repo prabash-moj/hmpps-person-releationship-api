@@ -9,10 +9,8 @@ import jakarta.persistence.criteria.Root
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
-import java.math.BigInteger
 import java.time.LocalDate
 
 @Repository
@@ -20,18 +18,12 @@ class ContactSearchRepository(
   @PersistenceContext
   private var entityManager: EntityManager,
 ) {
-  fun searchContacts(request: ContactSearchRequest, pageable: Pageable): PageImpl<Array<Any>> {
+  fun searchContacts(request: ContactSearchRequest, pageable: Pageable): PageImpl<ContactWithAddressEntity> {
     val cb = entityManager.criteriaBuilder
-    val cq = cb.createQuery(Array<Any>::class.java)
-    val contact = cq.from(ContactEntity::class.java)
-    val contactAddress = cq.from(ContactAddressEntity::class.java)
+    val cq = cb.createQuery(ContactWithAddressEntity::class.java)
+    val contact = cq.from(ContactWithAddressEntity::class.java)
 
-    cq.multiselect(
-      contact,
-      contactAddress,
-    )
-
-    val predicates: List<Predicate> = buildPredicates(request, cb, contact, contactAddress)
+    val predicates: List<Predicate> = buildPredicates(request, cb, contact)
 
     cq.where(*predicates.toTypedArray())
 
@@ -49,9 +41,9 @@ class ContactSearchRepository(
 
   private fun applySorting(
     pageable: Pageable,
-    cq: CriteriaQuery<Array<Any>>,
+    cq: CriteriaQuery<ContactWithAddressEntity>,
     cb: CriteriaBuilder,
-    contact: Root<ContactEntity>,
+    contact: Root<ContactWithAddressEntity>,
   ) {
     if (pageable.sort.isSorted) {
       pageable.sort.forEach {
@@ -66,12 +58,9 @@ class ContactSearchRepository(
   private fun buildPredicates(
     request: ContactSearchRequest,
     cb: CriteriaBuilder,
-    contact: Root<ContactEntity>,
-    contactAddress: Root<ContactAddressEntity>,
+    contact: Root<ContactWithAddressEntity>,
   ): MutableList<Predicate> {
     val predicates: MutableList<Predicate> = ArrayList()
-
-    predicates.add(cb.equal(contact.get<BigInteger>("contactId"), contactAddress.get<BigInteger>("contactAddressId")))
 
     request.lastName.let {
       predicates.add(
@@ -117,10 +106,9 @@ class ContactSearchRepository(
   ): Long {
     val cb = entityManager.criteriaBuilder
     val countQuery = cb.createQuery(Long::class.java)
-    val contact = countQuery.from(ContactEntity::class.java)
-    val contactAddress = countQuery.from(ContactAddressEntity::class.java)
+    val contact = countQuery.from(ContactWithAddressEntity::class.java)
 
-    val predicates: List<Predicate> = buildPredicates(request, cb, contact, contactAddress)
+    val predicates: List<Predicate> = buildPredicates(request, cb, contact)
 
     countQuery.select(cb.count(contact)).where(*predicates.toTypedArray<Predicate>())
     val total = entityManager.createQuery(countQuery).singleResult

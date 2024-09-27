@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 
@@ -18,7 +19,7 @@ data class ContactAddressEntity(
 
   val contactId: Long? = null,
 
-  val addressType: String,
+  val addressType: String? = null,
 
   val primaryAddress: Boolean = false,
 
@@ -40,9 +41,13 @@ data class ContactAddressEntity(
 
   val verified: Boolean = false,
 
-  val verifiedBy: String? = null,
+  val mailFlag: Boolean = false,
 
-  val verifiedTime: LocalDateTime? = null,
+  val startDate: LocalDate? = null,
+
+  val endDate: LocalDate? = null,
+
+  val noFixedAddress: Boolean = false,
 
   val createdBy: String,
 
@@ -51,6 +56,8 @@ data class ContactAddressEntity(
 ) {
   var amendedBy: String? = null
   var amendedTime: LocalDateTime? = null
+  var verifiedBy: String? = null
+  var verifiedTime: LocalDateTime? = null
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true

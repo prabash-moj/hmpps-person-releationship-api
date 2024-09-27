@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model
 
 import io.swagger.v3.oas.annotations.media.Schema
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "An address related to a contact")
@@ -13,7 +14,7 @@ data class ContactAddress(
   val contactId: Long,
 
   @Schema(description = "The type of address", example = "HOME")
-  val addressType: String,
+  val addressType: String? = null,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")
   val primaryAddress: Boolean,
@@ -50,6 +51,18 @@ data class ContactAddress(
 
   @Schema(description = "The timestamp of when the postcode lookup was done", example = "2024-01-01T00:00:00Z")
   val verifiedTime: LocalDateTime? = null,
+
+  @Schema(description = "Flag to indicate whether mail is allowed to be sent to this address", example = "false")
+  val mailFlag: Boolean = false,
+
+  @Schema(description = "The start date when this address is to be considered active from", example = "2024-01-01")
+  val startDate: LocalDate? = null,
+
+  @Schema(description = "The end date when this address is to be considered no longer active", example = "2024-01-01")
+  val endDate: LocalDate? = null,
+
+  @Schema(description = "Flag to indicate whether this address indicates no fixed address", example = "false")
+  val noFixedAddress: Boolean = false,
 
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,

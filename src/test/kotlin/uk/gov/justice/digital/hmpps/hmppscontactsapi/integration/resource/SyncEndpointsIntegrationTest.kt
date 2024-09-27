@@ -205,6 +205,55 @@ class SyncEndpointsIntegrationTest : IntegrationTestBase() {
     }
 
     @Test
+    fun `should set the address verified details if verified on a contact address update`() {
+      // Create a contact address with default - verified = false
+      val contactAddress = webTestClient.put()
+        .uri("/sync/contact-address")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
+        .bodyValue(createContactAddressRequest(contactId))
+        .exchange()
+        .expectStatus()
+        .isOk
+        .expectHeader().contentType(MediaType.APPLICATION_JSON)
+        .expectBody(ContactAddress::class.java)
+        .returnResult().responseBody!!
+
+      with(contactAddress) {
+        assertThat(verified).isFalse()
+        assertThat(verifiedBy).isNull()
+        assertThat(verifiedTime).isNull()
+        assertThat(createdBy).isEqualTo("CREATE")
+        assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
+      }
+
+      val updatedAddress = webTestClient.post()
+        .uri("/sync/contact-address/{contactAddressId}", contactAddress.contactAddressId)
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
+        .bodyValue(updateContactAddressRequest(contactId, verified = true))
+        .exchange()
+        .expectStatus()
+        .isOk
+        .expectHeader().contentType(MediaType.APPLICATION_JSON)
+        .expectBody(ContactAddress::class.java)
+        .returnResult().responseBody!!
+
+      // Check the updated address is now verified (with who and when)
+      with(updatedAddress) {
+        assertThat(verified).isTrue()
+        assertThat(verifiedBy).isEqualTo("UPDATE")
+        assertThat(verifiedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(amendedBy).isEqualTo("UPDATE")
+        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(createdBy).isEqualTo("CREATE")
+        assertThat(createdTime).isNotNull()
+      }
+    }
+
+    @Test
     fun `should delete an existing contact address`() {
       val beforeCount = contactAddressRepository.count()
 
@@ -234,7 +283,7 @@ class SyncEndpointsIntegrationTest : IntegrationTestBase() {
       }
     }
 
-    private fun updateContactAddressRequest(contactId: Long) =
+    private fun updateContactAddressRequest(contactId: Long, verified: Boolean = false) =
       UpdateContactAddressRequest(
         contactId = contactId,
         addressType = "WORK",
@@ -249,6 +298,7 @@ class SyncEndpointsIntegrationTest : IntegrationTestBase() {
         countryCode = "UK",
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
+        verified = verified,
       )
 
     private fun createContactAddressRequest(contactId: Long) =

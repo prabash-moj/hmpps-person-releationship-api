@@ -30,7 +30,11 @@ select
     ca.street,
     ca.verified,
     ca.verified_by,
-    ca.verified_time
+    ca.verified_time,
+    ca.mail_flag,
+    ca.start_date,
+    ca.end_date,
+    ca.no_fixed_address
   from contact c
   left join contact_address ca ON ca.contact_id = c.contact_id AND ca.primary_address = true
 

@@ -62,8 +62,15 @@ data class ContactWithAddressEntity(
 
   val verifiedTime: LocalDateTime? = null,
 
+  val mailFlag: Boolean? = false,
+
+  val startDate: LocalDate? = null,
+
+  val endDate: LocalDate? = null,
+
+  val noFixedAddress: Boolean? = false,
+
   val amendedBy: String? = null,
 
   val amendedTime: Instant? = null,
-
 )

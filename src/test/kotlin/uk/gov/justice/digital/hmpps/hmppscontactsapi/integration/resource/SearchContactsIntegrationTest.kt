@@ -97,7 +97,7 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
-  fun `should return contacts when fist, middle names and date of birth is not in request parameters`() {
+  fun `should return contacts when first, middle names and date of birth is not in request parameters`() {
     val url = UriComponentsBuilder.fromPath("contact/search")
       .queryParam("lastName", "Twelve")
       .build()
@@ -128,6 +128,10 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(contact.countyCode).isEqualTo("SYORKS")
       assertThat(contact.postCode).isEqualTo("S2 3LK")
       assertThat(contact.countryCode).isEqualTo("UK")
+      assertThat(contact.mailFlag).isFalse()
+      assertThat(contact.noFixedAddress).isFalse()
+      assertThat(contact.startDate).isNull()
+      assertThat(contact.startDate).isNull()
     }
   }
 
@@ -163,6 +167,10 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(contact.countyCode).isEqualTo("SYORKS")
       assertThat(contact.postCode).isEqualTo("S2 3LK")
       assertThat(contact.countryCode).isEqualTo("UK")
+      assertThat(contact.mailFlag).isFalse()
+      assertThat(contact.noFixedAddress).isFalse()
+      assertThat(contact.startDate).isNull()
+      assertThat(contact.startDate).isNull()
     }
   }
 
@@ -198,6 +206,10 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(contact.countyCode).isEqualTo("SYORKS")
       assertThat(contact.postCode).isEqualTo("S2 3LK")
       assertThat(contact.countryCode).isEqualTo("UK")
+      assertThat(contact.mailFlag).isFalse()
+      assertThat(contact.noFixedAddress).isFalse()
+      assertThat(contact.startDate).isNull()
+      assertThat(contact.startDate).isNull()
     }
   }
 

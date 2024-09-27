@@ -90,6 +90,10 @@ CREATE TABLE contact_address
     verified boolean NOT NULL default false, -- has the address been PAF-checked?
     verified_by varchar(100),
     verified_time timestamp,
+    mail_flag boolean NOT NULL DEFAULT false,
+    start_date date,
+    end_date date,
+    no_fixed_address boolean NOT NULL DEFAULT false,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
     amended_by varchar(100),

@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request
 
 import io.swagger.v3.oas.annotations.media.Schema
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "Request to update a contact address")
@@ -40,6 +41,18 @@ data class UpdateContactAddressRequest(
 
   @Schema(description = "Whether the address has been verified by postcode lookup", example = "false")
   val verified: Boolean = false,
+
+  @Schema(description = "Whether the address can be used for mailing", example = "false")
+  val mailFlag: Boolean? = false,
+
+  @Schema(description = "The start date when this address can be considered active from", example = "2023-01-12")
+  val startDate: LocalDate? = null,
+
+  @Schema(description = "The end date when this address can be considered active until", example = "2023-01-12")
+  val endDate: LocalDate? = null,
+
+  @Schema(description = "Flag to indicate this address should be considered as no fixed address", example = "false")
+  val noFixedAddress: Boolean? = false,
 
   @Schema(description = "The id of the user who updated the address", example = "JD000001")
   val updatedBy: String,

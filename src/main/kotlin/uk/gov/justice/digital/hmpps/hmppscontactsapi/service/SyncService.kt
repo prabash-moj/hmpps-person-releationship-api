@@ -12,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import java.time.LocalDateTime
 
 /**
  * The SyncService contains methods to manage the synchronisation of data to/from NOMIS.
@@ -81,20 +82,19 @@ class SyncService(
       countryCode = request.countryCode,
       postCode = request.postcode,
       verified = request.verified,
+      mailFlag = request.mailFlag ?: false,
+      startDate = request.startDate,
+      endDate = request.endDate,
+      noFixedAddress = request.noFixedAddress ?: false,
     ).also {
       it.amendedBy = request.updatedBy
       it.amendedTime = request.updatedTime
+      if (!contactAddress.verified && request.verified) {
+        it.verifiedBy = request.updatedBy
+        it.verifiedTime = LocalDateTime.now()
+      }
     }
 
     return contactAddressRepository.saveAndFlush(changedContactAddress).toModel()
   }
-
-  // TODO: Similar methods for the other entity types
-  // TODO: Contact
-  // TODO: ContactIdentity
-  // TODO: ContactPhone
-  // TODO: ContactEmail
-  // TODO: ContactRestriction
-  // TODO: PrisonerContact
-  // TODO: PrisonerContactRestriction
 }

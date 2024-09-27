@@ -43,6 +43,10 @@ fun ContactWithAddressEntity.toModel() = ContactSearchResultItem(
   countyCode = this.countyCode,
   postCode = this.postCode,
   countryCode = this.countryCode,
+  mailFlag = this.mailFlag,
+  startDate = this.startDate,
+  endDate = this.endDate,
+  noFixedAddress = this.noFixedAddress,
 )
 
 fun PageImpl<ContactWithAddressEntity>.toModel(): Page<ContactSearchResultItem> = map { it.toModel() }

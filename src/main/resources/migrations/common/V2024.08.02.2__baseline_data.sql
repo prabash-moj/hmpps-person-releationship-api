@@ -26,6 +26,11 @@ values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'TIM'),
        (2, 2, 'PASSPORT', 'PP87878787878', 'TIM'),
        (3, 3, 'NI_NUMBER', 'NI989989AA', 'TIM');
 
+insert into contact_restriction(contact_id, restriction_type, start_date, expiry_date, comments, created_by)
+values (1, 'DRIVING', '2000-11-21','2000-11-21','N/A', 'TIM'),
+       (2, 'PUBLIC', '2000-11-21','2005-11-21','N/A', 'TIM'),
+       (3, 'MOBILITY', '2000-11-21','2000-11-21','N/A', 'TIM');
+
 insert into contact_address(contact_address_id, contact_id, address_type, primary_address, flat, property, street, area, city_code, county_code, post_code, country_code, created_by)
 values (1,  1,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
        (2,  2,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),

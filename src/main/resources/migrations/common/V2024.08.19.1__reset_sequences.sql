@@ -9,5 +9,6 @@ alter sequence if exists contact_identity_contact_identity_id_seq restart with 4
 alter sequence if exists contact_phone_contact_phone_id_seq restart with 12;
 alter sequence if exists reference_codes_reference_code_id_seq restart with 82;
 alter sequence if exists prisoner_contact_prisoner_contact_id_seq restart with 29;
+alter sequence if exists contact_restriction_contact_restriction_id_seq restart with 4;
 
 -- End

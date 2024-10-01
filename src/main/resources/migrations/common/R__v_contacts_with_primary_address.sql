@@ -21,8 +21,11 @@ select
     ca.amended_time,
     ca.area,
     ca.city_code,
-    ca.country_code,
+    city_ref.nomis_description as city_description,
     ca.county_code,
+    county_ref.nomis_description as county_description,
+    ca.country_code,
+    country_ref.nomis_description as country_description,
     ca.flat,
     ca.post_code,
     ca.primary_address,
@@ -37,5 +40,8 @@ select
     ca.no_fixed_address
   from contact c
   left join contact_address ca ON ca.contact_id = c.contact_id AND ca.primary_address = true
+  left join city_reference city_ref on city_ref.nomis_code = ca.city_code
+  left join county_reference county_ref on county_ref.nomis_code = ca.county_code
+  left join country_reference country_ref on country_ref.nomis_code = ca.country_code
 
 -- End

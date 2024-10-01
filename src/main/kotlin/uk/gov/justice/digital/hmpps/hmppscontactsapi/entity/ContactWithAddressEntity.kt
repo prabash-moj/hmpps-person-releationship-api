@@ -50,11 +50,17 @@ data class ContactWithAddressEntity(
 
   val cityCode: String? = null,
 
+  val cityDescription: String? = null,
+
   val countyCode: String? = null,
+
+  val countyDescription: String? = null,
 
   val postCode: String? = null,
 
   val countryCode: String? = null,
+
+  val countryDescription: String? = null,
 
   val verified: Boolean? = false,
 

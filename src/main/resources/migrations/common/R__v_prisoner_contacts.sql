@@ -20,9 +20,12 @@ AS
       ca.street,
       ca.area,
       ca.city_code,
+      city_ref.nomis_description as city_description,
       ca.county_code,
+      county_ref.nomis_description as county_description,
       ca.post_code,
       ca.country_code,
+      country_ref.nomis_description as country_description,
       cp.contact_phone_id,
       cp.phone_type,
       rc2.description as phone_type_description,
@@ -51,6 +54,9 @@ AS
   left join reference_codes rc2 ON rc2.group_code = 'PHONE_TYPE' and rc2.code = cp.phone_type
   left join reference_codes rc3 ON rc3.group_code = 'EMAIL_TYPE' and rc3.code = ce.email_type
   left join reference_codes rc4 ON rc4.group_code = 'RELATIONSHIP' and rc4.code = pc.relationship_type
+  left join city_reference city_ref on city_ref.nomis_code = ca.city_code
+  left join county_reference county_ref on county_ref.nomis_code = ca.county_code
+  left join country_reference country_ref on country_ref.nomis_code = ca.country_code
   where pc.contact_id = c.contact_id
   order by pc.created_time desc;
 

@@ -40,17 +40,26 @@ data class ContactSearchResultItem(
   @Schema(description = "The area of the contact address, if known", example = "Birmingham", nullable = true)
   val area: String? = null,
 
-  @Schema(description = "The city code of the contact address, if known", example = "Birmingham", nullable = true)
+  @Schema(description = "The city code of the contact address, if known", example = "25343", nullable = true)
   val cityCode: String? = null,
 
-  @Schema(description = "The county code of the contact address, if known", example = "SYORKS", nullable = true)
+  @Schema(description = "The description of city code, if known", example = "Sheffield", nullable = true)
+  val cityDescription: String? = null,
+
+  @Schema(description = "The county code of the contact address, if known", example = "S.YORKSHIRE", nullable = true)
   val countyCode: String? = null,
+
+  @Schema(description = "The description of county code, if known", example = "South Yorkshire", nullable = true)
+  val countyDescription: String? = null,
 
   @Schema(description = "The postcode of the contact address, if known", example = "B42 2QJ", nullable = true)
   val postCode: String? = null,
 
-  @Schema(description = "The country code of the contact address, if known", example = "UK", nullable = true)
+  @Schema(description = "The country code of the contact address, if known", example = "ENG", nullable = true)
   val countryCode: String? = null,
+
+  @Schema(description = "The description of country code, if known", example = "England", nullable = true)
+  val countryDescription: String? = null,
 
   @Schema(description = "Flag to indicate if mail can be sent to this address", example = "false", nullable = true)
   val mailFlag: Boolean? = false,

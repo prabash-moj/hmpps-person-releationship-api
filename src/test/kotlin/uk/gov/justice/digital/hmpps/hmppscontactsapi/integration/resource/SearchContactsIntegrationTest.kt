@@ -124,10 +124,13 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(contact.property).isEqualTo("42")
       assertThat(contact.street).isEqualTo("Acacia Avenue")
       assertThat(contact.area).isEqualTo("Bunting")
-      assertThat(contact.cityCode).isEqualTo("SHEF")
-      assertThat(contact.countyCode).isEqualTo("SYORKS")
+      assertThat(contact.cityCode).isEqualTo("25343")
+      assertThat(contact.cityDescription).isEqualTo("Sheffield")
+      assertThat(contact.countyCode).isEqualTo("S.YORKSHIRE")
+      assertThat(contact.countyDescription).isEqualTo("South Yorkshire")
       assertThat(contact.postCode).isEqualTo("S2 3LK")
-      assertThat(contact.countryCode).isEqualTo("UK")
+      assertThat(contact.countryCode).isEqualTo("ENG")
+      assertThat(contact.countryDescription).isEqualTo("England")
       assertThat(contact.mailFlag).isFalse()
       assertThat(contact.noFixedAddress).isFalse()
       assertThat(contact.startDate).isNull()
@@ -163,10 +166,13 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(contact.property).isEqualTo("24")
       assertThat(contact.street).isEqualTo("Acacia Avenue")
       assertThat(contact.area).isEqualTo("Bunting")
-      assertThat(contact.cityCode).isEqualTo("SHEF")
-      assertThat(contact.countyCode).isEqualTo("SYORKS")
+      assertThat(contact.cityCode).isEqualTo("25343")
+      assertThat(contact.cityDescription).isEqualTo("Sheffield")
+      assertThat(contact.countyCode).isEqualTo("S.YORKSHIRE")
+      assertThat(contact.countyDescription).isEqualTo("South Yorkshire")
       assertThat(contact.postCode).isEqualTo("S2 3LK")
-      assertThat(contact.countryCode).isEqualTo("UK")
+      assertThat(contact.countryCode).isEqualTo("ENG")
+      assertThat(contact.countryDescription).isEqualTo("England")
       assertThat(contact.mailFlag).isFalse()
       assertThat(contact.noFixedAddress).isFalse()
       assertThat(contact.startDate).isNull()
@@ -202,10 +208,13 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(contact.property).isEqualTo("24")
       assertThat(contact.street).isEqualTo("Acacia Avenue")
       assertThat(contact.area).isEqualTo("Bunting")
-      assertThat(contact.cityCode).isEqualTo("SHEF")
-      assertThat(contact.countyCode).isEqualTo("SYORKS")
+      assertThat(contact.cityCode).isEqualTo("25343")
+      assertThat(contact.cityDescription).isEqualTo("Sheffield")
+      assertThat(contact.countyCode).isEqualTo("S.YORKSHIRE")
+      assertThat(contact.countyDescription).isEqualTo("South Yorkshire")
       assertThat(contact.postCode).isEqualTo("S2 3LK")
-      assertThat(contact.countryCode).isEqualTo("UK")
+      assertThat(contact.countryCode).isEqualTo("ENG")
+      assertThat(contact.countryDescription).isEqualTo("England")
       assertThat(contact.mailFlag).isFalse()
       assertThat(contact.noFixedAddress).isFalse()
       assertThat(contact.startDate).isNull()
@@ -236,6 +245,41 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       val lastContact = content.last()
       assertThat(lastContact.id).isEqualTo(17)
       assertThat(lastContact.firstName).isEqualTo("Hannah")
+    }
+  }
+
+  @Test
+  fun `should get the contacts with minimal addresses associated with them when searched by last name `() {
+    val uri = UriComponentsBuilder.fromPath("contact/search")
+      .queryParam("lastName", "Minimal")
+      .queryParam("firstName", "Address")
+      .build()
+      .toUri()
+
+    val body = testAPIClient.getSearchContactResults(uri)
+
+    with(body!!) {
+      assertThat(content).isNotEmpty()
+      assertThat(content.size).isEqualTo(1)
+      assertThat(totalElements).isEqualTo(1)
+
+      assertThat(totalPages).isEqualTo(1)
+
+      val contact = content.first()
+      assertThat(contact.id).isEqualTo(18)
+      assertThat(contact.firstName).isEqualTo("Address")
+      assertThat(contact.lastName).isEqualTo("Minimal")
+
+      assertThat(contact.property).isNull()
+      assertThat(contact.street).isNull()
+      assertThat(contact.area).isNull()
+      assertThat(contact.cityCode).isNull()
+      assertThat(contact.cityDescription).isNull()
+      assertThat(contact.countyCode).isNull()
+      assertThat(contact.countyDescription).isNull()
+      assertThat(contact.postCode).isNull()
+      assertThat(contact.countryCode).isNull()
+      assertThat(contact.countryDescription).isNull()
     }
   }
 

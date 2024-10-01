@@ -43,11 +43,17 @@ data class PrisonerContactSummaryEntity(
 
   val cityCode: String?,
 
+  val cityDescription: String?,
+
   val countyCode: String?,
+
+  val countyDescription: String?,
 
   val postCode: String?,
 
   val countryCode: String?,
+
+  val countryDescription: String?,
 
   val contactPhoneId: Long?,
 

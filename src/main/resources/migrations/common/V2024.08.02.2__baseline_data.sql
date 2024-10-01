@@ -19,7 +19,8 @@ values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', n
        (14, 'SOCIAL',  'MRS',  'Fourteen', 'Phil',     'Middle', null, 'NO', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
        (15, 'SOCIAL',  'MRS',  'Fifteen', 'Carl',      'Middle', null, 'DO_NOT_KMOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
        (16, 'SOCIAL',  'MRS',  'NoAddress', 'Liam',      'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
-       (17, 'SOCIAL',  'MRS',  'NoAddress', 'Hannah',    'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false);
+       (17, 'SOCIAL',  'MRS',  'NoAddress', 'Hannah',    'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
+       (18, 'SOCIAL',  null,  'Minimal', 'Address',    null, null, null, null, null, null, null, null, 'TIM', true);
 
 insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, created_by)
 values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'TIM'),
@@ -32,21 +33,22 @@ values (1, 'DRIVING', '2000-11-21','2000-11-21','N/A', 'TIM'),
        (3, 'MOBILITY', '2000-11-21','2000-11-21','N/A', 'TIM');
 
 insert into contact_address(contact_address_id, contact_id, address_type, primary_address, flat, property, street, area, city_code, county_code, post_code, country_code, created_by)
-values (1,  1,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (2,  2,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (3,  3,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (4,  4,  'HOME', true, null, '26','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (5,  5,  'HOME', true, null, '28','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (6,  6,  'HOME', true, null, '30','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (7,  7,  'HOME', true, null, '32','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (8,  8,  'HOME', true, null, '34','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (9,  9,  'HOME', true, null, '36','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (10, 10, 'HOME', true, null, '38','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (11, 11, 'HOME', true, null, '40','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (12, 12, 'HOME', true, 'Flat 3b', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (13, 13, 'HOME', true, 'Flat 35b', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (14, 14, 'HOME', true, 'Flat 3', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM'),
-       (15, 15, 'HOME', true, 'Flat 32', '42','Acacia Avenue', 'Bunting', 'SHEF', 'SYORKS', 'S2 3LK', 'UK', 'TIM');
+values (1,  1,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (2,  2,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (3,  3,  'HOME', true, null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (4,  4,  'HOME', true, null, '26','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (5,  5,  'HOME', true, null, '28','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (6,  6,  'HOME', true, null, '30','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (7,  7,  'HOME', true, null, '32','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (8,  8,  'HOME', true, null, '34','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (9,  9,  'HOME', true, null, '36','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (10, 10, 'HOME', true, null, '38','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (11, 11, 'HOME', true, null, '40','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (12, 12, 'HOME', true, 'Flat 3b', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (13, 13, 'HOME', true, 'Flat 35b', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (14, 14, 'HOME', true, 'Flat 3', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (15, 15, 'HOME', true, 'Flat 32', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM'),
+       (16, 18, 'HOME', true, null, null,null, null, null, null, null, null, 'TIM');
 
 
 insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, primary_phone, created_by)
@@ -88,9 +90,6 @@ values (1, 'CONTACT_TYPE', 'SOCIAL', 'Social contact', 'TIM'),
        (18, 'ADDRESS_TYPE', 'WORK', 'Work address', 'TIM'),
        (19, 'ADDRESS_TYPE', 'TEMP', 'Temporary address', 'TIM'),
        (20, 'ADDRESS_TYPE', 'NONE', 'No fixed address', 'TIM'),
-       (21, 'CITY', 'SHEF', 'Sheffield', 'TIM'),
-       (22, 'COUNTY', 'SYORKS', 'South Yorkshire', 'TIM'),
-       (23, 'COUNTRY', 'UK', 'United Kingdom', 'TIM'),
        (24, 'EMAIL_TYPE', 'WORK', 'Work email', 'TIM'),
        (25, 'EMAIL_TYPE', 'PERSONAL', 'Personal email', 'TIM'),
        (26, 'PHONE_TYPE', 'WORK', 'Work phone', 'TIM'),
@@ -184,7 +183,8 @@ values (1, 1, 'A1234BB', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp)
        (26, 1, 'A5166DY', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Mike Toby
        (27, 1, 'A4385DZ', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (28, 10, 'A4385DZ', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp);
+       (28, 10, 'A4385DZ', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (29, 18, 'A4385DZ', true, 'FRI', null, 'MDI', 'TIM', current_timestamp);
 
 Insert into nationality_reference (nationality_id, nomis_code, nomis_description, iso_numeric, iso_alpha2, iso_alpha3, iso_nationality_desc, display_sequence)
 values

@@ -49,17 +49,26 @@ data class PrisonerContactSummary(
   @Schema(description = "Area or locality, if any", example = "Marylebone", nullable = true)
   val area: String?,
 
-  @Schema(description = "City code", example = "LON")
+  @Schema(description = "City code", example = "25343")
   val cityCode: String,
 
-  @Schema(description = "County code", example = "GLA")
+  @Schema(description = "The description of city code", example = "Sheffield")
+  val cityDescription: String,
+
+  @Schema(description = "County code", example = "S.YORKSHIRE")
   val countyCode: String,
+
+  @Schema(description = "The description of county code", example = "South Yorkshire")
+  val countyDescription: String,
 
   @Schema(description = "Postal code", example = "NW1 6XE")
   val postCode: String,
 
-  @Schema(description = "Country code", example = "GBR")
+  @Schema(description = "Country code", example = "ENG")
   val countryCode: String,
+
+  @Schema(description = "The description of country code", example = "England")
+  val countryDescription: String,
 
   @Schema(description = "Indicates whether the contact is an approved visitor", example = "true")
   val approvedVisitor: Boolean,

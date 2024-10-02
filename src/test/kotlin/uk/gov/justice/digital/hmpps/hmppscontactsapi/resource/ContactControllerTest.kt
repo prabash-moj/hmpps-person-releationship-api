@@ -18,8 +18,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import java.net.URI
 import java.time.LocalDate
@@ -39,11 +39,13 @@ class ContactControllerTest {
         firstName = "first",
         createdBy = "created",
       )
-      val expectedContact = Contact(
+      val expectedContact = GetContactResponse(
         id = 99,
         lastName = request.lastName,
         firstName = request.firstName,
         estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+        isDeceased = false,
+        deceasedDate = null,
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -75,11 +77,13 @@ class ContactControllerTest {
   @Nested
   inner class GetContact {
     private val id = 123456L
-    private val contact = Contact(
+    private val contact = GetContactResponse(
       id = id,
       lastName = "last",
       firstName = "first",
       estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+      isDeceased = false,
+      deceasedDate = null,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

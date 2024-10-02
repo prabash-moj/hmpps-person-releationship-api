@@ -33,6 +33,11 @@ data class ContactEntity(
   @Enumerated(EnumType.STRING)
   val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
+  @Column(name = "deceased_flag")
+  val isDeceased: Boolean,
+
+  val deceasedDate: LocalDate?,
+
   @Column(updatable = false)
   val createdBy: String,
 

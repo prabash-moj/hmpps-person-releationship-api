@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "The details of a contact as an individual")
-data class Contact(
+data class GetContactResponse(
 
   @Schema(description = "The id of the contact", example = "123456")
   val id: Long,
@@ -28,6 +28,12 @@ data class Contact(
 
   @Schema(description = "Whether the contact is over 18, based on their date of birth if it is known", example = "YES")
   val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
+
+  @Schema(description = "The date the contact deceased, if known", example = "1980-01-01")
+  val isDeceased: Boolean,
+
+  @Schema(description = "The date the contact deceased, if known", example = "1980-01-01", nullable = true)
+  val deceasedDate: LocalDate? = null,
 
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,

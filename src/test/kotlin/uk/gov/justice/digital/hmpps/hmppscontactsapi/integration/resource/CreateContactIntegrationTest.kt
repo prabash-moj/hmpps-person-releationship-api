@@ -12,7 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.mo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import java.time.LocalDate
 
 class CreateContactIntegrationTest : IntegrationTestBase() {
@@ -170,7 +170,7 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
     assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
   }
 
-  private fun assertContactsAreEqualExcludingTimestamps(contact: Contact, request: CreateContactRequest) {
+  private fun assertContactsAreEqualExcludingTimestamps(contact: GetContactResponse, request: CreateContactRequest) {
     with(contact) {
       assertThat(title).isEqualTo(request.title)
       assertThat(lastName).isEqualTo(request.lastName)

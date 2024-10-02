@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -64,7 +64,7 @@ class ContactController(val contactService: ContactService) {
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = Contact::class),
+            schema = Schema(implementation = GetContactResponse::class),
           ),
         ],
       ),
@@ -101,7 +101,7 @@ class ContactController(val contactService: ContactService) {
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = Contact::class),
+            schema = Schema(implementation = GetContactResponse::class),
           ),
         ],
       ),
@@ -138,12 +138,6 @@ class ContactController(val contactService: ContactService) {
       ApiResponse(
         responseCode = "201",
         description = "Created the relationship successfully",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = Contact::class),
-          ),
-        ],
       ),
       ApiResponse(
         responseCode = "400",

@@ -11,7 +11,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ContactAddress
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import java.time.LocalDateTime
 
@@ -25,12 +24,7 @@ class SyncEndpointsIntegrationTest : IntegrationTestBase() {
 
     @BeforeEach
     fun initialiseData() {
-      // Create a new contact for each test and expose its ID
-      val request = aMinimalCreateContactRequest()
-      val contactReturnedOnCreate = testAPIClient.createAContact(request)
-      assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
-      assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
-      contactId = contactReturnedOnCreate.id
+      contactId = testAPIClient.createAContact(aMinimalCreateContactRequest()).id
     }
 
     @Test
@@ -267,20 +261,6 @@ class SyncEndpointsIntegrationTest : IntegrationTestBase() {
 
       val afterCount = contactAddressRepository.count()
       assertThat(beforeCount).isEqualTo((afterCount + 1))
-    }
-
-    private fun assertContactsAreEqualExcludingTimestamps(contact: Contact, request: CreateContactRequest) {
-      with(contact) {
-        assertThat(title).isEqualTo(request.title)
-        assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(firstName).isEqualTo(request.firstName)
-        assertThat(middleName).isEqualTo(request.middleName)
-        assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
-        if (request.estimatedIsOverEighteen != null) {
-          assertThat(estimatedIsOverEighteen).isEqualTo(request.estimatedIsOverEighteen)
-        }
-        assertThat(createdBy).isEqualTo(request.createdBy)
-      }
     }
 
     private fun updateContactAddressRequest(contactId: Long, verified: Boolean = false) =

@@ -66,6 +66,27 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
       assertThat(middleName).isEqualTo("Middle")
       assertThat(dateOfBirth).isEqualTo(LocalDate.of(2000, 11, 21))
       assertThat(estimatedIsOverEighteen).isNull()
+      assertThat(isDeceased).isFalse()
+      assertThat(deceasedDate).isNull()
+      assertThat(createdBy).isEqualTo("TIM")
+      assertThat(createdTime).isNotNull()
+    }
+  }
+
+  @Test
+  fun `should get deceased contacts`() {
+    val contact = testAPIClient.getContact(19)
+
+    with(contact) {
+      assertThat(id).isEqualTo(19)
+      assertThat(title).isNull()
+      assertThat(lastName).isEqualTo("Dead")
+      assertThat(firstName).isEqualTo("Currently")
+      assertThat(middleName).isNull()
+      assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
+      assertThat(estimatedIsOverEighteen).isNull()
+      assertThat(isDeceased).isTrue()
+      assertThat(deceasedDate).isEqualTo(LocalDate.of(2000, 1, 1))
       assertThat(createdBy).isEqualTo("TIM")
       assertThat(createdTime).isNotNull()
     }

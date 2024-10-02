@@ -8,12 +8,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntit
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-fun ContactEntity.toModel() = Contact(
+fun ContactEntity.toModel() = GetContactResponse(
   id = this.contactId,
   title = this.title,
   lastName = this.lastName,
@@ -21,11 +21,11 @@ fun ContactEntity.toModel() = Contact(
   middleName = this.middleName,
   dateOfBirth = this.dateOfBirth,
   estimatedIsOverEighteen = this.estimatedIsOverEighteen,
+  isDeceased = this.isDeceased,
+  deceasedDate = this.deceasedDate,
   createdBy = this.createdBy,
   createdTime = this.createdTime,
 )
-
-fun Page<ContactEntity>.toModel(): Page<Contact> = map { it.toModel() }
 
 fun ContactWithAddressEntity.toModel() = ContactSearchResultItem(
   id = this.contactId,
@@ -98,6 +98,8 @@ private fun newContact(
     middleName,
     dateOfBirth,
     estimatedIsOverEighteen,
+    false,
+    null,
     createdBy,
     LocalDateTime.now(),
   )

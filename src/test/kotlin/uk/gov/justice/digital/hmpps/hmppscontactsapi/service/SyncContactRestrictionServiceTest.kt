@@ -196,6 +196,8 @@ class SyncContactRestrictionServiceTest {
       lastName = "Smith",
       dateOfBirth = null,
       estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
+      isDeceased = false,
+      deceasedDate = null,
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     )

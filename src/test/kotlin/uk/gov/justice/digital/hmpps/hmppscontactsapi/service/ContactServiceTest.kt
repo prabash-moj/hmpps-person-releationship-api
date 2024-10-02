@@ -244,6 +244,8 @@ class ContactServiceTest {
         firstName = "first",
         dateOfBirth = null,
         estimatedIsOverEighteen = estimatedIsOverEighteen,
+        isDeceased = false,
+        deceasedDate = null,
         createdBy = "user",
         createdTime = LocalDateTime.now(),
       )
@@ -299,6 +301,8 @@ class ContactServiceTest {
       firstName = "first",
       dateOfBirth = null,
       estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+      isDeceased = false,
+      deceasedDate = null,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

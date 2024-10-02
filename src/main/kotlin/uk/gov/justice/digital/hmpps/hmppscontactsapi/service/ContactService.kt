@@ -12,8 +12,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
@@ -31,7 +31,7 @@ class ContactService(
   }
 
   @Transactional
-  fun createContact(request: CreateContactRequest): Contact {
+  fun createContact(request: CreateContactRequest): GetContactResponse {
     if (request.relationship != null) {
       validateRelationship(request.relationship)
     }
@@ -45,7 +45,7 @@ class ContactService(
     return createdContact
   }
 
-  fun getContact(id: Long): Contact? {
+  fun getContact(id: Long): GetContactResponse? {
     return contactRepository.findById(id).getOrNull()
       ?.toModel()
   }

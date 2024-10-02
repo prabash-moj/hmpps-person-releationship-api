@@ -6,8 +6,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
@@ -15,7 +15,7 @@ import java.net.URI
 
 class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAuthHelper: JwtAuthorisationHelper) {
 
-  fun createAContact(request: CreateContactRequest): Contact {
+  fun createAContact(request: CreateContactRequest): GetContactResponse {
     return webTestClient.post()
       .uri("/contact")
       .accept(MediaType.APPLICATION_JSON)
@@ -27,11 +27,11 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .isCreated
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectHeader().valuesMatch("Location", "/contact/(\\d)+")
-      .expectBody(Contact::class.java)
+      .expectBody(GetContactResponse::class.java)
       .returnResult().responseBody!!
   }
 
-  fun getContact(id: Long): Contact {
+  fun getContact(id: Long): GetContactResponse {
     return webTestClient.get()
       .uri("/contact/$id")
       .accept(MediaType.APPLICATION_JSON)
@@ -40,7 +40,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectStatus()
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(Contact::class.java)
+      .expectBody(GetContactResponse::class.java)
       .returnResult().responseBody!!
   }
 

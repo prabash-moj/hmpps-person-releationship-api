@@ -9,7 +9,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmail
 import java.time.LocalDateTime
 
@@ -21,11 +20,7 @@ class SyncContactEmailIntegrationTest : IntegrationTestBase() {
 
     @BeforeEach
     fun initialiseData() {
-      val request = aMinimalCreateContactRequest()
-      val contactReturnedOnCreate = testAPIClient.createAContact(request)
-      assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
-      assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
-      savedContactId = contactReturnedOnCreate.id
+      savedContactId = testAPIClient.createAContact(aMinimalCreateContactRequest()).id
     }
 
     @Test
@@ -219,20 +214,6 @@ class SyncContactEmailIntegrationTest : IntegrationTestBase() {
         .exchange()
         .expectStatus()
         .isNotFound
-    }
-
-    private fun assertContactsAreEqualExcludingTimestamps(contact: Contact, request: CreateContactRequest) {
-      with(contact) {
-        assertThat(title).isEqualTo(request.title)
-        assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(firstName).isEqualTo(request.firstName)
-        assertThat(middleName).isEqualTo(request.middleName)
-        assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
-        if (request.estimatedIsOverEighteen != null) {
-          assertThat(estimatedIsOverEighteen).isEqualTo(request.estimatedIsOverEighteen)
-        }
-        assertThat(createdBy).isEqualTo(request.createdBy)
-      }
     }
 
     private fun updateContactEmailRequest(contactId: Long) =

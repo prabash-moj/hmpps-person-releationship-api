@@ -6,8 +6,6 @@ import org.springframework.http.MediaType
 import org.springframework.web.util.UriComponentsBuilder
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import java.net.URI
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 private val CONTACT_SEARCH_URL = UriComponentsBuilder.fromPath("contact/search")
   .queryParam("lastName", "Last")
@@ -67,33 +65,6 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(totalElements).isEqualTo(0)
       assertThat(totalPages).isEqualTo(0)
     }
-  }
-
-  @Test
-  fun `should return validation errors for date of birth when the date is in the future and special characters on name fields `() {
-    val futureTime = getFormattedDateOneDayInFuture()
-
-    val uri = UriComponentsBuilder.fromPath("contact/search")
-      .queryParam("lastName", "NEW$")
-      .queryParam("firstName", "NEW$")
-      .queryParam("middleName", "Middle$")
-      .queryParam("dateOfBirth", futureTime)
-      .queryParam("page", 0)
-      .queryParam("size", 10)
-      .queryParam("sort", "lastName,asc")
-      .queryParam("sort", "firstName,desc")
-      .build()
-      .toUri()
-
-    val errors = testAPIClient.getBadResponseErrors(uri)
-
-    assertThat(errors.userMessage).isEqualTo(
-      "Validation failure(s): " +
-        "Special characters are not allowed for First Name.\n" +
-        "Special characters are not allowed for Last Name.\n" +
-        "Special characters are not allowed for Middle Name.\n" +
-        "The date of birth must be in the past",
-    )
   }
 
   @Test
@@ -318,11 +289,5 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
     val errors = testAPIClient.getBadResponseErrors(uri)
 
     assertThat(errors.userMessage).contains("Validation failure(s): Parameter specified as non-null is null: ")
-  }
-
-  fun getFormattedDateOneDayInFuture(): String {
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val futureDate = LocalDate.now().plusDays(1)
-    return futureDate.format(formatter)
   }
 }

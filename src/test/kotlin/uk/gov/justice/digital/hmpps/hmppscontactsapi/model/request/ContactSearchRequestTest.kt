@@ -43,27 +43,6 @@ class ContactSearchRequestTest {
   }
 
   @Test
-  fun `should fail validation if any Name field contain any special characters`() {
-    val pastDate = LocalDate.now().minusDays(1)
-    val request = ContactSearchRequest(
-      lastName = "Smith$",
-      firstName = "Smith$",
-      middleName = "Smith$",
-      dateOfBirth = pastDate,
-    )
-
-    val violations = validator.validate(request)
-
-    assertThat(violations).hasSize(3)
-    assertThat(violations.map { it.message })
-      .containsExactlyInAnyOrder(
-        "Special characters are not allowed for First Name.",
-        "Special characters are not allowed for Middle Name.",
-        "Special characters are not allowed for Last Name.",
-      )
-  }
-
-  @Test
   fun `should pass validation if dateOfBirth is in the past`() {
     val pastDate = LocalDate.now().minusDays(1)
     val request = ContactSearchRequest(

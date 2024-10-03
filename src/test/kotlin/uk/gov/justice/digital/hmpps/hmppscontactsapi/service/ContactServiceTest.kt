@@ -19,15 +19,18 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
@@ -41,11 +44,43 @@ class ContactServiceTest {
   private val prisonerContactRepository: PrisonerContactRepository = mock()
   private val prisonerService: PrisonerService = mock()
   private val contactSearchRepository: ContactSearchRepository = mock()
+  private val contactAddressDetailsRepository: ContactAddressDetailsRepository = mock()
   private val service = ContactService(
     contactRepository,
     prisonerContactRepository,
     prisonerService,
     contactSearchRepository,
+    contactAddressDetailsRepository,
+  )
+
+  private val aContactAddressDetails = ContactAddressDetailsEntity(
+    contactAddressId = 0,
+    contactId = 0,
+    addressType = null,
+    addressTypeDescription = null,
+    primaryAddress = false,
+    flat = null,
+    property = null,
+    street = null,
+    area = null,
+    cityCode = null,
+    cityDescription = null,
+    countyCode = null,
+    countyDescription = null,
+    postCode = null,
+    countryCode = null,
+    countryDescription = null,
+    verified = false,
+    verifiedBy = null,
+    verifiedTime = null,
+    mailFlag = false,
+    startDate = null,
+    endDate = null,
+    noFixedAddress = false,
+    createdBy = "USER1",
+    createdTime = LocalDateTime.now(),
+    amendedBy = null,
+    amendedTime = null,
   )
 
   @Nested
@@ -61,6 +96,7 @@ class ContactServiceTest {
         createdBy = "created",
       )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(contactAddressDetailsRepository.findByContactId(any())).thenReturn(listOf(aContactAddressDetails))
 
       val createdContact = service.createContact(request)
 
@@ -83,6 +119,7 @@ class ContactServiceTest {
         assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
         assertThat(createdBy).isEqualTo(request.createdBy)
         assertThat(createdTime).isNotNull()
+        assertThat(addresses).isEqualTo(listOf(aContactAddressDetails.toModel()))
       }
     }
 
@@ -236,6 +273,8 @@ class ContactServiceTest {
     @ParameterizedTest
     @EnumSource(EstimatedIsOverEighteen::class)
     fun `should get a contact without dob successfully`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
+      whenever(contactAddressDetailsRepository.findByContactId(id)).thenReturn(listOf(aContactAddressDetails))
+
       val entity = ContactEntity(
         contactId = id,
         title = "Mr",
@@ -262,6 +301,7 @@ class ContactServiceTest {
         assertThat(estimatedIsOverEighteen).isEqualTo(entity.estimatedIsOverEighteen)
         assertThat(createdBy).isEqualTo(entity.createdBy)
         assertThat(createdTime).isEqualTo(entity.createdTime)
+        assertThat(addresses).isEqualTo(listOf(aContactAddressDetails.toModel()))
       }
     }
 

@@ -46,6 +46,7 @@ class ContactControllerTest {
         estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
         isDeceased = false,
         deceasedDate = null,
+        addresses = emptyList(),
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -84,6 +85,7 @@ class ContactControllerTest {
       estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       isDeceased = false,
       deceasedDate = null,
+      addresses = emptyList(),
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

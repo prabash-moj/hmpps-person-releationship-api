@@ -35,6 +35,9 @@ data class GetContactResponse(
   @Schema(description = "The date the contact deceased, if known", example = "1980-01-01", nullable = true)
   val deceasedDate: LocalDate? = null,
 
+  @Schema(description = "All addresses for the contact", nullable = true)
+  val addresses: List<ContactAddressDetails>,
+
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,
 

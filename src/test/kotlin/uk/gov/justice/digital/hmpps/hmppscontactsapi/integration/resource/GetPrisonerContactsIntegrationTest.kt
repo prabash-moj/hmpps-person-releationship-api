@@ -71,8 +71,8 @@ class GetPrisonerContactsIntegrationTest : IntegrationTestBase() {
     assertThat(contact.countryCode).isEqualTo("ENG")
     assertThat(contact.countryDescription).isEqualTo("England")
 
-    val minimal = contacts.find { it.surname == "Minimal" } ?: fail("Couldn't find 'Minimal' contact")
-    assertThat(minimal.surname).isEqualTo("Minimal")
+    val minimal = contacts.find { it.forename == "Minimal" } ?: fail("Couldn't find 'Minimal' contact")
+    assertThat(minimal.forename).isEqualTo("Minimal")
     assertThat(minimal.cityCode).isEqualTo("")
     assertThat(minimal.cityDescription).isEqualTo("")
     assertThat(minimal.countyCode).isEqualTo("")

@@ -9,6 +9,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 class GetContactByIdIntegrationTest : IntegrationTestBase() {
 
@@ -70,6 +71,44 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
       assertThat(deceasedDate).isNull()
       assertThat(createdBy).isEqualTo("TIM")
       assertThat(createdTime).isNotNull()
+      assertThat(contact.addresses).hasSize(2)
+      with(contact.addresses[0]) {
+        assertThat(contactAddressId).isEqualTo(1)
+        assertThat(contactId).isEqualTo(1)
+        assertThat(addressType).isEqualTo("HOME")
+        assertThat(addressTypeDescription).isEqualTo("Home address")
+        assertThat(primaryAddress).isEqualTo(true)
+        assertThat(flat).isNull()
+        assertThat(property).isEqualTo("24")
+        assertThat(street).isEqualTo("Acacia Avenue")
+        assertThat(area).isEqualTo("Bunting")
+        assertThat(cityCode).isEqualTo("25343")
+        assertThat(cityDescription).isEqualTo("Sheffield")
+        assertThat(countyCode).isEqualTo("S.YORKSHIRE")
+        assertThat(countyDescription).isEqualTo("South Yorkshire")
+        assertThat(postcode).isEqualTo("S2 3LK")
+        assertThat(countryCode).isEqualTo("ENG")
+        assertThat(countryDescription).isEqualTo("England")
+        assertThat(mailFlag).isFalse()
+        assertThat(noFixedAddress).isFalse()
+        assertThat(createdBy).isEqualTo("TIM")
+        assertThat(createdTime).isNotNull()
+      }
+      with(contact.addresses[1]) {
+        assertThat(contactAddressId).isEqualTo(2)
+        assertThat(contactId).isEqualTo(1)
+        assertThat(addressType).isEqualTo("WORK")
+        assertThat(addressTypeDescription).isEqualTo("Work address")
+        assertThat(primaryAddress).isEqualTo(false)
+        assertThat(flat).isEqualTo("Flat 1")
+        assertThat(verified).isTrue()
+        assertThat(verifiedBy).isEqualTo("BOB")
+        assertThat(verifiedTime).isEqualTo(LocalDateTime.of(2020, 1, 1, 10, 30, 0))
+        assertThat(mailFlag).isTrue()
+        assertThat(noFixedAddress).isTrue()
+        assertThat(startDate).isEqualTo(LocalDate.of(2020, 1, 2))
+        assertThat(endDate).isEqualTo(LocalDate.of(2029, 3, 4))
+      }
     }
   }
 
@@ -94,7 +133,7 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
 
   @ParameterizedTest
   @EnumSource(EstimatedIsOverEighteen::class)
-  fun `should is over eighteen present if the dob is known`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
+  fun `should return is over eighteen when DOB is not known`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
     val createdContactId = testAPIClient.createAContact(
       CreateContactRequest(
         firstName = "First",

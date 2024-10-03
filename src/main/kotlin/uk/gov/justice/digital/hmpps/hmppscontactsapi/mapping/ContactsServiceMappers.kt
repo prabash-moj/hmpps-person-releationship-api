@@ -9,23 +9,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import java.time.LocalDate
 import java.time.LocalDateTime
-
-fun ContactEntity.toModel() = GetContactResponse(
-  id = this.contactId,
-  title = this.title,
-  lastName = this.lastName,
-  firstName = this.firstName,
-  middleName = this.middleName,
-  dateOfBirth = this.dateOfBirth,
-  estimatedIsOverEighteen = this.estimatedIsOverEighteen,
-  isDeceased = this.isDeceased,
-  deceasedDate = this.deceasedDate,
-  createdBy = this.createdBy,
-  createdTime = this.createdTime,
-)
 
 fun ContactWithAddressEntity.toModel() = ContactSearchResultItem(
   id = this.contactId,

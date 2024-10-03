@@ -222,8 +222,8 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
   @Test
   fun `should get the contacts with minimal addresses associated with them when searched by last name `() {
     val uri = UriComponentsBuilder.fromPath("contact/search")
-      .queryParam("lastName", "Minimal")
-      .queryParam("firstName", "Address")
+      .queryParam("lastName", "Address")
+      .queryParam("firstName", "Minimal")
       .build()
       .toUri()
 
@@ -238,8 +238,8 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
 
       val contact = content.first()
       assertThat(contact.id).isEqualTo(18)
-      assertThat(contact.firstName).isEqualTo("Address")
-      assertThat(contact.lastName).isEqualTo("Minimal")
+      assertThat(contact.firstName).isEqualTo("Minimal")
+      assertThat(contact.lastName).isEqualTo("Address")
 
       assertThat(contact.property).isNull()
       assertThat(contact.street).isNull()

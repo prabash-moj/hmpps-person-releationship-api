@@ -2,7 +2,7 @@
 [![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-contacts-api)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-contacts-api "Link to report")
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/ministryofjustice/hmpps-contacts-api/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ministryofjustice/hmpps-contacts-api/tree/main)
 [![Docker Repository on Quay](https://quay.io/repository/hmpps/hmpps-contacts-api/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/hmpps-contacts-api)
-[![API docs](https://img.shields.io/badge/API_docs-view-85EA2D.svg?logo=swagger)](https://contacts-api-dev.prison.service.justice.gov.uk/swagger-ui/index.html#/)
+[![API docs](https://img.shields.io/badge/API_docs-view-85EA2D.svg?logo=swagger)](https://contacts-api-dev.hmpps.service.justice.gov.uk/swagger-ui/index.html#/)
 
 API to support the front end service allowing court and probation users to manage contacts for the people in prison.
 

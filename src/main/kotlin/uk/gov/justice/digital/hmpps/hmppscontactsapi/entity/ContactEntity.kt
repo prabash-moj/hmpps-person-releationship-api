@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalDateTime.now
 
 @Entity
 @Table(name = "contact")
@@ -43,5 +44,33 @@ data class ContactEntity(
 
   @Column(updatable = false)
   @CreationTimestamp
-  val createdTime: LocalDateTime,
-)
+  val createdTime: LocalDateTime = now(),
+) {
+  var contactTypeCode: String? = null
+
+  var placeOfBirth: String? = null
+
+  var active: Boolean? = false
+
+  var suspended: Boolean? = false
+
+  var staffFlag: Boolean? = false
+
+  var coronerNumber: String? = null
+
+  var gender: String? = null
+
+  var maritalStatus: String? = null
+
+  var languageCode: String? = null
+
+  var nationalityCode: String? = null
+
+  var interpreterRequired: Boolean? = false
+
+  var comments: String? = null
+
+  var amendedBy: String? = null
+
+  var amendedTime: LocalDateTime? = null
+}

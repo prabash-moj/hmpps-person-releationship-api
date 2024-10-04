@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
@@ -41,28 +42,23 @@ data class PrisonerContactEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime,
 ) {
+  var active: Boolean? = true
 
-  companion object {
-    fun newPrisonerContact(
-      contactId: Long,
-      prisonerNumber: String,
-      relationshipType: String,
-      nextOfKin: Boolean,
-      emergencyContact: Boolean,
-      comments: String?,
-      createdBy: String,
-    ): PrisonerContactEntity {
-      return PrisonerContactEntity(
-        0,
-        contactId,
-        prisonerNumber,
-        relationshipType,
-        nextOfKin,
-        emergencyContact,
-        comments,
-        createdBy,
-        LocalDateTime.now(),
-      )
-    }
-  }
+  var approvedVisitor: Boolean? = false
+
+  var awareOfCharges: Boolean? = false
+
+  var canBeContacted: Boolean? = false
+
+  var approvedBy: String? = null
+
+  var approvedTime: LocalDateTime? = null
+
+  var expiryDate: LocalDate? = null
+
+  var createdAtPrison: String? = null
+
+  var amendedBy: String? = null
+
+  var amendedTime: LocalDateTime? = null
 }

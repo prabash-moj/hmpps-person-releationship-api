@@ -31,7 +31,7 @@ select
     ca.created_by,
     ca.created_time,
     ca.amended_by,
-    ca.amended_time,
+    ca.amended_time
   from contact_address ca
   left join city_reference city_ref on city_ref.nomis_code = ca.city_code
   left join county_reference county_ref on county_ref.nomis_code = ca.county_code

@@ -40,7 +40,7 @@ class ContactAddressDetailsMappersKtTest {
         createdTime = LocalDateTime.of(2023, 2, 3, 11, 15, 15),
         amendedBy = "AMEND_USER",
         amendedTime = LocalDateTime.of(2024, 5, 6, 12, 30, 30),
-      ).toModel(),
+      ).toModel(emptyList()),
     ).isEqualTo(
       ContactAddressDetails(
         contactAddressId = 0,
@@ -66,6 +66,7 @@ class ContactAddressDetailsMappersKtTest {
         startDate = LocalDate.of(2020, 2, 3),
         endDate = LocalDate.of(2050, 4, 5),
         noFixedAddress = true,
+        phoneNumbers = emptyList(),
         createdBy = "USER1",
         createdTime = LocalDateTime.of(2023, 2, 3, 11, 15, 15),
         amendedBy = "AMEND_USER",

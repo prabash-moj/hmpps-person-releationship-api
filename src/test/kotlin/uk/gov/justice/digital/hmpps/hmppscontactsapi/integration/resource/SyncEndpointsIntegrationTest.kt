@@ -252,7 +252,7 @@ class SyncEndpointsIntegrationTest : IntegrationTestBase() {
       val beforeCount = contactAddressRepository.count()
 
       webTestClient.delete()
-        .uri("/sync/contact-address/1")
+        .uri("/sync/contact-address/5")
         .accept(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
         .exchange()

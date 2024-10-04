@@ -52,19 +52,23 @@ values (1,  1,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', '
        (16, 15, 'HOME', true, 'Flat 32', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
        (17, 18, 'HOME', true, null, null,null, null, null, null, null, null, 'TIM', false, null, null, false, null, null, true);
 
+insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, ext_number, primary_phone, created_by)
+values (1, 1, 'MOBILE', '07878 111111', null, true, 'TIM'),
+       (2, 1, 'HOME', '01111 777777', '+0123', false, 'JAMES'),
+       (3, 2, 'MOBILE', '07878 222222', null, true, 'TIM'),
+       (4, 3, 'MOBILE', '07878 222222', null, false, 'TIM'),
+       (5, 4, 'MOBILE', '07878 222222', null, true, 'TIM'),
+       (6, 5, 'MOBILE', '07878 222222', null, true, 'TIM'),
+       (7, 6, 'HOME', '07878 222222', null, true, 'TIM'),
+       (8, 7, 'HOME', '07878 222222', null, true, 'TIM'),
+       (9, 8, 'MOBILE', '07878 222222', null, true, 'TIM'),
+       (10, 9, 'WORK', '07878 222222', null, true, 'TIM'),
+       (11, 10, 'MOBILE', '07878 222222', null, true, 'TIM'),
+       (12, 11, 'MOBILE', '07878 222222', null, true, 'TIM');
 
-insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, primary_phone, created_by)
-values (1, 1, 'MOBILE', '07878 111111', true, 'TIM'),
-       (2, 2, 'MOBILE', '07878 222222', true, 'TIM'),
-       (3, 3, 'MOBILE', '07878 222222', false, 'TIM'),
-       (4, 4, 'MOBILE', '07878 222222', true, 'TIM'),
-       (5, 5, 'MOBILE', '07878 222222', true, 'TIM'),
-       (6, 6, 'HOME', '07878 222222', true, 'TIM'),
-       (7, 7, 'HOME', '07878 222222', true, 'TIM'),
-       (8, 8, 'MOBILE', '07878 222222', true, 'TIM'),
-       (9, 9, 'WORK', '07878 222222', true, 'TIM'),
-       (10, 10, 'MOBILE', '07878 222222', true, 'TIM'),
-       (11, 11, 'MOBILE', '07878 222222', true, 'TIM');
+
+insert into contact_address_phone(contact_address_phone_id, contact_id, contact_address_id, contact_phone_id, created_by)
+values (1, 1, 1, 2, 'JAMES');
 
 insert into contact_email(contact_email_id, contact_id, email_type, email_address, primary_email, created_by)
 values (1, 1, 'PERSONAL', 'mr.last@hotmail.com', true, 'TIM'),

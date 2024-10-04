@@ -104,7 +104,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
     @Test
     fun `should get an existing contact phone`() {
       // From base data
-      val contactPhoneId = 2L
+      val contactPhoneId = 3L
       val contactPhone = webTestClient.get()
         .uri("/sync/contact-phone/{contactPhoneId}", contactPhoneId)
         .accept(MediaType.APPLICATION_JSON)

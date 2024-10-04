@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneNumberDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
@@ -46,7 +48,8 @@ class ContactControllerTest {
         estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
         isDeceased = false,
         deceasedDate = null,
-        addresses = emptyList(),
+        addresses = listOf(createContactAddressDetails()),
+        phoneNumbers = listOf(createContactPhoneNumberDetails()),
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -85,7 +88,8 @@ class ContactControllerTest {
       estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       isDeceased = false,
       deceasedDate = null,
-      addresses = emptyList(),
+      addresses = listOf(createContactAddressDetails()),
+      phoneNumbers = listOf(createContactPhoneNumberDetails()),
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

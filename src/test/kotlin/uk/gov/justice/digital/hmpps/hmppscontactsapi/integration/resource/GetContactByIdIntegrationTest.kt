@@ -72,6 +72,17 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
       assertThat(createdBy).isEqualTo("TIM")
       assertThat(createdTime).isNotNull()
       assertThat(contact.addresses).hasSize(2)
+    }
+  }
+
+  @Test
+  fun `should get the contact with addresses`() {
+    val contact = testAPIClient.getContact(1)
+
+    with(contact) {
+      assertThat(id).isEqualTo(1)
+      assertThat(id).isEqualTo(1)
+
       with(contact.addresses[0]) {
         assertThat(contactAddressId).isEqualTo(1)
         assertThat(contactId).isEqualTo(1)
@@ -109,6 +120,41 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
         assertThat(startDate).isEqualTo(LocalDate.of(2020, 1, 2))
         assertThat(endDate).isEqualTo(LocalDate.of(2029, 3, 4))
       }
+    }
+  }
+
+  @Test
+  fun `should get the contact with phone numbers`() {
+    val contact = testAPIClient.getContact(1)
+
+    with(contact) {
+      assertThat(id).isEqualTo(1)
+      assertThat(contact.phoneNumbers).hasSize(2)
+      with(contact.phoneNumbers[0]) {
+        assertThat(contactPhoneId).isEqualTo(1)
+        assertThat(contactId).isEqualTo(1)
+        assertThat(phoneType).isEqualTo("MOBILE")
+        assertThat(phoneTypeDescription).isEqualTo("Mobile phone")
+        assertThat(phoneNumber).isEqualTo("07878 111111")
+        assertThat(extNumber).isNull()
+        assertThat(primaryPhone).isTrue()
+        assertThat(createdBy).isEqualTo("TIM")
+      }
+      with(contact.phoneNumbers[1]) {
+        assertThat(contactPhoneId).isEqualTo(2)
+        assertThat(contactId).isEqualTo(1)
+        assertThat(phoneType).isEqualTo("HOME")
+        assertThat(phoneTypeDescription).isEqualTo("Home phone")
+        assertThat(phoneNumber).isEqualTo("01111 777777")
+        assertThat(extNumber).isEqualTo("+0123")
+        assertThat(primaryPhone).isFalse()
+        assertThat(createdBy).isEqualTo("JAMES")
+      }
+
+      assertThat(contact.addresses).hasSize(2)
+      assertThat(contact.addresses[0].phoneNumbers).hasSize(1)
+      assertThat(contact.addresses[0].phoneNumbers[0].contactPhoneId).isEqualTo(2)
+      assertThat(contact.addresses[1].phoneNumbers).isEmpty()
     }
   }
 

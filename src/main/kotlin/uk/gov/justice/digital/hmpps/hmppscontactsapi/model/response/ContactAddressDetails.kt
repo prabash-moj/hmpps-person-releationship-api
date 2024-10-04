@@ -76,6 +76,9 @@ data class ContactAddressDetails(
   @Schema(description = "Flag to indicate whether this address indicates no fixed address", example = "false")
   val noFixedAddress: Boolean,
 
+  @Schema(description = "Phone numbers that are related to this address")
+  val phoneNumbers: List<ContactPhoneNumberDetails>,
+
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,
 

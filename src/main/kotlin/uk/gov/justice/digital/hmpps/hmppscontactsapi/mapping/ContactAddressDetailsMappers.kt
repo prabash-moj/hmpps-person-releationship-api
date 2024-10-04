@@ -2,8 +2,9 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
 
-fun ContactAddressDetailsEntity.toModel(): ContactAddressDetails {
+fun ContactAddressDetailsEntity.toModel(phoneNumbers: List<ContactPhoneNumberDetails>): ContactAddressDetails {
   return ContactAddressDetails(
     contactAddressId = this.contactAddressId,
     contactId = this.contactId,
@@ -28,6 +29,7 @@ fun ContactAddressDetailsEntity.toModel(): ContactAddressDetails {
     startDate = this.startDate,
     endDate = this.endDate,
     noFixedAddress = this.noFixedAddress,
+    phoneNumbers = phoneNumbers,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     amendedBy = this.amendedBy,

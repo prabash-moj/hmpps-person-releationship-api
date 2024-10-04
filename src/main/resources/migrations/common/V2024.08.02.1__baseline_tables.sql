@@ -148,6 +148,22 @@ CREATE TABLE contact_phone
 CREATE INDEX idx_contact_phone_contact_id ON contact_phone(contact_id);
 CREATE INDEX idx_contact_phone_number ON contact_phone(phone_number);
 
+CREATE TABLE contact_address_phone
+(
+    contact_address_phone_id bigserial NOT NULL CONSTRAINT contact_address_phone_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    contact_address_id bigint NOT NULL REFERENCES contact_address(contact_address_id),
+    contact_phone_id bigint NOT NULL REFERENCES contact_phone(contact_phone_id),
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_address_phone_contact_id ON contact_address_phone(contact_id);
+CREATE INDEX idx_contact_address_phone_contact_address_id ON contact_address_phone(contact_address_id);
+CREATE INDEX idx_contact_address_phone_contact_phone_id ON contact_address_phone(contact_phone_id);
+
 ---------------------------------------------------------------------------------------
 -- Contacts may have multiple websites.
 -- This table stores the websites related to a contact.

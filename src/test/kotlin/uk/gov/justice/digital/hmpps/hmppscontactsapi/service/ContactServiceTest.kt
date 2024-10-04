@@ -19,10 +19,12 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
@@ -31,6 +33,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
@@ -45,43 +49,19 @@ class ContactServiceTest {
   private val prisonerService: PrisonerService = mock()
   private val contactSearchRepository: ContactSearchRepository = mock()
   private val contactAddressDetailsRepository: ContactAddressDetailsRepository = mock()
+  private val contactPhoneDetailsRepository: ContactPhoneDetailsRepository = mock()
+  private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
   private val service = ContactService(
     contactRepository,
     prisonerContactRepository,
     prisonerService,
     contactSearchRepository,
     contactAddressDetailsRepository,
+    contactPhoneDetailsRepository,
+    contactAddressPhoneRepository,
   )
 
-  private val aContactAddressDetails = ContactAddressDetailsEntity(
-    contactAddressId = 0,
-    contactId = 0,
-    addressType = null,
-    addressTypeDescription = null,
-    primaryAddress = false,
-    flat = null,
-    property = null,
-    street = null,
-    area = null,
-    cityCode = null,
-    cityDescription = null,
-    countyCode = null,
-    countyDescription = null,
-    postCode = null,
-    countryCode = null,
-    countryDescription = null,
-    verified = false,
-    verifiedBy = null,
-    verifiedTime = null,
-    mailFlag = false,
-    startDate = null,
-    endDate = null,
-    noFixedAddress = false,
-    createdBy = "USER1",
-    createdTime = LocalDateTime.now(),
-    amendedBy = null,
-    amendedTime = null,
-  )
+  private val aContactAddressDetailsEntity = createContactAddressDetailsEntity()
 
   @Nested
   inner class CreateContact {
@@ -96,7 +76,7 @@ class ContactServiceTest {
         createdBy = "created",
       )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
-      whenever(contactAddressDetailsRepository.findByContactId(any())).thenReturn(listOf(aContactAddressDetails))
+      whenever(contactAddressDetailsRepository.findByContactId(any())).thenReturn(listOf(aContactAddressDetailsEntity))
 
       val createdContact = service.createContact(request)
 
@@ -119,7 +99,7 @@ class ContactServiceTest {
         assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
         assertThat(createdBy).isEqualTo(request.createdBy)
         assertThat(createdTime).isNotNull()
-        assertThat(addresses).isEqualTo(listOf(aContactAddressDetails.toModel()))
+        assertThat(addresses).isEqualTo(listOf(aContactAddressDetailsEntity.toModel(emptyList())))
       }
     }
 
@@ -268,15 +248,19 @@ class ContactServiceTest {
 
   @Nested
   inner class GetContact {
-    private val id = 123456L
+    private val contactId = 123456L
 
     @ParameterizedTest
     @EnumSource(EstimatedIsOverEighteen::class)
     fun `should get a contact without dob successfully`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
-      whenever(contactAddressDetailsRepository.findByContactId(id)).thenReturn(listOf(aContactAddressDetails))
+      whenever(contactAddressDetailsRepository.findByContactId(contactId)).thenReturn(
+        listOf(
+          aContactAddressDetailsEntity,
+        ),
+      )
 
       val entity = ContactEntity(
-        contactId = id,
+        contactId = contactId,
         title = "Mr",
         lastName = "last",
         middleName = "middle",
@@ -288,8 +272,8 @@ class ContactServiceTest {
         createdBy = "user",
         createdTime = LocalDateTime.now(),
       )
-      whenever(contactRepository.findById(id)).thenReturn(Optional.of(entity))
-      val contact = service.getContact(id)
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+      val contact = service.getContact(contactId)
       assertNotNull(contact)
       with(contact!!) {
         assertThat(id).isEqualTo(entity.contactId)
@@ -301,23 +285,86 @@ class ContactServiceTest {
         assertThat(estimatedIsOverEighteen).isEqualTo(entity.estimatedIsOverEighteen)
         assertThat(createdBy).isEqualTo(entity.createdBy)
         assertThat(createdTime).isEqualTo(entity.createdTime)
-        assertThat(addresses).isEqualTo(listOf(aContactAddressDetails.toModel()))
+        assertThat(addresses).isEqualTo(listOf(aContactAddressDetailsEntity.toModel(emptyList())))
+      }
+    }
+
+    @Test
+    fun `should get a contact with phone numbers including those attached to addresses`() {
+      val aGeneralPhoneNumber = createContactPhoneDetailsEntity(id = 1, contactId = contactId)
+      val aPhoneAttachedToAddress1 = createContactPhoneDetailsEntity(id = 2, contactId = contactId)
+      val aPhoneAttachedToAddress2 = createContactPhoneDetailsEntity(id = 3, contactId = contactId)
+      val anotherPhoneAttachedToAddress1 = createContactPhoneDetailsEntity(id = 4, contactId = contactId)
+      val address1 = createContactAddressDetailsEntity(id = 1, contactId = contactId)
+      val address2 = createContactAddressDetailsEntity(id = 2, contactId = contactId)
+
+      whenever(contactAddressDetailsRepository.findByContactId(contactId)).thenReturn(listOf(address1, address2))
+      whenever(contactPhoneDetailsRepository.findByContactId(contactId)).thenReturn(
+        listOf(
+          aGeneralPhoneNumber,
+          aPhoneAttachedToAddress1,
+          aPhoneAttachedToAddress2,
+          anotherPhoneAttachedToAddress1,
+        ),
+      )
+      whenever(contactAddressPhoneRepository.findByContactId(contactId)).thenReturn(
+        listOf(
+          ContactAddressPhoneEntity(1, contactId, 1, 2),
+          ContactAddressPhoneEntity(1, contactId, 1, 4),
+          ContactAddressPhoneEntity(1, contactId, 2, 3),
+        ),
+      )
+
+      val entity = ContactEntity(
+        contactId = contactId,
+        title = "Mr",
+        lastName = "last",
+        middleName = "middle",
+        firstName = "first",
+        dateOfBirth = null,
+        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+        isDeceased = false,
+        deceasedDate = null,
+        createdBy = "user",
+        createdTime = LocalDateTime.now(),
+      )
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+
+      val contact = service.getContact(contactId)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+
+        assertThat(phoneNumbers).hasSize(4)
+        assertThat(phoneNumbers[0].contactPhoneId).isEqualTo(1)
+        assertThat(phoneNumbers[1].contactPhoneId).isEqualTo(2)
+        assertThat(phoneNumbers[2].contactPhoneId).isEqualTo(3)
+        assertThat(phoneNumbers[3].contactPhoneId).isEqualTo(4)
+
+        assertThat(addresses).hasSize(2)
+        assertThat(addresses[0].contactAddressId).isEqualTo(1)
+        assertThat(addresses[0].phoneNumbers).hasSize(2)
+        assertThat(addresses[0].phoneNumbers[0].contactPhoneId).isEqualTo(2)
+        assertThat(addresses[0].phoneNumbers[1].contactPhoneId).isEqualTo(4)
+        assertThat(addresses[1].phoneNumbers).hasSize(1)
+        assertThat(addresses[1].contactAddressId).isEqualTo(2)
+        assertThat(addresses[1].phoneNumbers[0].contactPhoneId).isEqualTo(3)
       }
     }
 
     @Test
     fun `should not blow up if contact not found`() {
-      whenever(contactRepository.findById(id)).thenReturn(Optional.empty())
-      val contact = service.getContact(id)
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
+      val contact = service.getContact(contactId)
       assertNull(contact)
     }
 
     @Test
     fun `should propagate exceptions getting a contact`() {
-      whenever(contactRepository.findById(id)).thenThrow(RuntimeException("Bang!"))
+      whenever(contactRepository.findById(contactId)).thenThrow(RuntimeException("Bang!"))
 
       assertThrows<RuntimeException>("Bang!") {
-        service.getContact(id)
+        service.getContact(contactId)
       }
     }
   }
@@ -349,7 +396,12 @@ class ContactServiceTest {
 
     @Test
     fun `should save the contact relationship`() {
-      whenever(prisonerService.getPrisoner(any())).thenReturn(Prisoner(request.relationship.prisonerNumber, prisonId = "MDI"))
+      whenever(prisonerService.getPrisoner(any())).thenReturn(
+        Prisoner(
+          request.relationship.prisonerNumber,
+          prisonId = "MDI",
+        ),
+      )
       whenever(contactRepository.findById(id)).thenReturn(Optional.of(contact))
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
 
@@ -387,7 +439,12 @@ class ContactServiceTest {
 
     @Test
     fun `should propagate exceptions adding a relationship`() {
-      whenever(prisonerService.getPrisoner(any())).thenReturn(Prisoner(request.relationship.prisonerNumber, prisonId = "MDI"))
+      whenever(prisonerService.getPrisoner(any())).thenReturn(
+        Prisoner(
+          request.relationship.prisonerNumber,
+          prisonId = "MDI",
+        ),
+      )
       whenever(contactRepository.findById(id)).thenReturn(Optional.of(contact))
       whenever(prisonerContactRepository.saveAndFlush(any())).thenThrow(RuntimeException("Bang!"))
 

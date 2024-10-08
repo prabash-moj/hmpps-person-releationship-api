@@ -192,6 +192,12 @@ values (1, 1, 'A1234BB', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp)
        (28, 10, 'A4385DZ', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
        (29, 18, 'A4385DZ', true, 'FRI', null, 'MDI', 'TIM', current_timestamp);
 
+insert into prisoner_contact_restriction (prisoner_contact_id, restriction_type, start_date, expiry_date, comments, authorised_by, authorised_time, created_by, created_time, amended_by, amended_time )
+values
+    (12, 'NoContact', '2024-01-01', '2024-12-31', 'Restriction due to ongoing investigation', 'John Doe', '2024-10-01 12:00:00', 'admin', '2024-10-01 12:00:00', 'editor', '2024-10-02 15:30:00'),
+    (12, 'Limited', '2023-06-01', '2024-01-01', 'Limited contact allowed', 'Jane Doe', '2023-05-31 09:00:00', 'supervisor', '2023-05-31 09:00:00', 'manager', '2023-07-01 10:00:00'),
+    (12, 'NoContact', '2022-08-15', '2023-08-15', 'No contact allowed due to past incidents', 'Alex Smith', '2022-08-14 11:00:00', 'officer', '2022-08-14 11:00:00', 'reviewer', '2022-09-15 16:00:00');
+
 Insert into nationality_reference (nationality_id, nomis_code, nomis_description, iso_numeric, iso_alpha2, iso_alpha3, iso_nationality_desc, display_sequence)
 values
         (1, 'AFGA', 'Afghan', 4, 'AF', 'AFG', 'Afghani', 99),

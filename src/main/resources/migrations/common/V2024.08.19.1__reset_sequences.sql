@@ -11,5 +11,7 @@ alter sequence if exists reference_codes_reference_code_id_seq restart with 82;
 alter sequence if exists prisoner_contact_prisoner_contact_id_seq restart with 30;
 alter sequence if exists contact_restriction_contact_restriction_id_seq restart with 4;
 alter sequence if exists contact_address_phone_contact_address_phone_id_seq restart with 2;
+alter sequence if exists prisoner_contact_restriction_prisoner_contact_restriction_id_seq restart with 4;
+
 
 -- End

@@ -254,7 +254,7 @@ class SyncPrisonerContactIntegrationTest : IntegrationTestBase() {
         .returnResult().responseBody!!
 
       webTestClient.delete()
-        .uri("/sync/prisoner-contact/{prisonerContactId}", prisonerContact.contactId)
+        .uri("/sync/prisoner-contact/{prisonerContactId}", prisonerContact.id)
         .accept(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
         .exchange()
@@ -262,7 +262,7 @@ class SyncPrisonerContactIntegrationTest : IntegrationTestBase() {
         .isOk
 
       webTestClient.get()
-        .uri("/sync/prisoner-contact/{prisonerContactId}", prisonerContact.contactId)
+        .uri("/sync/prisoner-contact/{prisonerContactId}", prisonerContact.id)
         .accept(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
         .exchange()

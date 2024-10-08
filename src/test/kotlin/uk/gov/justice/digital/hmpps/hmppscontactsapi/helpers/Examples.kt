@@ -1,8 +1,10 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -171,6 +173,54 @@ fun createContactAddressDetails(
   endDate,
   noFixedAddress,
   phoneNumbers,
+  createdBy,
+  createdTime,
+  amendedBy,
+  amendedTime,
+)
+
+fun createContactEmailDetailsEntity(
+  id: Long = 1,
+  contactId: Long = 1,
+  emailType: String = "WORK",
+  emailTypeDescription: String = "Work email",
+  emailAddress: String = "test@example.com",
+  primaryEmail: Boolean = false,
+  createdBy: String = "USER",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+  amendedBy: String? = "AMEND_USER",
+  amendedTime: LocalDateTime? = LocalDateTime.now(),
+) = ContactEmailDetailsEntity(
+  id,
+  contactId,
+  emailType,
+  emailTypeDescription,
+  emailAddress,
+  primaryEmail,
+  createdBy,
+  createdTime,
+  amendedBy,
+  amendedTime,
+)
+
+fun createContactEmailDetails(
+  id: Long = 1,
+  contactId: Long = 1,
+  emailType: String = "WORK",
+  emailTypeDescription: String = "Work email",
+  emailAddress: String = "test@example.com",
+  primaryEmail: Boolean = false,
+  createdBy: String = "USER",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+  amendedBy: String? = "AMEND_USER",
+  amendedTime: LocalDateTime? = LocalDateTime.now(),
+) = ContactEmailDetails(
+  id,
+  contactId,
+  emailType,
+  emailTypeDescription,
+  emailAddress,
+  primaryEmail,
   createdBy,
   createdTime,
   amendedBy,

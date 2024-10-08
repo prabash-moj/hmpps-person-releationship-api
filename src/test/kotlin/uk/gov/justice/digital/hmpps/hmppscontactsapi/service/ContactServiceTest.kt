@@ -24,6 +24,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
@@ -34,6 +35,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOv
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
@@ -51,6 +53,7 @@ class ContactServiceTest {
   private val contactAddressDetailsRepository: ContactAddressDetailsRepository = mock()
   private val contactPhoneDetailsRepository: ContactPhoneDetailsRepository = mock()
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
+  private val contactEmailDetailsRepository: ContactEmailDetailsRepository = mock()
   private val service = ContactService(
     contactRepository,
     prisonerContactRepository,
@@ -59,6 +62,7 @@ class ContactServiceTest {
     contactAddressDetailsRepository,
     contactPhoneDetailsRepository,
     contactAddressPhoneRepository,
+    contactEmailDetailsRepository,
   )
 
   private val aContactAddressDetailsEntity = createContactAddressDetailsEntity()
@@ -349,6 +353,39 @@ class ContactServiceTest {
         assertThat(addresses[1].phoneNumbers).hasSize(1)
         assertThat(addresses[1].contactAddressId).isEqualTo(2)
         assertThat(addresses[1].phoneNumbers[0].contactPhoneId).isEqualTo(3)
+      }
+    }
+
+    @Test
+    fun `should get a contact with email addresses`() {
+      val emailAddressEntity1 = createContactEmailDetailsEntity(id = 1)
+      val emailAddressEntity2 = createContactEmailDetailsEntity(id = 2)
+
+      whenever(contactEmailDetailsRepository.findByContactId(contactId)).thenReturn(listOf(emailAddressEntity1, emailAddressEntity2))
+
+      val entity = ContactEntity(
+        contactId = contactId,
+        title = "Mr",
+        lastName = "last",
+        middleName = "middle",
+        firstName = "first",
+        dateOfBirth = null,
+        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+        isDeceased = false,
+        deceasedDate = null,
+        createdBy = "user",
+        createdTime = LocalDateTime.now(),
+      )
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+
+      val contact = service.getContact(contactId)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+
+        assertThat(emailAddresses).hasSize(2)
+        assertThat(emailAddresses[0].contactEmailId).isEqualTo(1)
+        assertThat(emailAddresses[1].contactEmailId).isEqualTo(2)
       }
     }
 

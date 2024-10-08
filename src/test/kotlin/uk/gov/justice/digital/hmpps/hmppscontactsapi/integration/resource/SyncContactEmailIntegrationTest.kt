@@ -114,7 +114,7 @@ class SyncContactEmailIntegrationTest : IntegrationTestBase() {
 
       with(contactEmail) {
         assertThat(emailType).isEqualTo("PERSONAL")
-        assertThat(emailAddress).isEqualTo("miss.last@hotmail.com")
+        assertThat(emailAddress).isEqualTo("miss.last@example.com")
         assertThat(primaryEmail).isTrue()
       }
     }

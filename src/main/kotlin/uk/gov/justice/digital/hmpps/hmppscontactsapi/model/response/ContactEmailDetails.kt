@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 
 @Schema(description = "Email related to a contact")
-data class ContactEmail(
+data class ContactEmailDetails(
   @Schema(description = "Unique identifier for the contact email", example = "1")
   val contactEmailId: Long,
 
@@ -13,6 +13,9 @@ data class ContactEmail(
 
   @Schema(description = "Type of email", example = "WORK")
   val emailType: String,
+
+  @Schema(description = "Type of email", example = "Work email")
+  val emailTypeDescription: String,
 
   @Schema(description = "Email address", example = "work@example.com")
   val emailAddress: String,

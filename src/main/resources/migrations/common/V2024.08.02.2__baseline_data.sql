@@ -71,9 +71,10 @@ insert into contact_address_phone(contact_address_phone_id, contact_id, contact_
 values (1, 1, 1, 2, 'JAMES');
 
 insert into contact_email(contact_email_id, contact_id, email_type, email_address, primary_email, created_by)
-values (1, 1, 'PERSONAL', 'mr.last@hotmail.com', true, 'TIM'),
-       (2, 2, 'PERSONAL', 'miss.last@hotmail.com', true,  'TIM'),
-       (3, 3, 'PERSONAL', 'mrs.last@hotmail.com', false, 'TIM');
+values (1, 1, 'PERSONAL', 'mr.last@example.com', true, 'TIM'),
+       (2, 2, 'PERSONAL', 'miss.last@example.com', true,  'TIM'),
+       (3, 3, 'PERSONAL', 'mrs.last@example.com', false, 'TIM'),
+       (4, 3, 'WORK', 'work@example.com', true, 'JAMES');
 
 insert into reference_codes(reference_code_id, group_code, code, description, created_by)
 values (1, 'CONTACT_TYPE', 'SOCIAL', 'Social contact', 'TIM'),

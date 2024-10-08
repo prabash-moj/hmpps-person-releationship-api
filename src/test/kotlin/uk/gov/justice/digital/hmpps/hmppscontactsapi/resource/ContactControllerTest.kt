@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneNumberDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
@@ -50,6 +51,7 @@ class ContactControllerTest {
         deceasedDate = null,
         addresses = listOf(createContactAddressDetails()),
         phoneNumbers = listOf(createContactPhoneNumberDetails()),
+        emailAddresses = listOf(createContactEmailDetails()),
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -90,6 +92,7 @@ class ContactControllerTest {
       deceasedDate = null,
       addresses = listOf(createContactAddressDetails()),
       phoneNumbers = listOf(createContactPhoneNumberDetails()),
+      emailAddresses = listOf(createContactEmailDetails()),
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

@@ -19,6 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearc
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
@@ -34,6 +35,7 @@ class ContactService(
   private val contactAddressDetailsRepository: ContactAddressDetailsRepository,
   private val contactPhoneDetailsRepository: ContactPhoneDetailsRepository,
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository,
+  private val contactEmailDetailsRepository: ContactEmailDetailsRepository,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -87,6 +89,7 @@ class ContactService(
           ),
         )
       }
+    val emailAddresses = contactEmailDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
     return GetContactResponse(
       id = contactEntity.contactId,
       title = contactEntity.title,
@@ -99,6 +102,7 @@ class ContactService(
       deceasedDate = contactEntity.deceasedDate,
       addresses = addresses,
       phoneNumbers = phoneNumbers,
+      emailAddresses = emailAddresses,
       createdBy = contactEntity.createdBy,
       createdTime = contactEntity.createdTime,
     )

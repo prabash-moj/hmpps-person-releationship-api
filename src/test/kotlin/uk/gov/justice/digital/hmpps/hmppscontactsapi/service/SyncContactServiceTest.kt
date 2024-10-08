@@ -258,7 +258,7 @@ class SyncContactServiceTest {
       it.maritalStatus = this.maritalStatus
       it.languageCode = this.languageCode
       it.nationalityCode = this.nationalityCode
-      it.interpreterRequired = this.interpreterRequired
+      it.interpreterRequired = this.interpreterRequired ?: false
       it.comments = this.comments
       it.amendedBy = updatedBy
       it.amendedTime = updatedTime

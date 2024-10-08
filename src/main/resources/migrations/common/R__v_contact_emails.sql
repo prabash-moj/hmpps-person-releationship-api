@@ -1,5 +1,5 @@
 --
--- Creates a view over the contact_email and reference_codes tables to return a list of all phone numbers with descriptions
+-- Creates a view over the contact_email and reference_codes tables to return a list of all emails with descriptions
 -- for all codes.
 --
 CREATE OR REPLACE VIEW v_contact_emails

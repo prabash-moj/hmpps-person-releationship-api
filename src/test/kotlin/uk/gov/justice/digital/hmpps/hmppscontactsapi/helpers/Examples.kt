@@ -2,9 +2,11 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -221,6 +223,66 @@ fun createContactEmailDetails(
   emailTypeDescription,
   emailAddress,
   primaryEmail,
+  createdBy,
+  createdTime,
+  amendedBy,
+  amendedTime,
+)
+
+fun createContactIdentityDetailsEntity(
+  id: Long = 1,
+  contactId: Long = 1,
+  identityType: String? = "PASSPORT",
+  identityTypeDescription: String? = "Passport",
+  identityValue: String? = "132456789",
+  issuingAuthority: String? = "UK",
+  verified: Boolean = false,
+  verifiedBy: String? = "VER",
+  verifiedTime: LocalDateTime? = LocalDateTime.of(2024, 1, 1, 1, 1, 1),
+  createdBy: String = "CRE",
+  createdTime: LocalDateTime = LocalDateTime.of(2024, 2, 2, 2, 2, 2),
+  amendedBy: String? = "AMD",
+  amendedTime: LocalDateTime? = LocalDateTime.of(2024, 3, 3, 3, 3, 3),
+) = ContactIdentityDetailsEntity(
+  id,
+  contactId,
+  identityType,
+  identityTypeDescription,
+  identityValue,
+  issuingAuthority,
+  verified,
+  verifiedBy,
+  verifiedTime,
+  createdBy,
+  createdTime,
+  amendedBy,
+  amendedTime,
+)
+
+fun createContactIdentityDetails(
+  id: Long = 1,
+  contactId: Long = 1,
+  identityType: String? = "PASSPORT",
+  identityTypeDescription: String? = "Passport",
+  identityValue: String? = "132456789",
+  issuingAuthority: String? = "UK",
+  verified: Boolean = false,
+  verifiedBy: String? = "VER",
+  verifiedTime: LocalDateTime? = LocalDateTime.of(2024, 1, 1, 1, 1, 1),
+  createdBy: String = "CRE",
+  createdTime: LocalDateTime = LocalDateTime.of(2024, 2, 2, 2, 2, 2),
+  amendedBy: String? = "AMD",
+  amendedTime: LocalDateTime? = LocalDateTime.of(2024, 3, 3, 3, 3, 3),
+) = ContactIdentityDetails(
+  id,
+  contactId,
+  identityType,
+  identityTypeDescription,
+  identityValue,
+  issuingAuthority,
+  verified,
+  verifiedBy,
+  verifiedTime,
   createdBy,
   createdTime,
   amendedBy,

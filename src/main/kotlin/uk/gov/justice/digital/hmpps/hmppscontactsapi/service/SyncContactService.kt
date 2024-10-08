@@ -57,7 +57,7 @@ class SyncContactService(
       it.maritalStatus = request.maritalStatus
       it.languageCode = request.languageCode
       it.nationalityCode = request.nationalityCode
-      it.interpreterRequired = request.interpreterRequired
+      it.interpreterRequired = request.interpreterRequired ?: false
       it.comments = request.comments
       it.amendedBy = request.updatedBy
       it.amendedTime = request.updatedTime

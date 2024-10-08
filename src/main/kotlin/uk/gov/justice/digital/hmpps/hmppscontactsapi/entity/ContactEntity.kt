@@ -66,7 +66,7 @@ data class ContactEntity(
 
   var nationalityCode: String? = null
 
-  var interpreterRequired: Boolean? = false
+  var interpreterRequired: Boolean = false
 
   var comments: String? = null
 

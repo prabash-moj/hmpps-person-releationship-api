@@ -10,8 +10,8 @@ data class CreatePrisonerContactRestrictionRequest(
   @Schema(description = "ID of the contact to which the restriction applies", example = "12345")
   val contactId: Long,
 
-  @Schema(description = "Type of restriction applied", example = "NoContact", nullable = true)
-  val restrictionType: String? = null,
+  @Schema(description = "Type of restriction applied", example = "NoContact")
+  val restrictionType: String,
 
   @Schema(description = "Start date of the restriction", example = "2024-01-01", nullable = true)
   val startDate: LocalDate? = null,
@@ -28,9 +28,9 @@ data class CreatePrisonerContactRestrictionRequest(
   @Schema(description = "Time when the restriction was authorized", example = "2024-10-01T12:00:00Z", nullable = true)
   val authorisedTime: LocalDateTime? = null,
 
-  @Schema(description = "User who created the restriction record", example = "admin", nullable = true)
-  val createdBy: String? = null,
+  @Schema(description = "User who created the restriction record", example = "admin")
+  val createdBy: String,
 
-  @Schema(description = "Time when the restriction record was created", example = "2024-10-01T12:00:00Z", nullable = true)
-  val createdTime: LocalDateTime? = null,
+  @Schema(description = "Time when the restriction record was created", example = "2024-10-01T12:00:00Z")
+  val createdTime: LocalDateTime,
 )

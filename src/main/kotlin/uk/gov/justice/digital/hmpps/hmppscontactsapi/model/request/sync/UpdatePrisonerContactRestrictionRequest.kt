@@ -10,8 +10,8 @@ data class UpdatePrisonerContactRestrictionRequest(
   @Schema(description = "ID of the contact to which the restriction applies", example = "12345")
   val contactId: Long,
 
-  @Schema(description = "Type of restriction applied", example = "NoContact", nullable = true)
-  val restrictionType: String? = null,
+  @Schema(description = "Type of restriction applied", example = "NoContact")
+  val restrictionType: String,
 
   @Schema(description = "Start date of the restriction", example = "2024-01-01", nullable = true)
   val startDate: LocalDate? = null,

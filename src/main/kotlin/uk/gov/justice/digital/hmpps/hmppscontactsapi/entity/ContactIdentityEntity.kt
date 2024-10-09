@@ -22,6 +22,8 @@ data class ContactIdentityEntity(
 
   val identityValue: String? = null,
 
+  val issuingAuthority: String? = null,
+
   val createdBy: String,
 
   @CreationTimestamp

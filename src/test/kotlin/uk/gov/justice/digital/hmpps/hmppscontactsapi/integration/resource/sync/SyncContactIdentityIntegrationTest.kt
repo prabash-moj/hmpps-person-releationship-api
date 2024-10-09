@@ -137,6 +137,7 @@ class SyncContactIdentityIntegrationTest : IntegrationTestBase() {
         assertThat(contactIdentityId).isGreaterThan(3)
         assertThat(contactId).isEqualTo(savedContactId)
         assertThat(identityType).isEqualTo("PASSPORT")
+        assertThat(issuingAuthority).isEqualTo("UKBORDER")
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -181,6 +182,7 @@ class SyncContactIdentityIntegrationTest : IntegrationTestBase() {
         assertThat(contactIdentityId).isGreaterThan(4)
         assertThat(contactId).isEqualTo(savedContactId)
         assertThat(identityType).isEqualTo("PASSPORT")
+        assertThat(issuingAuthority).isEqualTo("UKBORDER")
         assertThat(amendedBy).isEqualTo("UPDATE")
         assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
@@ -214,6 +216,7 @@ class SyncContactIdentityIntegrationTest : IntegrationTestBase() {
         contactId = contactId,
         identityType = "PASSPORT",
         identityValue = "PP87878787878",
+        issuingAuthority = "UKBORDER",
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
       )
@@ -223,6 +226,7 @@ class SyncContactIdentityIntegrationTest : IntegrationTestBase() {
         contactId = contactId,
         identityType = "PASSPORT",
         identityValue = "PP87878787878",
+        issuingAuthority = "UKBORDER",
         createdBy = "CREATE",
       )
   }

@@ -15,7 +15,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepositor
 import java.time.LocalDateTime
 
 /**
- * The SyncService contains methods to manage the synchronisation of data to/from NOMIS.
+ * The SyncContactAddressService contains methods to manage the synchronisation of data to/from NOMIS.
  *
  * The UI services should not use these endpoints as they may have relaxed validation to cater
  * for incomplete or poor quality data from NOMIS, and the data may contain reference data which is

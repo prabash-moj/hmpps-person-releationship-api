@@ -10,6 +10,7 @@ fun ContactIdentityEntity.toModel(): ContactIdentity {
     contactId = this.contactId!!,
     identityType = this.identityType,
     identityValue = this.identityValue!!,
+    issuingAuthority = this.issuingAuthority,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     amendedBy = this.amendedBy,
@@ -24,6 +25,7 @@ fun CreateContactIdentityRequest.toEntity() = ContactIdentityEntity(
   contactId = contactId,
   identityType = identityType,
   identityValue = identityValue,
+  issuingAuthority = issuingAuthority,
   createdBy = createdBy,
   createdTime = createdTime,
 )

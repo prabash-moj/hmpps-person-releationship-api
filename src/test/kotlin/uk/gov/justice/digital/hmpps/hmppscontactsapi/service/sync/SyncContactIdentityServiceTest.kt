@@ -69,6 +69,7 @@ class SyncContactIdentityServiceTest {
       with(contactIdentity) {
         assertThat(contactIdentityId).isEqualTo(0L)
         assertThat(identityType).isEqualTo(request.identityType)
+        assertThat(issuingAuthority).isEqualTo(request.issuingAuthority)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
 
@@ -124,6 +125,7 @@ class SyncContactIdentityServiceTest {
       // Checks the model returned
       with(updated) {
         assertThat(identityType).isEqualTo(request.identityType)
+        assertThat(issuingAuthority).isEqualTo(request.issuingAuthority)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
@@ -157,6 +159,7 @@ class SyncContactIdentityServiceTest {
       contactId = contactId,
       identityType = "PASSPORT",
       identityValue = "PP87878787878",
+      issuingAuthority = "UKBORDER",
       updatedBy = "TEST",
       updatedTime = LocalDateTime.now(),
     )
@@ -166,6 +169,7 @@ class SyncContactIdentityServiceTest {
       contactId = 1L,
       identityType = "PASSPORT",
       identityValue = "PP87878787878",
+      issuingAuthority = "UKBORDER",
       createdBy = "TEST",
     )
 
@@ -190,6 +194,7 @@ class SyncContactIdentityServiceTest {
       contactId = 1L,
       identityType = "PASSPORT",
       identityValue = "PP87878787878",
+      issuingAuthority = "UKBORDER",
       createdBy = "TEST",
     )
 
@@ -202,6 +207,7 @@ class SyncContactIdentityServiceTest {
       contactId = this.contactId,
       identityType = this.identityType,
       identityValue = this.identityValue,
+      issuingAuthority = this.issuingAuthority,
       createdBy = "TEST",
     ).also {
       it.amendedBy = updatedBy

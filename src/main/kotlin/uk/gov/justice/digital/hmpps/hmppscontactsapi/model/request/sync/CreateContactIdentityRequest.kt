@@ -8,13 +8,16 @@ data class CreateContactIdentityRequest(
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of identity", example = "MOBILE")
+  @Schema(description = "Type of identity", example = "DRIVING_LICENCE")
   val identityType: String,
 
-  @Schema(description = "Identity ", example = "+1234567890")
-  val identityValue: String,
+  @Schema(description = "Identity number or reference", example = "HP9909SM1883")
+  val identityValue: String?,
 
-  @Schema(description = "User who created the entry", example = "admin")
+  @Schema(description = "Issuing authority ", example = "DVLA")
+  val issuingAuthority: String?,
+
+  @Schema(description = "User who created the entry", example = "JJ99821")
   val createdBy: String,
 
   @Schema(description = "The timestamp of when the identity was created", example = "2024-01-01T00:00:00Z")

@@ -11,11 +11,14 @@ data class ContactIdentity(
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of identity", example = "MOBILE")
+  @Schema(description = "Type of identity", example = "DRIVING_LICENCE")
   val identityType: String,
 
-  @Schema(description = "Identity ", example = "+1234567890")
-  val identityValue: String,
+  @Schema(description = "Identity ", example = "DL090 0909 909")
+  val identityValue: String?,
+
+  @Schema(description = "Issuing authority", example = "DVLA")
+  val issuingAuthority: String?,
 
   @Schema(description = "User who created the entry", example = "admin")
   val createdBy: String,

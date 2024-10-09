@@ -1,10 +1,12 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -17,7 +19,7 @@ data class PrisonerContactRestrictionEntity(
 
   val prisonerContactId: Long,
 
-  val restrictionType: String? = null,
+  val restrictionType: String,
 
   val startDate: LocalDate? = null,
 
@@ -29,11 +31,13 @@ data class PrisonerContactRestrictionEntity(
 
   val authorisedTime: LocalDateTime? = null,
 
-  val createdBy: String? = null,
+  @Column(updatable = false)
+  val createdBy: String,
 
-  val createdTime: LocalDateTime? = null,
+  @Column(updatable = false)
+  @CreationTimestamp
+  val createdTime: LocalDateTime,
 ) {
-
   var amendedBy: String? = null
 
   var amendedTime: LocalDateTime? = null

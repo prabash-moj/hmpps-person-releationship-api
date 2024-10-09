@@ -8,11 +8,14 @@ data class UpdateContactIdentityRequest(
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of identity", example = "MOBILE")
+  @Schema(description = "Type of identity", example = "DRIVING_LICENCE")
   val identityType: String,
 
-  @Schema(description = "Identity ", example = "+1234567890")
+  @Schema(description = "Identity ", example = "S99PH898989L")
   val identityValue: String,
+
+  @Schema(description = "Issuing authority", example = "DVLA")
+  val issuingAuthority: String,
 
   @Schema(description = "The id of the user who updated the contact identity", example = "JD000001")
   val updatedBy: String,

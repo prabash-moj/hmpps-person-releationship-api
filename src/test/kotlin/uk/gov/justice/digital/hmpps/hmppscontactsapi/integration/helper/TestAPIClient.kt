@@ -44,14 +44,14 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody!!
   }
 
-  fun getPrisonerContacts(prisonerNumber: String): List<PrisonerContactSummary> = webTestClient.get()
+  fun getPrisonerContacts(prisonerNumber: String): PrisonerContactSummaryResponse = webTestClient.get()
     .uri("/prisoner/$prisonerNumber/contact")
     .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
     .exchange()
     .expectStatus()
     .isOk
     .expectHeader().contentType(MediaType.APPLICATION_JSON)
-    .expectBodyList(PrisonerContactSummary::class.java)
+    .expectBody(PrisonerContactSummaryResponse::class.java)
     .returnResult().responseBody!!
 
   fun getReferenceCodes(groupCode: String) = webTestClient.get()
@@ -107,28 +107,41 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
 
   data class ContactSearchResponse(
     val content: List<ContactSearchResultItem>,
-    val pageable: Pageable,
+    val pageable: ReturnedPageable,
     val last: Boolean,
     val totalPages: Int,
     val totalElements: Int,
     val first: Boolean,
     val size: Int,
     val number: Int,
-    val sort: Sort,
+    val sort: ReturnedSort,
+    val numberOfElements: Int,
+    val empty: Boolean,
+  )
+  data class PrisonerContactSummaryResponse(
+    val content: List<PrisonerContactSummary>,
+    val pageable: ReturnedPageable,
+    val last: Boolean,
+    val totalPages: Int,
+    val totalElements: Int,
+    val first: Boolean,
+    val size: Int,
+    val number: Int,
+    val sort: ReturnedSort,
     val numberOfElements: Int,
     val empty: Boolean,
   )
 
-  data class Pageable(
+  data class ReturnedPageable(
     val pageNumber: Int,
     val pageSize: Int,
-    val sort: Sort,
+    val sort: ReturnedSort,
     val offset: Int,
     val unpaged: Boolean,
     val paged: Boolean,
   )
 
-  data class Sort(
+  data class ReturnedSort(
     val empty: Boolean,
     val unsorted: Boolean,
     val sorted: Boolean,

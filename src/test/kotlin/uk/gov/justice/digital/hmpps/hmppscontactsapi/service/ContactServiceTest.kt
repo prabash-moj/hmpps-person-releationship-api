@@ -82,7 +82,7 @@ class ContactServiceTest {
         title = "mr",
         lastName = "last",
         firstName = "first",
-        middleName = "middle",
+        middleNames = "middle",
         dateOfBirth = LocalDate.of(1982, 6, 15),
         createdBy = "created",
       )
@@ -97,7 +97,7 @@ class ContactServiceTest {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
         assertThat(firstName).isEqualTo(request.firstName)
-        assertThat(middleName).isEqualTo(request.middleName)
+        assertThat(middleNames).isEqualTo(request.middleNames)
         assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
         assertThat(createdBy).isEqualTo(request.createdBy)
         assertThat(createdTime).isNotNull()
@@ -106,7 +106,7 @@ class ContactServiceTest {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
         assertThat(firstName).isEqualTo(request.firstName)
-        assertThat(middleName).isEqualTo(request.middleName)
+        assertThat(middleNames).isEqualTo(request.middleNames)
         assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
         assertThat(createdBy).isEqualTo(request.createdBy)
         assertThat(createdTime).isNotNull()
@@ -120,7 +120,7 @@ class ContactServiceTest {
         title = "mr",
         lastName = "last",
         firstName = "first",
-        middleName = "middle",
+        middleNames = "middle",
         dateOfBirth = null,
         createdBy = "created",
       )
@@ -134,7 +134,7 @@ class ContactServiceTest {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
         assertThat(firstName).isEqualTo(request.firstName)
-        assertThat(middleName).isEqualTo(request.middleName)
+        assertThat(middleNames).isEqualTo(request.middleNames)
         assertNull(dateOfBirth)
         assertThat(estimatedIsOverEighteen).isEqualTo(request.estimatedIsOverEighteen)
         assertThat(createdBy).isEqualTo(request.createdBy)
@@ -144,7 +144,7 @@ class ContactServiceTest {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
         assertThat(firstName).isEqualTo(request.firstName)
-        assertThat(middleName).isEqualTo(request.middleName)
+        assertThat(middleNames).isEqualTo(request.middleNames)
         assertNull(dateOfBirth)
         assertThat(estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
         assertThat(createdBy).isEqualTo(request.createdBy)
@@ -274,7 +274,7 @@ class ContactServiceTest {
         contactId = contactId,
         title = "Mr",
         lastName = "last",
-        middleName = "middle",
+        middleNames = "middle",
         firstName = "first",
         dateOfBirth = null,
         estimatedIsOverEighteen = estimatedIsOverEighteen,
@@ -291,7 +291,7 @@ class ContactServiceTest {
         assertThat(title).isEqualTo(entity.title)
         assertThat(lastName).isEqualTo(entity.lastName)
         assertThat(firstName).isEqualTo(entity.firstName)
-        assertThat(middleName).isEqualTo(entity.middleName)
+        assertThat(middleNames).isEqualTo(entity.middleNames)
         assertThat(dateOfBirth).isNull()
         assertThat(estimatedIsOverEighteen).isEqualTo(entity.estimatedIsOverEighteen)
         assertThat(createdBy).isEqualTo(entity.createdBy)
@@ -330,7 +330,7 @@ class ContactServiceTest {
         contactId = contactId,
         title = "Mr",
         lastName = "last",
-        middleName = "middle",
+        middleNames = "middle",
         firstName = "first",
         dateOfBirth = null,
         estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
@@ -374,7 +374,7 @@ class ContactServiceTest {
         contactId = contactId,
         title = "Mr",
         lastName = "last",
-        middleName = "middle",
+        middleNames = "middle",
         firstName = "first",
         dateOfBirth = null,
         estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
@@ -407,7 +407,7 @@ class ContactServiceTest {
         contactId = contactId,
         title = "Mr",
         lastName = "last",
-        middleName = "middle",
+        middleNames = "middle",
         firstName = "first",
         dateOfBirth = null,
         estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
@@ -439,7 +439,7 @@ class ContactServiceTest {
         contactId = contactId,
         title = "Mr",
         lastName = "last",
-        middleName = "middle",
+        middleNames = "middle",
         firstName = "first",
         dateOfBirth = null,
         estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
@@ -468,7 +468,7 @@ class ContactServiceTest {
         contactId = contactId,
         title = "Mr",
         lastName = "last",
-        middleName = "middle",
+        middleNames = "middle",
         firstName = "first",
         dateOfBirth = null,
         estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
@@ -522,7 +522,7 @@ class ContactServiceTest {
       contactId = id,
       title = null,
       lastName = "last",
-      middleName = null,
+      middleNames = null,
       firstName = "first",
       dateOfBirth = null,
       estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
@@ -630,7 +630,7 @@ class ContactServiceTest {
       contactId = 1L,
       title = "Mr",
       lastName = "last",
-      middleName = "middle",
+      middleNames = "middle",
       firstName = "first",
       dateOfBirth = LocalDate.of(1980, 2, 1),
       estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,

@@ -78,7 +78,7 @@ class MigrationService(
           contactId = 0L,
           title = req.title?.code,
           lastName = req.lastName,
-          middleName = req.middleName,
+          middleNames = req.middleName,
           firstName = req.firstName,
           dateOfBirth = req.dateOfBirth,
           deceasedDate = req.deceasedDate,

@@ -80,10 +80,10 @@ class ContactSearchRepository(
       )
     }
 
-    request.middleName?.let {
+    request.middleNames?.let {
       predicates.add(
         cb.like(
-          cb.upper(contact.get("middleName")),
+          cb.upper(contact.get("middleNames")),
           cb.literal("%${it.trim().uppercase()}%"),
         ),
       )

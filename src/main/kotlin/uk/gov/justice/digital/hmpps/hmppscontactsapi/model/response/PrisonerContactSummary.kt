@@ -16,14 +16,14 @@ data class PrisonerContactSummary(
   @Schema(description = "Prisoner number (NOMS ID)", example = "A1234BC")
   val prisonerNumber: String,
 
-  @Schema(description = "The surname of the contact", example = "Doe")
-  val surname: String,
+  @Schema(description = "The last name of the contact", example = "Doe")
+  val lastName: String,
 
-  @Schema(description = "The forename of the contact", example = "John")
-  val forename: String,
+  @Schema(description = "The first name of the contact", example = "John")
+  val firstName: String,
 
-  @Schema(description = "The middle name of the contact, if any", example = "William", nullable = true)
-  val middleName: String? = null,
+  @Schema(description = "The middle names of the contact, if any", example = "William", nullable = true)
+  val middleNames: String? = null,
 
   @Schema(description = "The date of birth of the contact", example = "1980-01-01")
   val dateOfBirth: LocalDate?,

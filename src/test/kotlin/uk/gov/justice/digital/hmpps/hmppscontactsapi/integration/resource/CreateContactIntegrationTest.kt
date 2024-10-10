@@ -144,7 +144,7 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
       title = "mr",
       lastName = "last",
       firstName = "first",
-      middleName = "middle",
+      middleNames = "middle",
       dateOfBirth = LocalDate.of(1982, 6, 15),
       createdBy = "created",
     )
@@ -175,7 +175,7 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
       assertThat(title).isEqualTo(request.title)
       assertThat(lastName).isEqualTo(request.lastName)
       assertThat(firstName).isEqualTo(request.firstName)
-      assertThat(middleName).isEqualTo(request.middleName)
+      assertThat(middleNames).isEqualTo(request.middleNames)
       assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
       if (request.estimatedIsOverEighteen != null) {
         assertThat(estimatedIsOverEighteen).isEqualTo(request.estimatedIsOverEighteen)
@@ -198,8 +198,8 @@ class CreateContactIntegrationTest : IntegrationTestBase() {
           aMinimalCreateContactRequest().copy(firstName = "".padStart(36)),
         ),
         Arguments.of(
-          "middleName must be <= 35 characters",
-          aMinimalCreateContactRequest().copy(middleName = "".padStart(36)),
+          "middleNames must be <= 35 characters",
+          aMinimalCreateContactRequest().copy(middleNames = "".padStart(36)),
         ),
         Arguments.of(
           "createdBy must be <= 100 characters",

@@ -15,7 +15,7 @@ CREATE TABLE contact
     title varchar(12),
     last_name  varchar(35) NOT NULL,
     first_name varchar(35) NOT NULL,
-    middle_name varchar(35),
+    middle_names varchar(35),
     date_of_birth date,
     estimated_is_over_eighteen varchar(11),
     place_of_birth varchar(25),

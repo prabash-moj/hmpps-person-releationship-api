@@ -100,7 +100,7 @@ class ContactService(
       title = contactEntity.title,
       lastName = contactEntity.lastName,
       firstName = contactEntity.firstName,
-      middleName = contactEntity.middleName,
+      middleNames = contactEntity.middleNames,
       dateOfBirth = contactEntity.dateOfBirth,
       estimatedIsOverEighteen = contactEntity.estimatedIsOverEighteen,
       isDeceased = contactEntity.isDeceased,

@@ -205,7 +205,7 @@ class ContactControllerTest {
     id = contactId,
     lastName = "last",
     firstName = "first",
-    middleName = "first",
+    middleNames = "first",
     dateOfBirth = LocalDate.of(1980, 2, 1),
     createdBy = "user",
     createdTime = LocalDateTime.now(),

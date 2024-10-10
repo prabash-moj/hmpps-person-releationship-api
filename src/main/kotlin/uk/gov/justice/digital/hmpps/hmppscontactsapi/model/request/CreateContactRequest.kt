@@ -20,9 +20,9 @@ data class CreateContactRequest(
   @field:Size(max = 35, message = "firstName must be <= 35 characters")
   val firstName: String,
 
-  @Schema(description = "The middle name of the contact, if any", example = "William", nullable = true, maxLength = 35)
-  @field:Size(max = 35, message = "middleName must be <= 35 characters")
-  val middleName: String? = null,
+  @Schema(description = "The middle names of the contact, if any", example = "William", nullable = true, maxLength = 35)
+  @field:Size(max = 35, message = "middleNames must be <= 35 characters")
+  val middleNames: String? = null,
 
   @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true, format = "yyyy-MM-dd")
   @field:DateTimeFormat(pattern = "yyyy-MM-dd")

@@ -27,7 +27,7 @@ data class ContactEntity(
 
   val lastName: String,
 
-  val middleName: String?,
+  val middleNames: String?,
 
   val dateOfBirth: LocalDate?,
 

@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummaryPage
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
@@ -61,7 +64,7 @@ class PrisonerController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = PrisonerContactSummary::class),
+            schema = Schema(implementation = PrisonerContactSummaryPage::class),
           ),
         ],
       ),
@@ -85,5 +88,7 @@ class PrisonerController(
       name = "active",
       description = "Whether to include only active (true) or inactive (false) contacts",
     ) active: Boolean,
-  ): List<PrisonerContactSummary> = prisonerContactService.getAllContacts(prisonerNumber, active)
+    @Parameter(description = "Pageable configurations", required = false)
+    pageable: Pageable,
+  ): Page<PrisonerContactSummary> = prisonerContactService.getAllContacts(prisonerNumber, active, pageable)
 }

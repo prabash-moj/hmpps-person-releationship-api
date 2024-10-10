@@ -13,7 +13,7 @@ select
     c.estimated_is_over_eighteen,
     c.first_name,
     c.last_name,
-    c.middle_name,
+    c.middle_names,
     c.title,
     ca.contact_address_id,
     ca.address_type,

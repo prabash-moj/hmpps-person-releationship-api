@@ -4,9 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.TestAPIClient.PrisonerContactSummaryResponse
 
 class GetPrisonerContactsIntegrationTest : IntegrationTestBase() {
   companion object {
@@ -58,12 +57,20 @@ class GetPrisonerContactsIntegrationTest : IntegrationTestBase() {
   fun `should return OK`() {
     stubPrisonSearchWithResponse("A4385DZ")
 
-    val contacts = webTestClient.getContacts(GET_PRISONER_CONTACT)
+    val contacts = webTestClient.get()
+      .uri(GET_PRISONER_CONTACT)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PrisonerContactSummaryResponse::class.java)
+      .returnResult().responseBody!!
 
-    assertThat(contacts).hasSize(3)
+    assertThat(contacts.content).hasSize(3)
 
-    val contact = contacts.first()
-    assertThat(contact.surname).isEqualTo("Last")
+    val contact = contacts.content.first()
+    assertThat(contact.lastName).isEqualTo("Last")
     assertThat(contact.cityCode).isEqualTo("25343")
     assertThat(contact.cityDescription).isEqualTo("Sheffield")
     assertThat(contact.countyCode).isEqualTo("S.YORKSHIRE")
@@ -71,8 +78,8 @@ class GetPrisonerContactsIntegrationTest : IntegrationTestBase() {
     assertThat(contact.countryCode).isEqualTo("ENG")
     assertThat(contact.countryDescription).isEqualTo("England")
 
-    val minimal = contacts.find { it.forename == "Minimal" } ?: fail("Couldn't find 'Minimal' contact")
-    assertThat(minimal.forename).isEqualTo("Minimal")
+    val minimal = contacts.content.find { it.firstName == "Minimal" } ?: fail("Couldn't find 'Minimal' contact")
+    assertThat(minimal.firstName).isEqualTo("Minimal")
     assertThat(minimal.cityCode).isEqualTo("")
     assertThat(minimal.cityDescription).isEqualTo("")
     assertThat(minimal.countyCode).isEqualTo("")
@@ -81,14 +88,67 @@ class GetPrisonerContactsIntegrationTest : IntegrationTestBase() {
     assertThat(minimal.countryDescription).isEqualTo("")
   }
 
-  private fun WebTestClient.getContacts(URL: String): MutableList<PrisonerContactSummary> =
-    get()
-      .uri(URL)
+  @Test
+  fun `should return results for the correct page`() {
+    stubPrisonSearchWithResponse("A4385DZ")
+
+    val firstPage = webTestClient.get()
+      .uri("$GET_PRISONER_CONTACT?size=2&page=0")
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
       .exchange()
       .expectStatus()
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBodyList(PrisonerContactSummary::class.java)
+      .expectBody(PrisonerContactSummaryResponse::class.java)
       .returnResult().responseBody!!
+
+    assertThat(firstPage.content).hasSize(2)
+    assertThat(firstPage.totalPages).isEqualTo(2)
+    assertThat(firstPage.totalElements).isEqualTo(3)
+    assertThat(firstPage.number).isEqualTo(0)
+
+    assertThat(firstPage.content[0].contactId).isEqualTo(1)
+    assertThat(firstPage.content[1].contactId).isEqualTo(10)
+
+    val contacts = webTestClient.get()
+      .uri("$GET_PRISONER_CONTACT?size=2&page=1")
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PrisonerContactSummaryResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(contacts.content).hasSize(1)
+    assertThat(contacts.totalPages).isEqualTo(2)
+    assertThat(contacts.totalElements).isEqualTo(3)
+    assertThat(contacts.number).isEqualTo(1)
+
+    assertThat(contacts.content[0].contactId).isEqualTo(18)
+  }
+
+  @Test
+  fun `should return sorted correctly`() {
+    stubPrisonSearchWithResponse("A4385DZ")
+
+    val firstPage = webTestClient.get()
+      .uri("$GET_PRISONER_CONTACT?sort=lastName")
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PrisonerContactSummaryResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(firstPage.content).hasSize(3)
+    assertThat(firstPage.totalPages).isEqualTo(1)
+    assertThat(firstPage.totalElements).isEqualTo(3)
+    assertThat(firstPage.number).isEqualTo(0)
+
+    assertThat(firstPage.content[0].lastName).isEqualTo("Address")
+    assertThat(firstPage.content[1].lastName).isEqualTo("Last")
+    assertThat(firstPage.content[2].lastName).isEqualTo("Ten")
+  }
 }

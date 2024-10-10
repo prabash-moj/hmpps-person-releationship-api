@@ -10,7 +10,7 @@ AS
       c.title,
       rc1.description as title_description,
       c.first_name,
-      c.middle_name,
+      c.middle_names,
       c.last_name,
       c.date_of_birth,
       c.estimated_is_over_eighteen,

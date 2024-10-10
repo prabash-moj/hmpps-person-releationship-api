@@ -194,7 +194,7 @@ class SyncContactPhoneServiceTest {
       contactId = contactId,
       title = "Mr",
       firstName = "John",
-      middleName = null,
+      middleNames = null,
       lastName = "Smith",
       dateOfBirth = null,
       estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,

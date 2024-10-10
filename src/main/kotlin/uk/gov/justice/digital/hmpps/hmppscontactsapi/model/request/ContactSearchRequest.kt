@@ -16,8 +16,8 @@ data class ContactSearchRequest(
   @Schema(description = "First name of the contact", example = "Elton", nullable = true, maxLength = 12)
   val firstName: String?,
 
-  @Schema(description = "Middle name of the contact", example = "Simon", nullable = true, maxLength = 12)
-  val middleName: String?,
+  @Schema(description = "Middle names of the contact", example = "Simon", nullable = true, maxLength = 12)
+  val middleNames: String?,
 
   @Schema(description = "Date of Birth of the contact in ISO format", example = "30/12/2010", nullable = true, format = "dd/MM/yyyy")
   @field:Past(message = "The date of birth must be in the past")

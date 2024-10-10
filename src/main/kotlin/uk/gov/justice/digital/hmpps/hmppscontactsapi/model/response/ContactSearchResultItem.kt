@@ -17,7 +17,7 @@ data class ContactSearchResultItem(
   val firstName: String,
 
   @Schema(description = "The middle name of the contact, if any", example = "William", nullable = true)
-  val middleName: String? = null,
+  val middleNames: String? = null,
 
   @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true)
   val dateOfBirth: LocalDate? = null,

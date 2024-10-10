@@ -8,9 +8,9 @@ fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
     prisonerContactId = this.prisonerContactId,
     contactId = this.contactId,
     prisonerNumber = this.prisonerNumber,
-    surname = this.lastName,
-    forename = this.firstName,
-    middleName = this.middleName,
+    lastName = this.lastName,
+    firstName = this.firstName,
+    middleNames = this.middleNames,
     dateOfBirth = this.dateOfBirth,
     estimatedIsOverEighteen = this.estimatedIsOverEighteen,
     relationshipCode = this.relationshipType,
@@ -33,5 +33,3 @@ fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
     comments = this.comments,
   )
 }
-
-fun List<PrisonerContactSummaryEntity>.toModel() = map { it.toModel() }

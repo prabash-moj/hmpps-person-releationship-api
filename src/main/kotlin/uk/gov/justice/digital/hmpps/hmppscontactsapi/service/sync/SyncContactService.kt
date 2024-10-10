@@ -41,7 +41,7 @@ class SyncContactService(
       title = request.title,
       firstName = request.firstName,
       lastName = request.lastName,
-      middleName = request.middleName,
+      middleNames = request.middleName,
       dateOfBirth = request.dateOfBirth,
       isDeceased = request.deceasedFlag!!,
       deceasedDate = request.deceasedDate,

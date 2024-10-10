@@ -22,7 +22,7 @@ data class PrisonerContactSummaryEntity(
 
   val firstName: String,
 
-  val middleName: String?,
+  val middleNames: String?,
 
   val lastName: String,
 

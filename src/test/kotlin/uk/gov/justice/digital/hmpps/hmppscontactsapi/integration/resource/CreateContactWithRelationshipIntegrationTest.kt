@@ -96,11 +96,11 @@ class CreateContactWithRelationshipIntegrationTest : IntegrationTestBase() {
 
     testAPIClient.createAContact(request)
 
-    val prisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber)
+    val prisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(prisonerContacts).hasSize(1)
 
     val prisonerContact = prisonerContacts[0]
-    assertThat(prisonerContact.surname).isEqualTo(request.lastName)
+    assertThat(prisonerContact.lastName).isEqualTo(request.lastName)
     asserPrisonerContactEquals(prisonerContact, requestedRelationship)
   }
 
@@ -123,11 +123,11 @@ class CreateContactWithRelationshipIntegrationTest : IntegrationTestBase() {
     )
 
     testAPIClient.createAContact(request)
-    val prisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber)
+    val prisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(prisonerContacts).hasSize(1)
 
     val prisonerContact = prisonerContacts[0]
-    assertThat(prisonerContact.surname).isEqualTo(request.lastName)
+    assertThat(prisonerContact.lastName).isEqualTo(request.lastName)
     asserPrisonerContactEquals(prisonerContact, requestedRelationship)
   }
 

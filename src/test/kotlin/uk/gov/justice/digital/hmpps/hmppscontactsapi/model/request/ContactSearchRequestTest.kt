@@ -17,7 +17,7 @@ class ContactSearchRequestTest {
     val request = ContactSearchRequest(
       lastName = "Smith",
       firstName = null,
-      middleName = null,
+      middleNames = null,
       dateOfBirth = futureDate,
     )
 
@@ -32,7 +32,7 @@ class ContactSearchRequestTest {
     val request = ContactSearchRequest(
       lastName = "",
       firstName = null,
-      middleName = null,
+      middleNames = null,
       dateOfBirth = null,
     )
 
@@ -48,7 +48,7 @@ class ContactSearchRequestTest {
     val request = ContactSearchRequest(
       lastName = "Smith",
       firstName = null,
-      middleName = null,
+      middleNames = null,
       dateOfBirth = pastDate,
     )
 

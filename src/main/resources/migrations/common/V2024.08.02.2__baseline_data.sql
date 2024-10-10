@@ -2,7 +2,7 @@
 -- Reference data
 -- =============================================
 
-insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_name, date_of_birth, estimated_is_over_eighteen, place_of_birth, gender, marital_status, language_code, comments, created_by, active, deceased_flag, deceased_date, interpreter_required)
+insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_names, date_of_birth, estimated_is_over_eighteen, place_of_birth, gender, marital_status, language_code, comments, created_by, active, deceased_flag, deceased_date, interpreter_required)
 values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
        (2, 'SOCIAL',   'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
        (3, 'OFFICIAL', 'MRS', 'Last',    'Jane',       'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),

@@ -191,7 +191,7 @@ class ContactController(val contactService: ContactService) {
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
   fun searchContacts(
     @Parameter(description = "Pageable configurations", required = false)
-    @PageableDefault(sort = ["lastName", "firstName", "middleName", "createdTime"], direction = Direction.ASC)
+    @PageableDefault(sort = ["lastName", "firstName", "middleNames", "createdTime"], direction = Direction.ASC)
     pageable: Pageable,
     @ModelAttribute @Valid @Parameter(description = "Contact search criteria", required = true) request: ContactSearchRequest,
   ) = contactService.searchContacts(pageable, request)

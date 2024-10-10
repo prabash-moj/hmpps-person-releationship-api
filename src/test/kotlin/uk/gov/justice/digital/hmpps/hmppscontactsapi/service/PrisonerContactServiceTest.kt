@@ -11,6 +11,8 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
@@ -41,29 +43,32 @@ class PrisonerContactServiceTest {
     prisoner = Prisoner(prisonerNumber, prisonId = "MDI")
   }
 
+  private val pageable = Pageable.ofSize(10)
+
   @Test
   fun `should fetch all contacts for a prisoner`() {
     val dateOfBirth = LocalDate.of(1980, 5, 10)
     val c1 = makePrisonerContact(id = 1L, contactId = 2L, dateOfBirth, firstName = "John", lastName = "Doe", EstimatedIsOverEighteen.DO_NOT_KNOW)
     val c2 = makePrisonerContact(id = 2L, contactId = 2L, dateOfBirth, firstName = "David", lastName = "Doe", EstimatedIsOverEighteen.YES)
     val contacts = listOf(c1, c2)
+    val page = PageImpl(contacts, pageable, contacts.size.toLong())
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactSummaryRepository.findPrisonerContacts(prisonerNumber, true)).thenReturn(contacts)
+    whenever(prisonerContactSummaryRepository.findByPrisonerNumberAndActive(prisonerNumber, true, pageable)).thenReturn(page)
 
-    val result = prisonerContactService.getAllContacts(prisonerNumber, true)
+    val result = prisonerContactService.getAllContacts(prisonerNumber, true, pageable)
 
-    result hasSize 2
+    result.content hasSize 2
     assertThat(result).containsAll(listOf(c1.toModel(), c2.toModel()))
 
-    verify(prisonerContactSummaryRepository).findPrisonerContacts(prisonerNumber, true)
+    verify(prisonerContactSummaryRepository).findByPrisonerNumberAndActive(prisonerNumber, true, pageable)
   }
 
   @Test
   fun `should throw exception`() {
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(null)
     val exception = assertThrows<EntityNotFoundException> {
-      prisonerContactService.getAllContacts(prisonerNumber, true)
+      prisonerContactService.getAllContacts(prisonerNumber, true, pageable)
     }
     exception.message isEqualTo "Prisoner number $prisonerNumber - not found"
   }
@@ -82,7 +87,7 @@ class PrisonerContactServiceTest {
       contactId = contactId,
       title = "Mr.",
       firstName = firstName,
-      middleName = "Any",
+      middleNames = "Any",
       lastName = lastName,
       dateOfBirth = dateOfBirth,
       estimatedIsOverEighteen = estimatedIsOverEighteen,

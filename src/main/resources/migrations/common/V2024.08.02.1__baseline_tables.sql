@@ -11,7 +11,6 @@
 CREATE TABLE contact
 (
     contact_id bigserial NOT NULL CONSTRAINT contact_id_pk PRIMARY KEY,
-    contact_type_code varchar(10), -- Reference codes - CONTACT_TYPE (SOCIAL or OFFICIAL)
     title varchar(12),
     last_name  varchar(35) NOT NULL,
     first_name varchar(35) NOT NULL,
@@ -221,6 +220,7 @@ CREATE TABLE prisoner_contact
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
     prisoner_number varchar(7) NOT NULL, -- The prison number (NOMS id) e.g. A1234AA
     active boolean NOT NULL DEFAULT true,
+    contact_type varchar(10), -- Reference codes - CONTACT_TYPE (SOCIAL or OFFICIAL)
     relationship_type varchar(12) NOT NULL, -- Reference codes - RELATIONSHIP
     approved_visitor boolean NOT NULL DEFAULT false,
     aware_of_charges boolean NOT NULL DEFAULT false,

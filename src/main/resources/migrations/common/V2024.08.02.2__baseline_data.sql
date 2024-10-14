@@ -2,27 +2,27 @@
 -- Reference data
 -- =============================================
 
-insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_names, date_of_birth, estimated_is_over_eighteen, place_of_birth, gender, marital_status, language_code, comments, created_by, active, deceased_flag, deceased_date, interpreter_required)
-values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (2, 'SOCIAL',   'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (3, 'OFFICIAL', 'MRS', 'Last',    'Jane',       'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (4, 'SOCIAL',   'MR',   'Four',   'John',       'Middle', '2000-05-18', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (5, 'SOCIAL',   'MR',   'Five',   'Jon',        'Middle', '2000-09-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (6, 'SOCIAL',   'MR',   'Six',    'Johnny',     'Middle', '2000-10-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (7, 'SOCIAL',   'MR',   'Seven',  'Pete',       'Middle', '2015-08-29', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (8, 'SOCIAL',   'MR',   'Eight',  'Harry',      'Middle', '2015-12-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (9, 'SOCIAL',   'MR',   'Nine',   'Donald',     'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (10, 'SOCIAL',  'MS',   'Ten',    'Freya',      'Middle', '2000-11-24', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
-       (11, 'SOCIAL',  'MS',   'Eleven', 'Suki',       'Middle', '2000-11-25', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
-       (12, 'SOCIAL',  'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
-       (13, 'SOCIAL',  'MRS',  'Thirteen', 'Mark',     'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
-       (14, 'SOCIAL',  'MRS',  'Fourteen', 'Phil',     'Middle', null, 'NO', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
-       (15, 'SOCIAL',  'MRS',  'Fifteen', 'Carl',      'Middle', '2000-11-26', 'DO_NOT_KNOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, '2024-01-26', false),
-       (16, 'SOCIAL',  'MRS',  'NoAddress', 'Liam',    'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
-       (17, 'SOCIAL',  'MRS',  'NoAddress', 'Hannah',  'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
-       (18, 'SOCIAL',  null,   'Address', 'Minimal',    null, null, null, null, null, null, null, null, 'TIM', true, false, null, false),
-       (19, 'SOCIAL',  null,   'Dead', 'Currently',     null, '1980-01-01', null, null, null, null, null, null, 'TIM', true, true, '2000-01-01', false),
-       (20, 'SOCIAL',  null,   'French', 'Only',     null, '1980-01-01', null, null, null, null, 'FRE-FRA', null, 'TIM', true, true, '2000-01-01', true);
+insert into contact(contact_id, title, last_name, first_name, middle_names, date_of_birth, estimated_is_over_eighteen, place_of_birth, gender, marital_status, language_code, comments, created_by, active, deceased_flag, deceased_date, interpreter_required)
+values (1,  'MR',   'Last',   'Jack',       'Middle', '2000-11-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (2,  'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (3,  'MRS',  'Last',   'Jane',       'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (4,  'MR',   'Four',   'John',       'Middle', '2000-05-18', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (5,  'MR',   'Five',   'Jon',        'Middle', '2000-09-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (6,  'MR',   'Six',    'Johnny',     'Middle', '2000-10-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (7,  'MR',   'Seven',  'Pete',       'Middle', '2015-08-29', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (8,  'MR',   'Eight',  'Harry',      'Middle', '2015-12-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (9,  'MR',   'Nine',   'Donald',     'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (10, 'MS',   'Ten',    'Freya',      'Middle', '2000-11-24', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (11, 'MS',   'Eleven', 'Suki',       'Middle', '2000-11-25', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (12, 'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (13, 'MRS',  'Thirteen', 'Mark',     'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (14, 'MRS',  'Fourteen', 'Phil',     'Middle', null, 'NO', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (15, 'MRS',  'Fifteen', 'Carl',      'Middle', '2000-11-26', 'DO_NOT_KNOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, '2024-01-26', false),
+       (16, 'MRS',  'NoAddress', 'Liam',    'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (17, 'MRS',  'NoAddress', 'Hannah',  'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (18, null,   'Address', 'Minimal',    null, null, null, null, null, null, null, null, 'TIM', true, false, null, false),
+       (19, null,   'Dead', 'Currently',     null, '1980-01-01', null, null, null, null, null, null, 'TIM', true, true, '2000-01-01', false),
+       (20, null,   'French', 'Only',     null, '1980-01-01', null, null, null, null, 'FRE-FRA', null, 'TIM', true, true, '2000-01-01', true);
 
 insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, issuing_authority, verified, verified_by, verified_time, created_by)
 values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'DVLA', true, 'JAMES', current_timestamp, 'TIM'),
@@ -158,41 +158,41 @@ values (1, 'CONTACT_TYPE', 'SOCIAL', 'Social contact', 'TIM'),
         (81, 'TITLE','DAME', 'Dame', 'JAMES')
 ;
 
-insert into prisoner_contact (prisoner_contact_id, contact_id, prisoner_number, active, relationship_type, comments, created_at_prison, created_by, created_time)
-values (1, 1, 'A1234BB', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+insert into prisoner_contact (prisoner_contact_id, contact_id, prisoner_number, contact_type, active, relationship_type, comments, created_at_prison, created_by, created_time)
+values (1, 1, 'A1234BB', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Jason Mitchell
-       (2,  1,  'A8185DY', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (3,  6,  'A8185DY', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (4,  7,  'A8185DY', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (5,  8,  'A8185DY', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (6,  10, 'A8185DY', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (7,  11, 'A8185DY', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (2,  1,  'A8185DY', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (3,  6,  'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (4,  7,  'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (5,  8,  'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (6,  10, 'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (7,  11, 'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Tim Harrison
-       (8,  1,  'G4793VF', true,  'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (9,  2,  'G4793VF', true,  'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (10, 3,  'G4793VF', true,  'SIS', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (11, 4,  'G4793VF', true,  'BRO', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (12, 5,  'G4793VF', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (13, 6,  'G4793VF', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (14, 7,  'G4793VF', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (15, 8,  'G4793VF', true,  'UN', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (16, 9,  'G4793VF', true,  'UN', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (17, 10, 'G4793VF', true, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (18, 11, 'G4793VF', false, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (19, 12, 'G4793VF', false, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (8,  1,  'G4793VF', 'SOCIAL', true,  'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (9,  2,  'G4793VF', 'SOCIAL', true,  'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (10, 3,  'G4793VF', 'OFFICIAL', true,  'SIS', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (11, 4,  'G4793VF', 'SOCIAL', true,  'BRO', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (12, 5,  'G4793VF', 'SOCIAL', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (13, 6,  'G4793VF', 'SOCIAL', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (14, 7,  'G4793VF', 'SOCIAL', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (15, 8,  'G4793VF', 'SOCIAL', true,  'UN', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (16, 9,  'G4793VF', 'SOCIAL', true,  'UN', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (17, 10, 'G4793VF', 'SOCIAL', true, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (18, 11, 'G4793VF', 'SOCIAL', false, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (19, 12, 'G4793VF', 'SOCIAL', false, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Tim Cooks
-       (20, 1, 'A4162DZ', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (21, 2, 'A4162DZ', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (22, 3, 'A4162DZ', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (23, 4, 'A4162DZ', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (24, 5, 'A4162DZ', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (25, 10, 'A4162DZ', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (20, 1, 'A4162DZ', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (21, 2, 'A4162DZ', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (22, 3, 'A4162DZ', 'OFFICIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (23, 4, 'A4162DZ', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (24, 5, 'A4162DZ', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (25, 10, 'A4162DZ', 'SOCIAL', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Justin Timberlake
-       (26, 1, 'A5166DY', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (26, 1, 'A5166DY', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Mike Toby
-       (27, 1, 'A4385DZ', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (28, 10, 'A4385DZ', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (29, 18, 'A4385DZ', true, 'FRI', null, 'MDI', 'TIM', current_timestamp);
+       (27, 1, 'A4385DZ', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (28, 10, 'A4385DZ', 'SOCIAL', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (29, 18, 'A4385DZ', 'SOCIAL', true, 'FRI', null, 'MDI', 'TIM', current_timestamp);
 
 insert into prisoner_contact_restriction (prisoner_contact_id, restriction_type, start_date, expiry_date, comments, authorised_by, authorised_time, created_by, created_time, amended_by, amended_time )
 values

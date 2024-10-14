@@ -45,6 +45,7 @@ fun ContactRelationship.toEntity(
 ) = newPrisonerContact(
   contactId,
   this.prisonerNumber,
+  "SOCIAL",
   this.relationshipCode,
   this.isNextOfKin,
   this.isEmergencyContact,
@@ -93,6 +94,7 @@ private fun newContact(
 private fun newPrisonerContact(
   contactId: Long,
   prisonerNumber: String,
+  contactType: String,
   relationshipType: String,
   nextOfKin: Boolean,
   emergencyContact: Boolean,
@@ -103,6 +105,7 @@ private fun newPrisonerContact(
     0,
     contactId,
     prisonerNumber,
+    contactType,
     relationshipType,
     nextOfKin,
     emergencyContact,

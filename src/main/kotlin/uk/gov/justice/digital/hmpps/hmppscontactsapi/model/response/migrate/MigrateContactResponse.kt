@@ -18,9 +18,6 @@ data class MigrateContactResponse(
   @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true)
   val dateOfBirth: LocalDate? = null,
 
-  @Schema(description = "The type code of the contact", example = "SOCIAL or OFFICIAL")
-  val contactTypeCode: String,
-
   @Schema(description = "List of Nomis Id and DPS Id for phone numbers")
   val phoneNumbers: List<IdPair> = emptyList(),
 

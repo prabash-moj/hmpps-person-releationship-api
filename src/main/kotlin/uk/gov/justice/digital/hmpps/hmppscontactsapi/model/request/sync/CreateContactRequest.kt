@@ -30,9 +30,6 @@ data class CreateContactRequest(
   @Schema(description = "A description of the relationship if the contact should be linked to a prisoner", nullable = true, exampleClasses = [ContactRelationship::class])
   val relationship: ContactRelationship? = null,
 
-  @Schema(description = "The type code of the contact", example = "PERSON", nullable = true)
-  var contactTypeCode: String? = null,
-
   @Schema(description = "The place of birth of the contact", example = "London", nullable = true)
   var placeOfBirth: String? = null,
 

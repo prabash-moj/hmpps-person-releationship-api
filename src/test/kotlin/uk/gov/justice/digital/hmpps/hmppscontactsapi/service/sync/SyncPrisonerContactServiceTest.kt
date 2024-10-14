@@ -76,7 +76,8 @@ class SyncPrisonerContactServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("Family")
+        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(relationshipType).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Updated relationship type to family")
@@ -98,7 +99,8 @@ class SyncPrisonerContactServiceTest {
       with(contact) {
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("Family")
+        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(relationshipType).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Updated relationship type to family")
@@ -151,7 +153,8 @@ class SyncPrisonerContactServiceTest {
         assertThat(prisonerContactId).isEqualTo(prisonerContactID)
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("Family")
+        assertThat(contactType).isEqualTo("OFFICIAL")
+        assertThat(relationshipType).isEqualTo("LAW")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Updated prison location")
@@ -173,7 +176,8 @@ class SyncPrisonerContactServiceTest {
       with(updated) {
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("Social")
+        assertThat(contactType).isEqualTo("OFFICIAL")
+        assertThat(relationshipType).isEqualTo("LAW")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Updated relationship type to social")
@@ -207,7 +211,8 @@ class SyncPrisonerContactServiceTest {
     UpdatePrisonerContactRequest(
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      relationshipType = "Family",
+      contactType = "OFFICIAL",
+      relationshipType = "LAW",
       nextOfKin = true,
       emergencyContact = false,
       comments = "Updated prison location",
@@ -227,7 +232,8 @@ class SyncPrisonerContactServiceTest {
     CreatePrisonerContactRequest(
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      relationshipType = "Family",
+      contactType = "SOCIAL",
+      relationshipType = "FRI",
       nextOfKin = true,
       emergencyContact = false,
       comments = "Updated relationship type to family",
@@ -248,6 +254,7 @@ class SyncPrisonerContactServiceTest {
       prisonerContactId = 1L,
       contactId = 12345L,
       prisonerNumber = "A1234BC",
+      contactType = "SOCIAL",
       relationshipType = "Family",
       nextOfKin = true,
       emergencyContact = false,
@@ -275,7 +282,8 @@ class SyncPrisonerContactServiceTest {
       prisonerContactId = 1L,
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      relationshipType = "Social",
+      contactType = "OFFICIAL",
+      relationshipType = "LAW",
       nextOfKin = true,
       emergencyContact = false,
       comments = "Updated relationship type to social",

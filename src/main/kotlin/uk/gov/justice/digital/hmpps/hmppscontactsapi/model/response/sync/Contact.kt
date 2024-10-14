@@ -29,9 +29,6 @@ data class Contact(
   @Schema(description = "Whether the contact is over 18, based on their date of birth if it is known", example = "YES")
   val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
-  @Schema(description = "The type code of the contact", example = "PERSON", nullable = true)
-  var contactTypeCode: String? = null,
-
   @Schema(description = "The place of birth of the contact", example = "London", nullable = true)
   var placeOfBirth: String? = null,
 

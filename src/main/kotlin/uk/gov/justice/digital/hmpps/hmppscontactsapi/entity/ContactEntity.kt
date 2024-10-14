@@ -46,7 +46,6 @@ data class ContactEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
 ) {
-  var contactTypeCode: String? = null
 
   var placeOfBirth: String? = null
 

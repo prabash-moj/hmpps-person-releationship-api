@@ -114,7 +114,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(middleName).isEqualTo("Middle")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(2000, 11, 26))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
-        assertThat(contactTypeCode).isEqualTo("SOCIAL")
         assertThat(placeOfBirth).isEqualTo("London")
         assertThat(active).isFalse()
         assertThat(suspended).isFalse
@@ -159,7 +158,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(middleName).isEqualTo("William")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
-        assertThat(contactTypeCode).isEqualTo("PERSON")
         assertThat(placeOfBirth).isEqualTo("London")
         assertThat(active).isTrue
         assertThat(suspended).isFalse
@@ -227,7 +225,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
         assertThat(createdBy).isEqualTo("JD000001")
-        assertThat(contactTypeCode).isEqualTo("PERSON")
         assertThat(placeOfBirth).isEqualTo("Birmingham")
         assertThat(active).isTrue
         assertThat(suspended).isFalse
@@ -286,7 +283,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         middleName = "William",
         dateOfBirth = LocalDate.of(1980, 1, 1),
         estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-        contactTypeCode = "PERSON",
         placeOfBirth = "Birmingham",
         active = true,
         suspended = false,
@@ -313,7 +309,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         dateOfBirth = LocalDate.of(1980, 1, 1),
         estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
         createdBy = "JD000001",
-        contactTypeCode = "PERSON",
         placeOfBirth = "London",
         active = true,
         suspended = false,

@@ -36,7 +36,6 @@ class SyncContactServiceTest {
         assertThat(middleName).isNull()
         assertThat(lastName).isEqualTo("Smith")
         assertThat(createdBy).isEqualTo("TEST")
-        assertThat(contactTypeCode).isEqualTo("PERSON")
         assertThat(placeOfBirth).isEqualTo("London")
         assertThat(gender).isEqualTo("Male")
         assertThat(maritalStatus).isEqualTo("Single")
@@ -160,7 +159,6 @@ class SyncContactServiceTest {
       middleName = "William",
       dateOfBirth = LocalDate.of(1980, 1, 1),
       estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-      contactTypeCode = "PERSON",
       placeOfBirth = "London",
       active = true,
       suspended = false,
@@ -188,7 +186,6 @@ class SyncContactServiceTest {
       estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
       createdBy = "JD000001",
       createdTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0),
-      contactTypeCode = "PERSON",
       placeOfBirth = "London",
       active = true,
       suspended = false,
@@ -218,7 +215,6 @@ class SyncContactServiceTest {
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     ).also {
-      it.contactTypeCode = "PERSON"
       it.placeOfBirth = "London"
       it.active = true
       it.suspended = false
@@ -248,7 +244,6 @@ class SyncContactServiceTest {
       deceasedDate = null,
       createdBy = "Admin",
     ).also {
-      it.contactTypeCode = this.contactTypeCode
       it.placeOfBirth = this.placeOfBirth
       it.active = this.active
       it.suspended = this.suspended

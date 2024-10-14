@@ -13,6 +13,9 @@ data class CreatePrisonerContactRequest(
   @Schema(description = "The prisoner number", example = "A1234BC")
   val prisonerNumber: String,
 
+  @Schema(description = "The type of the contact", example = "SOCIAL or OFFICIAL")
+  val contactType: String,
+
   @Schema(description = "The type of relationship", example = "Friend")
   val relationshipType: String,
 

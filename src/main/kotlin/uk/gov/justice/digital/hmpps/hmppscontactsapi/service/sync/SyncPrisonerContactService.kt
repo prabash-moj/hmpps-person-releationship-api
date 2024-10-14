@@ -40,6 +40,7 @@ class SyncPrisonerContactService(
     val changedPrisonerContact = contact.copy(
       contactId = request.contactId,
       prisonerNumber = request.prisonerNumber,
+      contactType = request.contactType,
       relationshipType = request.relationshipType,
       nextOfKin = request.nextOfKin,
       emergencyContact = request.emergencyContact,

@@ -15,7 +15,6 @@ fun ContactEntity.mapEntityToSyncResponse(): Contact {
     estimatedIsOverEighteen = this.estimatedIsOverEighteen,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
-    contactTypeCode = this.contactTypeCode,
     placeOfBirth = this.placeOfBirth,
     active = this.active,
     suspended = this.suspended,
@@ -47,7 +46,6 @@ fun CreateContactRequest.mapSyncRequestToEntity() = ContactEntity(
   deceasedDate = this.deceasedDate,
   createdTime = this.createdTime,
 ).also {
-  it.contactTypeCode = this.contactTypeCode
   it.placeOfBirth = this.placeOfBirth
   it.active = this.active
   it.suspended = this.suspended

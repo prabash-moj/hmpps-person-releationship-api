@@ -23,6 +23,9 @@ data class PrisonerContactEntity(
   @Column(name = "prisoner_number")
   val prisonerNumber: String,
 
+  @Column(name = "contact_type")
+  val contactType: String,
+
   @Column(name = "relationship_type")
   val relationshipType: String,
 

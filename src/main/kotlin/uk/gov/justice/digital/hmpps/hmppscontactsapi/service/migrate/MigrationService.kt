@@ -59,7 +59,6 @@ class MigrationService(
       nomisPersonId = contactPair.first,
       dpsContactId = contactPair.second.contactId,
       lastName = contactPair.second.lastName,
-      contactTypeCode = contactPair.second.contactTypeCode ?: "SOCIAL",
       phoneNumbers = phoneNumberPairs.map { IdPair(ElementType.PHONE, it.first, it.second.contactPhoneId) },
       addresses = addressPairs.map { IdPair(ElementType.ADDRESS, it.first, it.second.contactAddressId) },
       emailAddresses = emailPairs.map { IdPair(ElementType.EMAIL, it.first, it.second.contactEmailId) },
@@ -87,7 +86,6 @@ class MigrationService(
           createdBy = req.audit?.createUsername ?: "MIGRATION",
           createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
         ).also {
-          it.contactTypeCode = "SOCIAL"
           it.staffFlag = req.staff
           it.gender = req.gender?.code
           it.languageCode = req.language?.code

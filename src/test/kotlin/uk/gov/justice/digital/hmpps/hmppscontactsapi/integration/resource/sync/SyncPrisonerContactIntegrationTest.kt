@@ -108,6 +108,7 @@ class SyncPrisonerContactIntegrationTest : IntegrationTestBase() {
       with(prisonerContact) {
         assertThat(contactId).isEqualTo(15L)
         assertThat(prisonerNumber).isEqualTo("G4793VF")
+        assertThat(contactType).isEqualTo("SOCIAL")
         assertThat(relationshipType).isEqualTo("UN")
         assertThat(nextOfKin).isFalse
         assertThat(emergencyContact).isFalse
@@ -147,7 +148,8 @@ class SyncPrisonerContactIntegrationTest : IntegrationTestBase() {
         assertThat(id).isGreaterThan(29L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("Family")
+        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(relationshipType).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Create relationship")
@@ -185,7 +187,8 @@ class SyncPrisonerContactIntegrationTest : IntegrationTestBase() {
         assertThat(id).isGreaterThan(29L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("Family")
+        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(relationshipType).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Create relationship")
@@ -221,7 +224,8 @@ class SyncPrisonerContactIntegrationTest : IntegrationTestBase() {
         assertThat(id).isGreaterThan(29L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("Family")
+        assertThat(contactType).isEqualTo("OFFICIAL")
+        assertThat(relationshipType).isEqualTo("LAW")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Updated relationship type to family")
@@ -274,7 +278,8 @@ class SyncPrisonerContactIntegrationTest : IntegrationTestBase() {
       UpdatePrisonerContactRequest(
         contactId = 1L,
         prisonerNumber = "A1234BC",
-        relationshipType = "Family",
+        contactType = "OFFICIAL",
+        relationshipType = "LAW",
         nextOfKin = true,
         emergencyContact = false,
         comments = "Updated relationship type to family",
@@ -294,7 +299,8 @@ class SyncPrisonerContactIntegrationTest : IntegrationTestBase() {
       CreatePrisonerContactRequest(
         contactId = 1L,
         prisonerNumber = "A1234BC",
-        relationshipType = "Family",
+        contactType = "SOCIAL",
+        relationshipType = "FRI",
         nextOfKin = true,
         emergencyContact = false,
         comments = "Create relationship",

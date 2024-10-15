@@ -23,7 +23,7 @@ fun ContactEntity.mapEntityToSyncResponse(): Contact {
     deceasedDate = this.deceasedDate,
     coronerNumber = this.coronerNumber,
     gender = this.gender,
-    maritalStatus = this.maritalStatus,
+    domesticStatus = this.domesticStatus,
     languageCode = this.languageCode,
     nationalityCode = this.nationalityCode,
     interpreterRequired = this.interpreterRequired,
@@ -52,7 +52,7 @@ fun CreateContactRequest.mapSyncRequestToEntity() = ContactEntity(
   it.staffFlag = this.staffFlag
   it.coronerNumber = this.coronerNumber
   it.gender = this.gender
-  it.maritalStatus = this.maritalStatus
+  it.domesticStatus = this.domesticStatus
   it.languageCode = this.languageCode
   it.nationalityCode = this.nationalityCode
   it.interpreterRequired = this.interpreterRequired ?: false

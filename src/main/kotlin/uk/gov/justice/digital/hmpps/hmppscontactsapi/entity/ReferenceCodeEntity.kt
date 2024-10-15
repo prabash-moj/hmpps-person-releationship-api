@@ -20,6 +20,8 @@ data class ReferenceCodeEntity(
 
   val description: String,
 
+  val displayOrder: Int,
+
   val createdBy: String,
 
   val createdTime: LocalDateTime = LocalDateTime.now(),

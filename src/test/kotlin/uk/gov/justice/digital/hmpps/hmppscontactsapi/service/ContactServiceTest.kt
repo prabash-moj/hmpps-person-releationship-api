@@ -35,6 +35,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailDetailsRepository
@@ -59,6 +60,7 @@ class ContactServiceTest {
   private val contactEmailDetailsRepository: ContactEmailDetailsRepository = mock()
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository = mock()
   private val languageService: LanguageService = mock()
+  private val referenceCodeService: ReferenceCodeService = mock()
   private val service = ContactService(
     contactRepository,
     prisonerContactRepository,
@@ -70,6 +72,7 @@ class ContactServiceTest {
     contactEmailDetailsRepository,
     contactIdentityDetailsRepository,
     languageService,
+    referenceCodeService,
   )
 
   private val aContactAddressDetailsEntity = createContactAddressDetailsEntity()
@@ -488,6 +491,65 @@ class ContactServiceTest {
         assertThat(languageDescription).isNull()
       }
       verify(languageService, never()).getLanguageByNomisCode(any())
+    }
+
+    @Test
+    fun `should get a contact with domestic status`() {
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", "S")).thenReturn(
+        ReferenceCode(1, "DOMESTIC_STS", "S", "Single", 1),
+      )
+
+      val entity = ContactEntity(
+        contactId = contactId,
+        title = "Mr",
+        lastName = "last",
+        middleNames = "middle",
+        firstName = "first",
+        dateOfBirth = null,
+        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+        isDeceased = false,
+        deceasedDate = null,
+        createdBy = "user",
+        createdTime = LocalDateTime.now(),
+      )
+      entity.domesticStatus = "S"
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+
+      val contact = service.getContact(contactId)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+        assertThat(domesticStatusCode).isEqualTo("S")
+        assertThat(domesticStatusDescription).isEqualTo("Single")
+      }
+    }
+
+    @Test
+    fun `should get a contact with no domestic status and not look it up`() {
+      val entity = ContactEntity(
+        contactId = contactId,
+        title = "Mr",
+        lastName = "last",
+        middleNames = "middle",
+        firstName = "first",
+        dateOfBirth = null,
+        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+        isDeceased = false,
+        deceasedDate = null,
+        createdBy = "user",
+        createdTime = LocalDateTime.now(),
+      )
+      entity.domesticStatus = null
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+
+      val contact = service.getContact(contactId)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+        assertThat(domesticStatusCode).isNull()
+        assertThat(domesticStatusDescription).isNull()
+      }
+      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
     }
 
     @Test

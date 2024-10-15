@@ -25,7 +25,7 @@ CREATE TABLE contact
     deceased_date date,
     coroner_number varchar(32),
     gender varchar(20),
-    marital_status varchar(12), -- Reference codes - MARITAL_STS - nullable
+    domestic_status varchar(12), -- Reference codes - DOMESTIC_STS - nullable
     language_code varchar(12), -- Reference codes - LANGUAGE - nullable
     nationality_code varchar(12), -- Reference data - NATIONALITY - nullable
     interpreter_required boolean NOT NULL DEFAULT false,
@@ -282,6 +282,7 @@ CREATE TABLE reference_codes
     group_code          varchar(40) NOT NULL,
     code                varchar(40) NOT NULL,
     description         varchar(100) NOT NULL,
+    display_order          integer NOT NULL,
     created_by          varchar(100) NOT NULL,
     created_time        timestamp NOT NULL DEFAULT current_timestamp,
     amended_by          varchar(100),

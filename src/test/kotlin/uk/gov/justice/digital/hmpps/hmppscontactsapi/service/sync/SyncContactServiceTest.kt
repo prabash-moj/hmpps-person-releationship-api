@@ -38,7 +38,7 @@ class SyncContactServiceTest {
         assertThat(createdBy).isEqualTo("TEST")
         assertThat(placeOfBirth).isEqualTo("London")
         assertThat(gender).isEqualTo("Male")
-        assertThat(maritalStatus).isEqualTo("Single")
+        assertThat(domesticStatus).isEqualTo("Single")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
         assertThat(comments).isEqualTo("Special requirements for contact.")
@@ -167,7 +167,7 @@ class SyncContactServiceTest {
       deceasedDate = null,
       coronerNumber = null,
       gender = "Male",
-      maritalStatus = "Single",
+      domesticStatus = "Single",
       languageCode = "EN",
       nationalityCode = "GB",
       interpreterRequired = false,
@@ -194,7 +194,7 @@ class SyncContactServiceTest {
       deceasedDate = null,
       coronerNumber = null,
       gender = "Male",
-      maritalStatus = "Single",
+      domesticStatus = "Single",
       languageCode = "EN",
       nationalityCode = "GB",
       interpreterRequired = false,
@@ -221,7 +221,7 @@ class SyncContactServiceTest {
       it.staffFlag = false
       it.coronerNumber = null
       it.gender = "Male"
-      it.maritalStatus = "Single"
+      it.domesticStatus = "Single"
       it.languageCode = "EN"
       it.nationalityCode = "GB"
       it.interpreterRequired = false
@@ -250,7 +250,7 @@ class SyncContactServiceTest {
       it.staffFlag = this.staffFlag
       it.coronerNumber = this.coronerNumber
       it.gender = this.gender
-      it.maritalStatus = this.maritalStatus
+      it.domesticStatus = this.domesticStatus
       it.languageCode = this.languageCode
       it.nationalityCode = this.nationalityCode
       it.interpreterRequired = this.interpreterRequired ?: false

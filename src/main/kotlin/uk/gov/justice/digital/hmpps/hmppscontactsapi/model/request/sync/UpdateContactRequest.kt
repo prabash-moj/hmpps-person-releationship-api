@@ -53,8 +53,8 @@ data class UpdateContactRequest(
   @Schema(description = "The gender of the contact", example = "Male", nullable = true)
   var gender: String? = null,
 
-  @Schema(description = "The marital status of the contact", example = "Single", nullable = true)
-  var maritalStatus: String? = null,
+  @Schema(description = "The domestic status code of the contact", example = "S", nullable = true)
+  var domesticStatus: String? = null,
 
   @Schema(description = "The language code of the contact", example = "EN", nullable = true)
   var languageCode: String? = null,

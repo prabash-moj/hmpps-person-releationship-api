@@ -16,4 +16,7 @@ data class ReferenceCode(
 
   @Schema(description = "A fuller description of the reference code", example = "Mobile")
   val description: String?,
+
+  @Schema(description = "The default order configured for the reference code, lowest number first.", example = "5")
+  val displayOrder: Int,
 )

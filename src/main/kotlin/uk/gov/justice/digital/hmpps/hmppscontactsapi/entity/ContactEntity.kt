@@ -59,7 +59,7 @@ data class ContactEntity(
 
   var gender: String? = null
 
-  var maritalStatus: String? = null
+  var domesticStatus: String? = null
 
   var languageCode: String? = null
 

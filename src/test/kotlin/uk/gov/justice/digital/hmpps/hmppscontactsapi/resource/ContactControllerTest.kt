@@ -57,6 +57,8 @@ class ContactControllerTest {
         phoneNumbers = listOf(createContactPhoneNumberDetails()),
         emailAddresses = listOf(createContactEmailDetails()),
         identities = listOf(createContactIdentityDetails()),
+        domesticStatusCode = "S",
+        domesticStatusDescription = "Single",
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -102,6 +104,8 @@ class ContactControllerTest {
       phoneNumbers = listOf(createContactPhoneNumberDetails()),
       emailAddresses = listOf(createContactEmailDetails()),
       identities = listOf(createContactIdentityDetails()),
+      domesticStatusCode = null,
+      domesticStatusDescription = null,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

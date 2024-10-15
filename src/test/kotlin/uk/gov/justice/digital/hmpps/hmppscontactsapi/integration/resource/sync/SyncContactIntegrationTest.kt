@@ -122,7 +122,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(deceasedDate).isEqualTo("2024-01-26")
         assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("Female")
-        assertThat(maritalStatus).isEqualTo("SINGLE")
+        assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("ENG")
         assertThat(nationalityCode).isNull()
         assertThat(interpreterRequired).isFalse
@@ -166,7 +166,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(deceasedDate).isNull()
         assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("Male")
-        assertThat(maritalStatus).isEqualTo("Single")
+        assertThat(domesticStatus).isEqualTo("Single")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isFalse
@@ -233,7 +233,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(deceasedDate).isNull()
         assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("Male")
-        assertThat(maritalStatus).isEqualTo("Single")
+        assertThat(domesticStatus).isEqualTo("Single")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isTrue()
@@ -291,7 +291,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         deceasedDate = null,
         coronerNumber = null,
         gender = "Male",
-        maritalStatus = "Single",
+        domesticStatus = "Single",
         languageCode = "EN",
         nationalityCode = "GB",
         interpreterRequired = true,
@@ -317,7 +317,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         deceasedDate = null,
         coronerNumber = null,
         gender = "Male",
-        maritalStatus = "Single",
+        domesticStatus = "Single",
         languageCode = "EN",
         nationalityCode = "GB",
         interpreterRequired = false,

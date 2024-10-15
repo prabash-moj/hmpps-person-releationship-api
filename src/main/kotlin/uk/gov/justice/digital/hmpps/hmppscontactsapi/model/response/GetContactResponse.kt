@@ -56,6 +56,12 @@ data class GetContactResponse(
   @Schema(description = "All identities for the contact")
   val identities: List<ContactIdentityDetails>,
 
+  @Schema(description = "The NOMIS code for the contacts domestic status", example = "S", nullable = true)
+  val domesticStatusCode: String?,
+
+  @Schema(description = "The description of the domestic status code", example = "Single", nullable = true)
+  val domesticStatusDescription: String?,
+
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,
 

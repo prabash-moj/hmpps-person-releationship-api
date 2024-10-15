@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.SortDefault
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,7 +25,10 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 @RequestMapping(value = ["reference-codes"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ReferenceCodeController(private val referenceCodeService: ReferenceCodeService) {
 
-  @Operation(summary = "Endpoint to return reference data for a provided group key")
+  @Operation(
+    summary = "Endpoint to return reference data for a provided group key. " +
+      "Sorted by display order then description by default.",
+  )
   @ApiResponses(
     value = [
       ApiResponse(
@@ -62,6 +67,10 @@ class ReferenceCodeController(private val referenceCodeService: ReferenceCodeSer
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
   fun getReferenceDataByGroup(
     @Parameter(description = "The group code of the reference codes to load", required = true, example = "PHONE_TYPE")
-    @PathVariable("groupCode", required = true) groupCode: String,
-  ): List<ReferenceCode> = referenceCodeService.getReferenceDataByGroup(groupCode)
+    @PathVariable("groupCode", required = true)
+    groupCode: String,
+    @Parameter(description = "Sort configuration - default displayOrder, description", required = false)
+    @SortDefault("displayOrder", "description")
+    sort: Sort,
+  ): List<ReferenceCode> = referenceCodeService.getReferenceDataByGroup(groupCode, sort)
 }

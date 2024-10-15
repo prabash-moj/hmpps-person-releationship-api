@@ -89,7 +89,7 @@ class MigrationService(
           it.staffFlag = req.staff
           it.gender = req.gender?.code
           it.languageCode = req.language?.code
-          it.maritalStatus = req.domesticStatus?.code
+          it.domesticStatus = req.domesticStatus?.code
           // it.active
           // it.placeOfBirth
           it.interpreterRequired = req.interpreterRequired

@@ -240,6 +240,17 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
     }
   }
 
+  @Test
+  fun `should get contacts with domestic status`() {
+    val contact = testAPIClient.getContact(1)
+
+    with(contact) {
+      assertThat(id).isEqualTo(1)
+      assertThat(domesticStatusCode).isEqualTo("M")
+      assertThat(domesticStatusDescription).isEqualTo("Married or in civil partnership")
+    }
+  }
+
   @ParameterizedTest
   @EnumSource(EstimatedIsOverEighteen::class)
   fun `should return is over eighteen when DOB is not known`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {

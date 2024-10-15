@@ -54,15 +54,17 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBody(PrisonerContactSummaryResponse::class.java)
     .returnResult().responseBody!!
 
-  fun getReferenceCodes(groupCode: String) = webTestClient.get()
-    .uri("/reference-codes/group/$groupCode")
-    .accept(MediaType.APPLICATION_JSON)
-    .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-    .exchange()
-    .expectStatus().isOk
-    .expectHeader().contentType(MediaType.APPLICATION_JSON)
-    .expectBodyList(ReferenceCode::class.java)
-    .returnResult().responseBody
+  fun getReferenceCodes(groupCode: String, sort: String? = null): MutableList<ReferenceCode>? {
+    return webTestClient.get()
+      .uri("/reference-codes/group/${groupCode}${sort?.let { "?sort=$sort" } ?: ""}")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus().isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(ReferenceCode::class.java)
+      .returnResult().responseBody
+  }
 
   fun addAContactRelationship(contactId: Long, request: AddContactRelationshipRequest) {
     webTestClient.post()

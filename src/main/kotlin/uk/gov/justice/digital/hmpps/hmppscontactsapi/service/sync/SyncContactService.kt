@@ -53,7 +53,7 @@ class SyncContactService(
       it.staffFlag = request.staffFlag
       it.coronerNumber = request.coronerNumber
       it.gender = request.gender
-      it.maritalStatus = request.maritalStatus
+      it.domesticStatus = request.domesticStatus
       it.languageCode = request.languageCode
       it.nationalityCode = request.nationalityCode
       it.interpreterRequired = request.interpreterRequired ?: false

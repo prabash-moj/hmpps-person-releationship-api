@@ -55,7 +55,7 @@ dependencies {
   testImplementation("org.mockito:mockito-inline:5.2.0")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.security:spring-security-test")
-  testImplementation("org.testcontainers:localstack:1.20.1")
+  testImplementation("org.testcontainers:localstack:1.20.2")
   testImplementation("org.wiremock:wiremock-standalone:3.9.1")
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.0.7")
 }

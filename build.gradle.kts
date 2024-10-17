@@ -33,7 +33,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-validation")
 
   // CSV dependencies
-  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.17.2")
+  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.18.0")
 
   // Database dependencies
   runtimeOnly("org.flywaydb:flyway-database-postgresql")

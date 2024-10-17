@@ -9,8 +9,8 @@ data class CreateContactAddressRequest(
   @Schema(description = "The id of the contact this address is linked with", example = "123456")
   val contactId: Long,
 
-  @Schema(description = "The type of address", example = "HOME")
-  val addressType: String? = null,
+  @Schema(description = "The type of address", examples = ["HOME", "WORK", "NONE", "UNKNOWN"])
+  val addressType: String,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")
   val primaryAddress: Boolean = false,

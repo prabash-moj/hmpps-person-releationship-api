@@ -75,7 +75,7 @@ CREATE TABLE contact_address
 (
     contact_address_id bigserial NOT NULL CONSTRAINT contact_address_id_pk PRIMARY KEY,
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
-    address_type varchar(12) NOT NULL, -- Reference code - ADDRESS_TYPE e.g. HOME, WORK, TEMPORARY
+    address_type varchar(12) NOT NULL, -- Reference code - ADDRESS_TYPE e.g. HOME, WORK, TEMPORARY, UNKNOWN
     primary_address boolean NOT NULL DEFAULT false,
     flat varchar(20), -- flat number (nullable)
     property varchar(50), -- house name or number - nullable
@@ -161,27 +161,6 @@ CREATE TABLE contact_address_phone
 CREATE INDEX idx_contact_address_phone_contact_id ON contact_address_phone(contact_id);
 CREATE INDEX idx_contact_address_phone_contact_address_id ON contact_address_phone(contact_address_id);
 CREATE INDEX idx_contact_address_phone_contact_phone_id ON contact_address_phone(contact_phone_id);
-
----------------------------------------------------------------------------------------
--- Contacts may have multiple websites.
--- This table stores the websites related to a contact.
--- This is likely to be used for professional contacts rather than social.
--- Can be empty, or populated if contacts in NOMIS have websites (table INTERNET_ADDRESSES)
-----------------------------------------------------------------------------------------
-
-CREATE TABLE contact_website
-(
-    contact_website_id bigserial NOT NULL CONSTRAINT contact_website_id_pk PRIMARY KEY,
-    contact_id bigint NOT NULL REFERENCES contact(contact_id),
-    url varchar(240) NOT NULL,
-    created_by varchar(100) NOT NULL,
-    created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
-);
-
-CREATE INDEX idx_contact_website_contact_id ON contact_website(contact_id);
-CREATE INDEX idx_contact_website_url ON contact_website(url);
 
 ---------------------------------------------------------------------------------------
 -- Restrictions can exist against contacts (unrelated to any prisoners)

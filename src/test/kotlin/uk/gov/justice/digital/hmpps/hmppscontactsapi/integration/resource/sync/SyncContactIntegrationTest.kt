@@ -126,7 +126,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(languageCode).isEqualTo("ENG")
         assertThat(nationalityCode).isNull()
         assertThat(interpreterRequired).isFalse
-        assertThat(comments).isEqualTo("Comment")
         assertThat(createdBy).isEqualTo("TIM")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(amendedBy).isNull()
@@ -170,7 +169,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isFalse
-        assertThat(comments).isEqualTo("Special requirements for contact.")
         assertThat(createdBy).isEqualTo("JD000001")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -237,7 +235,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isTrue()
-        assertThat(comments).isEqualTo("Updated Special requirements for contact.")
         assertThat(amendedBy).isEqualTo("UPDATE")
         assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -295,7 +292,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         languageCode = "EN",
         nationalityCode = "GB",
         interpreterRequired = true,
-        comments = "Updated Special requirements for contact.",
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
       )
@@ -321,7 +317,6 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         languageCode = "EN",
         nationalityCode = "GB",
         interpreterRequired = false,
-        comments = "Special requirements for contact.",
       )
   }
 }

@@ -57,7 +57,6 @@ class SyncContactService(
       it.languageCode = request.languageCode
       it.nationalityCode = request.nationalityCode
       it.interpreterRequired = request.interpreterRequired ?: false
-      it.comments = request.comments
       it.amendedBy = request.updatedBy
       it.amendedTime = request.updatedTime
     }

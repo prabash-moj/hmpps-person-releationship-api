@@ -27,7 +27,6 @@ fun ContactEntity.mapEntityToSyncResponse(): Contact {
     languageCode = this.languageCode,
     nationalityCode = this.nationalityCode,
     interpreterRequired = this.interpreterRequired,
-    comments = this.comments,
     amendedBy = this.amendedBy,
     amendedTime = this.amendedTime,
   )
@@ -56,5 +55,4 @@ fun CreateContactRequest.mapSyncRequestToEntity() = ContactEntity(
   it.languageCode = this.languageCode
   it.nationalityCode = this.nationalityCode
   it.interpreterRequired = this.interpreterRequired ?: false
-  it.comments = this.comments
 }

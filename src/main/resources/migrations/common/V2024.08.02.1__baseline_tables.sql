@@ -29,7 +29,6 @@ CREATE TABLE contact
     language_code varchar(12), -- Reference codes - LANGUAGE - nullable
     nationality_code varchar(12), -- Reference data - NATIONALITY - nullable
     interpreter_required boolean NOT NULL DEFAULT false,
-    comments varchar(200),
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
     amended_by varchar(100),

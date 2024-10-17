@@ -66,9 +66,6 @@ data class CreateContactRequest(
   @Schema(description = "Whether an interpreter is required", example = "false", nullable = true)
   var interpreterRequired: Boolean? = false,
 
-  @Schema(description = "Additional comments about the contact", example = "This contact has special dietary requirements.", nullable = true)
-  var comments: String? = null,
-
   @Schema(description = "The id of the user creating the contact", example = "JD000001", maxLength = 100)
   val createdBy: String,
 

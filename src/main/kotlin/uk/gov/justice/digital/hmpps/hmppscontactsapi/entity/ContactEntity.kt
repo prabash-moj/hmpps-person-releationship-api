@@ -67,8 +67,6 @@ data class ContactEntity(
 
   var interpreterRequired: Boolean = false
 
-  var comments: String? = null
-
   var amendedBy: String? = null
 
   var amendedTime: LocalDateTime? = null

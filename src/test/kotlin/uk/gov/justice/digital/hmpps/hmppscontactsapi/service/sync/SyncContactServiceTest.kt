@@ -41,7 +41,6 @@ class SyncContactServiceTest {
         assertThat(domesticStatus).isEqualTo("Single")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
-        assertThat(comments).isEqualTo("Special requirements for contact.")
         assertThat(dateOfBirth).isNull()
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.NO)
         assertThat(deceasedDate).isNull()
@@ -171,7 +170,6 @@ class SyncContactServiceTest {
       languageCode = "EN",
       nationalityCode = "GB",
       interpreterRequired = false,
-      comments = "Special requirements for contact.",
       updatedBy = "Admin",
       updatedTime = LocalDateTime.now(),
     )
@@ -198,7 +196,6 @@ class SyncContactServiceTest {
       languageCode = "EN",
       nationalityCode = "GB",
       interpreterRequired = false,
-      comments = "Special requirements for contact.",
     )
 
   private fun contactEntity() =
@@ -225,7 +222,6 @@ class SyncContactServiceTest {
       it.languageCode = "EN"
       it.nationalityCode = "GB"
       it.interpreterRequired = false
-      it.comments = "Special requirements for contact."
     }
 
   private fun UpdateContactRequest.toEntity(contactId: Long = 1L): ContactEntity {
@@ -254,7 +250,6 @@ class SyncContactServiceTest {
       it.languageCode = this.languageCode
       it.nationalityCode = this.nationalityCode
       it.interpreterRequired = this.interpreterRequired ?: false
-      it.comments = this.comments
       it.amendedBy = updatedBy
       it.amendedTime = updatedTime
     }

@@ -65,9 +65,6 @@ data class Contact(
   @Schema(description = "Whether an interpreter is required", example = "false", nullable = true)
   var interpreterRequired: Boolean? = false,
 
-  @Schema(description = "Additional comments about the contact", example = "This contact has special dietary requirements.", nullable = true)
-  var comments: String? = null,
-
   @Schema(description = "User who created the entry", example = "admin")
   val createdBy: String,
 

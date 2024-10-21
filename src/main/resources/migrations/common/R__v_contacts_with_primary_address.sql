@@ -37,7 +37,8 @@ select
     ca.mail_flag,
     ca.start_date,
     ca.end_date,
-    ca.no_fixed_address
+    ca.no_fixed_address,
+    ca.comments
   from contact c
   left join contact_address ca ON ca.contact_id = c.contact_id AND ca.primary_address = true
   left join city_reference city_ref on city_ref.nomis_code = ca.city_code

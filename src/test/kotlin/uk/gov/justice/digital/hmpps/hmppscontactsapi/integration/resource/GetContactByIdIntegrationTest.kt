@@ -102,6 +102,7 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
         assertThat(countryDescription).isEqualTo("England")
         assertThat(mailFlag).isFalse()
         assertThat(noFixedAddress).isFalse()
+        assertThat(comments).isEqualTo("Some comments")
         assertThat(createdBy).isEqualTo("TIM")
         assertThat(createdTime).isNotNull()
       }

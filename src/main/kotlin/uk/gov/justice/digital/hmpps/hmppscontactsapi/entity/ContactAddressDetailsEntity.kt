@@ -56,6 +56,8 @@ data class ContactAddressDetailsEntity(
 
   val noFixedAddress: Boolean,
 
+  val comments: String?,
+
   val createdBy: String,
 
   val createdTime: LocalDateTime,

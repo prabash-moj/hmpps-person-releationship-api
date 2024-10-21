@@ -146,6 +146,7 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(contact.countryDescription).isEqualTo("England")
       assertThat(contact.mailFlag).isFalse()
       assertThat(contact.noFixedAddress).isFalse()
+      assertThat(contact.comments).isEqualTo("Some comments")
       assertThat(contact.startDate).isNull()
       assertThat(contact.startDate).isNull()
     }

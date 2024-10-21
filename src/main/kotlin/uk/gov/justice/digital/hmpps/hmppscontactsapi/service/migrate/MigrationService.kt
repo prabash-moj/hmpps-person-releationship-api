@@ -144,6 +144,7 @@ class MigrationService(
             startDate = addr.startDate,
             endDate = addr.endDate,
             noFixedAddress = addr.noFixedAddress,
+            comments = addr.comment,
             // TODO: Check any linked phone numbers are also supplied as phone numbers!
             createdBy = req.audit?.createUsername ?: "MIGRATION",
             createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),

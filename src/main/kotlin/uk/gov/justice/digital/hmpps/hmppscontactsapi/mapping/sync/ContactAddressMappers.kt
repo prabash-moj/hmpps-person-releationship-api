@@ -25,6 +25,7 @@ fun ContactAddressEntity.toModel(): ContactAddress {
     startDate = this.startDate,
     endDate = this.endDate,
     noFixedAddress = this.noFixedAddress,
+    comments = this.comments,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     amendedBy = this.amendedBy,
@@ -53,6 +54,7 @@ fun CreateContactAddressRequest.toEntity(): ContactAddressEntity {
     startDate = this.startDate,
     endDate = this.endDate,
     noFixedAddress = this.noFixedAddress ?: false,
+    comments = this.comments,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
   )

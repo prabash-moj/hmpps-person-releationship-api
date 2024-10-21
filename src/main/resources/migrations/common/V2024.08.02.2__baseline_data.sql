@@ -34,24 +34,24 @@ values (1, 'DRIVING', '2000-11-21','2000-11-21','N/A', 'TIM'),
        (2, 'PUBLIC', '2000-11-21','2005-11-21','N/A', 'TIM'),
        (3, 'MOBILITY', '2000-11-21','2000-11-21','N/A', 'TIM');
 
-insert into contact_address(contact_address_id, contact_id, address_type, primary_address, flat, property, street, area, city_code, county_code, post_code, country_code, created_by, verified, verified_by, verified_time, mail_flag, start_date, end_date, no_fixed_address)
-values (1,  1,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (2,  1,  'WORK', false, 'Flat 1', '42','My Work Place', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', true, 'BOB', '2020-01-01 10:30:00', true, '2020-01-02', '2029-03-04', true),
-       (3,  2,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (4,  3,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (5,  4,  'HOME', true,  null, '26','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (6,  5,  'HOME', true,  null, '28','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (7,  6,  'HOME', true,  null, '30','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (8,  7,  'HOME', true,  null, '32','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (9,  8,  'HOME', true,  null, '34','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (10,  9, 'HOME', true,  null, '36','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (11, 10, 'HOME', true,  null, '38','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (12, 11, 'HOME', true,  null, '40','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (13, 12, 'HOME', true, 'Flat 3b', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (14, 13, 'HOME', true, 'Flat 35b', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (15, 14, 'HOME', true, 'Flat 3', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (16, 15, 'HOME', true, 'Flat 32', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'TIM', false, null, null, false, null, null, false),
-       (17, 18, 'HOME', true, null, null,null, null, null, null, null, null, 'TIM', false, null, null, false, null, null, true);
+insert into contact_address(contact_address_id, contact_id, address_type, primary_address, flat, property, street, area, city_code, county_code, post_code, country_code, comments, created_by, verified, verified_by, verified_time, mail_flag, start_date, end_date, no_fixed_address)
+values (1,  1,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (2,  1,  'WORK', false, 'Flat 1', '42','My Work Place', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', true, 'BOB', '2020-01-01 10:30:00', true, '2020-01-02', '2029-03-04', true),
+       (3,  2,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (4,  3,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (5,  4,  'HOME', true,  null, '26','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (6,  5,  'HOME', true,  null, '28','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (7,  6,  'HOME', true,  null, '30','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (8,  7,  'HOME', true,  null, '32','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (9,  8,  'HOME', true,  null, '34','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (10,  9, 'HOME', true,  null, '36','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (11, 10, 'HOME', true,  null, '38','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (12, 11, 'HOME', true,  null, '40','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (13, 12, 'HOME', true, 'Flat 3b', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (14, 13, 'HOME', true, 'Flat 35b', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (15, 14, 'HOME', true, 'Flat 3', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (16, 15, 'HOME', true, 'Flat 32', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
+       (17, 18, 'HOME', true, null, null,null, null, null, null, null, null, null, 'TIM', false, null, null, false, null, null, true);
 
 insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, ext_number, primary_phone, created_by)
 values (1, 1, 'MOBILE', '07878 111111', null, true, 'TIM'),

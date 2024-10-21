@@ -86,6 +86,7 @@ class SyncContactAddressService(
       startDate = request.startDate,
       endDate = request.endDate,
       noFixedAddress = request.noFixedAddress ?: false,
+      comments = request.comments,
     ).also {
       it.amendedBy = request.updatedBy
       it.amendedTime = request.updatedTime

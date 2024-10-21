@@ -13,10 +13,10 @@ data class ContactAddressDetails(
   @Schema(description = "The id of the contact", example = "123456")
   val contactId: Long,
 
-  @Schema(description = "The type of address", example = "HOME")
+  @Schema(description = "The type of address", example = "HOME", nullable = true)
   val addressType: String?,
 
-  @Schema(description = "The description of the address type", example = "HOME")
+  @Schema(description = "The description of the address type", example = "HOME", nullable = true)
   val addressTypeDescription: String?,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")
@@ -58,7 +58,7 @@ data class ContactAddressDetails(
   @Schema(description = "Whether the address has been verified by postcode lookup", example = "false")
   val verified: Boolean,
 
-  @Schema(description = "Which username ran the postcode lookup check", example = "NJKG44D")
+  @Schema(description = "Which username ran the postcode lookup check", example = "NJKG44D", nullable = true)
   val verifiedBy: String?,
 
   @Schema(description = "The timestamp of when the postcode lookup was done", example = "2024-01-01T00:00:00Z")
@@ -67,14 +67,17 @@ data class ContactAddressDetails(
   @Schema(description = "Flag to indicate whether mail is allowed to be sent to this address", example = "false")
   val mailFlag: Boolean,
 
-  @Schema(description = "The start date when this address is to be considered active from", example = "2024-01-01")
+  @Schema(description = "The start date when this address is to be considered active from", example = "2024-01-01", nullable = true)
   val startDate: LocalDate?,
 
-  @Schema(description = "The end date when this address is to be considered no longer active", example = "2024-01-01")
+  @Schema(description = "The end date when this address is to be considered no longer active", example = "2024-01-01", nullable = true)
   val endDate: LocalDate?,
 
   @Schema(description = "Flag to indicate whether this address indicates no fixed address", example = "false")
   val noFixedAddress: Boolean,
+
+  @Schema(description = "Any additional information or comments about the address", example = "Some additional information", nullable = true)
+  val comments: String?,
 
   @Schema(description = "Phone numbers that are related to this address")
   val phoneNumbers: List<ContactPhoneNumberDetails>,
@@ -85,9 +88,9 @@ data class ContactAddressDetails(
   @Schema(description = "The timestamp of when the contact was created", example = "2024-01-01T00:00:00Z")
   val createdTime: LocalDateTime,
 
-  @Schema(description = "The id of the user who last amended the contact address", example = "JD000001")
+  @Schema(description = "The id of the user who last amended the contact address", example = "JD000001", nullable = true)
   val amendedBy: String?,
 
-  @Schema(description = "The timestamp of when the contact address was last amended", example = "2024-01-01T00:00:00Z")
+  @Schema(description = "The timestamp of when the contact address was last amended", example = "2024-01-01T00:00:00Z", nullable = true)
   val amendedTime: LocalDateTime?,
 )

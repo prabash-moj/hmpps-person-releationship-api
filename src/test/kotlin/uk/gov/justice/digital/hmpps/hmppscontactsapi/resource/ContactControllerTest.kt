@@ -219,5 +219,6 @@ class ContactControllerTest {
     postCode = "user",
     mailFlag = true,
     noFixedAddress = true,
+    comments = "Some comments",
   )
 }

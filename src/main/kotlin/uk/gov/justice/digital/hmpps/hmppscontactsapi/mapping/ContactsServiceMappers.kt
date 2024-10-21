@@ -35,6 +35,7 @@ fun ContactWithAddressEntity.toModel() = ContactSearchResultItem(
   startDate = this.startDate,
   endDate = this.endDate,
   noFixedAddress = this.noFixedAddress,
+  comments = this.comments,
 )
 
 fun PageImpl<ContactWithAddressEntity>.toModel(): Page<ContactSearchResultItem> = map { it.toModel() }

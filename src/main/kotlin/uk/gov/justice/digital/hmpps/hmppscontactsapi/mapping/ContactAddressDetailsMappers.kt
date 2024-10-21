@@ -29,6 +29,7 @@ fun ContactAddressDetailsEntity.toModel(phoneNumbers: List<ContactPhoneNumberDet
     startDate = this.startDate,
     endDate = this.endDate,
     noFixedAddress = this.noFixedAddress,
+    comments = this.comments,
     phoneNumbers = phoneNumbers,
     createdBy = this.createdBy,
     createdTime = this.createdTime,

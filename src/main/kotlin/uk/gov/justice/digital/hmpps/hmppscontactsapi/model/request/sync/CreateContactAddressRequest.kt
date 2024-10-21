@@ -54,6 +54,9 @@ data class CreateContactAddressRequest(
   @Schema(description = "Flag to indicate this address should be considered as no fixed address", example = "false")
   val noFixedAddress: Boolean? = false,
 
+  @Schema(description = "Any additional information or comments about the address", example = "Some additional information", nullable = true)
+  val comments: String? = null,
+
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,
 

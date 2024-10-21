@@ -49,6 +49,8 @@ data class ContactAddressEntity(
 
   val noFixedAddress: Boolean = false,
 
+  val comments: String? = null,
+
   val createdBy: String,
 
   @CreationTimestamp

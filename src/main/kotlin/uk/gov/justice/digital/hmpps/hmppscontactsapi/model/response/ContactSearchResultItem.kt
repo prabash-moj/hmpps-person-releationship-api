@@ -73,4 +73,7 @@ data class ContactSearchResultItem(
   @Schema(description = "A flag to indicate that this address is effectively no fixed address", example = "false", nullable = true)
   val noFixedAddress: Boolean? = false,
 
+  @Schema(description = "Any additional information or comments about the address", example = "Some additional information", nullable = true)
+  val comments: String?,
+
 )

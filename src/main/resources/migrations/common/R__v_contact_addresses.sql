@@ -28,6 +28,7 @@ select
     ca.start_date,
     ca.end_date,
     ca.no_fixed_address,
+    ca.comments,
     ca.created_by,
     ca.created_time,
     ca.amended_by,

@@ -92,6 +92,7 @@ CREATE TABLE contact_address
     start_date date,
     end_date date,
     no_fixed_address boolean NOT NULL DEFAULT false,
+    comments varchar(240),
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
     amended_by varchar(100),

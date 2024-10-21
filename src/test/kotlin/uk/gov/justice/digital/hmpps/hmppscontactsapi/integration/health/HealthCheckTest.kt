@@ -1,9 +1,9 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.health
 
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 
-class HealthCheckTest : IntegrationTestBase() {
+class HealthCheckTest : H2IntegrationTestBase() {
 
   @Test
   fun `Health page reports ok`() {

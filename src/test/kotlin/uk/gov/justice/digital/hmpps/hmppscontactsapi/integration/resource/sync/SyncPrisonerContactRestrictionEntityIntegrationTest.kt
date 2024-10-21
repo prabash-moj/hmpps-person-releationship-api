@@ -4,14 +4,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.PrisonerContactRestriction
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class SyncPrisonerContactRestrictionEntityIntegrationTest : IntegrationTestBase() {
+class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBase() {
 
   @Nested
   inner class PrisonerContactRestrictionEntitySyncTests {

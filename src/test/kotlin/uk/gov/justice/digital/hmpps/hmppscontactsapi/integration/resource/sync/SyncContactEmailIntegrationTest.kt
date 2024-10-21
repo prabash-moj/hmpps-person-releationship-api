@@ -5,14 +5,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactEmail
 import java.time.LocalDateTime
 
-class SyncContactEmailIntegrationTest : IntegrationTestBase() {
+class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
 
   @Nested
   inner class ContactEmailSyncTests {

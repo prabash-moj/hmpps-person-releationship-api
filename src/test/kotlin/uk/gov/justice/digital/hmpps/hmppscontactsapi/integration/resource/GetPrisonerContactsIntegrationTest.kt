@@ -4,10 +4,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.TestAPIClient.PrisonerContactSummaryResponse
 
-class GetPrisonerContactsIntegrationTest : IntegrationTestBase() {
+class GetPrisonerContactsIntegrationTest : H2IntegrationTestBase() {
   companion object {
     private const val GET_PRISONER_CONTACT = "/prisoner/A4385DZ/contact"
   }

@@ -8,13 +8,13 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 
-class AddContactRelationshipIntegrationTest : IntegrationTestBase() {
+class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
   private lateinit var contact: GetContactResponse
 

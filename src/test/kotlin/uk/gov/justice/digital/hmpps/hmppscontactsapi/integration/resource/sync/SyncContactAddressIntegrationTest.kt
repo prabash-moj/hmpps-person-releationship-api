@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactAddressRequest
@@ -14,7 +14,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import java.time.LocalDateTime
 
-class SyncContactAddressIntegrationTest : IntegrationTestBase() {
+class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
   @Autowired
   private lateinit var contactAddressRepository: ContactAddressRepository
 

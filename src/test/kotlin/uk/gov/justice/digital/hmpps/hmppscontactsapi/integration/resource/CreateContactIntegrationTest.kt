@@ -9,13 +9,13 @@ import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import java.time.LocalDate
 
-class CreateContactIntegrationTest : IntegrationTestBase() {
+class CreateContactIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should return unauthorized if no token`() {

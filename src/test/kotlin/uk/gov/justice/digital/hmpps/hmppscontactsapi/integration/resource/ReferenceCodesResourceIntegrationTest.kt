@@ -4,11 +4,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ReferenceCodeRepository
 
-class ReferenceCodesResourceIntegrationTest : IntegrationTestBase() {
+class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
   @Autowired
   private lateinit var referenceCodeRepository: ReferenceCodeRepository
 

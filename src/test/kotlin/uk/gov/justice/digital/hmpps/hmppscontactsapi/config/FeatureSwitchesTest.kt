@@ -11,7 +11,7 @@ import org.springframework.test.context.TestPropertySource
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.isBool
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@ActiveProfiles("test")
+@ActiveProfiles("test", "h2")
 class FeatureSwitchesTest {
   @TestPropertySource(properties = ["feature.events.sns.enabled=true"])
   @Nested

@@ -13,12 +13,19 @@ parameters:
   java-version:
     type: string
     default: "21.0"
+  postgres-tag:
+    type: string
+    default: "16"
 
 jobs:
   validate:
     executor:
-      name: hmpps/java
-      tag: << pipeline.parameters.java-version >>
+      name: hmpps/java_postgres
+      jdk_tag: << pipeline.parameters.java-version >>
+      postgres_tag: << pipeline.parameters.postgres-tag >>
+      postgres_db: "contacts-db"
+      postgres_username: "contacts"
+      postgres_password: "contacts"
     steps:
       - checkout
       - restore_cache:

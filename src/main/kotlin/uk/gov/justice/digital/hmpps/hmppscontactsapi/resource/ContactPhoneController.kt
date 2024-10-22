@@ -7,11 +7,13 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -23,7 +25,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPhoneService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Contact")
+@Tag(name = "Contact Phone")
 @RestController
 @RequestMapping(value = ["contact/{contactId}/phone"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
@@ -53,7 +55,7 @@ class ContactPhoneController(private val contactPhoneService: ContactPhoneServic
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Could not find the prisoner that this contact has a relationship to",
+        description = "Could not find the the contact this phone is for",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -71,5 +73,47 @@ class ContactPhoneController(private val contactPhoneService: ContactPhoneServic
     return ResponseEntity
       .status(HttpStatus.CREATED)
       .body(createdPhone)
+  }
+
+  @GetMapping("/{contactPhoneId}")
+  @Operation(
+    summary = "Get a phone number",
+    description = "Gets a contacts phone number by id",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "200",
+        description = "Found the phone successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = ContactPhoneDetails::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "Could not find the the contact or phone this request is for",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun get(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @PathVariable("contactPhoneId") @Parameter(
+      name = "contactPhoneId",
+      description = "The id of the contact phone",
+      example = "987654",
+    ) contactPhoneId: Long,
+  ): ResponseEntity<Any> {
+    return contactPhoneService.get(contactId, contactPhoneId)
+      ?.let { ResponseEntity.ok(it) }
+      ?: throw EntityNotFoundException("Contact phone with id ($contactPhoneId) not found for contact ($contactId)")
   }
 }

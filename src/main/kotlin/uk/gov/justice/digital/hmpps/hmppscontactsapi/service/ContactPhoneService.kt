@@ -5,9 +5,11 @@ import jakarta.transaction.Transactional
 import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 
@@ -15,6 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepositor
 class ContactPhoneService(
   val contactRepository: ContactRepository,
   val contactPhoneRepository: ContactPhoneRepository,
+  val contactPhoneDetailsRepository: ContactPhoneDetailsRepository,
   val referenceCodeService: ReferenceCodeService,
 ) {
 
@@ -45,6 +48,10 @@ class ContactPhoneService(
       null,
       null,
     )
+  }
+
+  fun get(contactId: Long, contactPhoneId: Long): ContactPhoneDetails? {
+    return contactPhoneDetailsRepository.findByContactIdAndContactPhoneId(contactId, contactPhoneId)?.toModel()
   }
 
   private fun validatePhoneNumber(request: CreatePhoneRequest) {

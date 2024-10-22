@@ -115,6 +115,20 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectBody(ContactPhoneDetails::class.java)
       .returnResult().responseBody!!
   }
+
+  fun getContactPhone(contactId: Long, contactPhoneId: Long): ContactPhoneDetails {
+    return webTestClient.get()
+      .uri("/contact/$contactId/phone/$contactPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactPhoneDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
   fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(),

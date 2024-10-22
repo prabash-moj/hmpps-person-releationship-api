@@ -70,6 +70,18 @@ data class PrisonerContactSummary(
   @Schema(description = "The description of country code", example = "England")
   val countryDescription: String,
 
+  @Schema(description = "Type of the latest phone number", example = "MOBILE", nullable = true)
+  val phoneType: String?,
+
+  @Schema(description = "Description of the type of the latest phone number", example = "Mobile phone", nullable = true)
+  val phoneTypeDescription: String?,
+
+  @Schema(description = "The latest phone number, if there are any", example = "+1234567890", nullable = true)
+  val phoneNumber: String?,
+
+  @Schema(description = "The extension number of the latest phone number", example = "123", nullable = true)
+  val extNumber: String?,
+
   @Schema(description = "Indicates whether the contact is an approved visitor", example = "true")
   val approvedVisitor: Boolean,
 

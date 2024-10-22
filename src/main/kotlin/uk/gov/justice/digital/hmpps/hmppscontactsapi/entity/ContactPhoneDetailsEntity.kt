@@ -21,8 +21,6 @@ data class ContactPhoneDetailsEntity(
 
   val extNumber: String?,
 
-  val primaryPhone: Boolean,
-
   val createdBy: String,
 
   val createdTime: LocalDateTime,

@@ -138,7 +138,6 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
         assertThat(phoneTypeDescription).isEqualTo("Mobile phone")
         assertThat(phoneNumber).isEqualTo("07878 111111")
         assertThat(extNumber).isNull()
-        assertThat(primaryPhone).isTrue()
         assertThat(createdBy).isEqualTo("TIM")
       }
       with(contact.phoneNumbers[1]) {
@@ -148,7 +147,6 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
         assertThat(phoneTypeDescription).isEqualTo("Home phone")
         assertThat(phoneNumber).isEqualTo("01111 777777")
         assertThat(extNumber).isEqualTo("+0123")
-        assertThat(primaryPhone).isFalse()
         assertThat(createdBy).isEqualTo("JAMES")
       }
 

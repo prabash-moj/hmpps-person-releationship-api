@@ -7,7 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsE
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -18,7 +18,6 @@ fun createContactPhoneDetailsEntity(
   phoneTypeDescription: String = "Home phone",
   phoneNumber: String = "123456789",
   extNumber: String? = "987654321",
-  primaryPhone: Boolean = true,
   createdBy: String = "CREATOR",
   createdTime: LocalDateTime = LocalDateTime.of(2024, 2, 3, 4, 5, 6),
   amendedBy: String? = "AM",
@@ -30,7 +29,6 @@ fun createContactPhoneDetailsEntity(
   phoneTypeDescription,
   phoneNumber,
   extNumber,
-  primaryPhone,
   createdBy,
   createdTime,
   amendedBy,
@@ -44,19 +42,17 @@ fun createContactPhoneNumberDetails(
   phoneTypeDescription: String = "Home phone",
   phoneNumber: String = "123456789",
   extNumber: String? = "987654321",
-  primaryPhone: Boolean = true,
   createdBy: String = "CREATOR",
   createdTime: LocalDateTime = LocalDateTime.of(2024, 2, 3, 4, 5, 6),
   amendedBy: String? = "AM",
   amendedTime: LocalDateTime? = LocalDateTime.of(2026, 5, 4, 3, 2, 1),
-): ContactPhoneNumberDetails = ContactPhoneNumberDetails(
+): ContactPhoneDetails = ContactPhoneDetails(
   id,
   contactId,
   phoneType,
   phoneTypeDescription,
   phoneNumber,
   extNumber,
-  primaryPhone,
   createdBy,
   createdTime,
   amendedBy,
@@ -148,7 +144,7 @@ fun createContactAddressDetails(
   endDate: LocalDate? = LocalDate.of(2050, 4, 5),
   noFixedAddress: Boolean = true,
   comments: String? = "Some comments",
-  phoneNumbers: List<ContactPhoneNumberDetails> = emptyList(),
+  phoneNumbers: List<ContactPhoneDetails> = emptyList(),
   createdBy: String = "USER1",
   createdTime: LocalDateTime = LocalDateTime.of(2023, 2, 3, 11, 15, 15),
   amendedBy: String? = "AMEND_USER",

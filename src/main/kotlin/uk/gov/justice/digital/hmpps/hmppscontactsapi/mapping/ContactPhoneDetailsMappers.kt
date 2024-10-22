@@ -1,16 +1,15 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 
-fun ContactPhoneDetailsEntity.toModel(): ContactPhoneNumberDetails = ContactPhoneNumberDetails(
+fun ContactPhoneDetailsEntity.toModel(): ContactPhoneDetails = ContactPhoneDetails(
   contactPhoneId = this.contactPhoneId,
   contactId = this.contactId,
   phoneType = this.phoneType,
   phoneTypeDescription = this.phoneTypeDescription,
   phoneNumber = this.phoneNumber,
   extNumber = this.extNumber,
-  primaryPhone = this.primaryPhone,
   createdBy = this.createdBy,
   createdTime = this.createdTime,
   amendedBy = this.amendedBy,

@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactPhone
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
 import java.time.LocalDateTime
 
 class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
 
   @Nested
-  inner class ContactPhoneSyncTests {
+  inner class SyncContactPhoneSyncTests {
     private var savedContactId = 0L
 
     @BeforeEach
@@ -109,13 +109,12 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactPhone::class.java)
+        .expectBody(SyncContactPhone::class.java)
         .returnResult().responseBody!!
 
       with(contactPhone) {
         assertThat(phoneType).isEqualTo("MOBILE")
         assertThat(phoneNumber).isEqualTo("07878 222222")
-        assertThat(primaryPhone).isTrue()
       }
     }
 
@@ -131,7 +130,7 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactPhone::class.java)
+        .expectBody(SyncContactPhone::class.java)
         .returnResult().responseBody!!
 
       // The created phone is returned
@@ -141,7 +140,6 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         assertThat(phoneType).isEqualTo("Mobile")
         assertThat(phoneNumber).isEqualTo("555-1234")
         assertThat(extNumber).isEqualTo("101")
-        assertThat(primaryPhone).isTrue()
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -159,14 +157,13 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactPhone::class.java)
+        .expectBody(SyncContactPhone::class.java)
         .returnResult().responseBody!!
 
       with(contactPhone) {
         assertThat(phoneType).isEqualTo("Mobile")
         assertThat(phoneNumber).isEqualTo("555-1234")
         assertThat(extNumber).isEqualTo("101")
-        assertThat(primaryPhone).isTrue()
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -181,7 +178,7 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactPhone::class.java)
+        .expectBody(SyncContactPhone::class.java)
         .returnResult().responseBody!!
 
       // Check the updated copy
@@ -219,23 +216,21 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun updateContactPhoneRequest(contactId: Long) =
-      UpdateContactPhoneRequest(
+      SyncUpdateContactPhoneRequest(
         contactId = contactId,
         phoneType = "Mobile",
         phoneNumber = "555-1234",
         extNumber = "101",
-        primaryPhone = true,
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
       )
 
     private fun createContactPhoneRequest(contactId: Long) =
-      CreateContactPhoneRequest(
+      SyncCreateContactPhoneRequest(
         contactId = contactId,
         phoneType = "Mobile",
         phoneNumber = "555-1234",
         extNumber = "101",
-        primaryPhone = true,
         createdBy = "CREATE",
       )
   }

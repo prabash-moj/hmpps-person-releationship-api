@@ -89,6 +89,30 @@ class GetPrisonerContactsIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
+  fun `should return phone numbers with latest first`() {
+    stubPrisonSearchWithResponse("A1234BB")
+
+    val contacts = webTestClient.get()
+      .uri("/prisoner/A1234BB/contact")
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PrisonerContactSummaryResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(contacts.content).hasSize(1)
+
+    val contact = contacts.content.first()
+    assertThat(contact.contactId).isEqualTo(1)
+    assertThat(contact.phoneType).isEqualTo("HOME")
+    assertThat(contact.phoneTypeDescription).isEqualTo("Home phone")
+    assertThat(contact.phoneNumber).isEqualTo("01111 777777")
+    assertThat(contact.extNumber).isEqualTo("+0123")
+  }
+
+  @Test
   fun `should return results for the correct page`() {
     stubPrisonSearchWithResponse("A4385DZ")
 

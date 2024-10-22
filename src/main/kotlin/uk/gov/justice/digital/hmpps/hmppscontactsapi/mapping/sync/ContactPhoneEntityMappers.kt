@@ -1,17 +1,16 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactPhone
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
 
-fun ContactPhoneEntity.toModel(): ContactPhone {
-  return ContactPhone(
+fun ContactPhoneEntity.toModel(): SyncContactPhone {
+  return SyncContactPhone(
     contactPhoneId = this.contactPhoneId,
     contactId = this.contactId!!,
     phoneType = this.phoneType,
     phoneNumber = this.phoneNumber!!,
     extNumber = this.extNumber,
-    primaryPhone = this.primaryPhone,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     amendedBy = this.amendedBy,
@@ -21,13 +20,12 @@ fun ContactPhoneEntity.toModel(): ContactPhone {
 
 fun List<ContactPhoneEntity>.toModel() = map { it.toModel() }
 
-fun CreateContactPhoneRequest.toEntity() = ContactPhoneEntity(
+fun SyncCreateContactPhoneRequest.toEntity() = ContactPhoneEntity(
   contactPhoneId = 0L,
   contactId = contactId,
   phoneType = phoneType,
   phoneNumber = phoneNumber,
   extNumber = extNumber,
-  primaryPhone = primaryPhone,
   createdBy = createdBy,
   createdTime = createdTime,
 )

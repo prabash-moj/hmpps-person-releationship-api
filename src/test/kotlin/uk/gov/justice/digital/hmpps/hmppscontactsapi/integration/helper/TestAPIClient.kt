@@ -6,6 +6,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
@@ -99,6 +101,20 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBody(ErrorResponse::class.java)
     .returnResult().responseBody!!
 
+  fun createAContactPhone(contactId: Long, request: CreatePhoneRequest): ContactPhoneDetails {
+    return webTestClient.post()
+      .uri("/contact/$contactId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactPhoneDetails::class.java)
+      .returnResult().responseBody!!
+  }
   fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(),

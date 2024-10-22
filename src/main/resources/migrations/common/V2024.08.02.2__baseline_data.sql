@@ -53,19 +53,19 @@ values (1,  1,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', '
        (16, 15, 'HOME', true, 'Flat 32', '42','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),
        (17, 18, 'HOME', true, null, null,null, null, null, null, null, null, null, 'TIM', false, null, null, false, null, null, true);
 
-insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, ext_number, primary_phone, created_by)
-values (1, 1, 'MOBILE', '07878 111111', null, true, 'TIM'),
-       (2, 1, 'HOME', '01111 777777', '+0123', false, 'JAMES'),
-       (3, 2, 'MOBILE', '07878 222222', null, true, 'TIM'),
-       (4, 3, 'MOBILE', '07878 222222', null, false, 'TIM'),
-       (5, 4, 'MOBILE', '07878 222222', null, true, 'TIM'),
-       (6, 5, 'MOBILE', '07878 222222', null, true, 'TIM'),
-       (7, 6, 'HOME', '07878 222222', null, true, 'TIM'),
-       (8, 7, 'HOME', '07878 222222', null, true, 'TIM'),
-       (9, 8, 'MOBILE', '07878 222222', null, true, 'TIM'),
-       (10, 9, 'WORK', '07878 222222', null, true, 'TIM'),
-       (11, 10, 'MOBILE', '07878 222222', null, true, 'TIM'),
-       (12, 11, 'MOBILE', '07878 222222', null, true, 'TIM');
+insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, ext_number, created_by, created_time)
+values (1, 1, 'MOBILE', '07878 111111', null, 'TIM', '2024-10-01 12:00:00'),
+       (2, 1, 'HOME', '01111 777777', '+0123', 'JAMES', '2024-10-01 13:00:00'), --most recent
+       (3, 2, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (4, 3, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (5, 4, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (6, 5, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (7, 6, 'HOME', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (8, 7, 'HOME', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (9, 8, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (10, 9, 'WORK', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (11, 10, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (12, 11, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00');
 
 
 insert into contact_address_phone(contact_address_phone_id, contact_id, contact_address_id, contact_phone_id, created_by)

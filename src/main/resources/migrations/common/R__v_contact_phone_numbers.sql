@@ -11,7 +11,6 @@ select
     rc.description as phone_type_description,
     cp.phone_number,
     cp.ext_number,
-    cp.primary_phone,
     cp.created_by,
     cp.created_time,
     cp.amended_by,

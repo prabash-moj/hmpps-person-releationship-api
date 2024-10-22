@@ -107,6 +107,7 @@ class PrisonerContactServiceTest {
       phoneType = "Mobile",
       phoneTypeDescription = "Mobile Phone",
       phoneNumber = "07123456789",
+      extNumber = "0123",
       contactEmailId = 5L,
       emailType = "Personal",
       emailTypeDescription = "Personal Email",

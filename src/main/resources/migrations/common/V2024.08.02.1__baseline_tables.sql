@@ -137,7 +137,6 @@ CREATE TABLE contact_phone
     phone_type varchar(20) NOT NULL, -- Reference codes - PHONE_TYPE e.g. HOME, WORK or MOBILE
     phone_number varchar(240) NOT NULL,
     ext_number varchar(10),
-    primary_phone boolean NOT NULL DEFAULT false,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
     amended_by varchar(100),

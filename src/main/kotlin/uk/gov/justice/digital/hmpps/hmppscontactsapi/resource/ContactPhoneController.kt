@@ -1,0 +1,75 @@
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
+
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPhoneService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
+
+@Tag(name = "Contact")
+@RestController
+@RequestMapping(value = ["contact/{contactId}/phone"], produces = [MediaType.APPLICATION_JSON_VALUE])
+@AuthApiResponses
+class ContactPhoneController(private val contactPhoneService: ContactPhoneService) {
+
+  @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
+  @Operation(
+    summary = "Create new contact phone number",
+    description = "Creates a new phone number for the specified contact",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "201",
+        description = "Created the contact phone successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = ContactPhoneDetails::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "The request has invalid or missing fields",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "Could not find the prisoner that this contact has a relationship to",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun create(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @Valid @RequestBody request: CreatePhoneRequest,
+  ): ResponseEntity<Any> {
+    val createdPhone = contactPhoneService.create(contactId, request)
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body(createdPhone)
+  }
+}

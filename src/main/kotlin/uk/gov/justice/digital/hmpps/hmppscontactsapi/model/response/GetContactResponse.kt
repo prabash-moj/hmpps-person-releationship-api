@@ -48,7 +48,7 @@ data class GetContactResponse(
   val addresses: List<ContactAddressDetails>,
 
   @Schema(description = "All phone numbers for the contact")
-  val phoneNumbers: List<ContactPhoneNumberDetails>,
+  val phoneNumbers: List<ContactPhoneDetails>,
 
   @Schema(description = "All email addresses for the contact")
   val emailAddresses: List<ContactEmailDetails>,

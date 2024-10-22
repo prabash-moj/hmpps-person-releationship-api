@@ -80,7 +80,7 @@ data class ContactAddressDetails(
   val comments: String?,
 
   @Schema(description = "Phone numbers that are related to this address")
-  val phoneNumbers: List<ContactPhoneNumberDetails>,
+  val phoneNumbers: List<ContactPhoneDetails>,
 
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,

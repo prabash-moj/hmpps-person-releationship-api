@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactPhone
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 
@@ -25,7 +25,7 @@ class SyncContactPhoneService(
   }
 
   @Transactional(readOnly = true)
-  fun getContactPhoneById(contactPhoneId: Long): ContactPhone {
+  fun getContactPhoneById(contactPhoneId: Long): SyncContactPhone {
     val contactPhoneEntity = contactPhoneRepository.findById(contactPhoneId)
       .orElseThrow { EntityNotFoundException("Contact phone with ID $contactPhoneId not found") }
     return contactPhoneEntity.toModel()
@@ -37,13 +37,13 @@ class SyncContactPhoneService(
     contactPhoneRepository.deleteById(contactPhoneId)
   }
 
-  fun createContactPhone(request: CreateContactPhoneRequest): ContactPhone {
+  fun createContactPhone(request: SyncCreateContactPhoneRequest): SyncContactPhone {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
     return contactPhoneRepository.saveAndFlush(request.toEntity()).toModel()
   }
 
-  fun updateContactPhone(contactPhoneId: Long, request: UpdateContactPhoneRequest): ContactPhone {
+  fun updateContactPhone(contactPhoneId: Long, request: SyncUpdateContactPhoneRequest): SyncContactPhone {
     val contact = contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
 
@@ -60,7 +60,6 @@ class SyncContactPhoneService(
       phoneType = request.phoneType,
       phoneNumber = request.phoneNumber,
       extNumber = request.extNumber,
-      primaryPhone = request.primaryPhone,
     ).also {
       it.amendedBy = request.updatedBy
       it.amendedTime = request.updatedTime

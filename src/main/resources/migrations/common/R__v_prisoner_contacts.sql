@@ -30,6 +30,7 @@ AS
       cp.phone_type,
       rc2.description as phone_type_description,
       cp.phone_number,
+      cp.ext_number,
       ce.contact_email_id,
       ce.email_type,
       rc3.description as email_type_description,
@@ -48,7 +49,8 @@ AS
   from contact c
        join prisoner_contact pc ON pc.contact_id = c.contact_id
   left join contact_address ca ON ca.contact_id = c.contact_id AND ca.primary_address = true
-  left join contact_phone cp ON cp.contact_id = c.contact_id AND cp.primary_phone = true
+  left join (select contact_id, contact_phone_id, phone_type, phone_number, ext_number, row_number() over (partition by contact_id order by created_time desc) as rn
+            from contact_phone) cp on (cp.contact_id = c.contact_id and cp.rn = 1)
   left join contact_email ce ON ce.contact_id = c.contact_id AND ce.primary_email = true
   left join reference_codes rc1 ON rc1.group_code = 'TITLE' and rc1.code = c.title
   left join reference_codes rc2 ON rc2.group_code = 'PHONE_TYPE' and rc2.code = cp.phone_type

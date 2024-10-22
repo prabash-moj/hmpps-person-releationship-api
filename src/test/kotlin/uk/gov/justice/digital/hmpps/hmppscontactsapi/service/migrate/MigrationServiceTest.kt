@@ -103,7 +103,6 @@ class MigrationServiceTest {
           contactPhoneId = 1L,
           phoneType = request.phoneNumbers[0].type.code,
           phoneNumber = request.phoneNumbers[0].number,
-          primaryPhone = true,
           createdBy = auditInfo.createUsername!!,
           createdTime = auditInfo.createDateTime!!,
         ),
@@ -112,7 +111,6 @@ class MigrationServiceTest {
           contactPhoneId = 2L,
           phoneType = request.phoneNumbers[1].type.code,
           phoneNumber = request.phoneNumbers[1].number,
-          primaryPhone = true,
           createdBy = auditInfo.createUsername!!,
           createdTime = auditInfo.createDateTime!!,
         ),
@@ -131,13 +129,12 @@ class MigrationServiceTest {
       for (i in 0..1) {
         assertThat(result[i].first).isEqualTo(request.phoneNumbers[i].phoneId)
         assertThat(result[i].second)
-          .extracting("contactId", "contactPhoneId", "phoneType", "phoneNumber", "primaryPhone")
+          .extracting("contactId", "contactPhoneId", "phoneType", "phoneNumber")
           .contains(
             responses[i].contactId,
             responses[i].contactPhoneId,
             responses[i].phoneType,
             responses[i].phoneNumber,
-            responses[i].primaryPhone,
           )
       }
 

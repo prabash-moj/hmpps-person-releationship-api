@@ -14,7 +14,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
@@ -124,7 +124,7 @@ class ContactService(
   private fun getAddressPhoneNumbers(
     contactAddressId: Long,
     addressPhoneNumbers: List<ContactAddressPhoneEntity>,
-    phoneNumbers: List<ContactPhoneNumberDetails>,
+    phoneNumbers: List<ContactPhoneDetails>,
   ) = addressPhoneNumbers.filter { it.contactAddressId == contactAddressId }
     .mapNotNull { addressPhone -> phoneNumbers.find { it.contactPhoneId == addressPhone.contactPhoneId } }
 }

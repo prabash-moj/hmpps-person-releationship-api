@@ -1,0 +1,245 @@
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
+
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.MethodSource
+import org.springframework.http.MediaType
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
+
+class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
+  private var savedContactId = 0L
+
+  @BeforeEach
+  fun initialiseData() {
+    savedContactId = testAPIClient.createAContact(
+      CreateContactRequest(
+        lastName = "phone",
+        firstName = "has",
+        createdBy = "created",
+      ),
+    ).id
+  }
+
+  @Test
+  fun `should return unauthorized if no token`() {
+    webTestClient.post()
+      .uri("/contact/$savedContactId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(aMinimalRequest())
+      .exchange()
+      .expectStatus()
+      .isUnauthorized
+  }
+
+  @Test
+  fun `should return forbidden if no role`() {
+    webTestClient.post()
+      .uri("/contact/$savedContactId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(aMinimalRequest())
+      .headers(setAuthorisation())
+      .exchange()
+      .expectStatus()
+      .isForbidden
+  }
+
+  @Test
+  fun `should return forbidden if wrong role`() {
+    webTestClient.post()
+      .uri("/contact/$savedContactId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(aMinimalRequest())
+      .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+      .exchange()
+      .expectStatus()
+      .isForbidden
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+    value = [
+      "phoneType must not be null;{\"phoneType\": null, \"phoneNumber\": \"0123456789\", \"createdBy\": \"created\"}",
+      "phoneType must not be null;{\"phoneNumber\": \"0123456789\", \"createdBy\": \"created\"}",
+      "phoneNumber must not be null;{\"phoneType\": \"MOBILE\", \"phoneNumber\": null, \"createdBy\": \"created\"}",
+      "phoneNumber must not be null;{\"phoneType\": \"MOBILE\", \"createdBy\": \"created\"}",
+      "createdBy must not be null;{\"phoneType\": \"MOBILE\", \"phoneNumber\": \"0123456789\", \"createdBy\": null}",
+      "createdBy must not be null;{\"phoneType\": \"MOBILE\", \"phoneNumber\": \"0123456789\"}",
+    ],
+    delimiter = ';',
+  )
+  fun `should return bad request if required fields are null`(expectedMessage: String, json: String) {
+    val errors = webTestClient.post()
+      .uri("/contact/$savedContactId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(json)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+  }
+
+  @ParameterizedTest
+  @MethodSource("allFieldConstraintViolations")
+  fun `should enforce field constraints`(expectedMessage: String, request: CreatePhoneRequest) {
+    val errors = webTestClient.post()
+      .uri("/contact/$savedContactId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+    "Plus only at start,123+456",
+    "Hash not allowed,#",
+  )
+  fun `should not create the phone if the phone number contains unsupported chars`(case: String, phoneNumber: String) {
+    val request = CreatePhoneRequest(
+      phoneType = "MOBILE",
+      phoneNumber = phoneNumber,
+      createdBy = "created",
+    )
+
+    val errors = webTestClient.post()
+      .uri("/contact/$savedContactId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Phone number invalid, it can only contain numbers, () and whitespace with an optional + at the start")
+  }
+
+  @Test
+  fun `should not create the phone if the type is not supported`() {
+    val request = CreatePhoneRequest(
+      phoneType = "SATELLITE",
+      phoneNumber = "+44777777777 (0123)",
+      createdBy = "created",
+    )
+
+    val errors = webTestClient.post()
+      .uri("/contact/$savedContactId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported phone type (SATELLITE)")
+  }
+
+  @Test
+  fun `should not create the phone if the contact is not found`() {
+    val request = aMinimalRequest()
+
+    val errors = webTestClient.post()
+      .uri("/contact/-321/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isNotFound
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
+  }
+
+  @Test
+  fun `should create the phone with minimal fields`() {
+    val request = aMinimalRequest()
+
+    val contactReturnedOnCreate = testAPIClient.createAContactPhone(savedContactId, request)
+
+    assertEqualsExcludingTimestamps(contactReturnedOnCreate, request)
+  }
+
+  @Test
+  fun `should create the phone with all fields`() {
+    val request = CreatePhoneRequest(
+      phoneType = "MOBILE",
+      phoneNumber = "+44777777777 (0123)",
+      extNumber = "9999",
+      createdBy = "created",
+    )
+
+    val contact = testAPIClient.createAContactPhone(savedContactId, request)
+
+    assertEqualsExcludingTimestamps(contact, request)
+  }
+
+  private fun assertEqualsExcludingTimestamps(contact: ContactPhoneDetails, request: CreatePhoneRequest) {
+    with(contact) {
+      assertThat(phoneType).isEqualTo(request.phoneType)
+      assertThat(phoneNumber).isEqualTo(request.phoneNumber)
+      assertThat(extNumber).isEqualTo(request.extNumber)
+      assertThat(createdBy).isEqualTo(request.createdBy)
+      assertThat(createdTime).isNotNull()
+    }
+  }
+
+  companion object {
+    @JvmStatic
+    fun allFieldConstraintViolations(): List<Arguments> {
+      return listOf(
+        Arguments.of("phoneType must be <= 20 characters", aMinimalRequest().copy(phoneType = "".padStart(21))),
+        Arguments.of("phoneNumber must be <= 240 characters", aMinimalRequest().copy(phoneNumber = "".padStart(241))),
+        Arguments.of(
+          "extNumber must be <= 7 characters",
+          aMinimalRequest().copy(extNumber = "".padStart(8)),
+        ),
+        Arguments.of(
+          "createdBy must be <= 100 characters",
+          aMinimalRequest().copy(createdBy = "".padStart(101)),
+        ),
+      )
+    }
+
+    private fun aMinimalRequest() = CreatePhoneRequest(
+      phoneType = "MOBILE",
+      phoneNumber = "+44777777777 (0123)",
+      createdBy = "created",
+    )
+  }
+}

@@ -16,15 +16,13 @@ data class ContactPhoneEntity(
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val contactPhoneId: Long,
 
-  val contactId: Long? = null,
+  val contactId: Long,
 
   val phoneType: String,
 
-  val phoneNumber: String? = null,
+  val phoneNumber: String,
 
   val extNumber: String? = null,
-
-  val primaryPhone: Boolean = false,
 
   val createdBy: String,
 

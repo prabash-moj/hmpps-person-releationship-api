@@ -15,20 +15,20 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
 import java.util.*
 
-class SyncContactPhoneServiceTest {
+class SyncSyncContactPhoneServiceTest {
   private val contactRepository: ContactRepository = mock()
   private val contactPhoneRepository: ContactPhoneRepository = mock()
   private val syncService = SyncContactPhoneService(contactRepository, contactPhoneRepository)
 
   @Nested
-  inner class ContactPhoneTests {
+  inner class SyncContactPhoneTests {
     @Test
     fun `should get a contact phone by ID`() {
       whenever(contactPhoneRepository.findById(1L)).thenReturn(Optional.of(contactPhoneEntity()))
@@ -38,7 +38,6 @@ class SyncContactPhoneServiceTest {
         assertThat(phoneNumber).isEqualTo("555-1234")
         assertThat(phoneNumber).isEqualTo("555-1234")
         assertThat(extNumber).isEqualTo("101")
-        assertThat(primaryPhone).isTrue()
       }
       verify(contactPhoneRepository).findById(1L)
     }
@@ -68,7 +67,6 @@ class SyncContactPhoneServiceTest {
         assertThat(phoneType).isEqualTo(request.phoneType)
         assertThat(phoneNumber).isEqualTo(request.phoneNumber)
         assertThat(extNumber).isEqualTo(request.extNumber)
-        assertThat(primaryPhone).isEqualTo(request.primaryPhone)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
 
@@ -78,7 +76,6 @@ class SyncContactPhoneServiceTest {
         assertThat(phoneType).isEqualTo(request.phoneType)
         assertThat(phoneNumber).isEqualTo(request.phoneNumber)
         assertThat(extNumber).isEqualTo(request.extNumber)
-        assertThat(primaryPhone).isEqualTo(request.primaryPhone)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
 
@@ -129,7 +126,6 @@ class SyncContactPhoneServiceTest {
         assertThat(phoneType).isEqualTo(request.phoneType)
         assertThat(phoneNumber).isEqualTo(request.phoneNumber)
         assertThat(extNumber).isEqualTo(request.extNumber)
-        assertThat(primaryPhone).isEqualTo(request.primaryPhone)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
@@ -139,7 +135,6 @@ class SyncContactPhoneServiceTest {
         assertThat(phoneType).isEqualTo(request.phoneType)
         assertThat(phoneNumber).isEqualTo(request.phoneNumber)
         assertThat(extNumber).isEqualTo(request.extNumber)
-        assertThat(primaryPhone).isEqualTo(request.primaryPhone)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
@@ -169,23 +164,21 @@ class SyncContactPhoneServiceTest {
   }
 
   private fun updateContactPhoneRequest(contactId: Long = 1L) =
-    UpdateContactPhoneRequest(
+    SyncUpdateContactPhoneRequest(
       contactId = contactId,
       phoneType = "Mobile",
       phoneNumber = "555-1234",
       extNumber = "101",
-      primaryPhone = true,
       updatedBy = "TEST",
       updatedTime = LocalDateTime.now(),
     )
 
   private fun createContactPhoneRequest() =
-    CreateContactPhoneRequest(
+    SyncCreateContactPhoneRequest(
       contactId = 1L,
       phoneType = "Mobile",
       phoneNumber = "555-1234",
       extNumber = "101",
-      primaryPhone = true,
       createdBy = "TEST",
     )
 
@@ -211,11 +204,10 @@ class SyncContactPhoneServiceTest {
       phoneType = "Mobile",
       phoneNumber = "555-1234",
       extNumber = "101",
-      primaryPhone = true,
       createdBy = "TEST",
     )
 
-  private fun UpdateContactPhoneRequest.toEntity(contactPhoneId: Long = 1L): ContactPhoneEntity {
+  private fun SyncUpdateContactPhoneRequest.toEntity(contactPhoneId: Long = 1L): ContactPhoneEntity {
     val updatedBy = this.updatedBy
     val updatedTime = this.updatedTime
 
@@ -225,7 +217,6 @@ class SyncContactPhoneServiceTest {
       phoneType = this.phoneType,
       phoneNumber = this.phoneNumber,
       extNumber = this.extNumber,
-      primaryPhone = this.primaryPhone,
       createdBy = "TEST",
     ).also {
       it.amendedBy = updatedBy

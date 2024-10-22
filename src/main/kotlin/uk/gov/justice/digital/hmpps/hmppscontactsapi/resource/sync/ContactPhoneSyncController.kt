@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactPhone
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactPhoneService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
@@ -47,7 +47,7 @@ class ContactPhoneSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactPhone::class),
+            schema = Schema(implementation = SyncContactPhone::class),
           ),
         ],
       ),
@@ -106,7 +106,7 @@ class ContactPhoneSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactPhone::class),
+            schema = Schema(implementation = SyncContactPhone::class),
           ),
         ],
       ),
@@ -119,7 +119,7 @@ class ContactPhoneSyncController(
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContactPhone(
-    @Valid @RequestBody createContactPhoneRequest: CreateContactPhoneRequest,
+    @Valid @RequestBody createContactPhoneRequest: SyncCreateContactPhoneRequest,
   ) = syncService.createContactPhone(createContactPhoneRequest)
 
   @PutMapping(path = ["/contact-phone/{contactPhoneId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -139,7 +139,7 @@ class ContactPhoneSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactPhone::class),
+            schema = Schema(implementation = SyncContactPhone::class),
           ),
         ],
       ),
@@ -157,6 +157,6 @@ class ContactPhoneSyncController(
   fun updateContactPhone(
     @Parameter(description = "The internal ID for the contact phone.", required = true)
     @PathVariable contactPhoneId: Long,
-    @Valid @RequestBody updateContactPhoneRequest: UpdateContactPhoneRequest,
+    @Valid @RequestBody updateContactPhoneRequest: SyncUpdateContactPhoneRequest,
   ) = syncService.updateContactPhone(contactPhoneId, updateContactPhoneRequest)
 }

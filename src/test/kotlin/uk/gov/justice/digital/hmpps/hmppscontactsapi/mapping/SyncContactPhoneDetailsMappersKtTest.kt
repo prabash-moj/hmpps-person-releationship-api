@@ -3,10 +3,10 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import java.time.LocalDateTime
 
-class ContactPhoneDetailsMappersKtTest {
+class SyncContactPhoneDetailsMappersKtTest {
 
   @Test
   fun `should map all fields`() {
@@ -18,21 +18,19 @@ class ContactPhoneDetailsMappersKtTest {
         phoneTypeDescription = "Home phone",
         phoneNumber = "123456789",
         extNumber = "987654321",
-        primaryPhone = true,
         createdBy = "CREATOR",
         createdTime = LocalDateTime.of(2024, 2, 3, 4, 5, 6),
         amendedBy = "AM",
         amendedTime = LocalDateTime.of(2026, 5, 4, 3, 2, 1),
       ).toModel(),
     ).isEqualTo(
-      ContactPhoneNumberDetails(
+      ContactPhoneDetails(
         contactPhoneId = 99,
         contactId = 45,
         phoneType = "HOME",
         phoneTypeDescription = "Home phone",
         phoneNumber = "123456789",
         extNumber = "987654321",
-        primaryPhone = true,
         createdBy = "CREATOR",
         createdTime = LocalDateTime.of(2024, 2, 3, 4, 5, 6),
         amendedBy = "AM",

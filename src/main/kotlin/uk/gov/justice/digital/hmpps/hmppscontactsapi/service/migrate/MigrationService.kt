@@ -113,10 +113,9 @@ class MigrationService(
             extNumber = requestPhone.extension,
             createdBy = req.audit?.createUsername ?: "MIGRATION",
             createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
-          ).also {
-            it.amendedBy = req.audit?.modifyUserId
-            it.amendedTime = req.audit?.modifyDateTime
-          },
+            amendedBy = req.audit?.modifyUserId,
+            amendedTime = req.audit?.modifyDateTime,
+          ),
         ),
       )
     }

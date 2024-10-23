@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import java.time.LocalDateTime
 
 @Service
 class ContactPhoneService(
@@ -24,8 +26,8 @@ class ContactPhoneService(
   @Transactional
   fun create(contactId: Long, request: CreatePhoneRequest): ContactPhoneDetails {
     validateContactExists(contactId)
-    val type = validatePhoneType(request)
-    validatePhoneNumber(request)
+    val type = validatePhoneType(request.phoneType)
+    validatePhoneNumber(request.phoneNumber)
     val created = contactPhoneRepository.saveAndFlush(
       ContactPhoneEntity(
         contactPhoneId = 0,
@@ -36,33 +38,43 @@ class ContactPhoneService(
         createdBy = request.createdBy,
       ),
     )
-    return ContactPhoneDetails(
-      created.contactPhoneId,
-      created.contactId,
-      created.phoneType,
-      type.description,
-      created.phoneNumber,
-      created.extNumber,
-      created.createdBy,
-      created.createdTime,
-      null,
-      null,
-    )
+    return created.toDomainWithType(type)
   }
 
   fun get(contactId: Long, contactPhoneId: Long): ContactPhoneDetails? {
     return contactPhoneDetailsRepository.findByContactIdAndContactPhoneId(contactId, contactPhoneId)?.toModel()
   }
 
-  private fun validatePhoneNumber(request: CreatePhoneRequest) {
-    if (!request.phoneNumber.matches(Regex("\\+?[\\d\\s()]+"))) {
+  @Transactional
+  fun update(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails {
+    validateContactExists(contactId)
+    val existing = contactPhoneRepository.findById(contactPhoneId)
+      .orElseThrow { EntityNotFoundException("Contact phone ($contactPhoneId) not found") }
+    val type = validatePhoneType(request.phoneType)
+    validatePhoneNumber(request.phoneNumber)
+
+    val updating = existing.copy(
+      phoneType = request.phoneType,
+      phoneNumber = request.phoneNumber,
+      extNumber = request.extNumber,
+      amendedBy = request.amendedBy,
+      amendedTime = LocalDateTime.now(),
+    )
+
+    val updated = contactPhoneRepository.saveAndFlush(updating)
+
+    return updated.toDomainWithType(type)
+  }
+
+  private fun validatePhoneNumber(phoneNumber: String) {
+    if (!phoneNumber.matches(Regex("\\+?[\\d\\s()]+"))) {
       throw ValidationException("Phone number invalid, it can only contain numbers, () and whitespace with an optional + at the start")
     }
   }
 
-  private fun validatePhoneType(request: CreatePhoneRequest): ReferenceCode {
-    val type = referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", request.phoneType)
-      ?: throw ValidationException("Unsupported phone type (${request.phoneType})")
+  private fun validatePhoneType(phoneType: String): ReferenceCode {
+    val type = referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", phoneType)
+      ?: throw ValidationException("Unsupported phone type ($phoneType)")
     return type
   }
 
@@ -70,4 +82,19 @@ class ContactPhoneService(
     contactRepository.findById(contactId)
       .orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
   }
+
+  private fun ContactPhoneEntity.toDomainWithType(
+    type: ReferenceCode,
+  ) = ContactPhoneDetails(
+    this.contactPhoneId,
+    this.contactId,
+    this.phoneType,
+    type.description,
+    this.phoneNumber,
+    this.extNumber,
+    this.createdBy,
+    this.createdTime,
+    this.amendedBy,
+    this.amendedTime,
+  )
 }

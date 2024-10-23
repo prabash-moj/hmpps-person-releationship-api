@@ -22,7 +22,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepositor
 import java.time.LocalDateTime
 import java.util.*
 
-class SyncSyncContactPhoneServiceTest {
+class SyncContactPhoneServiceTest {
   private val contactRepository: ContactRepository = mock()
   private val contactPhoneRepository: ContactPhoneRepository = mock()
   private val syncService = SyncContactPhoneService(contactRepository, contactPhoneRepository)
@@ -218,9 +218,8 @@ class SyncSyncContactPhoneServiceTest {
       phoneNumber = this.phoneNumber,
       extNumber = this.extNumber,
       createdBy = "TEST",
-    ).also {
-      it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
-    }
+      amendedBy = updatedBy,
+      amendedTime = updatedTime,
+    )
   }
 }

@@ -16,10 +16,12 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPhoneService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
@@ -115,5 +117,52 @@ class ContactPhoneController(private val contactPhoneService: ContactPhoneServic
     return contactPhoneService.get(contactId, contactPhoneId)
       ?.let { ResponseEntity.ok(it) }
       ?: throw EntityNotFoundException("Contact phone with id ($contactPhoneId) not found for contact ($contactId)")
+  }
+
+  @PutMapping("/{contactPhoneId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
+  @Operation(
+    summary = "Update contact phone number",
+    description = "Updates an existing contact phone by id",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "200",
+        description = "Updated the contact phone successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = ContactPhoneDetails::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "The request has invalid or missing fields",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "Could not find the the contact or phone by their ids",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun update(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @PathVariable("contactPhoneId") @Parameter(
+      name = "contactPhoneId",
+      description = "The id of the contact phone",
+      example = "987654",
+    ) contactPhoneId: Long,
+    @Valid @RequestBody request: UpdatePhoneRequest,
+  ): ResponseEntity<Any> {
+    val updatedPhone = contactPhoneService.update(contactId, contactPhoneId, request)
+    return ResponseEntity.ok(updatedPhone)
   }
 }

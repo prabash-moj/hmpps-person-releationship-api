@@ -12,10 +12,11 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.mo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 
-class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
+class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
+  private var savedContactPhoneId = 0L
 
   @BeforeEach
   fun initialiseData() {
@@ -26,12 +27,21 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
         createdBy = "created",
       ),
     ).id
+    savedContactPhoneId = testAPIClient.createAContactPhone(
+      savedContactId,
+      CreatePhoneRequest(
+        phoneType = "MOB",
+        phoneNumber = "07777777777",
+        extNumber = "123456",
+        createdBy = "USER1",
+      ),
+    ).contactPhoneId
   }
 
   @Test
   fun `should return unauthorized if no token`() {
-    webTestClient.post()
-      .uri("/contact/$savedContactId/phone")
+    webTestClient.put()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -42,8 +52,8 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should return forbidden if no role`() {
-    webTestClient.post()
-      .uri("/contact/$savedContactId/phone")
+    webTestClient.put()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -55,8 +65,8 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should return forbidden if wrong role`() {
-    webTestClient.post()
-      .uri("/contact/$savedContactId/phone")
+    webTestClient.put()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -69,18 +79,18 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "phoneType must not be null;{\"phoneType\": null, \"phoneNumber\": \"0123456789\", \"createdBy\": \"created\"}",
-      "phoneType must not be null;{\"phoneNumber\": \"0123456789\", \"createdBy\": \"created\"}",
-      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": null, \"createdBy\": \"created\"}",
-      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"createdBy\": \"created\"}",
-      "createdBy must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": \"0123456789\", \"createdBy\": null}",
-      "createdBy must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": \"0123456789\"}",
+      "phoneType must not be null;{\"phoneType\": null, \"phoneNumber\": \"0123456789\", \"amendedBy\": \"amended\"}",
+      "phoneType must not be null;{\"phoneNumber\": \"0123456789\", \"amendedBy\": \"amended\"}",
+      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": null, \"amendedBy\": \"amended\"}",
+      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"amendedBy\": \"amended\"}",
+      "amendedBy must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": \"0123456789\", \"amendedBy\": null}",
+      "amendedBy must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": \"0123456789\"}",
     ],
     delimiter = ';',
   )
   fun `should return bad request if required fields are null`(expectedMessage: String, json: String) {
-    val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/phone")
+    val errors = webTestClient.put()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -97,9 +107,9 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
 
   @ParameterizedTest
   @MethodSource("allFieldConstraintViolations")
-  fun `should enforce field constraints`(expectedMessage: String, request: CreatePhoneRequest) {
-    val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/phone")
+  fun `should enforce field constraints`(expectedMessage: String, request: UpdatePhoneRequest) {
+    val errors = webTestClient.put()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -119,15 +129,15 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     "Plus only at start,123+456",
     "Hash not allowed,#",
   )
-  fun `should not create the phone if the phone number contains unsupported chars`(case: String, phoneNumber: String) {
-    val request = CreatePhoneRequest(
+  fun `should not update the phone if the phone number contains unsupported chars`(case: String, phoneNumber: String) {
+    val request = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = phoneNumber,
-      createdBy = "created",
+      amendedBy = "amended",
     )
 
-    val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/phone")
+    val errors = webTestClient.put()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -143,15 +153,15 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should not create the phone if the type is not supported`() {
-    val request = CreatePhoneRequest(
+  fun `should not update the phone if the type is not supported`() {
+    val request = UpdatePhoneRequest(
       phoneType = "SATELLITE",
       phoneNumber = "+44777777777 (0123)",
-      createdBy = "created",
+      amendedBy = "amended",
     )
 
-    val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/phone")
+    val errors = webTestClient.put()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -167,11 +177,11 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should not create the phone if the contact is not found`() {
+  fun `should not update the phone if the contact is not found`() {
     val request = aMinimalRequest()
 
-    val errors = webTestClient.post()
-      .uri("/contact/-321/phone")
+    val errors = webTestClient.put()
+      .uri("/contact/-321/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -187,35 +197,66 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should create the phone with minimal fields`() {
+  fun `should not update the phone if the phone is not found`() {
     val request = aMinimalRequest()
 
-    val created = testAPIClient.createAContactPhone(savedContactId, request)
+    val errors = webTestClient.put()
+      .uri("/contact/$savedContactId/phone/-99")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isNotFound
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
 
-    assertEqualsExcludingTimestamps(created, request)
+    assertThat(errors.userMessage).isEqualTo("Entity not found : Contact phone (-99) not found")
   }
 
   @Test
-  fun `should create the phone with all fields`() {
-    val request = CreatePhoneRequest(
+  fun `should update the phone with minimal fields`() {
+    val request = UpdatePhoneRequest(
+      phoneType = "MOB",
+      phoneNumber = "+44777777777 (0123)",
+      extNumber = null,
+      amendedBy = "amended",
+    )
+
+    val updated = testAPIClient.updateAContactPhone(savedContactId, savedContactPhoneId, request)
+
+    with(updated) {
+      assertThat(phoneType).isEqualTo(request.phoneType)
+      assertThat(phoneNumber).isEqualTo(request.phoneNumber)
+      assertThat(extNumber).isNull()
+      assertThat(createdBy).isEqualTo("USER1")
+      assertThat(createdTime).isNotNull()
+      assertThat(amendedBy).isEqualTo("amended")
+      assertThat(amendedTime).isNotNull()
+    }
+  }
+
+  @Test
+  fun `should update the phone with all fields`() {
+    val request = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
       extNumber = "9999",
-      createdBy = "created",
+      amendedBy = "amended",
     )
 
-    val created = testAPIClient.createAContactPhone(savedContactId, request)
+    val updated = testAPIClient.updateAContactPhone(savedContactId, savedContactPhoneId, request)
 
-    assertEqualsExcludingTimestamps(created, request)
-  }
-
-  private fun assertEqualsExcludingTimestamps(phone: ContactPhoneDetails, request: CreatePhoneRequest) {
-    with(phone) {
+    with(updated) {
       assertThat(phoneType).isEqualTo(request.phoneType)
       assertThat(phoneNumber).isEqualTo(request.phoneNumber)
       assertThat(extNumber).isEqualTo(request.extNumber)
-      assertThat(createdBy).isEqualTo(request.createdBy)
+      assertThat(createdBy).isEqualTo("USER1")
       assertThat(createdTime).isNotNull()
+      assertThat(amendedBy).isEqualTo("amended")
+      assertThat(amendedTime).isNotNull()
     }
   }
 
@@ -230,16 +271,16 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
           aMinimalRequest().copy(extNumber = "".padStart(8)),
         ),
         Arguments.of(
-          "createdBy must be <= 100 characters",
-          aMinimalRequest().copy(createdBy = "".padStart(101)),
+          "updatedBy must be <= 100 characters",
+          aMinimalRequest().copy(amendedBy = "".padStart(101)),
         ),
       )
     }
 
-    private fun aMinimalRequest() = CreatePhoneRequest(
+    private fun aMinimalRequest() = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
-      createdBy = "created",
+      amendedBy = "amended",
     )
   }
 }

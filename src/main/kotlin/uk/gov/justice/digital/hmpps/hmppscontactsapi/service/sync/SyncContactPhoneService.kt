@@ -60,10 +60,9 @@ class SyncContactPhoneService(
       phoneType = request.phoneType,
       phoneNumber = request.phoneNumber,
       extNumber = request.extNumber,
-    ).also {
-      it.amendedBy = request.updatedBy
-      it.amendedTime = request.updatedTime
-    }
+      amendedBy = request.updatedBy,
+      amendedTime = request.updatedTime,
+    )
 
     return contactPhoneRepository.saveAndFlush(changedContactPhone).toModel()
   }

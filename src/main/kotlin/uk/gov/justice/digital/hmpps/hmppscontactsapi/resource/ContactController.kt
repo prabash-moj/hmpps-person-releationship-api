@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,9 +29,12 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
@@ -39,7 +43,10 @@ import java.net.URI
 @RestController
 @RequestMapping(value = ["contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
-class ContactController(val contactService: ContactService) {
+class ContactController(
+  val contactService: ContactService,
+  val contactPatchFacade: ContactPatchFacade,
+) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
   }
@@ -195,4 +202,45 @@ class ContactController(val contactService: ContactService) {
     pageable: Pageable,
     @ModelAttribute @Valid @Parameter(description = "Contact search criteria", required = true) request: ContactSearchRequest,
   ) = contactService.searchContacts(pageable, request)
+
+  @PatchMapping("/{contactId}")
+  @Operation(
+    summary = "Update a contact",
+    description = "Update a contact",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "200",
+        description = "The contact was updated.",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = PatchContactResponse::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "Invalid request",
+        content = [
+          Content(schema = Schema(implementation = ErrorResponse::class)),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "No contact with that id could be found",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun patchContact(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @Valid @RequestBody patchContactRequest: PatchContactRequest,
+  ) = contactPatchFacade.patch(contactId, patchContactRequest)
 }

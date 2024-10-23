@@ -9,6 +9,7 @@ import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
+import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -22,9 +23,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchFacade
 import java.net.URI
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -32,7 +36,8 @@ import java.time.LocalDateTime
 class ContactControllerTest {
 
   private val contactService: ContactService = mock()
-  private val controller = ContactController(contactService)
+  private val contactPatchFacade: ContactPatchFacade = mock()
+  private val controller = ContactController(contactService, contactPatchFacade)
 
   @Nested
   inner class CreateContact {
@@ -180,7 +185,7 @@ class ContactControllerTest {
       // Given
       val pageable = PageRequest.of(0, 10)
       val contactEntities = listOf(
-        getContact(1L),
+        getContact(),
       )
       val pageContacts = PageImpl(contactEntities, pageable, contactEntities.size.toLong())
 
@@ -205,8 +210,75 @@ class ContactControllerTest {
     }
   }
 
-  private fun getContact(contactId: Long) = ContactSearchResultItem(
-    id = contactId,
+  @Nested
+  inner class PatchContact {
+    private val id = 123456L
+    private val contact = patchContactResponse(id)
+
+    @Test
+    fun `should patch a contact successfully`() {
+      val request = patchContactRequest()
+      whenever(contactPatchFacade.patch(id, request)).thenReturn(contact)
+
+      val result = controller.patchContact(id, request)
+
+      assertThat(result).isEqualTo(contact)
+    }
+
+    @Test
+    fun `should return 404 if contact not found`() {
+      val request = patchContactRequest()
+      whenever(contactPatchFacade.patch(id, request)).thenReturn(null)
+
+      val response = controller.patchContact(id, request)
+
+      assertThat(response).isEqualTo(null)
+    }
+
+    @Test
+    fun `should propagate exceptions getting a contact`() {
+      val request = patchContactRequest()
+      whenever(contactPatchFacade.patch(id, request)).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        controller.patchContact(id, request)
+      }
+    }
+
+    private fun patchContactRequest() = PatchContactRequest(
+      languageCode = JsonNullable.of("ENG"),
+      updatedBy = "system",
+    )
+
+    private fun patchContactResponse(id: Long) = PatchContactResponse(
+      id = id,
+      title = "Mr",
+      lastName = "Doe",
+      firstName = "John",
+      middleNames = "William",
+      dateOfBirth = LocalDate.of(1980, 1, 1),
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
+      placeOfBirth = "London",
+      active = true,
+      suspended = false,
+      staffFlag = false,
+      deceasedFlag = false,
+      deceasedDate = null,
+      coronerNumber = null,
+      gender = "Male",
+      domesticStatus = "Single",
+      languageCode = "EN",
+      nationalityCode = "GB",
+      interpreterRequired = false,
+      createdBy = "JD000001",
+      createdTime = LocalDateTime.now(),
+      amendedBy = "UPDATE",
+      amendedTime = LocalDateTime.now(),
+    )
+  }
+
+  private fun getContact() = ContactSearchResultItem(
+    id = 1L,
     lastName = "last",
     firstName = "first",
     middleNames = "first",

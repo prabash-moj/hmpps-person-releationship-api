@@ -22,7 +22,8 @@ values (1,  'MR',   'Last',   'Jack',       'Middle', '2000-11-21', null, 'Londo
        (17, 'MRS',  'NoAddress', 'Hannah',  'Middle', null, 'YES', 'London', 'Female', 'S', 'ENG', 'TIM', false, false, null, false),
        (18, null,   'Address', 'Minimal',    null, null, null, null, null, null, null, 'TIM', true, false, null, false),
        (19, null,   'Dead', 'Currently',     null, '1980-01-01', null, null, null, null, null, 'TIM', true, true, '2000-01-01', false),
-       (20, null,   'French', 'Only',     null, '1980-01-01', null, null, null, null, 'FRE-FRA', 'TIM', true, true, '2000-01-01', true);
+       (20, null,   'French', 'Only',     null, '1980-01-01', null, null, null, null, 'FRE-FRA', 'TIM', true, true, '2000-01-01', true),
+       (21, 'Mr',   'Language', 'Update',   'Middle', '2000-11-25', null, 'London', 'Female', 'D', 'ENG', 'PB', false, false, null, false);
 
 insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, issuing_authority, verified, verified_by, verified_time, created_by)
 values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'DVLA', true, 'JAMES', current_timestamp, 'TIM'),

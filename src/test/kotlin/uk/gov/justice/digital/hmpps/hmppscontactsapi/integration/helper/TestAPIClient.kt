@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
@@ -31,6 +32,21 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectHeader().valuesMatch("Location", "/contact/(\\d)+")
       .expectBody(GetContactResponse::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun patchAContact(request: Any, url: String): PatchContactResponse {
+    return webTestClient.patch()
+      .uri(url)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PatchContactResponse::class.java)
       .returnResult().responseBody!!
   }
 

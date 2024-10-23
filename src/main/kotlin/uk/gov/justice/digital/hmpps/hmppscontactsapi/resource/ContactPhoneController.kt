@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -164,5 +165,46 @@ class ContactPhoneController(private val contactPhoneService: ContactPhoneServic
   ): ResponseEntity<Any> {
     val updatedPhone = contactPhoneService.update(contactId, contactPhoneId, request)
     return ResponseEntity.ok(updatedPhone)
+  }
+
+  @DeleteMapping("/{contactPhoneId}")
+  @Operation(
+    summary = "Delete contact phone number",
+    description = "Deletes an existing contact phone by id",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "204",
+        description = "Deleted the contact phone successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = ContactPhoneDetails::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "Could not find the the contact or phone by their ids",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun delete(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @PathVariable("contactPhoneId") @Parameter(
+      name = "contactPhoneId",
+      description = "The id of the contact phone",
+      example = "987654",
+    ) contactPhoneId: Long,
+  ): ResponseEntity<Any> {
+    contactPhoneService.delete(contactId, contactPhoneId)
+    return ResponseEntity.noContent().build()
   }
 }

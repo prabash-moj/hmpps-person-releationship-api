@@ -9,6 +9,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
@@ -22,7 +23,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCod
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
-import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 import java.util.*
 
@@ -47,7 +47,7 @@ class ContactPhoneServiceTest {
     isDeceased = false,
     deceasedDate = null,
     createdBy = "user",
-    createdTime = LocalDateTime.now(),
+    createdTime = now(),
   )
 
   @Nested
@@ -166,7 +166,7 @@ class ContactPhoneServiceTest {
 
   @Nested
   inner class GetPhone {
-    private val createdTime = LocalDateTime.now()
+    private val createdTime = now()
     private val phoneEntity = ContactPhoneDetailsEntity(
       contactPhoneId = 99,
       contactId = contactId,
@@ -347,6 +347,54 @@ class ContactPhoneServiceTest {
           amendedTime = updated.amendedTime,
         ),
       )
+    }
+  }
+
+  @Nested
+  inner class DeletePhone {
+    private val contactPhoneId = 1234L
+    private val existingPhone = ContactPhoneEntity(
+      contactPhoneId = contactPhoneId,
+      contactId = contactId,
+      phoneType = "HOME",
+      phoneNumber = "999",
+      extNumber = null,
+      createdBy = "USER99",
+      createdTime = now().minusDays(2),
+      amendedBy = null,
+      amendedTime = null,
+    )
+
+    @Test
+    fun `should throw EntityNotFoundException deleting phone if contact doesn't exist`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.delete(contactId, contactPhoneId)
+      }
+      assertThat(exception.message).isEqualTo("Contact (99) not found")
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException deleting phone if phone doesn't exist`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.delete(contactId, contactPhoneId)
+      }
+      assertThat(exception.message).isEqualTo("Contact phone (1234) not found")
+    }
+
+    @Test
+    fun `should just delete the phone if it exists`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(existingPhone))
+      whenever(contactPhoneRepository.delete(any())).then {}
+
+      service.delete(contactId, contactPhoneId)
+
+      verify(contactPhoneRepository).delete(existingPhone)
     }
   }
 }

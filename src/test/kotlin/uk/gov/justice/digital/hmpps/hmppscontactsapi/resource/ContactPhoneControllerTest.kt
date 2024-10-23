@@ -134,4 +134,30 @@ class ContactPhoneControllerTest {
       verify(service).update(1, 2, request)
     }
   }
+
+  @Nested
+  inner class DeleteContactPhone {
+    @Test
+    fun `should return 204 if deleted successfully`() {
+      whenever(service.delete(1, 2)).then { }
+
+      val response = controller.delete(1, 2)
+
+      assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
+      verify(service).delete(1, 2)
+    }
+
+    @Test
+    fun `should propagate exceptions if delete fails`() {
+      val expected = EntityNotFoundException("Couldn't find contact")
+      whenever(service.delete(1, 2)).thenThrow(expected)
+
+      val exception = assertThrows<EntityNotFoundException> {
+        controller.delete(1, 2)
+      }
+
+      assertThat(exception).isEqualTo(expected)
+      verify(service).delete(1, 2)
+    }
+  }
 }

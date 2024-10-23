@@ -48,8 +48,7 @@ class ContactPhoneService(
   @Transactional
   fun update(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails {
     validateContactExists(contactId)
-    val existing = contactPhoneRepository.findById(contactPhoneId)
-      .orElseThrow { EntityNotFoundException("Contact phone ($contactPhoneId) not found") }
+    val existing = validateExistingPhone(contactPhoneId)
     val type = validatePhoneType(request.phoneType)
     validatePhoneNumber(request.phoneNumber)
 
@@ -64,6 +63,19 @@ class ContactPhoneService(
     val updated = contactPhoneRepository.saveAndFlush(updating)
 
     return updated.toDomainWithType(type)
+  }
+
+  @Transactional
+  fun delete(contactId: Long, contactPhoneId: Long) {
+    validateContactExists(contactId)
+    val existing = validateExistingPhone(contactPhoneId)
+    contactPhoneRepository.delete(existing)
+  }
+
+  private fun validateExistingPhone(contactPhoneId: Long): ContactPhoneEntity {
+    val existing = contactPhoneRepository.findById(contactPhoneId)
+      .orElseThrow { EntityNotFoundException("Contact phone ($contactPhoneId) not found") }
+    return existing
   }
 
   private fun validatePhoneNumber(phoneNumber: String) {

@@ -50,7 +50,7 @@ class ContactPhoneServiceTest {
   @Nested
   inner class CreatePhone {
     private val request = CreatePhoneRequest(
-      "MOBILE",
+      "MOB",
       "+447777777777",
       "0123",
       "USER1",
@@ -108,12 +108,12 @@ class ContactPhoneServiceTest {
     )
     fun `should throw ValidationException creating phone if phone contains invalid chars`(phoneNumber: String) {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "MOBILE")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "MOB")).thenReturn(
         ReferenceCode(
           0,
           "PHONE_TYPE",
-          "MOBILE",
-          "Mobile phone",
+          "MOB",
+          "Mobile",
           90,
         ),
       )
@@ -127,12 +127,12 @@ class ContactPhoneServiceTest {
     @Test
     fun `should return a phone details including the reference data after creating a contact successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "MOBILE")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "MOB")).thenReturn(
         ReferenceCode(
           0,
           "PHONE_TYPE",
-          "MOBILE",
-          "Mobile phone",
+          "MOB",
+          "Mobile",
           90,
         ),
       )
@@ -148,8 +148,8 @@ class ContactPhoneServiceTest {
         ContactPhoneDetails(
           contactPhoneId = 9999,
           contactId = contactId,
-          phoneType = "MOBILE",
-          phoneTypeDescription = "Mobile phone",
+          phoneType = "MOB",
+          phoneTypeDescription = "Mobile",
           phoneNumber = "+447777777777",
           extNumber = "0123",
           createdBy = "USER1",
@@ -167,7 +167,7 @@ class ContactPhoneServiceTest {
     private val phoneEntity = ContactPhoneDetailsEntity(
       contactPhoneId = 99,
       contactId = contactId,
-      phoneType = "MOBILE",
+      phoneType = "MOB",
       phoneTypeDescription = "Mobile",
       phoneNumber = "07777777777",
       extNumber = null,
@@ -187,7 +187,7 @@ class ContactPhoneServiceTest {
         ContactPhoneDetails(
           contactPhoneId = 99,
           contactId = contactId,
-          phoneType = "MOBILE",
+          phoneType = "MOB",
           phoneTypeDescription = "Mobile",
           phoneNumber = "07777777777",
           extNumber = null,

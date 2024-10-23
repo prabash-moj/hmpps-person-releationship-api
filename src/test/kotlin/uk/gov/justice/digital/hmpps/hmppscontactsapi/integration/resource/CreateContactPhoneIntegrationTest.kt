@@ -71,10 +71,10 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     value = [
       "phoneType must not be null;{\"phoneType\": null, \"phoneNumber\": \"0123456789\", \"createdBy\": \"created\"}",
       "phoneType must not be null;{\"phoneNumber\": \"0123456789\", \"createdBy\": \"created\"}",
-      "phoneNumber must not be null;{\"phoneType\": \"MOBILE\", \"phoneNumber\": null, \"createdBy\": \"created\"}",
-      "phoneNumber must not be null;{\"phoneType\": \"MOBILE\", \"createdBy\": \"created\"}",
-      "createdBy must not be null;{\"phoneType\": \"MOBILE\", \"phoneNumber\": \"0123456789\", \"createdBy\": null}",
-      "createdBy must not be null;{\"phoneType\": \"MOBILE\", \"phoneNumber\": \"0123456789\"}",
+      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": null, \"createdBy\": \"created\"}",
+      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"createdBy\": \"created\"}",
+      "createdBy must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": \"0123456789\", \"createdBy\": null}",
+      "createdBy must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": \"0123456789\"}",
     ],
     delimiter = ';',
   )
@@ -121,7 +121,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   )
   fun `should not create the phone if the phone number contains unsupported chars`(case: String, phoneNumber: String) {
     val request = CreatePhoneRequest(
-      phoneType = "MOBILE",
+      phoneType = "MOB",
       phoneNumber = phoneNumber,
       createdBy = "created",
     )
@@ -198,7 +198,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should create the phone with all fields`() {
     val request = CreatePhoneRequest(
-      phoneType = "MOBILE",
+      phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
       extNumber = "9999",
       createdBy = "created",
@@ -237,7 +237,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun aMinimalRequest() = CreatePhoneRequest(
-      phoneType = "MOBILE",
+      phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
       createdBy = "created",
     )

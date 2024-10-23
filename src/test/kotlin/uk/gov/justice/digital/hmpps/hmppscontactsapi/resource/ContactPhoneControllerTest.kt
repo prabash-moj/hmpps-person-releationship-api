@@ -26,7 +26,7 @@ class ContactPhoneControllerTest {
     fun `should return 201 with created phone number if created successfully`() {
       val createdPhone = createContactPhoneNumberDetails(id = 99, contactId = 1)
       val request = CreatePhoneRequest(
-        "MOBILE",
+        "MOB",
         "+07777777777",
         null,
         "JAMES",
@@ -43,7 +43,7 @@ class ContactPhoneControllerTest {
     @Test
     fun `should propagate exceptions if create fails`() {
       val request = CreatePhoneRequest(
-        "MOBILE",
+        "MOB",
         "+07777777777",
         null,
         "JAMES",
@@ -65,7 +65,7 @@ class ContactPhoneControllerTest {
     private val phone = ContactPhoneDetails(
       contactPhoneId = 99,
       contactId = 11,
-      phoneType = "MOBILE",
+      phoneType = "MOB",
       phoneTypeDescription = "Mobile",
       phoneNumber = "07777777777",
       extNumber = null,

@@ -113,7 +113,7 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         .returnResult().responseBody!!
 
       with(contactPhone) {
-        assertThat(phoneType).isEqualTo("MOBILE")
+        assertThat(phoneType).isEqualTo("MOB")
         assertThat(phoneNumber).isEqualTo("07878 222222")
       }
     }

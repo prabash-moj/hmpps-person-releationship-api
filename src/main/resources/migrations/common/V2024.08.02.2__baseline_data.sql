@@ -54,18 +54,18 @@ values (1,  1,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', '
        (17, 18, 'HOME', true, null, null,null, null, null, null, null, null, null, 'TIM', false, null, null, false, null, null, true);
 
 insert into contact_phone(contact_phone_id, contact_id, phone_type, phone_number, ext_number, created_by, created_time)
-values (1, 1, 'MOBILE', '07878 111111', null, 'TIM', '2024-10-01 12:00:00'),
+values (1, 1, 'MOB', '07878 111111', null, 'TIM', '2024-10-01 12:00:00'),
        (2, 1, 'HOME', '01111 777777', '+0123', 'JAMES', '2024-10-01 13:00:00'), --most recent
-       (3, 2, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
-       (4, 3, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
-       (5, 4, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
-       (6, 5, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (3, 2, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (4, 3, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (5, 4, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (6, 5, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
        (7, 6, 'HOME', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
        (8, 7, 'HOME', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
-       (9, 8, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (9, 8, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
        (10, 9, 'WORK', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
-       (11, 10, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
-       (12, 11, 'MOBILE', '07878 222222', null, 'TIM', '2024-10-01 12:00:00');
+       (11, 10, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
+       (12, 11, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00');
 
 
 insert into contact_address_phone(contact_address_phone_id, contact_id, contact_address_id, contact_phone_id, created_by)
@@ -104,9 +104,13 @@ values ('CONTACT_TYPE', 'SOCIAL', 'Social contact', 0, 'TIM'),
        ('ADDRESS_TYPE', 'UNKNOWN', 'Unknown', 0, 'TIM'),
        ('EMAIL_TYPE', 'WORK', 'Work email', 0, 'TIM'),
        ('EMAIL_TYPE', 'PERSONAL', 'Personal email', 0, 'TIM'),
-       ('PHONE_TYPE', 'WORK', 'Work phone', 0, 'TIM'),
-       ('PHONE_TYPE', 'HOME', 'Home phone', 0, 'TIM'),
-       ('PHONE_TYPE', 'MOBILE', 'Mobile phone', 0, 'TIM'),
+       ('PHONE_TYPE', 'HOME','Home', 1, 'JAMES'),
+       ('PHONE_TYPE', 'BUS','Business', 2, 'JAMES'),
+       ('PHONE_TYPE', 'FAX','Fax', 3, 'JAMES'),
+       ('PHONE_TYPE', 'ALTB','Alternate Business', 4, 'JAMES'),
+       ('PHONE_TYPE', 'ALTH','Alternate Home', 5, 'JAMES'),
+       ('PHONE_TYPE', 'MOB','Mobile',6, 'JAMES'),
+       ('PHONE_TYPE', 'VISIT','Agency Visit Line', 7, 'JAMES'),
        ('RESTRICTION', 'CHILDREN', 'No children', 0, 'TIM'),
        ('RESTRICTION', 'ESCORTED', 'Must be escorted', 0, 'TIM'),
        ('RELATIONSHIP', 'AUNT',	'Aunt', 0, 'JAMES'),

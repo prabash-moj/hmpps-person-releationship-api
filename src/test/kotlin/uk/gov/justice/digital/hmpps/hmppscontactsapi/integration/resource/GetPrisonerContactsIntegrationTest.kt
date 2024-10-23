@@ -107,7 +107,7 @@ class GetPrisonerContactsIntegrationTest : H2IntegrationTestBase() {
     val contact = contacts.content.first()
     assertThat(contact.contactId).isEqualTo(1)
     assertThat(contact.phoneType).isEqualTo("HOME")
-    assertThat(contact.phoneTypeDescription).isEqualTo("Home phone")
+    assertThat(contact.phoneTypeDescription).isEqualTo("Home")
     assertThat(contact.phoneNumber).isEqualTo("01111 777777")
     assertThat(contact.extNumber).isEqualTo("+0123")
   }

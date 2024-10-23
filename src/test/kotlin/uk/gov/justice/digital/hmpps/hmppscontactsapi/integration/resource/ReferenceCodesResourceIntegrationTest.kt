@@ -57,17 +57,25 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
     assertThat(listOfCodes)
       .extracting("code")
       .containsAll(listOf("MOT", "FA"))
-    assertThat(listOfCodes).extracting("code").doesNotContainAnyElementsOf(listOf("WORK", "MOBILE", "HOME"))
+    assertThat(listOfCodes).extracting("code").doesNotContainAnyElementsOf(listOf("WORK", "MOB"))
   }
 
   @Test
   fun `should return a list of phone type reference codes`() {
     val groupCode = "PHONE_TYPE"
-    referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted()) hasSize 3
+    referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted()) hasSize 7
 
     val listOfCodes = testAPIClient.getReferenceCodes(groupCode)
 
-    assertThat(listOfCodes).extracting("code").containsExactlyInAnyOrder("WORK", "MOBILE", "HOME")
+    assertThat(listOfCodes).extracting("code").containsExactlyInAnyOrder(
+      "HOME",
+      "BUS",
+      "FAX",
+      "ALTB",
+      "ALTH",
+      "MOB",
+      "VISIT",
+    )
   }
 
   @Test

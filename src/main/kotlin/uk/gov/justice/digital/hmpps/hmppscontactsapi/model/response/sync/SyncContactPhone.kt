@@ -11,7 +11,7 @@ data class SyncContactPhone(
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of phone", example = "MOBILE")
+  @Schema(description = "Type of phone", example = "MOB")
   val phoneType: String,
 
   @Schema(description = "Phone number", example = "+1234567890")

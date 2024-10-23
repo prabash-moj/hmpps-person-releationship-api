@@ -47,7 +47,7 @@ class GetContactPhoneIntegrationTest : H2IntegrationTestBase() {
       assertThat(contactPhoneId).isEqualTo(2)
       assertThat(contactId).isEqualTo(1)
       assertThat(phoneType).isEqualTo("HOME")
-      assertThat(phoneTypeDescription).isEqualTo("Home phone")
+      assertThat(phoneTypeDescription).isEqualTo("Home")
       assertThat(phoneNumber).isEqualTo("01111 777777")
       assertThat(extNumber).isEqualTo("+0123")
       assertThat(createdBy).isEqualTo("JAMES")

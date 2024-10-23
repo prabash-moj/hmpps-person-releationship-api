@@ -11,7 +11,7 @@ data class ReferenceCode(
   @Schema(description = "The group name for related reference codes.", example = "PHONE_TYPE")
   val groupCode: String,
 
-  @Schema(description = "The code for this reference data", example = "MOBILE")
+  @Schema(description = "The code for this reference data", example = "MOB")
   val code: String,
 
   @Schema(description = "A fuller description of the reference code", example = "Mobile")

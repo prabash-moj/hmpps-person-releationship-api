@@ -22,53 +22,71 @@ class OutboundEventsService(
         OutboundEvent.CONTACT_AMENDED,
         OutboundEvent.CONTACT_DELETED,
         -> {
-          publisher.send(outboundEvent.event(ContactInfo(identifier)))
+          sendSafely(outboundEvent, ContactInfo(identifier))
         }
+
         OutboundEvent.CONTACT_ADDRESS_CREATED,
         OutboundEvent.CONTACT_ADDRESS_AMENDED,
         OutboundEvent.CONTACT_ADDRESS_DELETED,
         -> {
-          publisher.send(outboundEvent.event(ContactAddressInfo(identifier)))
+          sendSafely(outboundEvent, ContactAddressInfo(identifier))
         }
+
         OutboundEvent.CONTACT_PHONE_CREATED,
         OutboundEvent.CONTACT_PHONE_AMENDED,
         OutboundEvent.CONTACT_PHONE_DELETED,
         -> {
-          publisher.send(outboundEvent.event(ContactPhoneInfo(identifier)))
+          sendSafely(outboundEvent, ContactPhoneInfo(identifier))
         }
+
         OutboundEvent.CONTACT_EMAIL_CREATED,
         OutboundEvent.CONTACT_EMAIL_AMENDED,
         OutboundEvent.CONTACT_EMAIL_DELETED,
         -> {
-          publisher.send(outboundEvent.event(ContactEmailInfo(identifier)))
+          sendSafely(outboundEvent, ContactEmailInfo(identifier))
         }
+
         OutboundEvent.CONTACT_IDENTITY_CREATED,
         OutboundEvent.CONTACT_IDENTITY_AMENDED,
         OutboundEvent.CONTACT_IDENTITY_DELETED,
         -> {
-          publisher.send(outboundEvent.event(ContactIdentityInfo(identifier)))
+          sendSafely(outboundEvent, ContactIdentityInfo(identifier))
         }
+
         OutboundEvent.CONTACT_RESTRICTION_CREATED,
         OutboundEvent.CONTACT_RESTRICTION_AMENDED,
         OutboundEvent.CONTACT_RESTRICTION_DELETED,
         -> {
-          publisher.send(outboundEvent.event(ContactRestrictionInfo(identifier)))
+          sendSafely(outboundEvent, ContactRestrictionInfo(identifier))
         }
+
         OutboundEvent.PRISONER_CONTACT_CREATED,
         OutboundEvent.PRISONER_CONTACT_AMENDED,
         OutboundEvent.PRISONER_CONTACT_DELETED,
         -> {
-          publisher.send(outboundEvent.event(PrisonerContactInfo(identifier)))
+          sendSafely(outboundEvent, PrisonerContactInfo(identifier))
         }
+
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_AMENDED,
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_DELETED,
         -> {
-          publisher.send(outboundEvent.event(PrisonerContactRestrictionInfo(identifier)))
+          sendSafely(outboundEvent, PrisonerContactRestrictionInfo(identifier))
         }
       }
     } else {
       log.warn("Outbound event type $outboundEvent feature is configured off.")
+    }
+  }
+
+  private fun sendSafely(
+    outboundEvent: OutboundEvent,
+    info: AdditionalInformation,
+  ) {
+    try {
+      publisher.send(outboundEvent.event(info))
+    } catch (e: Exception) {
+      log.error("Unable to send event with type {} and info {}", outboundEvent, info, e)
     }
   }
 }

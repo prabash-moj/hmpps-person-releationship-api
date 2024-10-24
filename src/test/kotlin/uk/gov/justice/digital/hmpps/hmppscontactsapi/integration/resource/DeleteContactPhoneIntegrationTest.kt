@@ -8,6 +8,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.mo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactPhoneInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 
 class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -79,6 +81,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_DELETED, ContactPhoneInfo(savedContactPhoneId))
   }
 
   @Test
@@ -95,6 +98,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact phone (-99) not found")
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_DELETED, ContactPhoneInfo(-99))
   }
 
   @Test
@@ -114,5 +118,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .exchange()
       .expectStatus()
       .isNotFound
+
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_PHONE_DELETED, ContactPhoneInfo(savedContactPhoneId))
   }
 }

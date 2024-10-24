@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -17,6 +18,7 @@ import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
 @ExtendWith(HmppsAuthApiExtension::class, PrisonerSearchApiExtension::class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@Import(TestConfiguration::class)
 @ActiveProfiles("test")
 abstract class IntegrationTestBase {
 
@@ -26,11 +28,15 @@ abstract class IntegrationTestBase {
   @Autowired
   protected lateinit var jwtAuthHelper: JwtAuthorisationHelper
 
+  @Autowired
+  protected lateinit var stubEvents: StubOutboundEventsPublisher
+
   protected lateinit var testAPIClient: TestAPIClient
 
   @BeforeEach
   fun setupTestApiClient() {
     testAPIClient = TestAPIClient(webTestClient, jwtAuthHelper)
+    stubEvents.reset()
   }
 
   internal fun setAuthorisation(

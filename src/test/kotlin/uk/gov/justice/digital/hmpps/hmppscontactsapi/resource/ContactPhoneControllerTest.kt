@@ -9,17 +9,17 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactPhoneFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneNumberDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPhoneService
 import java.time.LocalDateTime
 
 class ContactPhoneControllerTest {
 
-  private val service: ContactPhoneService = mock()
-  private val controller = ContactPhoneController(service)
+  private val facade: ContactPhoneFacade = mock()
+  private val controller = ContactPhoneController(facade)
 
   @Nested
   inner class CreateContactPhone {
@@ -32,13 +32,13 @@ class ContactPhoneControllerTest {
         null,
         "JAMES",
       )
-      whenever(service.create(1, request)).thenReturn(createdPhone)
+      whenever(facade.create(1, request)).thenReturn(createdPhone)
 
       val response = controller.create(1, request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
       assertThat(response.body).isEqualTo(createdPhone)
-      verify(service).create(1, request)
+      verify(facade).create(1, request)
     }
 
     @Test
@@ -50,14 +50,14 @@ class ContactPhoneControllerTest {
         "JAMES",
       )
       val expected = EntityNotFoundException("Couldn't find contact")
-      whenever(service.create(1, request)).thenThrow(expected)
+      whenever(facade.create(1, request)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
         controller.create(1, request)
       }
 
       assertThat(exception).isEqualTo(expected)
-      verify(service).create(1, request)
+      verify(facade).create(1, request)
     }
   }
 
@@ -78,16 +78,16 @@ class ContactPhoneControllerTest {
 
     @Test
     fun `get phone if found by ids`() {
-      whenever(service.get(11, 99)).thenReturn(phone)
+      whenever(facade.get(11, 99)).thenReturn(phone)
 
-      val returnedPhone = service.get(11, 99)
+      val returnedPhone = facade.get(11, 99)
 
       assertThat(returnedPhone).isEqualTo(phone)
     }
 
     @Test
     fun `throw EntityNotFoundException when contact or phone cannot be found`() {
-      whenever(service.get(11, 99)).thenReturn(null)
+      whenever(facade.get(11, 99)).thenReturn(null)
       val exception = assertThrows<EntityNotFoundException> {
         controller.get(11, 99)
       }
@@ -106,13 +106,13 @@ class ContactPhoneControllerTest {
         null,
         "JAMES",
       )
-      whenever(service.update(1, 2, request)).thenReturn(updatedPhone)
+      whenever(facade.update(1, 2, request)).thenReturn(updatedPhone)
 
       val response = controller.update(1, 2, request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(response.body).isEqualTo(updatedPhone)
-      verify(service).update(1, 2, request)
+      verify(facade).update(1, 2, request)
     }
 
     @Test
@@ -124,14 +124,14 @@ class ContactPhoneControllerTest {
         "JAMES",
       )
       val expected = EntityNotFoundException("Couldn't find contact")
-      whenever(service.update(1, 2, request)).thenThrow(expected)
+      whenever(facade.update(1, 2, request)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
         controller.update(1, 2, request)
       }
 
       assertThat(exception).isEqualTo(expected)
-      verify(service).update(1, 2, request)
+      verify(facade).update(1, 2, request)
     }
   }
 
@@ -139,25 +139,25 @@ class ContactPhoneControllerTest {
   inner class DeleteContactPhone {
     @Test
     fun `should return 204 if deleted successfully`() {
-      whenever(service.delete(1, 2)).then { }
+      whenever(facade.delete(1, 2)).then { }
 
       val response = controller.delete(1, 2)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
-      verify(service).delete(1, 2)
+      verify(facade).delete(1, 2)
     }
 
     @Test
     fun `should propagate exceptions if delete fails`() {
       val expected = EntityNotFoundException("Couldn't find contact")
-      whenever(service.delete(1, 2)).thenThrow(expected)
+      whenever(facade.delete(1, 2)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
         controller.delete(1, 2)
       }
 
       assertThat(exception).isEqualTo(expected)
-      verify(service).delete(1, 2)
+      verify(facade).delete(1, 2)
     }
   }
 }

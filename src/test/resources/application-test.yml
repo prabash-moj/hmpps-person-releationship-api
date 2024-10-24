@@ -15,3 +15,12 @@ api:
     url:
       hmpps-auth: http://localhost:8090/auth
       prisoner-search: http://localhost:8092
+
+feature:
+  event:
+    contacts-api:
+      contact-phone:
+        created: true
+        amended: true
+        deleted: true
+

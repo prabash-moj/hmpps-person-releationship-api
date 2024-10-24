@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactPhoneFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPhoneService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
@@ -32,7 +32,7 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 @RestController
 @RequestMapping(value = ["contact/{contactId}/phone"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
-class ContactPhoneController(private val contactPhoneService: ContactPhoneService) {
+class ContactPhoneController(private val contactPhoneFacade: ContactPhoneFacade) {
 
   @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -72,7 +72,7 @@ class ContactPhoneController(private val contactPhoneService: ContactPhoneServic
     ) contactId: Long,
     @Valid @RequestBody request: CreatePhoneRequest,
   ): ResponseEntity<Any> {
-    val createdPhone = contactPhoneService.create(contactId, request)
+    val createdPhone = contactPhoneFacade.create(contactId, request)
     return ResponseEntity
       .status(HttpStatus.CREATED)
       .body(createdPhone)
@@ -115,7 +115,7 @@ class ContactPhoneController(private val contactPhoneService: ContactPhoneServic
       example = "987654",
     ) contactPhoneId: Long,
   ): ResponseEntity<Any> {
-    return contactPhoneService.get(contactId, contactPhoneId)
+    return contactPhoneFacade.get(contactId, contactPhoneId)
       ?.let { ResponseEntity.ok(it) }
       ?: throw EntityNotFoundException("Contact phone with id ($contactPhoneId) not found for contact ($contactId)")
   }
@@ -163,7 +163,7 @@ class ContactPhoneController(private val contactPhoneService: ContactPhoneServic
     ) contactPhoneId: Long,
     @Valid @RequestBody request: UpdatePhoneRequest,
   ): ResponseEntity<Any> {
-    val updatedPhone = contactPhoneService.update(contactId, contactPhoneId, request)
+    val updatedPhone = contactPhoneFacade.update(contactId, contactPhoneId, request)
     return ResponseEntity.ok(updatedPhone)
   }
 
@@ -204,7 +204,7 @@ class ContactPhoneController(private val contactPhoneService: ContactPhoneServic
       example = "987654",
     ) contactPhoneId: Long,
   ): ResponseEntity<Any> {
-    contactPhoneService.delete(contactId, contactPhoneId)
+    contactPhoneFacade.delete(contactId, contactPhoneId)
     return ResponseEntity.noContent().build()
   }
 }

@@ -13,6 +13,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactPhoneInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 
 class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -193,6 +195,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     val created = testAPIClient.createAContactPhone(savedContactId, request)
 
     assertEqualsExcludingTimestamps(created, request)
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_PHONE_CREATED, ContactPhoneInfo(created.contactPhoneId))
   }
 
   @Test
@@ -207,6 +210,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     val created = testAPIClient.createAContactPhone(savedContactId, request)
 
     assertEqualsExcludingTimestamps(created, request)
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_PHONE_CREATED, ContactPhoneInfo(created.contactPhoneId))
   }
 
   private fun assertEqualsExcludingTimestamps(phone: ContactPhoneDetails, request: CreatePhoneRequest) {

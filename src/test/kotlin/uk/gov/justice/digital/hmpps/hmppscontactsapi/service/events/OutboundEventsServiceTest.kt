@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events
 import org.assertj.core.api.Assertions.within
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.kotlin.any
@@ -11,6 +13,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.config.FeatureSwitches
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -290,6 +293,17 @@ class OutboundEventsServiceTest {
     featureSwitches.stub { on { isEnabled(any<OutboundEvent>(), any()) } doReturn false }
     OutboundEvent.entries.forEach { outboundEventsService.send(it, 1L) }
     verifyNoInteractions(eventsPublisher)
+  }
+
+  @ParameterizedTest
+  @EnumSource(OutboundEvent::class)
+  fun `should trap exception sending event`(event: OutboundEvent) {
+    featureSwitches.stub { on { isEnabled(event) } doReturn true }
+    whenever(eventsPublisher.send(any())).thenThrow(RuntimeException("Boom!"))
+
+    outboundEventsService.send(event, 1L)
+
+    verify(eventsPublisher).send(any())
   }
 
   private fun verify(

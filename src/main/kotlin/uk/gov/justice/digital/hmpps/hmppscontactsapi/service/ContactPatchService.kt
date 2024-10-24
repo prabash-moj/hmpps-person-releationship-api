@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
+import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch.mapToResponse
@@ -21,9 +22,8 @@ class ContactPatchService(
     val contact = contactRepository.findById(id)
       .orElseThrow { EntityNotFoundException("Contact not found") }
 
-    if (request.languageCode.isPresent && request.languageCode.get() != null) {
-      languageService.getLanguageByNomisCode(request.languageCode.get()!!)
-    }
+    validateLanguageCode(request)
+    validateInterpreterRequiredType(request)
 
     val changedContact = contact.patchRequest(request)
 
@@ -43,12 +43,24 @@ class ContactPatchService(
       it.gender = this.gender
       it.domesticStatus = this.domesticStatus
       it.nationalityCode = this.nationalityCode
-      it.interpreterRequired = this.interpreterRequired
+      it.interpreterRequired = request.interpreterRequired.orElse(this.interpreterRequired)
       it.languageCode = request.languageCode.orElse(this.languageCode)
       it.amendedBy = request.updatedBy
       it.amendedTime = LocalDateTime.now()
     }
 
     return changedContact
+  }
+
+  private fun validateLanguageCode(request: PatchContactRequest) {
+    if (request.languageCode.isPresent && request.languageCode.get() != null) {
+      languageService.getLanguageByNomisCode(request.languageCode.get()!!)
+    }
+  }
+
+  private fun validateInterpreterRequiredType(request: PatchContactRequest) {
+    if (request.interpreterRequired.isPresent && request.interpreterRequired.get() == null) {
+      throw ValidationException("Unsupported interpreter required type null.")
+    }
   }
 }

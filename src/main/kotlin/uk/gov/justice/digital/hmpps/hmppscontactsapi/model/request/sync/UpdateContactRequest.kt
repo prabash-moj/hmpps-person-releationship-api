@@ -38,8 +38,8 @@ data class UpdateContactRequest(
   @Schema(description = "Whether the contact is suspended", example = "false", nullable = true)
   var suspended: Boolean? = false,
 
-  @Schema(description = "Whether the contact is a staff member", example = "false", nullable = true)
-  var staffFlag: Boolean? = false,
+  @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false)
+  var staffFlag: Boolean = false,
 
   @Schema(description = "Whether the contact is deceased", example = "false", nullable = true)
   var deceasedFlag: Boolean? = false,

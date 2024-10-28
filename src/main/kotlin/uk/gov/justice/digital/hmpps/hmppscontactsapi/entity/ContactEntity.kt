@@ -53,7 +53,7 @@ data class ContactEntity(
 
   var suspended: Boolean? = false
 
-  var staffFlag: Boolean? = false
+  var staffFlag: Boolean = false
 
   var coronerNumber: String? = null
 

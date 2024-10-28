@@ -182,7 +182,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
     }
 
     @Test
-    fun `should successfully patch the interpreter required with null value`() {
+    fun `should not patch the interpreter required with null value`() {
       resetInterpreterRequired(true)
 
       val req = PatchContactRequest(
@@ -264,6 +264,66 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("P")
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+  }
+
+  @Nested
+  inner class StaffFlag {
+
+    @Test
+    fun `should successfully patch the staff flag with true`() {
+      resetStaffFlag(false)
+
+      val req = PatchContactRequest(
+        staffFlag = JsonNullable.of(true),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      assertThat(res.staffFlag).isEqualTo(true)
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    @Test
+    fun `should not patch the staff flag when not provided`() {
+      resetStaffFlag(true)
+
+      val req = PatchContactRequest(
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      assertThat(res.staffFlag).isEqualTo(true)
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    @Test
+    fun `should not patch the staff flag with null value`() {
+      resetStaffFlag(true)
+
+      val req = PatchContactRequest(
+        staffFlag = JsonNullable.of(null),
+        updatedBy = updatedByUser,
+      )
+      val uri = UriComponentsBuilder.fromPath("/contact/$contactId")
+        .build()
+        .toUri()
+
+      val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
+
+      assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported staff flag value null.")
+    }
+
+    private fun resetStaffFlag(resetValue: Boolean) {
+      val req = PatchContactRequest(
+        staffFlag = JsonNullable.of(resetValue),
+        updatedBy = updatedByUser,
+      )
+      val res =
+        testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      assertThat(res.staffFlag).isEqualTo(resetValue)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
     }
   }

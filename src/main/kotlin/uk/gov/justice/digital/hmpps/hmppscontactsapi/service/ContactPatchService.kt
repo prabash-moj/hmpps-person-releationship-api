@@ -26,6 +26,7 @@ class ContactPatchService(
     validateLanguageCode(request)
     validateInterpreterRequiredType(request)
     validateDomesticStatusCode(request)
+    validateStaffFlag(request)
 
     val changedContact = contact.patchRequest(request)
 
@@ -40,7 +41,7 @@ class ContactPatchService(
       it.placeOfBirth = this.placeOfBirth
       it.active = this.active
       it.suspended = this.suspended
-      it.staffFlag = this.staffFlag
+      it.staffFlag = request.staffFlag.orElse(this.staffFlag)
       it.coronerNumber = this.coronerNumber
       it.gender = this.gender
       it.domesticStatus = request.domesticStatus.orElse(this.domesticStatus)
@@ -66,11 +67,17 @@ class ContactPatchService(
     }
   }
 
+  private fun validateStaffFlag(request: PatchContactRequest) {
+    if (request.staffFlag.isPresent && request.staffFlag.get() == null) {
+      throw ValidationException("Unsupported staff flag value null.")
+    }
+  }
+
   private fun validateDomesticStatusCode(request: PatchContactRequest) {
     if (request.domesticStatus.isPresent && request.domesticStatus.get() != null) {
       val code = request.domesticStatus.get()!!
       referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", code)
-        ?: throw EntityNotFoundException("Reference code with groupCode DOMESTIC_STS and code '$code' not found.")
+        ?: throw ValidationException("Reference code with groupCode DOMESTIC_STS and code '$code' not found.")
     }
   }
 }

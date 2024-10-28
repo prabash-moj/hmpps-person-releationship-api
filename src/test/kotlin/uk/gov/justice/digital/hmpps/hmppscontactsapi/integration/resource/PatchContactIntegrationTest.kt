@@ -97,7 +97,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
   inner class LanguageCode {
 
     @Test
-    fun `should not patch the Language code when not provided`() {
+    fun `should not patch the language code when not provided`() {
       resetLanguageCode()
 
       val req = PatchContactRequest(
@@ -110,7 +110,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
     }
 
     @Test
-    fun `should successfully patch the Language code with null value`() {
+    fun `should successfully patch the language code with null value`() {
       resetLanguageCode()
 
       val req = PatchContactRequest(
@@ -124,7 +124,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
     }
 
     @Test
-    fun `should successfully patch the Language code with a value`() {
+    fun `should successfully patch the language code with a value`() {
       resetLanguageCode()
 
       val req = PatchContactRequest(
@@ -207,6 +207,63 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(resetValue)
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+  }
+
+  @Nested
+  inner class DomesticStatus {
+
+    @Test
+    fun `should not patch the domestic status code when not provided`() {
+      resetDomesticStatus()
+
+      val req = PatchContactRequest(
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      assertThat(res.domesticStatus).isEqualTo("P")
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    @Test
+    fun `should successfully patch the domestic status code with null value`() {
+      resetDomesticStatus()
+
+      val req = PatchContactRequest(
+        domesticStatus = JsonNullable.of(null),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      assertThat(res.domesticStatus).isEqualTo(null)
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    @Test
+    fun `should successfully patch the domestic status code with a value`() {
+      resetDomesticStatus()
+
+      val req = PatchContactRequest(
+        domesticStatus = JsonNullable.of("M"),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      assertThat(res.domesticStatus).isEqualTo("M")
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    private fun resetDomesticStatus() {
+      val req = PatchContactRequest(
+        domesticStatus = JsonNullable.of("P"),
+        updatedBy = updatedByUser,
+      )
+      val res =
+        testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      assertThat(res.domesticStatus).isEqualTo("P")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
     }
   }

@@ -50,7 +50,7 @@ class SyncContactService(
       it.placeOfBirth = request.placeOfBirth
       it.active = request.active
       it.suspended = request.suspended
-      it.staffFlag = request.staffFlag
+      it.staffFlag = request.isStaff
       it.coronerNumber = request.coronerNumber
       it.gender = request.gender
       it.domesticStatus = request.domesticStatus

@@ -7,7 +7,7 @@ import org.openapitools.jackson.nullable.JsonNullable
 data class PatchContactRequest(
 
   @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false, type = "boolean", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  var staffFlag: JsonNullable<Boolean> = JsonNullable.undefined(),
+  var isStaff: JsonNullable<Boolean> = JsonNullable.undefined(),
 
   @Schema(description = "The domestic status code of the contact", example = "S", nullable = true, type = "string", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   var domesticStatus: JsonNullable<String?> = JsonNullable.undefined(),

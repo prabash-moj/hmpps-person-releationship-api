@@ -14,7 +14,6 @@ import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -157,6 +156,32 @@ class ContactServiceTest {
     }
 
     @Test
+    fun `should create a contact returns existing value for the staff flag`() {
+      val request = CreateContactRequest(
+        title = "mr",
+        lastName = "last",
+        firstName = "first",
+        middleNames = "middle",
+        dateOfBirth = null,
+        createdBy = "created",
+      )
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+      val createdContact = service.createContact(request)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+      with(contactCaptor.firstValue) {
+        assertThat(staffFlag).isFalse()
+        assertThat(createdTime).isNotNull()
+      }
+      with(createdContact) {
+        assertThat(title).isEqualTo(request.title)
+        assertThat(isStaff).isFalse()
+      }
+    }
+
+    @Test
     fun `should create a contact with a relationship successfully`() {
       val relationshipRequest = ContactRelationship(
         prisonerNumber = "A1234BC",
@@ -274,19 +299,7 @@ class ContactServiceTest {
         ),
       )
 
-      val entity = ContactEntity(
-        contactId = contactId,
-        title = "Mr",
-        lastName = "last",
-        middleNames = "middle",
-        firstName = "first",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = estimatedIsOverEighteen,
-        isDeceased = false,
-        deceasedDate = null,
-        createdBy = "user",
-        createdTime = LocalDateTime.now(),
-      )
+      val entity = createContactEntity(estimatedIsOverEighteen)
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
       val contact = service.getContact(contactId)
       assertNotNull(contact)
@@ -330,19 +343,7 @@ class ContactServiceTest {
         ),
       )
 
-      val entity = ContactEntity(
-        contactId = contactId,
-        title = "Mr",
-        lastName = "last",
-        middleNames = "middle",
-        firstName = "first",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-        isDeceased = false,
-        deceasedDate = null,
-        createdBy = "user",
-        createdTime = LocalDateTime.now(),
-      )
+      val entity = createContactEntity()
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)
@@ -374,19 +375,7 @@ class ContactServiceTest {
 
       whenever(contactEmailDetailsRepository.findByContactId(contactId)).thenReturn(listOf(emailAddressEntity1, emailAddressEntity2))
 
-      val entity = ContactEntity(
-        contactId = contactId,
-        title = "Mr",
-        lastName = "last",
-        middleNames = "middle",
-        firstName = "first",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-        isDeceased = false,
-        deceasedDate = null,
-        createdBy = "user",
-        createdTime = LocalDateTime.now(),
-      )
+      val entity = createContactEntity()
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)
@@ -407,19 +396,7 @@ class ContactServiceTest {
 
       whenever(contactIdentityDetailsRepository.findByContactId(contactId)).thenReturn(listOf(identityEntity1, identityEntity2))
 
-      val entity = ContactEntity(
-        contactId = contactId,
-        title = "Mr",
-        lastName = "last",
-        middleNames = "middle",
-        firstName = "first",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-        isDeceased = false,
-        deceasedDate = null,
-        createdBy = "user",
-        createdTime = LocalDateTime.now(),
-      )
+      val entity = createContactEntity()
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)
@@ -439,19 +416,7 @@ class ContactServiceTest {
         Language(1, "FRE-FRA", "French", "Foo", "Bar", "X", 99),
       )
 
-      val entity = ContactEntity(
-        contactId = contactId,
-        title = "Mr",
-        lastName = "last",
-        middleNames = "middle",
-        firstName = "first",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-        isDeceased = false,
-        deceasedDate = null,
-        createdBy = "user",
-        createdTime = LocalDateTime.now(),
-      )
+      val entity = createContactEntity()
       entity.languageCode = "FRE-FRA"
       entity.interpreterRequired = true
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
@@ -468,19 +433,7 @@ class ContactServiceTest {
 
     @Test
     fun `should get a contact if language code null and not lookup the null`() {
-      val entity = ContactEntity(
-        contactId = contactId,
-        title = "Mr",
-        lastName = "last",
-        middleNames = "middle",
-        firstName = "first",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-        isDeceased = false,
-        deceasedDate = null,
-        createdBy = "user",
-        createdTime = LocalDateTime.now(),
-      )
+      val entity = createContactEntity()
       entity.languageCode = null
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
@@ -500,19 +453,7 @@ class ContactServiceTest {
         ReferenceCode(1, "DOMESTIC_STS", "S", "Single", 1),
       )
 
-      val entity = ContactEntity(
-        contactId = contactId,
-        title = "Mr",
-        lastName = "last",
-        middleNames = "middle",
-        firstName = "first",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-        isDeceased = false,
-        deceasedDate = null,
-        createdBy = "user",
-        createdTime = LocalDateTime.now(),
-      )
+      val entity = createContactEntity()
       entity.domesticStatus = "S"
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
@@ -527,19 +468,7 @@ class ContactServiceTest {
 
     @Test
     fun `should get a contact with no domestic status and not look it up`() {
-      val entity = ContactEntity(
-        contactId = contactId,
-        title = "Mr",
-        lastName = "last",
-        middleNames = "middle",
-        firstName = "first",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-        isDeceased = false,
-        deceasedDate = null,
-        createdBy = "user",
-        createdTime = LocalDateTime.now(),
-      )
+      val entity = createContactEntity()
       entity.domesticStatus = null
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
@@ -551,6 +480,21 @@ class ContactServiceTest {
         assertThat(domesticStatusDescription).isNull()
       }
       verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+    }
+
+    @Test
+    fun `should get a contact with staff flag`() {
+      val entity = createContactEntity().also {
+        it.staffFlag = true
+      }
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+
+      val contact = service.getContact(contactId)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+        assertThat(isStaff).isTrue()
+      }
     }
 
     @Test
@@ -713,4 +657,20 @@ class ContactServiceTest {
       createdTime = LocalDateTime.now(),
     )
   }
+
+  private fun createContactEntity(
+    estimatedIsOverEighteen: EstimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+  ) = ContactEntity(
+    contactId = 123456L,
+    title = "Mr",
+    lastName = "last",
+    middleNames = "middle",
+    firstName = "first",
+    dateOfBirth = null,
+    estimatedIsOverEighteen = estimatedIsOverEighteen,
+    isDeceased = false,
+    deceasedDate = null,
+    createdBy = "user",
+    createdTime = LocalDateTime.now(),
+  )
 }

@@ -29,6 +29,9 @@ data class GetContactResponse(
   @Schema(description = "Whether the contact is over 18, based on their date of birth if it is known", example = "YES")
   val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
+  @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false)
+  var isStaff: Boolean = false,
+
   @Schema(description = "The date the contact deceased, if known", example = "1980-01-01")
   val isDeceased: Boolean,
 

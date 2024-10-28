@@ -27,7 +27,7 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.placeOfBirth).isEqualTo(contactEntity.placeOfBirth)
     assertThat(response.active).isEqualTo(contactEntity.active)
     assertThat(response.suspended).isEqualTo(contactEntity.suspended)
-    assertThat(response.staffFlag).isEqualTo(contactEntity.staffFlag)
+    assertThat(response.isStaff).isEqualTo(contactEntity.staffFlag)
     assertThat(response.deceasedFlag).isEqualTo(contactEntity.isDeceased)
     assertThat(response.deceasedDate).isEqualTo(contactEntity.deceasedDate)
     assertThat(response.coronerNumber).isEqualTo(contactEntity.coronerNumber)

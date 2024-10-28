@@ -250,6 +250,16 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
     }
   }
 
+  @Test
+  fun `should get contacts with staff flag`() {
+    val contact = testAPIClient.getContact(1)
+
+    with(contact) {
+      assertThat(id).isEqualTo(1)
+      assertThat(isStaff).isTrue()
+    }
+  }
+
   @ParameterizedTest
   @EnumSource(EstimatedIsOverEighteen::class)
   fun `should return is over eighteen when DOB is not known`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {

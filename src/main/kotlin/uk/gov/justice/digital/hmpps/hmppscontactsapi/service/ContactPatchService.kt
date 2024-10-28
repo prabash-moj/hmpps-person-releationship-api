@@ -41,7 +41,7 @@ class ContactPatchService(
       it.placeOfBirth = this.placeOfBirth
       it.active = this.active
       it.suspended = this.suspended
-      it.staffFlag = request.staffFlag.orElse(this.staffFlag)
+      it.staffFlag = request.isStaff.orElse(this.staffFlag)
       it.coronerNumber = this.coronerNumber
       it.gender = this.gender
       it.domesticStatus = request.domesticStatus.orElse(this.domesticStatus)
@@ -68,7 +68,7 @@ class ContactPatchService(
   }
 
   private fun validateStaffFlag(request: PatchContactRequest) {
-    if (request.staffFlag.isPresent && request.staffFlag.get() == null) {
+    if (request.isStaff.isPresent && request.isStaff.get() == null) {
       throw ValidationException("Unsupported staff flag value null.")
     }
   }

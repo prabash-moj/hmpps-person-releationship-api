@@ -117,7 +117,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(placeOfBirth).isEqualTo("London")
         assertThat(active).isFalse()
         assertThat(suspended).isFalse
-        assertThat(staffFlag).isFalse
+        assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isEqualTo("2024-01-26")
         assertThat(coronerNumber).isNull()
@@ -160,7 +160,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(placeOfBirth).isEqualTo("London")
         assertThat(active).isTrue
         assertThat(suspended).isFalse
-        assertThat(staffFlag).isFalse
+        assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
         assertThat(coronerNumber).isNull()
@@ -226,7 +226,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(placeOfBirth).isEqualTo("Birmingham")
         assertThat(active).isTrue
         assertThat(suspended).isFalse
-        assertThat(staffFlag).isFalse
+        assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
         assertThat(coronerNumber).isNull()
@@ -283,7 +283,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         placeOfBirth = "Birmingham",
         active = true,
         suspended = false,
-        staffFlag = false,
+        isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,
         coronerNumber = null,
@@ -308,7 +308,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         placeOfBirth = "London",
         active = true,
         suspended = false,
-        staffFlag = false,
+        isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,
         coronerNumber = null,

@@ -339,7 +339,7 @@ class ContactPatchServiceTest {
     @Test
     fun `should patch when is staff flag is valid`() {
       val patchRequest = PatchContactRequest(
-        staffFlag = JsonNullable.of(true),
+        isStaff = JsonNullable.of(true),
         updatedBy = "Modifier",
       )
 
@@ -354,17 +354,17 @@ class ContactPatchServiceTest {
 
       val updatingEntity = contactCaptor.firstValue
 
-      assertThat(updatingEntity.staffFlag).isEqualTo(patchRequest.staffFlag.get())
+      assertThat(updatingEntity.staffFlag).isEqualTo(patchRequest.isStaff.get())
       assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
 
-      assertThat(response.staffFlag).isEqualTo(patchRequest.staffFlag.get())
+      assertThat(response.isStaff).isEqualTo(patchRequest.isStaff.get())
       assertThat(response.amendedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
     fun `should throw validation error when is staff flag is null`() {
       val patchRequest = PatchContactRequest(
-        staffFlag = JsonNullable.of(null),
+        isStaff = JsonNullable.of(null),
         updatedBy = "Modifier",
       )
 
@@ -379,7 +379,7 @@ class ContactPatchServiceTest {
     @Test
     fun `should patch staff flag is undefined`() {
       val patchRequest = PatchContactRequest(
-        staffFlag = JsonNullable.undefined(),
+        isStaff = JsonNullable.undefined(),
         updatedBy = "Modifier",
       )
 
@@ -436,7 +436,7 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
     assertThat(updatedContact.active).isEqualTo(originalContact.active)
     assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
-    assertThat(updatedContact.staffFlag).isEqualTo(originalContact.staffFlag)
+    assertThat(updatedContact.isStaff).isEqualTo(originalContact.staffFlag)
     assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
     assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
     assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)

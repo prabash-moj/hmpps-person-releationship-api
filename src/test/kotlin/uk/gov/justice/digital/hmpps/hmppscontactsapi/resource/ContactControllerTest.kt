@@ -261,7 +261,7 @@ class ContactControllerTest {
       placeOfBirth = "London",
       active = true,
       suspended = false,
-      staffFlag = false,
+      isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
       coronerNumber = null,

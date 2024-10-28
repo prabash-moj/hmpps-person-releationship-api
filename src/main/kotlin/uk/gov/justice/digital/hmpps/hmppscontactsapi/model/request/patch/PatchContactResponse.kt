@@ -39,7 +39,7 @@ data class PatchContactResponse(
   var suspended: Boolean? = false,
 
   @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false)
-  var staffFlag: Boolean = false,
+  var isStaff: Boolean = false,
 
   @Schema(description = "Whether the contact is deceased", example = "false", nullable = true)
   var deceasedFlag: Boolean? = false,

@@ -47,7 +47,7 @@ class SyncContactServiceTest {
         assertThat(coronerNumber).isNull()
         assertThat(active).isTrue()
         assertThat(suspended).isFalse()
-        assertThat(staffFlag).isFalse()
+        assertThat(isStaff).isFalse()
         assertThat(deceasedFlag).isFalse()
         assertThat(interpreterRequired).isFalse()
       }
@@ -161,7 +161,7 @@ class SyncContactServiceTest {
       placeOfBirth = "London",
       active = true,
       suspended = false,
-      staffFlag = false,
+      isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
       coronerNumber = null,
@@ -187,7 +187,7 @@ class SyncContactServiceTest {
       placeOfBirth = "London",
       active = true,
       suspended = false,
-      staffFlag = false,
+      isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
       coronerNumber = null,
@@ -243,7 +243,7 @@ class SyncContactServiceTest {
       it.placeOfBirth = this.placeOfBirth
       it.active = this.active
       it.suspended = this.suspended
-      it.staffFlag = this.staffFlag
+      it.staffFlag = this.isStaff
       it.coronerNumber = this.coronerNumber
       it.gender = this.gender
       it.domesticStatus = this.domesticStatus

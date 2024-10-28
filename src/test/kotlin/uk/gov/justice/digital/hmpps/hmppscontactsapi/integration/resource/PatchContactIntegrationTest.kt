@@ -276,12 +276,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       resetStaffFlag(false)
 
       val req = PatchContactRequest(
-        staffFlag = JsonNullable.of(true),
+        isStaff = JsonNullable.of(true),
         updatedBy = updatedByUser,
       )
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
-      assertThat(res.staffFlag).isEqualTo(true)
+      assertThat(res.isStaff).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
     }
 
@@ -294,7 +294,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       )
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
-      assertThat(res.staffFlag).isEqualTo(true)
+      assertThat(res.isStaff).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
     }
 
@@ -303,7 +303,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       resetStaffFlag(true)
 
       val req = PatchContactRequest(
-        staffFlag = JsonNullable.of(null),
+        isStaff = JsonNullable.of(null),
         updatedBy = updatedByUser,
       )
       val uri = UriComponentsBuilder.fromPath("/contact/$contactId")
@@ -317,13 +317,13 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
     private fun resetStaffFlag(resetValue: Boolean) {
       val req = PatchContactRequest(
-        staffFlag = JsonNullable.of(resetValue),
+        isStaff = JsonNullable.of(resetValue),
         updatedBy = updatedByUser,
       )
       val res =
         testAPIClient.patchAContact(req, "/contact/$contactId")
 
-      assertThat(res.staffFlag).isEqualTo(resetValue)
+      assertThat(res.isStaff).isEqualTo(resetValue)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
     }
   }

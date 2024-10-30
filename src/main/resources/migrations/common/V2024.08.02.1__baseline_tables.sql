@@ -182,7 +182,7 @@ CREATE TABLE contact_restriction
     amended_time      timestamp
 );
 
-CREATE UNIQUE INDEX idx_contact_restriction_contact_id ON contact_restriction(contact_id);
+CREATE INDEX idx_contact_restriction_contact_id ON contact_restriction(contact_id);
 CREATE INDEX idx_contact_restriction_start_date ON contact_restriction(start_date);
 CREATE INDEX idx_contact_restriction_expiry_date ON contact_restriction(expiry_date);
 
@@ -245,6 +245,28 @@ CREATE INDEX idx_prisoner_contact_restriction_contact_id ON prisoner_contact_res
 CREATE INDEX idx_prisoner_contact_restriction_type ON prisoner_contact_restriction(restriction_type);
 CREATE INDEX idx_prisoner_contact_start_date ON prisoner_contact_restriction(start_date);
 CREATE INDEX idx_prisoner_contact_expiry_date ON prisoner_contact_restriction(expiry_date);
+
+---------------------------------------------------------------------------------------
+-- Contact employments - for official contacts only
+-- This table holds the details of the employer(s) of official contacts
+-- At this stage the corporate organisations are not held locally so this is external.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_employment
+(
+    contact_employment_id bigserial NOT NULL CONSTRAINT contact_employment_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    corporate_id bigint NOT NULL,
+    corporate_name varchar(100),
+    active boolean NOT NULL DEFAULT true,
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_employment_contact_id ON contact_employment(contact_id);
+CREATE INDEX idx_contact_employment_corporate_id ON contact_employment(corporate_id);
 
 ---------------------------------------------------------------------------------------
 -- Contains coded reference values used to constrain the values of lists/validation.

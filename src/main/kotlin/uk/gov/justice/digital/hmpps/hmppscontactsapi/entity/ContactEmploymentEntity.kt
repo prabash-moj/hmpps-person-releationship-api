@@ -9,24 +9,25 @@ import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "contact_address_phone")
-data class ContactAddressPhoneEntity(
+@Table(name = "contact_employment")
+data class ContactEmploymentEntity(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val contactAddressPhoneId: Long,
+  val contactEmploymentId: Long,
 
-  val contactId: Long,
+  val contactId: Long? = null,
 
-  val contactAddressId: Long,
+  val corporateId: Long? = null,
 
-  val contactPhoneId: Long,
+  val corporateName: String? = null,
+
+  val active: Boolean = true,
 
   val createdBy: String,
 
   @CreationTimestamp
   val createdTime: LocalDateTime = LocalDateTime.now(),
-
-  val amendedBy: String? = null,
-
-  val amendedTime: LocalDateTime? = null,
-)
+) {
+  var amendedBy: String? = null
+  var amendedTime: LocalDateTime? = null
+}

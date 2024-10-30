@@ -8,12 +8,14 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.MigrateContactResponse
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 import java.net.URI
 
@@ -180,6 +182,20 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
   ): (HttpHeaders) -> Unit = jwtAuthHelper.setAuthorisationHeader(username = username, scope = scopes, roles = roles)
 
   private fun authorised() = setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN"))
+
+  fun migrateAContact(request: MigrateContactRequest) =
+    webTestClient.post()
+      .uri("/migrate/contact")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_PRISONER_CONTACTS__RW")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(MigrateContactResponse::class.java)
+      .returnResult().responseBody!!
 
   data class ContactSearchResponse(
     val content: List<ContactSearchResultItem>,

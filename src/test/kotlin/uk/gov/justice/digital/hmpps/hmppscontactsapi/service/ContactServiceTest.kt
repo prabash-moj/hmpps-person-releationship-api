@@ -337,9 +337,9 @@ class ContactServiceTest {
       )
       whenever(contactAddressPhoneRepository.findByContactId(contactId)).thenReturn(
         listOf(
-          ContactAddressPhoneEntity(1, contactId, 1, 2),
-          ContactAddressPhoneEntity(1, contactId, 1, 4),
-          ContactAddressPhoneEntity(1, contactId, 2, 3),
+          ContactAddressPhoneEntity(1, contactId, 1, 2, createdBy = "TEST"),
+          ContactAddressPhoneEntity(1, contactId, 1, 4, createdBy = "TEST"),
+          ContactAddressPhoneEntity(1, contactId, 2, 3, createdBy = "TEST"),
         ),
       )
 

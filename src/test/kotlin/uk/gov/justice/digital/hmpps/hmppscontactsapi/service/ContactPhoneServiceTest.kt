@@ -20,6 +20,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOv
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -30,10 +31,11 @@ class ContactPhoneServiceTest {
 
   private val contactRepository: ContactRepository = mock()
   private val contactPhoneRepository: ContactPhoneRepository = mock()
+  private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
   private val contactPhoneDetailsRepository: ContactPhoneDetailsRepository = mock()
   private val referenceCodeService: ReferenceCodeService = mock()
   private val service =
-    ContactPhoneService(contactRepository, contactPhoneRepository, contactPhoneDetailsRepository, referenceCodeService)
+    ContactPhoneService(contactRepository, contactPhoneRepository, contactPhoneDetailsRepository, contactAddressPhoneRepository, referenceCodeService)
 
   private val contactId = 99L
   private val aContact = ContactEntity(
@@ -387,13 +389,15 @@ class ContactPhoneServiceTest {
     }
 
     @Test
-    fun `should just delete the phone if it exists`() {
+    fun `should just delete the phone and any address links if it exists`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(existingPhone))
       whenever(contactPhoneRepository.delete(any())).then {}
+      whenever(contactAddressPhoneRepository.deleteByContactPhoneId(contactPhoneId)).then {}
 
       service.delete(contactId, contactPhoneId)
 
+      verify(contactAddressPhoneRepository).deleteByContactPhoneId(contactPhoneId)
       verify(contactPhoneRepository).delete(existingPhone)
     }
   }

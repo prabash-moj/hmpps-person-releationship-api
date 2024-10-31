@@ -8,4 +8,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneE
 interface ContactAddressPhoneRepository : JpaRepository<ContactAddressPhoneEntity, Long> {
 
   fun findByContactId(contactId: Long): List<ContactAddressPhoneEntity>
+
+  fun deleteByContactPhoneId(contactPhoneId: Long)
 }

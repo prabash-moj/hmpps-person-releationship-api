@@ -10,6 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -17,10 +18,11 @@ import java.time.LocalDateTime
 
 @Service
 class ContactPhoneService(
-  val contactRepository: ContactRepository,
-  val contactPhoneRepository: ContactPhoneRepository,
-  val contactPhoneDetailsRepository: ContactPhoneDetailsRepository,
-  val referenceCodeService: ReferenceCodeService,
+  private val contactRepository: ContactRepository,
+  private val contactPhoneRepository: ContactPhoneRepository,
+  private val contactPhoneDetailsRepository: ContactPhoneDetailsRepository,
+  private val contactAddressPhoneRepository: ContactAddressPhoneRepository,
+  private val referenceCodeService: ReferenceCodeService,
 ) {
 
   @Transactional
@@ -69,6 +71,7 @@ class ContactPhoneService(
   fun delete(contactId: Long, contactPhoneId: Long) {
     validateContactExists(contactId)
     val existing = validateExistingPhone(contactPhoneId)
+    contactAddressPhoneRepository.deleteByContactPhoneId(existing.contactPhoneId)
     contactPhoneRepository.delete(existing)
   }
 

@@ -3,17 +3,28 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactPhoneInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 
 class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
   private var savedContactPhoneId = 0L
+
+  @Autowired
+  protected lateinit var addressPhoneRepository: ContactAddressPhoneRepository
+
+  @Autowired
+  protected lateinit var addressRepository: ContactAddressRepository
 
   @BeforeEach
   fun initialiseData() {
@@ -120,5 +131,55 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .isNotFound
 
     stubEvents.assertHasEvent(OutboundEvent.CONTACT_PHONE_DELETED, ContactPhoneInfo(savedContactPhoneId))
+  }
+
+  @Test
+  fun `should delete the contacts phone number even if associated with an address`() {
+    val address = addressRepository.saveAndFlush(
+      ContactAddressEntity(
+        contactAddressId = 0L,
+        contactId = savedContactId,
+        addressType = "HOME",
+        primaryAddress = false,
+        flat = "1B",
+        property = "13",
+        street = "Main Street",
+        area = "Dodworth",
+        cityCode = "CVNTRY",
+        countyCode = "WARWKS",
+        countryCode = "UK",
+        comments = "Some comments",
+        createdBy = "CREATE",
+      ),
+    )
+    val addressPhone = addressPhoneRepository.saveAndFlush(
+      ContactAddressPhoneEntity(
+        contactAddressPhoneId = 0,
+        contactId = savedContactId,
+        contactPhoneId = savedContactPhoneId,
+        contactAddressId = address.contactAddressId,
+        createdBy = "USER1",
+      ),
+    )
+
+    webTestClient.delete()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isNoContent
+
+    webTestClient.get()
+      .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isNotFound
+
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_PHONE_DELETED, ContactPhoneInfo(savedContactPhoneId))
+    assertThat(addressPhoneRepository.findById(addressPhone.contactPhoneId)).isNotPresent
+    assertThat(addressRepository.findById(address.contactAddressId)).isPresent
   }
 }

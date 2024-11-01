@@ -7,12 +7,12 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -112,8 +112,47 @@ class ContactIdentityController(private val contactIdentityFacade: ContactIdenti
       example = "987654",
     ) contactIdentityId: Long,
   ): ResponseEntity<Any> {
-    return contactIdentityFacade.get(contactId, contactIdentityId)
-      ?.let { ResponseEntity.ok(it) }
-      ?: throw EntityNotFoundException("Contact identity with id ($contactIdentityId) not found for contact ($contactId)")
+    return ResponseEntity.ok(contactIdentityFacade.get(contactId, contactIdentityId))
+  }
+
+  @DeleteMapping("/{contactIdentityId}")
+  @Operation(
+    summary = "Delete contact identity",
+    description = "Deletes an existing contact identity by id",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "204",
+        description = "Deleted the contact identity successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = ContactIdentityDetails::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "Could not find the the contact or identity by their ids",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun delete(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @PathVariable("contactIdentityId") @Parameter(
+      name = "contactIdentityId",
+      description = "The id of the contact identity",
+      example = "987654",
+    ) contactIdentityId: Long,
+  ): ResponseEntity<Any> {
+    contactIdentityFacade.delete(contactId, contactIdentityId)
+    return ResponseEntity.noContent().build()
   }
 }

@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 
+import jakarta.persistence.EntityNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -69,6 +70,45 @@ class ContactIdentityFacadeTest {
 
     assertThat(result).isEqualTo(contactIdentityDetails)
     verify(identityService).get(contactId, contactIdentityId)
+    verify(eventsService, never()).send(any(), any())
+  }
+
+  @Test
+  fun `should throw exception if there is no identity found on get`() {
+    whenever(identityService.get(any(), any())).thenReturn(null)
+
+    val exception = assertThrows<EntityNotFoundException> {
+      facade.get(contactId, contactIdentityId)
+    }
+
+    assertThat(exception.message).isEqualTo("Contact identity with id (99) not found for contact (11)")
+    verify(identityService).get(contactId, contactIdentityId)
+    verify(eventsService, never()).send(any(), any())
+  }
+
+  @Test
+  fun `should send event if delete success`() {
+    whenever(identityService.delete(any(), any())).then {}
+    whenever(eventsService.send(any(), any())).then {}
+
+    facade.delete(contactId, contactIdentityId)
+
+    verify(identityService).delete(contactId, contactIdentityId)
+    verify(eventsService).send(OutboundEvent.CONTACT_IDENTITY_DELETED, contactIdentityId)
+  }
+
+  @Test
+  fun `should not send event if delete throws exception and propagate the exception`() {
+    val expectedException = RuntimeException("Bang!")
+    whenever(identityService.delete(any(), any())).thenThrow(expectedException)
+    whenever(eventsService.send(any(), any())).then {}
+
+    val exception = assertThrows<RuntimeException> {
+      facade.delete(contactId, contactIdentityId)
+    }
+
+    assertThat(exception).isEqualTo(exception)
+    verify(identityService).delete(contactId, contactIdentityId)
     verify(eventsService, never()).send(any(), any())
   }
 }

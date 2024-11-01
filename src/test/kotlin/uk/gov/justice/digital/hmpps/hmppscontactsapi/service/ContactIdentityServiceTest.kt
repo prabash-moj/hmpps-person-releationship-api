@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
@@ -156,6 +157,53 @@ class ContactIdentityServiceTest {
       whenever(contactIdentityDetailsRepository.findByContactIdAndContactIdentityId(contactId, 99)).thenReturn(null)
 
       assertThat(service.get(contactId, 99)).isNull()
+    }
+  }
+
+  @Nested
+  inner class DeleteIdentity {
+    private val contactIdentityId = 1234L
+    private val existingIdentity = ContactIdentityEntity(
+      contactIdentityId = contactIdentityId,
+      contactId = contactId,
+      identityType = "DRIVING_LIC",
+      identityValue = "DL123456789",
+      createdBy = "USER99",
+      createdTime = now().minusDays(2),
+      amendedBy = null,
+      amendedTime = null,
+    )
+
+    @Test
+    fun `should throw EntityNotFoundException deleting identity if contact doesn't exist`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.delete(contactId, contactIdentityId)
+      }
+      assertThat(exception.message).isEqualTo("Contact (99) not found")
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException deleting identity if identity doesn't exist`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.delete(contactId, contactIdentityId)
+      }
+      assertThat(exception.message).isEqualTo("Contact identity (1234) not found")
+    }
+
+    @Test
+    fun `should just delete the identity and any address links if it exists`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
+      whenever(contactIdentityRepository.delete(any())).then {}
+
+      service.delete(contactId, contactIdentityId)
+
+      verify(contactIdentityRepository).delete(existingIdentity)
     }
   }
 }

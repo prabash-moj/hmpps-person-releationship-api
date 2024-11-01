@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
@@ -19,7 +20,13 @@ class ContactIdentityFacade(
     }
   }
 
-  fun get(contactId: Long, contactIdentityId: Long): ContactIdentityDetails? {
-    return contactIdentityService.get(contactId, contactIdentityId)
+  fun get(contactId: Long, contactIdentityId: Long): ContactIdentityDetails {
+    return contactIdentityService.get(contactId, contactIdentityId) ?: throw EntityNotFoundException("Contact identity with id ($contactIdentityId) not found for contact ($contactId)")
+  }
+
+  fun delete(contactId: Long, contactIdentityId: Long) {
+    contactIdentityService.delete(contactId, contactIdentityId).also {
+      outboundEventsService.send(OutboundEvent.CONTACT_IDENTITY_DELETED, contactIdentityId)
+    }
   }
 }

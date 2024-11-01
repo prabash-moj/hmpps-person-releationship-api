@@ -83,12 +83,39 @@ class ContactIdentityControllerTest {
     }
 
     @Test
-    fun `throw EntityNotFoundException when contact or identity cannot be found`() {
-      whenever(facade.get(11, 99)).thenReturn(null)
+    fun `propagate exception getting identity`() {
+      val expected = EntityNotFoundException("Bang!")
+      whenever(facade.get(11, 99)).thenThrow(expected)
       val exception = assertThrows<EntityNotFoundException> {
         controller.get(11, 99)
       }
-      assertThat(exception.message).isEqualTo("Contact identity with id (99) not found for contact (11)")
+      assertThat(exception).isEqualTo(expected)
+    }
+  }
+
+  @Nested
+  inner class DeleteContactIdentity {
+    @Test
+    fun `should return 204 if deleted successfully`() {
+      whenever(facade.delete(1, 2)).then { }
+
+      val response = controller.delete(1, 2)
+
+      assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
+      verify(facade).delete(1, 2)
+    }
+
+    @Test
+    fun `should propagate exceptions if delete fails`() {
+      val expected = EntityNotFoundException("Couldn't find contact")
+      whenever(facade.delete(1, 2)).thenThrow(expected)
+
+      val exception = assertThrows<EntityNotFoundException> {
+        controller.delete(1, 2)
+      }
+
+      assertThat(exception).isEqualTo(expected)
+      verify(facade).delete(1, 2)
     }
   }
 }

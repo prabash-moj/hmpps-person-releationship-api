@@ -42,6 +42,19 @@ class ContactIdentityService(
     return contactIdentityDetailsRepository.findByContactIdAndContactIdentityId(contactId, contactIdentityId)?.toModel()
   }
 
+  @Transactional
+  fun delete(contactId: Long, contactIdentityId: Long) {
+    validateContactExists(contactId)
+    val existing = validateExistingIdentity(contactIdentityId)
+    contactIdentityRepository.delete(existing)
+  }
+
+  private fun validateExistingIdentity(contactIdentityId: Long): ContactIdentityEntity {
+    val existing = contactIdentityRepository.findById(contactIdentityId)
+      .orElseThrow { EntityNotFoundException("Contact identity ($contactIdentityId) not found") }
+    return existing
+  }
+
   private fun validateIdentityType(identityType: String): ReferenceCode {
     val type = referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", identityType)
       ?: throw ValidationException("Unsupported identity type ($identityType)")

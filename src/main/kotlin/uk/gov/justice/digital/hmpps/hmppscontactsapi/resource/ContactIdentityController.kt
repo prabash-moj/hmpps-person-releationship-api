@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactIdentityFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -73,6 +75,52 @@ class ContactIdentityController(private val contactIdentityFacade: ContactIdenti
     return ResponseEntity
       .status(HttpStatus.CREATED)
       .body(created)
+  }
+
+  @PutMapping("/{contactIdentityId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
+  @Operation(
+    summary = "Update contact identity",
+    description = "Updates an existing contact identity by id",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "200",
+        description = "Updated the contact identity successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = ContactIdentityDetails::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "The request has invalid or missing fields",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "Could not find the the contact or identity by their ids",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun update(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @PathVariable("contactIdentityId") @Parameter(
+      name = "contactIdentityId",
+      description = "The id of the contact identity",
+      example = "987654",
+    ) contactIdentityId: Long,
+    @Valid @RequestBody request: UpdateIdentityRequest,
+  ): ResponseEntity<Any> {
+    return ResponseEntity.ok(contactIdentityFacade.update(contactId, contactIdentityId, request))
   }
 
   @GetMapping("/{contactIdentityId}")

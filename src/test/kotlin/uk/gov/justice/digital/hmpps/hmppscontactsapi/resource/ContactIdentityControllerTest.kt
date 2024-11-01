@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactIdentityFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import java.time.LocalDateTime
 
@@ -55,6 +56,46 @@ class ContactIdentityControllerTest {
 
       assertThat(exception).isEqualTo(expected)
       verify(facade).create(1, request)
+    }
+  }
+
+  @Nested
+  inner class UpdateContactIdentity {
+    @Test
+    fun `should return 200 with updated identity if updated successfully`() {
+      val updatedIdentity = createContactIdentityDetails(id = 2, contactId = 1)
+      val request = UpdateIdentityRequest(
+        "MOB",
+        "+07777777777",
+        null,
+        "JAMES",
+      )
+      whenever(facade.update(1, 2, request)).thenReturn(updatedIdentity)
+
+      val response = controller.update(1, 2, request)
+
+      assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+      assertThat(response.body).isEqualTo(updatedIdentity)
+      verify(facade).update(1, 2, request)
+    }
+
+    @Test
+    fun `should propagate exceptions if update fails`() {
+      val request = UpdateIdentityRequest(
+        "MOB",
+        "+07777777777",
+        null,
+        "JAMES",
+      )
+      val expected = EntityNotFoundException("Couldn't find contact")
+      whenever(facade.update(1, 2, request)).thenThrow(expected)
+
+      val exception = assertThrows<EntityNotFoundException> {
+        controller.update(1, 2, request)
+      }
+
+      assertThat(exception).isEqualTo(expected)
+      verify(facade).update(1, 2, request)
     }
   }
 

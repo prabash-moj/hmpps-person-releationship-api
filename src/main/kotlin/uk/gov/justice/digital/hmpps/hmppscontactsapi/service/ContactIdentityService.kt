@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import java.time.LocalDateTime
 
 @Service
 class ContactIdentityService(
@@ -36,6 +38,25 @@ class ContactIdentityService(
       ),
     )
     return created.toDomainWithType(type)
+  }
+
+  @Transactional
+  fun update(contactId: Long, contactIdentityId: Long, request: UpdateIdentityRequest): ContactIdentityDetails {
+    validateContactExists(contactId)
+    val existing = validateExistingIdentity(contactIdentityId)
+    val type = validateIdentityType(request.identityType)
+
+    val updating = existing.copy(
+      identityType = request.identityType,
+      identityValue = request.identityValue,
+      issuingAuthority = request.issuingAuthority,
+      amendedBy = request.amendedBy,
+      amendedTime = LocalDateTime.now(),
+    )
+
+    val updated = contactIdentityRepository.saveAndFlush(updating)
+
+    return updated.toDomainWithType(type)
   }
 
   fun get(contactId: Long, contactIdentityId: Long): ContactIdentityDetails? {

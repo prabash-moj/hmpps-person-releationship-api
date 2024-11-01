@@ -11,6 +11,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactIdentityService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
@@ -59,6 +60,43 @@ class ContactIdentityFacadeTest {
 
     assertThat(exception).isEqualTo(exception)
     verify(identityService).create(contactId, request)
+    verify(eventsService, never()).send(any(), any())
+  }
+
+  @Test
+  fun `should send event if update success`() {
+    whenever(identityService.update(any(), any(), any())).thenReturn(contactIdentityDetails)
+    whenever(eventsService.send(any(), any())).then {}
+    val request = UpdateIdentityRequest(
+      identityType = "PASSPORT",
+      identityValue = "P978654312",
+      amendedBy = "amended",
+    )
+
+    val result = facade.update(contactId, contactIdentityId, request)
+
+    assertThat(result).isEqualTo(contactIdentityDetails)
+    verify(identityService).update(contactId, contactIdentityId, request)
+    verify(eventsService).send(OutboundEvent.CONTACT_IDENTITY_AMENDED, contactIdentityId)
+  }
+
+  @Test
+  fun `should not send event if update throws exception and propagate the exception`() {
+    val expectedException = RuntimeException("Bang!")
+    whenever(identityService.update(any(), any(), any())).thenThrow(expectedException)
+    whenever(eventsService.send(any(), any())).then {}
+    val request = UpdateIdentityRequest(
+      identityType = "PASSPORT",
+      identityValue = "P978654312",
+      amendedBy = "amended",
+    )
+
+    val exception = assertThrows<RuntimeException> {
+      facade.update(contactId, contactIdentityId, request)
+    }
+
+    assertThat(exception).isEqualTo(exception)
+    verify(identityService).update(contactId, contactIdentityId, request)
     verify(eventsService, never()).send(any(), any())
   }
 

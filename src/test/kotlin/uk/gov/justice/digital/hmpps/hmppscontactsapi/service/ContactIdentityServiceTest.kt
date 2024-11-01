@@ -15,6 +15,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetai
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityDetailsRepository
@@ -109,6 +110,98 @@ class ContactIdentityServiceTest {
           createdTime = created.createdTime,
           amendedBy = null,
           amendedTime = null,
+        ),
+      )
+    }
+  }
+
+  @Nested
+  inner class UpdateIdentity {
+    private val request = UpdateIdentityRequest(
+      "PASSPORT",
+      "P987654321",
+      "Passport office",
+      "amended",
+    )
+    private val contactIdentityId = 1234L
+    private val existingIdentity = ContactIdentityEntity(
+      contactIdentityId = contactIdentityId,
+      contactId = contactId,
+      identityType = "DRIVING_LIC",
+      identityValue = "DL123456789",
+      issuingAuthority = null,
+      createdBy = "USER99",
+      createdTime = now().minusDays(2),
+      amendedBy = null,
+      amendedTime = null,
+    )
+
+    @Test
+    fun `should throw EntityNotFoundException updating identity if contact doesn't exist`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.update(contactId, contactIdentityId, request)
+      }
+      assertThat(exception.message).isEqualTo("Contact (99) not found")
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException updating identity if identity doesn't exist`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.update(contactId, contactIdentityId, request)
+      }
+      assertThat(exception.message).isEqualTo("Contact identity (1234) not found")
+    }
+
+    @Test
+    fun `should throw ValidationException updating identity if identity type doesn't exist`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "FOO")).thenReturn(null)
+
+      val exception = assertThrows<ValidationException> {
+        service.update(contactId, contactIdentityId, request.copy(identityType = "FOO"))
+      }
+      assertThat(exception.message).isEqualTo("Unsupported identity type (FOO)")
+    }
+
+    @Test
+    fun `should return a identity details including the reference data after updating a identity successfully`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "PASSPORT")).thenReturn(
+        ReferenceCode(
+          0,
+          "ID_TYPE",
+          "PASSPORT",
+          "Passport",
+          90,
+        ),
+      )
+      whenever(contactIdentityRepository.saveAndFlush(any())).thenAnswer { i ->
+        (i.arguments[0] as ContactIdentityEntity).copy(
+          contactIdentityId = 9999,
+        )
+      }
+
+      val updated = service.update(contactId, contactIdentityId, request)
+      assertThat(updated.amendedTime).isNotNull()
+      assertThat(updated).isEqualTo(
+        ContactIdentityDetails(
+          contactIdentityId = 9999,
+          contactId = contactId,
+          identityType = "PASSPORT",
+          identityTypeDescription = "Passport",
+          identityValue = "P987654321",
+          issuingAuthority = "Passport office",
+          createdBy = "USER99",
+          createdTime = existingIdentity.createdTime,
+          amendedBy = "amended",
+          amendedTime = updated.amendedTime,
         ),
       )
     }

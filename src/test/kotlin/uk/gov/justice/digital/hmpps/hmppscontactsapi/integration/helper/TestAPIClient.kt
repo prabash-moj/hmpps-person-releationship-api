@@ -6,10 +6,12 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
@@ -175,6 +177,33 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody!!
   }
 
+  fun createAContactIdentity(contactId: Long, request: CreateIdentityRequest): ContactIdentityDetails {
+    return webTestClient.post()
+      .uri("/contact/$contactId/identity")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactIdentityDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun getContactIdentity(contactId: Long, contactIdentityId: Long): ContactIdentityDetails {
+    return webTestClient.get()
+      .uri("/contact/$contactId/identity/$contactIdentityId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactIdentityDetails::class.java)
+      .returnResult().responseBody!!
+  }
   fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(),

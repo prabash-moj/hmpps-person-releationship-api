@@ -8,4 +8,5 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetai
 interface ContactIdentityDetailsRepository : JpaRepository<ContactIdentityDetailsEntity, Long> {
 
   fun findByContactId(contactId: Long): List<ContactIdentityDetailsEntity>
+  fun findByContactIdAndContactIdentityId(contactId: Long, contactIdentityId: Long): ContactIdentityDetailsEntity?
 }

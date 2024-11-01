@@ -16,7 +16,7 @@ data class ContactIdentityEntity(
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val contactIdentityId: Long,
 
-  val contactId: Long? = null,
+  val contactId: Long,
 
   val identityType: String,
 
@@ -28,7 +28,8 @@ data class ContactIdentityEntity(
 
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
-) {
-  var amendedBy: String? = null
-  var amendedTime: LocalDateTime? = null
-}
+
+  val amendedBy: String? = null,
+
+  val amendedTime: LocalDateTime? = null,
+)

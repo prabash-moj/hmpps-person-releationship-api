@@ -23,15 +23,6 @@ data class ContactIdentityDetails(
   @Schema(description = "The authority who issued the identity ", example = "UK Passport Office", nullable = true)
   val issuingAuthority: String?,
 
-  @Schema(description = "Whether the identity has been verified", example = "false")
-  val verified: Boolean,
-
-  @Schema(description = "The user id of the user who verified the identity", example = "USER1", nullable = true)
-  val verifiedBy: String?,
-
-  @Schema(description = "Timestamp when the identity was verified", example = "2023-09-23T10:15:30", nullable = true)
-  val verifiedTime: LocalDateTime?,
-
   @Schema(description = "User who created the entry", example = "admin")
   val createdBy: String,
 

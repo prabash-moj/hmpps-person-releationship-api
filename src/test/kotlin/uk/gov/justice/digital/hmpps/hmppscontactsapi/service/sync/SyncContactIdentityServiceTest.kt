@@ -199,9 +199,6 @@ class SyncContactIdentityServiceTest {
     )
 
   private fun UpdateContactIdentityRequest.toEntity(contactIdentityId: Long = 1L): ContactIdentityEntity {
-    val updatedBy = this.updatedBy
-    val updatedTime = this.updatedTime
-
     return ContactIdentityEntity(
       contactIdentityId = contactIdentityId,
       contactId = this.contactId,
@@ -209,9 +206,8 @@ class SyncContactIdentityServiceTest {
       identityValue = this.identityValue,
       issuingAuthority = this.issuingAuthority,
       createdBy = "TEST",
-    ).also {
-      it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
-    }
+      amendedBy = this.updatedBy,
+      amendedTime = this.updatedTime,
+    )
   }
 }

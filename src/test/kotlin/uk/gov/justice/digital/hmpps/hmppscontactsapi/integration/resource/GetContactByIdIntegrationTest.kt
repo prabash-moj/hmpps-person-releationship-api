@@ -199,9 +199,6 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
         assertThat(identityTypeDescription).isEqualTo("Driving licence")
         assertThat(identityValue).isEqualTo("LAST-87736799M")
         assertThat(issuingAuthority).isEqualTo("DVLA")
-        assertThat(verified).isTrue()
-        assertThat(verifiedBy).isEqualTo("JAMES")
-        assertThat(verifiedTime).isNotNull()
         assertThat(createdBy).isEqualTo("TIM")
         assertThat(createdTime).isNotNull()
       }

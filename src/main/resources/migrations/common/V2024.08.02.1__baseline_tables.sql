@@ -53,9 +53,6 @@ CREATE TABLE contact_identity
     identity_type varchar(20), -- Reference codes - ID_TYPE
     identity_value varchar(100), -- driving licence number, NI number, passport number
     issuing_authority varchar(40), -- e.g. UK passport agency, DVLA
-    verified boolean NOT NULL DEFAULT false,
-    verified_by varchar(100),
-    verified_time timestamp,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
     amended_by varchar(100),

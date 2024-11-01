@@ -23,4 +23,7 @@ feature:
         created: true
         amended: true
         deleted: true
-
+      contact-identity:
+        created: true
+        amended: true
+        deleted: true

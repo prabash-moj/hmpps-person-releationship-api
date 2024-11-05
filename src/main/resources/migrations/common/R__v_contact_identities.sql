@@ -9,6 +9,7 @@ select
     ci.contact_id,
     ci.identity_type,
     rc.description as identity_type_description,
+    rc.is_active as identity_type_is_active,
     ci.identity_value,
     ci.issuing_authority,
     ci.created_by,

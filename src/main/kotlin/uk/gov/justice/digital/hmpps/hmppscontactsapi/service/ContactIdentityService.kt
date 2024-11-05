@@ -79,6 +79,9 @@ class ContactIdentityService(
   private fun validateIdentityType(identityType: String): ReferenceCode {
     val type = referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", identityType)
       ?: throw ValidationException("Unsupported identity type ($identityType)")
+    if (!type.isActive) {
+      throw ValidationException("Identity type ($identityType) is no longer supported for creating or updating identities")
+    }
     return type
   }
 
@@ -90,15 +93,16 @@ class ContactIdentityService(
   private fun ContactIdentityEntity.toDomainWithType(
     type: ReferenceCode,
   ) = ContactIdentityDetails(
-    this.contactIdentityId,
-    this.contactId,
-    this.identityType,
-    type.description,
-    this.identityValue,
-    this.issuingAuthority,
-    this.createdBy,
-    this.createdTime,
-    this.amendedBy,
-    this.amendedTime,
+    contactIdentityId = this.contactIdentityId,
+    contactId = this.contactId,
+    identityType = this.identityType,
+    identityTypeDescription = type.description,
+    identityTypeIsActive = type.isActive,
+    identityValue = this.identityValue,
+    issuingAuthority = this.issuingAuthority,
+    createdBy = this.createdBy,
+    createdTime = this.createdTime,
+    amendedBy = this.amendedBy,
+    amendedTime = this.amendedTime,
   )
 }

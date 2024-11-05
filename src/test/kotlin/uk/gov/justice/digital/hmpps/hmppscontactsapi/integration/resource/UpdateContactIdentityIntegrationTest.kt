@@ -32,7 +32,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     savedContactIdentityId = testAPIClient.createAContactIdentity(
       savedContactId,
       CreateIdentityRequest(
-        identityType = "DRIVING_LIC",
+        identityType = "DL",
         identityValue = "DL123456789",
         issuingAuthority = "DVLA",
         createdBy = "created",
@@ -83,10 +83,10 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     value = [
       "identityType must not be null;{\"identityType\": null, \"identityValue\": \"0123456789\", \"amendedBy\": \"created\"}",
       "identityType must not be null;{\"identityValue\": \"0123456789\", \"amendedBy\": \"created\"}",
-      "identityValue must not be null;{\"identityType\": \"DRIVING_LIC\", \"identityValue\": null, \"amendedBy\": \"created\"}",
-      "identityValue must not be null;{\"identityType\": \"DRIVING_LIC\", \"amendedBy\": \"created\"}",
-      "amendedBy must not be null;{\"identityType\": \"DRIVING_LIC\", \"identityValue\": \"0123456789\", \"amendedBy\": null}",
-      "amendedBy must not be null;{\"identityType\": \"DRIVING_LIC\", \"identityValue\": \"0123456789\"}",
+      "identityValue must not be null;{\"identityType\": \"DL\", \"identityValue\": null, \"amendedBy\": \"created\"}",
+      "identityValue must not be null;{\"identityType\": \"DL\", \"amendedBy\": \"created\"}",
+      "amendedBy must not be null;{\"identityType\": \"DL\", \"identityValue\": \"0123456789\", \"amendedBy\": null}",
+      "amendedBy must not be null;{\"identityType\": \"DL\", \"identityValue\": \"0123456789\"}",
     ],
     delimiter = ';',
   )
@@ -129,7 +129,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should not update the identity if the type is not supported`() {
+  fun `should not update the identity if the type is unknown`() {
     val request = UpdateIdentityRequest(
       identityType = "MACRO",
       identityValue = "DL123456789",
@@ -150,6 +150,31 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported identity type (MACRO)")
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
+  }
+
+  @Test
+  fun `should not update the identity if the type is no longer active`() {
+    val request = UpdateIdentityRequest(
+      identityType = "NHS",
+      identityValue = "Is active is false",
+      amendedBy = "amended",
+    )
+
+    val errors = webTestClient.put()
+      .uri("/contact/$savedContactId/identity/$savedContactIdentityId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Identity type (NHS) is no longer supported for creating or updating identities")
     stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
   }
 
@@ -198,7 +223,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should update the identity with minimal fields`() {
     val request = UpdateIdentityRequest(
-      identityType = "PASSPORT",
+      identityType = "PASS",
       identityValue = "P978654312",
       issuingAuthority = null,
       amendedBy = "amended",
@@ -220,7 +245,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should update the identity with all fields`() {
     val request = UpdateIdentityRequest(
-      identityType = "PASSPORT",
+      identityType = "PASS",
       identityValue = "P978654312",
       issuingAuthority = "Passport office",
       amendedBy = "amended",
@@ -258,7 +283,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun aMinimalRequest() = UpdateIdentityRequest(
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityValue = "DL123456789",
       amendedBy = "amended",
     )

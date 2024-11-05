@@ -34,7 +34,7 @@ class SyncContactIdentityServiceTest {
       whenever(contactIdentityRepository.findById(1L)).thenReturn(Optional.of(contactIdentityEntity()))
       val contactIdentity = syncService.getContactIdentityById(1L)
       with(contactIdentity) {
-        assertThat(identityType).isEqualTo("PASSPORT")
+        assertThat(identityType).isEqualTo("PASS")
       }
       verify(contactIdentityRepository).findById(1L)
     }
@@ -157,7 +157,7 @@ class SyncContactIdentityServiceTest {
   private fun updateContactIdentityRequest(contactId: Long = 1L) =
     UpdateContactIdentityRequest(
       contactId = contactId,
-      identityType = "PASSPORT",
+      identityType = "PASS",
       identityValue = "PP87878787878",
       issuingAuthority = "UKBORDER",
       updatedBy = "TEST",
@@ -167,7 +167,7 @@ class SyncContactIdentityServiceTest {
   private fun createContactIdentityRequest() =
     CreateContactIdentityRequest(
       contactId = 1L,
-      identityType = "PASSPORT",
+      identityType = "PASS",
       identityValue = "PP87878787878",
       issuingAuthority = "UKBORDER",
       createdBy = "TEST",
@@ -192,7 +192,7 @@ class SyncContactIdentityServiceTest {
     ContactIdentityEntity(
       contactIdentityId = 1L,
       contactId = 1L,
-      identityType = "PASSPORT",
+      identityType = "PASS",
       identityValue = "PP87878787878",
       issuingAuthority = "UKBORDER",
       createdBy = "TEST",

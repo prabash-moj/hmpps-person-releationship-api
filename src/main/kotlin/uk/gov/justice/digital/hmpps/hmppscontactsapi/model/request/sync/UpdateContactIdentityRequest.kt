@@ -8,7 +8,7 @@ data class UpdateContactIdentityRequest(
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of identity", example = "DRIVING_LICENCE")
+  @Schema(description = "Type of identity", example = "DL")
   val identityType: String,
 
   @Schema(description = "Identity ", example = "S99PH898989L")

@@ -875,12 +875,12 @@ class MigrationServiceTest {
     )
 
   private fun identifiers() = listOf(
-    MigrateIdentifier(sequence = 1L, type = CodedValue("DRIVING_LICENCE", "Driving Licence"), identifier = "DL1", issuedAuthority = "DVLA")
+    MigrateIdentifier(sequence = 1L, type = CodedValue("DL", "Driving Licence"), identifier = "DL1", issuedAuthority = "DVLA")
       .also {
         it.createDateTime = aDateTime
         it.createUsername = aUsername
       },
-    MigrateIdentifier(sequence = 2L, type = CodedValue("PASSPORT", "Passport"), identifier = "PASS1", issuedAuthority = "UKBORDER")
+    MigrateIdentifier(sequence = 2L, type = CodedValue("PASS", "Passport"), identifier = "PASS1", issuedAuthority = "UKBORDER")
       .also {
         it.createDateTime = aDateTime
         it.createUsername = aUsername

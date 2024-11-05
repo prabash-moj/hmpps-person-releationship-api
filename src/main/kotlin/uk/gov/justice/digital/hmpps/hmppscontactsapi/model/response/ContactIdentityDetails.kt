@@ -11,11 +11,14 @@ data class ContactIdentityDetails(
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of identity", example = "PASSPORT", nullable = true)
+  @Schema(description = "Type of identity", example = "PASS", nullable = true)
   val identityType: String?,
 
   @Schema(description = "Description of the type of identity", example = "Passport number", nullable = true)
   val identityTypeDescription: String?,
+
+  @Schema(description = "Whether this type of identity is still active. If not active, the identity cannot be updated.", example = "true", nullable = false)
+  val identityTypeIsActive: Boolean,
 
   @Schema(description = "Identity ", example = "GB123456789", nullable = true)
   val identityValue: String?,

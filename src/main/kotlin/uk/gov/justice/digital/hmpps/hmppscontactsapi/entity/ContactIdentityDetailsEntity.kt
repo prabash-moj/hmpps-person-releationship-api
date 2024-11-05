@@ -13,6 +13,7 @@ data class ContactIdentityDetailsEntity(
   val contactId: Long,
   val identityType: String?,
   val identityTypeDescription: String?,
+  val identityTypeIsActive: Boolean,
   val identityValue: String?,
   val issuingAuthority: String?,
   val createdBy: String,

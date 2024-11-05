@@ -40,17 +40,34 @@ class GetContactIdentityIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should get identity details`() {
+  fun `should get identity details where the type is active`() {
     val identity = testAPIClient.getContactIdentity(1, 1)
 
     with(identity) {
       assertThat(contactIdentityId).isEqualTo(1)
       assertThat(contactId).isEqualTo(1)
-      assertThat(identityType).isEqualTo("DRIVING_LIC")
-      assertThat(identityTypeDescription).isEqualTo("Driving licence")
+      assertThat(identityType).isEqualTo("DL")
+      assertThat(identityTypeDescription).isEqualTo("Driving Licence")
+      assertThat(identityTypeIsActive).isTrue()
       assertThat(identityValue).isEqualTo("LAST-87736799M")
       assertThat(issuingAuthority).isEqualTo("DVLA")
       assertThat(createdBy).isEqualTo("TIM")
+    }
+  }
+
+  @Test
+  fun `should get identity details where the type is inactive`() {
+    val identity = testAPIClient.getContactIdentity(4, 4)
+
+    with(identity) {
+      assertThat(contactIdentityId).isEqualTo(4)
+      assertThat(contactId).isEqualTo(4)
+      assertThat(identityType).isEqualTo("NHS")
+      assertThat(identityTypeDescription).isEqualTo("NHS Number")
+      assertThat(identityTypeIsActive).isFalse()
+      assertThat(identityValue).isEqualTo("NHS999")
+      assertThat(issuingAuthority).isEqualTo("National Health Service")
+      assertThat(createdBy).isEqualTo("JAMES")
     }
   }
 }

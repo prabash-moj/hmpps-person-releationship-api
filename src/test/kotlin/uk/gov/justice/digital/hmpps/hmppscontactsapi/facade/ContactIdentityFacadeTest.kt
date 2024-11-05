@@ -31,7 +31,7 @@ class ContactIdentityFacadeTest {
     whenever(identityService.create(any(), any())).thenReturn(contactIdentityDetails)
     whenever(eventsService.send(any(), any())).then {}
     val request = CreateIdentityRequest(
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityValue = "DL123456789",
       createdBy = "created",
     )
@@ -49,7 +49,7 @@ class ContactIdentityFacadeTest {
     whenever(identityService.create(any(), any())).thenThrow(expectedException)
     whenever(eventsService.send(any(), any())).then {}
     val request = CreateIdentityRequest(
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityValue = "DL123456789",
       createdBy = "created",
     )
@@ -68,7 +68,7 @@ class ContactIdentityFacadeTest {
     whenever(identityService.update(any(), any(), any())).thenReturn(contactIdentityDetails)
     whenever(eventsService.send(any(), any())).then {}
     val request = UpdateIdentityRequest(
-      identityType = "PASSPORT",
+      identityType = "PASS",
       identityValue = "P978654312",
       amendedBy = "amended",
     )
@@ -86,7 +86,7 @@ class ContactIdentityFacadeTest {
     whenever(identityService.update(any(), any(), any())).thenThrow(expectedException)
     whenever(eventsService.send(any(), any())).then {}
     val request = UpdateIdentityRequest(
-      identityType = "PASSPORT",
+      identityType = "PASS",
       identityValue = "P978654312",
       amendedBy = "amended",
     )

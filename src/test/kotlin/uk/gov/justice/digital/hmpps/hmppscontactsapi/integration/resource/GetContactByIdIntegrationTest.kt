@@ -195,8 +195,8 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
       with(contact.identities[0]) {
         assertThat(contactIdentityId).isEqualTo(1)
         assertThat(contactId).isEqualTo(1)
-        assertThat(identityType).isEqualTo("DRIVING_LIC")
-        assertThat(identityTypeDescription).isEqualTo("Driving licence")
+        assertThat(identityType).isEqualTo("DL")
+        assertThat(identityTypeDescription).isEqualTo("Driving Licence")
         assertThat(identityValue).isEqualTo("LAST-87736799M")
         assertThat(issuingAuthority).isEqualTo("DVLA")
         assertThat(createdBy).isEqualTo("TIM")

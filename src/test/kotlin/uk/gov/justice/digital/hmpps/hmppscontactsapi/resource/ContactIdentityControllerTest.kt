@@ -27,7 +27,7 @@ class ContactIdentityControllerTest {
     fun `should return 201 with created identity if created successfully`() {
       val createdIdentity = createContactIdentityDetails(id = 99, contactId = 1)
       val request = CreateIdentityRequest(
-        identityType = "DRIVING_LIC",
+        identityType = "DL",
         identityValue = "DL123456789",
         createdBy = "created",
       )
@@ -43,7 +43,7 @@ class ContactIdentityControllerTest {
     @Test
     fun `should propagate exceptions if create fails`() {
       val request = CreateIdentityRequest(
-        identityType = "DRIVING_LIC",
+        identityType = "DL",
         identityValue = "DL123456789",
         createdBy = "created",
       )
@@ -104,8 +104,9 @@ class ContactIdentityControllerTest {
     private val identity = ContactIdentityDetails(
       contactIdentityId = 99,
       contactId = 11,
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityTypeDescription = "Driving licence",
+      identityTypeIsActive = true,
       identityValue = "DL123456789",
       issuingAuthority = null,
       createdBy = "USER1",

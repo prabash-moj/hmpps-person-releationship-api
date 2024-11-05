@@ -27,7 +27,7 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
     savedContactIdentityId = testAPIClient.createAContactIdentity(
       savedContactId,
       CreateIdentityRequest(
-        identityType = "DRIVING_LIC",
+        identityType = "DL",
         identityValue = "DL123456789",
         createdBy = "created",
       ),

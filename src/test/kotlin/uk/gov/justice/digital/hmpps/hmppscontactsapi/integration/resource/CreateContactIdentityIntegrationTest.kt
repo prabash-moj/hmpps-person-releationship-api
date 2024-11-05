@@ -73,10 +73,10 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     value = [
       "identityType must not be null;{\"identityType\": null, \"identityValue\": \"0123456789\", \"createdBy\": \"created\"}",
       "identityType must not be null;{\"identityValue\": \"0123456789\", \"createdBy\": \"created\"}",
-      "identityValue must not be null;{\"identityType\": \"DRIVING_LIC\", \"identityValue\": null, \"createdBy\": \"created\"}",
-      "identityValue must not be null;{\"identityType\": \"DRIVING_LIC\", \"createdBy\": \"created\"}",
-      "createdBy must not be null;{\"identityType\": \"DRIVING_LIC\", \"identityValue\": \"0123456789\", \"createdBy\": null}",
-      "createdBy must not be null;{\"identityType\": \"DRIVING_LIC\", \"identityValue\": \"0123456789\"}",
+      "identityValue must not be null;{\"identityType\": \"DL\", \"identityValue\": null, \"createdBy\": \"created\"}",
+      "identityValue must not be null;{\"identityType\": \"DL\", \"createdBy\": \"created\"}",
+      "createdBy must not be null;{\"identityType\": \"DL\", \"identityValue\": \"0123456789\", \"createdBy\": null}",
+      "createdBy must not be null;{\"identityType\": \"DL\", \"identityValue\": \"0123456789\"}",
     ],
     delimiter = ';',
   )
@@ -117,7 +117,7 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should not create the identity if the type is not supported`() {
+  fun `should not create the identity if the type is unknown`() {
     val request = CreateIdentityRequest(
       identityType = "MACRO CARD",
       identityValue = "DL123456789",
@@ -138,6 +138,30 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported identity type (MACRO CARD)")
+  }
+
+  @Test
+  fun `should not create the identity if the type is no longer active`() {
+    val request = CreateIdentityRequest(
+      identityType = "NHS",
+      identityValue = "Is active is false",
+      createdBy = "created",
+    )
+
+    val errors = webTestClient.post()
+      .uri("/contact/$savedContactId/identity")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Identity type (NHS) is no longer supported for creating or updating identities")
   }
 
   @Test
@@ -173,7 +197,7 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should create the identity with all fields`() {
     val request = CreateIdentityRequest(
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityValue = "DL123456789",
       issuingAuthority = "DVLA",
       createdBy = "created",
@@ -213,7 +237,7 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun aMinimalRequest() = CreateIdentityRequest(
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityValue = "DL123456789",
       createdBy = "created",
     )

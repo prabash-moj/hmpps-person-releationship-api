@@ -13,8 +13,9 @@ class ContactIdentityDetailsMappersKtTest {
       ContactIdentityDetailsEntity(
         contactIdentityId = 1,
         contactId = 1,
-        identityType = "PASSPORT",
+        identityType = "PASS",
         identityTypeDescription = "Passport",
+        identityTypeIsActive = true,
         identityValue = "132456789",
         issuingAuthority = "UK",
         createdBy = "CRE",
@@ -26,8 +27,9 @@ class ContactIdentityDetailsMappersKtTest {
       ContactIdentityDetails(
         contactIdentityId = 1,
         contactId = 1,
-        identityType = "PASSPORT",
+        identityType = "PASS",
         identityTypeDescription = "Passport",
+        identityTypeIsActive = true,
         identityValue = "132456789",
         issuingAuthority = "UK",
         createdBy = "CRE",

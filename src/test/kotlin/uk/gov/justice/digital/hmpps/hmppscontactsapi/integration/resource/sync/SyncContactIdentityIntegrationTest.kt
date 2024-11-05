@@ -113,7 +113,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .returnResult().responseBody!!
 
       with(contactIdentity) {
-        assertThat(identityType).isEqualTo("PASSPORT")
+        assertThat(identityType).isEqualTo("PASS")
       }
     }
 
@@ -136,7 +136,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
       with(contactIdentity) {
         assertThat(contactIdentityId).isGreaterThan(3)
         assertThat(contactId).isEqualTo(savedContactId)
-        assertThat(identityType).isEqualTo("PASSPORT")
+        assertThat(identityType).isEqualTo("PASS")
         assertThat(issuingAuthority).isEqualTo("UKBORDER")
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -159,7 +159,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .returnResult().responseBody!!
 
       with(contactIdentity) {
-        assertThat(identityType).isEqualTo("PASSPORT")
+        assertThat(identityType).isEqualTo("PASS")
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -181,7 +181,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
       with(updatedIdentity) {
         assertThat(contactIdentityId).isGreaterThan(4)
         assertThat(contactId).isEqualTo(savedContactId)
-        assertThat(identityType).isEqualTo("PASSPORT")
+        assertThat(identityType).isEqualTo("PASS")
         assertThat(issuingAuthority).isEqualTo("UKBORDER")
         assertThat(amendedBy).isEqualTo("UPDATE")
         assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -214,7 +214,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
     private fun updateContactIdentityRequest(contactId: Long) =
       UpdateContactIdentityRequest(
         contactId = contactId,
-        identityType = "PASSPORT",
+        identityType = "PASS",
         identityValue = "PP87878787878",
         issuingAuthority = "UKBORDER",
         updatedBy = "UPDATE",
@@ -224,7 +224,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
     private fun createContactIdentityRequest(contactId: Long) =
       CreateContactIdentityRequest(
         contactId = contactId,
-        identityType = "PASSPORT",
+        identityType = "PASS",
         identityValue = "PP87878787878",
         issuingAuthority = "UKBORDER",
         createdBy = "CREATE",

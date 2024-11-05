@@ -51,7 +51,7 @@ class ContactIdentityServiceTest {
   @Nested
   inner class CreateIdentity {
     private val request = CreateIdentityRequest(
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityValue = "DL123456789",
       issuingAuthority = "DVLA",
       createdBy = "created",
@@ -79,13 +79,33 @@ class ContactIdentityServiceTest {
     }
 
     @Test
-    fun `should return identity details including the reference data after creating successfully`() {
+    fun `should throw ValidationException creating identity if identity type is no longer active`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "DRIVING_LIC")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "NHS")).thenReturn(
         ReferenceCode(
           0,
           "ID_TYPE",
-          "DRIVING_LIC",
+          "NHS",
+          "NHS Number",
+          0,
+          false,
+        ),
+      )
+
+      val exception = assertThrows<ValidationException> {
+        service.create(contactId, request.copy(identityType = "NHS"))
+      }
+      assertThat(exception.message).isEqualTo("Identity type (NHS) is no longer supported for creating or updating identities")
+    }
+
+    @Test
+    fun `should return identity details including the reference data after creating successfully`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "DL")).thenReturn(
+        ReferenceCode(
+          0,
+          "ID_TYPE",
+          "DL",
           "Driving licence",
           90,
           true,
@@ -103,8 +123,9 @@ class ContactIdentityServiceTest {
         ContactIdentityDetails(
           contactIdentityId = 9999,
           contactId = contactId,
-          identityType = "DRIVING_LIC",
+          identityType = "DL",
           identityTypeDescription = "Driving licence",
+          identityTypeIsActive = true,
           identityValue = "DL123456789",
           issuingAuthority = "DVLA",
           createdBy = "created",
@@ -119,7 +140,7 @@ class ContactIdentityServiceTest {
   @Nested
   inner class UpdateIdentity {
     private val request = UpdateIdentityRequest(
-      "PASSPORT",
+      "PASS",
       "P987654321",
       "Passport office",
       "amended",
@@ -128,7 +149,7 @@ class ContactIdentityServiceTest {
     private val existingIdentity = ContactIdentityEntity(
       contactIdentityId = contactIdentityId,
       contactId = contactId,
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityValue = "DL123456789",
       issuingAuthority = null,
       createdBy = "USER99",
@@ -171,14 +192,35 @@ class ContactIdentityServiceTest {
     }
 
     @Test
-    fun `should return a identity details including the reference data after updating a identity successfully`() {
+    fun `should throw ValidationException updating identity if identity type is no longer active`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "PASSPORT")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "NHS")).thenReturn(
         ReferenceCode(
           0,
           "ID_TYPE",
-          "PASSPORT",
+          "NHS",
+          "NHS Number",
+          0,
+          false,
+        ),
+      )
+
+      val exception = assertThrows<ValidationException> {
+        service.update(contactId, contactIdentityId, request.copy(identityType = "NHS"))
+      }
+      assertThat(exception.message).isEqualTo("Identity type (NHS) is no longer supported for creating or updating identities")
+    }
+
+    @Test
+    fun `should return a identity details including the reference data after updating a identity successfully`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "PASS")).thenReturn(
+        ReferenceCode(
+          0,
+          "ID_TYPE",
+          "PASS",
           "Passport",
           90,
           true,
@@ -196,8 +238,9 @@ class ContactIdentityServiceTest {
         ContactIdentityDetails(
           contactIdentityId = 9999,
           contactId = contactId,
-          identityType = "PASSPORT",
+          identityType = "PASS",
           identityTypeDescription = "Passport",
+          identityTypeIsActive = true,
           identityValue = "P987654321",
           issuingAuthority = "Passport office",
           createdBy = "USER99",
@@ -215,8 +258,9 @@ class ContactIdentityServiceTest {
     private val entity = ContactIdentityDetailsEntity(
       contactIdentityId = 99,
       contactId = contactId,
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityTypeDescription = "Driving licence",
+      identityTypeIsActive = true,
       identityValue = "DL123456789",
       issuingAuthority = "DVLA",
       createdBy = "USER1",
@@ -235,8 +279,9 @@ class ContactIdentityServiceTest {
         ContactIdentityDetails(
           contactIdentityId = 99,
           contactId = contactId,
-          identityType = "DRIVING_LIC",
+          identityType = "DL",
           identityTypeDescription = "Driving licence",
+          identityTypeIsActive = true,
           identityValue = "DL123456789",
           issuingAuthority = "DVLA",
           createdBy = "USER1",
@@ -261,7 +306,7 @@ class ContactIdentityServiceTest {
     private val existingIdentity = ContactIdentityEntity(
       contactIdentityId = contactIdentityId,
       contactId = contactId,
-      identityType = "DRIVING_LIC",
+      identityType = "DL",
       identityValue = "DL123456789",
       createdBy = "USER99",
       createdTime = now().minusDays(2),

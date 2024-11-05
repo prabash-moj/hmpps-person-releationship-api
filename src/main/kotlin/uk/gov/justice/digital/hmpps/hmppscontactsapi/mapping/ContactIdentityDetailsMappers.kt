@@ -8,6 +8,7 @@ fun ContactIdentityDetailsEntity.toModel(): ContactIdentityDetails = ContactIden
   contactId = this.contactId,
   identityType = this.identityType,
   identityTypeDescription = this.identityTypeDescription,
+  identityTypeIsActive = this.identityTypeIsActive,
   identityValue = this.identityValue,
   issuingAuthority = this.issuingAuthority,
   createdBy = this.createdBy,

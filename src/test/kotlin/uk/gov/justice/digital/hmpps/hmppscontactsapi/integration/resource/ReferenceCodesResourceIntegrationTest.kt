@@ -104,4 +104,28 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
       .extracting("code")
       .isEqualTo(listOf("C", "D", "M", "N", "P", "S", "W"))
   }
+
+  @Test
+  fun `should not return inactive codes by default`() {
+    val groupCode = "TEST_TYPE"
+    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = null))
+      .extracting("code")
+      .isEqualTo(listOf("ACTIVE"))
+  }
+
+  @Test
+  fun `should not return inactive codes if specifically request not to`() {
+    val groupCode = "TEST_TYPE"
+    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = true))
+      .extracting("code")
+      .isEqualTo(listOf("ACTIVE"))
+  }
+
+  @Test
+  fun `should return inactive codes if requested`() {
+    val groupCode = "TEST_TYPE"
+    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = false))
+      .extracting("code")
+      .isEqualTo(listOf("ACTIVE", "INACTIVE"))
+  }
 }

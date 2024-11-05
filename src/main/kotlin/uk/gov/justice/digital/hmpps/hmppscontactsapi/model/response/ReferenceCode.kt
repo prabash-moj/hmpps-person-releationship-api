@@ -19,4 +19,7 @@ data class ReferenceCode(
 
   @Schema(description = "The default order configured for the reference code, lowest number first.", example = "5")
   val displayOrder: Int,
+
+  @Schema(description = "Whether the reference code is still in use. Old reference codes are maintained for compatability with legacy data.", example = "true")
+  val isActive: Boolean,
 )

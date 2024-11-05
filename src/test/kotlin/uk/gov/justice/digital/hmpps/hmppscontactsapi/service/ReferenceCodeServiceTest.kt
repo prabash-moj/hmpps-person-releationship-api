@@ -22,26 +22,50 @@ class ReferenceCodeServiceTest {
   }
 
   @Test
-  fun `Should return a list of references codes for court hearing type`() {
+  fun `Should return a list of references codes with active only`() {
     val groupCode = "RELATIONSHIP"
     val listOfCodes = listOf(
-      ReferenceCodeEntity(1L, groupCode, "FRIEND", "Friend", 0, "name"),
-      ReferenceCodeEntity(2L, groupCode, "MOTHER", "Mother", 1, "name"),
-      ReferenceCodeEntity(3L, groupCode, "FATHER", "Father", 2, "name"),
+      ReferenceCodeEntity(1L, groupCode, "FRIEND", "Friend", 0, true, "name"),
+      ReferenceCodeEntity(2L, groupCode, "MOTHER", "Mother", 1, true, "name"),
+      ReferenceCodeEntity(3L, groupCode, "FATHER", "Father", 2, true, "name"),
     )
 
-    whenever(referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted())).thenReturn(listOfCodes)
+    whenever(referenceCodeRepository.findAllByGroupCodeAndIsActiveEquals(groupCode, true, Sort.unsorted())).thenReturn(listOfCodes)
 
-    assertThat(service.getReferenceDataByGroup(groupCode, Sort.unsorted())).isEqualTo(listOfCodes.toModel())
+    assertThat(service.getReferenceDataByGroup(groupCode, Sort.unsorted(), true)).isEqualTo(listOfCodes.toModel())
 
+    verify(referenceCodeRepository).findAllByGroupCodeAndIsActiveEquals(groupCode, true, Sort.unsorted())
+  }
+
+  @Test
+  fun `Should return a list of references codes for all is active status`() {
+    val groupCode = "RELATIONSHIP"
+    val listOfCodes = listOf(
+      ReferenceCodeEntity(1L, groupCode, "FRIEND", "Friend", 0, true, "name"),
+      ReferenceCodeEntity(2L, groupCode, "MOTHER", "Mother", 1, true, "name"),
+      ReferenceCodeEntity(3L, groupCode, "FATHER", "Father", 2, true, "name"),
+    )
+
+    whenever(referenceCodeRepository.findAllByGroupCodeAndIsActiveEquals(groupCode, true, Sort.unsorted())).thenReturn(listOfCodes)
+
+    assertThat(service.getReferenceDataByGroup(groupCode, Sort.unsorted(), true)).isEqualTo(listOfCodes.toModel())
+
+    verify(referenceCodeRepository).findAllByGroupCodeAndIsActiveEquals(groupCode, true, Sort.unsorted())
+  }
+
+  @Test
+  fun `Should return an empty list when no reference codes are matched active only`() {
+    val groupCode = "TITLE"
+    whenever(referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted())).thenReturn(emptyList())
+    assertThat(service.getReferenceDataByGroup(groupCode, Sort.unsorted(), false)).isEmpty()
     verify(referenceCodeRepository).findAllByGroupCodeEquals(groupCode, Sort.unsorted())
   }
 
   @Test
-  fun `Should return an empty list when no reference codes are matched`() {
+  fun `Should return an empty list when no reference codes are matched inactive included`() {
     val groupCode = "TITLE"
     whenever(referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted())).thenReturn(emptyList())
-    assertThat(service.getReferenceDataByGroup(groupCode, Sort.unsorted())).isEmpty()
+    assertThat(service.getReferenceDataByGroup(groupCode, Sort.unsorted(), false)).isEmpty()
     verify(referenceCodeRepository).findAllByGroupCodeEquals(groupCode, Sort.unsorted())
   }
 }

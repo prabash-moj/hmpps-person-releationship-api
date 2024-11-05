@@ -78,9 +78,9 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBody(PrisonerContactSummaryResponse::class.java)
     .returnResult().responseBody!!
 
-  fun getReferenceCodes(groupCode: String, sort: String? = null): MutableList<ReferenceCode>? {
+  fun getReferenceCodes(groupCode: String, sort: String? = null, activeOnly: Boolean? = null): MutableList<ReferenceCode>? {
     return webTestClient.get()
-      .uri("/reference-codes/group/${groupCode}${sort?.let { "?sort=$sort" } ?: ""}")
+      .uri("/reference-codes/group/$groupCode?${sort?.let { "sort=$sort&" } ?: ""}${activeOnly?.let { "&activeOnly=$activeOnly" } ?: ""}")
       .accept(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
       .exchange()

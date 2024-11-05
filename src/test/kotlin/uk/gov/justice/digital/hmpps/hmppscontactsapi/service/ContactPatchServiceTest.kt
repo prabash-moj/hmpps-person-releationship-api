@@ -289,6 +289,7 @@ class ContactPatchServiceTest {
           "MOB",
           "Mobile",
           90,
+          true,
         ),
       )
 
@@ -313,7 +314,7 @@ class ContactPatchServiceTest {
       whenContactExists()
       whenUpdateIsSuccessful()
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", domesticStatusCode)).thenReturn(
-        ReferenceCode(1, "DOMESTIC_STS", "P", "Single", 1),
+        ReferenceCode(1, "DOMESTIC_STS", "P", "Single", 1, true),
       )
 
       val response = service.patch(contactId, patchRequest)

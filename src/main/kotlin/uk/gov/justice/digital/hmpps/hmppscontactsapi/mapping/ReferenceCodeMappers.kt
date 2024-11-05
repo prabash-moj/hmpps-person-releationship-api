@@ -7,8 +7,9 @@ fun ReferenceCodeEntity.toModel() = ReferenceCode(
   referenceCodeId = referenceCodeId,
   groupCode = groupCode,
   code = code,
-  displayOrder = displayOrder,
   description = description,
+  displayOrder = displayOrder,
+  isActive = isActive,
 )
 
 fun List<ReferenceCodeEntity>.toModel() = map { it.toModel() }

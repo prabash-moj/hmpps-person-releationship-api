@@ -22,6 +22,8 @@ data class ReferenceCodeEntity(
 
   val displayOrder: Int,
 
+  val isActive: Boolean,
+
   val createdBy: String,
 
   val createdTime: LocalDateTime = LocalDateTime.now(),

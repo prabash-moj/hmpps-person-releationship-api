@@ -288,6 +288,7 @@ CREATE TABLE reference_codes
     code                varchar(40) NOT NULL,
     description         varchar(100) NOT NULL,
     display_order          integer NOT NULL,
+    is_active          boolean NOT NULL,
     created_by          varchar(100) NOT NULL,
     created_time        timestamp NOT NULL DEFAULT current_timestamp,
     amended_by          varchar(100),

@@ -120,6 +120,7 @@ class ContactPhoneServiceTest {
           "MOB",
           "Mobile",
           90,
+          true,
         ),
       )
 
@@ -139,6 +140,7 @@ class ContactPhoneServiceTest {
           "MOB",
           "Mobile",
           90,
+          true,
         ),
       )
       whenever(contactPhoneRepository.saveAndFlush(any())).thenAnswer { i ->
@@ -305,6 +307,7 @@ class ContactPhoneServiceTest {
           "MOB",
           "Mobile",
           90,
+          true,
         ),
       )
 
@@ -325,6 +328,7 @@ class ContactPhoneServiceTest {
           "MOB",
           "Mobile",
           90,
+          true,
         ),
       )
       whenever(contactPhoneRepository.saveAndFlush(any())).thenAnswer { i ->

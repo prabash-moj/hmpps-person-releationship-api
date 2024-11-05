@@ -88,6 +88,7 @@ class ContactIdentityServiceTest {
           "DRIVING_LIC",
           "Driving licence",
           90,
+          true,
         ),
       )
       whenever(contactIdentityRepository.saveAndFlush(any())).thenAnswer { i ->
@@ -180,6 +181,7 @@ class ContactIdentityServiceTest {
           "PASSPORT",
           "Passport",
           90,
+          true,
         ),
       )
       whenever(contactIdentityRepository.saveAndFlush(any())).thenAnswer { i ->

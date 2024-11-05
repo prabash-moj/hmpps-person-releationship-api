@@ -450,7 +450,7 @@ class ContactServiceTest {
     @Test
     fun `should get a contact with domestic status`() {
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", "S")).thenReturn(
-        ReferenceCode(1, "DOMESTIC_STS", "S", "Single", 1),
+        ReferenceCode(1, "DOMESTIC_STS", "S", "Single", 1, true),
       )
 
       val entity = createContactEntity()

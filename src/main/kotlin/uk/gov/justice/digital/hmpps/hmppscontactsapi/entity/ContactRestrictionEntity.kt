@@ -27,6 +27,8 @@ data class ContactRestrictionEntity(
 
   val comments: String? = null,
 
+  val staffUsername: String,
+
   val createdBy: String,
 
   @CreationTimestamp

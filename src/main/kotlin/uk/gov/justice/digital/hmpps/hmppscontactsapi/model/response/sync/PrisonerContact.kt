@@ -19,7 +19,7 @@ data class PrisonerContact(
   @Schema(description = "The type of the contact", example = "SOCIAL or OFFICIAL")
   val contactType: String,
 
-  @Schema(description = "The type of relationship", example = "Friend")
+  @Schema(description = "The relationship code from reference data", example = "Friend")
   val relationshipType: String,
 
   @Schema(description = "Indicates if the prisoner contact is next of kin", example = "true")
@@ -31,17 +31,14 @@ data class PrisonerContact(
   @Schema(description = "Additional comments about the prisoner contact", example = "Close family friend", nullable = true)
   val comments: String?,
 
-  @Schema(description = "Indicates if the prisoner contact is active", example = "true", nullable = true)
-  val active: Boolean? = false,
+  @Schema(description = "Indicates if the prisoner contact is active", example = "true")
+  val active: Boolean,
 
-  @Schema(description = "Indicates if the prisoner contact is an approved visitor", example = "true", nullable = true)
-  val approvedVisitor: Boolean? = false,
+  @Schema(description = "Indicates if the prisoner contact is an approved visitor", example = "true")
+  val approvedVisitor: Boolean,
 
-  @Schema(description = "Indicates if the prisoner contact is aware of charges", example = "true", nullable = true)
-  val awareOfCharges: Boolean? = false,
-
-  @Schema(description = "Indicates if the prisoner contact can be contacted", example = "true", nullable = true)
-  val canBeContacted: Boolean? = false,
+  @Schema(description = "Indicates if this relationship applies to the latest booking", example = "true")
+  val currentTerm: Boolean,
 
   @Schema(description = "The user who approved the prisoner contact", example = "officer123", nullable = true)
   val approvedBy: String? = null,
@@ -73,5 +70,5 @@ data class PrisonerContact(
     example = "2024-02-01T16:00:00Z",
     nullable = true,
   )
-  val amendedTime: LocalDateTime?,
+  val amendedTime: LocalDateTime? = null,
 )

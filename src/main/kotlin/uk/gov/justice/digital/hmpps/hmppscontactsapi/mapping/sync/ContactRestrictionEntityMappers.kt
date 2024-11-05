@@ -12,6 +12,7 @@ fun ContactRestrictionEntity.toModel(): ContactRestriction {
     startDate = this.startDate,
     expiryDate = this.expiryDate,
     comments = this.comments,
+    staffUsername = this.staffUsername,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     amendedBy = this.amendedBy,
@@ -28,6 +29,7 @@ fun CreateContactRestrictionRequest.toEntity() = ContactRestrictionEntity(
   startDate = startDate,
   expiryDate = expiryDate,
   comments = comments,
+  staffUsername = staffUsername,
   createdBy = createdBy,
   createdTime = createdTime,
 )

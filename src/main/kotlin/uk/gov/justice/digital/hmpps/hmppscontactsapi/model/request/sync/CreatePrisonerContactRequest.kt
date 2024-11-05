@@ -35,16 +35,13 @@ data class CreatePrisonerContactRequest(
   val createdTime: LocalDateTime,
 
   @Schema(description = "Indicates if the prisoner contact is active", example = "true", nullable = true)
-  val active: Boolean? = false,
+  val active: Boolean? = true,
 
-  @Schema(description = "Indicates if the prisoner contact is an approved visitor", example = "true", nullable = true)
+  @Schema(description = "Indicates if the prisoner contact is an approved visitor", example = "false", nullable = true)
   val approvedVisitor: Boolean? = false,
 
-  @Schema(description = "Indicates if the prisoner contact is aware of charges", example = "true", nullable = true)
-  val awareOfCharges: Boolean? = false,
-
-  @Schema(description = "Indicates if the prisoner contact can be contacted", example = "true", nullable = true)
-  val canBeContacted: Boolean? = false,
+  @Schema(description = "Indicates if this relationship is current and applies to the latest booking", example = "true", nullable = true)
+  val currentTerm: Boolean? = true,
 
   @Schema(description = "The user who approved the prisoner contact", example = "officer123", nullable = true)
   val approvedBy: String? = null,

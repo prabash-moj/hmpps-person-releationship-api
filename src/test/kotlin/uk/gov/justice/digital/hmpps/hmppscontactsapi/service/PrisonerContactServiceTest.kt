@@ -116,11 +116,10 @@ class PrisonerContactServiceTest {
       relationshipType = "FRIEND",
       relationshipDescription = "Friend",
       active = active,
-      canBeContacted = true,
       approvedVisitor = true,
-      awareOfCharges = false,
       nextOfKin = false,
       emergencyContact = false,
+      currentTerm = true,
       comments = "No comments",
     )
 }

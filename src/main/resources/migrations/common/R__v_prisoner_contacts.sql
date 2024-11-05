@@ -1,7 +1,7 @@
 --
 -- Creates a view over the contact, contact_address and prisoner_contact tables
 -- to return a list of active or inactive contacts, and their primary addresses,
--- for a prisoner.
+-- for a prisoner, where the current_term is true (latest booking only).
 --
 CREATE OR REPLACE VIEW v_prisoner_contacts
 AS
@@ -40,9 +40,8 @@ AS
       pc.relationship_type,
       rc4.description as relationship_description,
       pc.active,
-      pc.can_be_contacted,
       pc.approved_visitor,
-      pc.aware_of_charges,
+      pc.current_term,
       pc.next_of_kin,
       pc.emergency_contact,
       pc.comments
@@ -60,6 +59,7 @@ AS
   left join county_reference county_ref on county_ref.nomis_code = ca.county_code
   left join country_reference country_ref on country_ref.nomis_code = ca.country_code
   where pc.contact_id = c.contact_id
+    and pc.current_term = true
   order by pc.created_time desc;
 
 -- End

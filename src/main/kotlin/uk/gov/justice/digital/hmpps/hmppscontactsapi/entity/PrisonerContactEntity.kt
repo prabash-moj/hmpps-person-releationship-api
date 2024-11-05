@@ -17,26 +17,25 @@ data class PrisonerContactEntity(
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val prisonerContactId: Long,
 
-  @Column(name = "contact_id")
   val contactId: Long,
 
-  @Column(name = "prisoner_number")
   val prisonerNumber: String,
 
-  @Column(name = "contact_type")
   val contactType: String,
 
-  @Column(name = "relationship_type")
   val relationshipType: String,
 
-  @Column(name = "next_of_kin")
   val nextOfKin: Boolean,
 
-  @Column(name = "emergency_contact")
   val emergencyContact: Boolean,
 
-  @Column(name = "comments")
   val comments: String?,
+
+  val active: Boolean,
+
+  val approvedVisitor: Boolean,
+
+  val currentTerm: Boolean,
 
   @Column(updatable = false, name = "created_by")
   val createdBy: String,
@@ -45,14 +44,6 @@ data class PrisonerContactEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime,
 ) {
-  var active: Boolean? = true
-
-  var approvedVisitor: Boolean? = false
-
-  var awareOfCharges: Boolean? = false
-
-  var canBeContacted: Boolean? = false
-
   var approvedBy: String? = null
 
   var approvedTime: LocalDateTime? = null

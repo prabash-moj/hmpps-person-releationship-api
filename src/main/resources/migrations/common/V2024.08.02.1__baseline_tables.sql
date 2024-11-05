@@ -21,6 +21,7 @@ CREATE TABLE contact
     active boolean NOT NULL default true,
     suspended boolean NOT NULL DEFAULT false,
     staff_flag boolean NOT NULL DEFAULT false,
+    remitter_flag boolean NOT NULL default false,
     deceased_flag boolean NOT NULL DEFAULT false,
     deceased_date date,
     coroner_number varchar(32),
@@ -72,7 +73,7 @@ CREATE TABLE contact_address
 (
     contact_address_id bigserial NOT NULL CONSTRAINT contact_address_id_pk PRIMARY KEY,
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
-    address_type varchar(12) NOT NULL, -- Reference code - ADDRESS_TYPE e.g. HOME, WORK, TEMPORARY, UNKNOWN
+    address_type varchar(12), -- Reference code - ADDRESS_TYPE e.g. HOME, WORK, TEMPORARY, UNKNOWN - nullable
     primary_address boolean NOT NULL DEFAULT false,
     flat varchar(20), -- flat number (nullable)
     property varchar(50), -- house name or number - nullable
@@ -143,6 +144,12 @@ CREATE TABLE contact_phone
 CREATE INDEX idx_contact_phone_contact_id ON contact_phone(contact_id);
 CREATE INDEX idx_contact_phone_number ON contact_phone(phone_number);
 
+---------------------------------------------------------------------------------------
+-- Address-specific phone numbers.
+-- Currently modelled as a join-table between contact_phone and contact_address.
+-- (may revisit to store as a separate set of address-specific phone numbers as in NOMIS)
+----------------------------------------------------------------------------------------
+
 CREATE TABLE contact_address_phone
 (
     contact_address_phone_id bigserial NOT NULL CONSTRAINT contact_address_phone_id_pk PRIMARY KEY,
@@ -173,6 +180,7 @@ CREATE TABLE contact_restriction
     start_date        date,
     expiry_date       date,
     comments          varchar(240),
+    staff_username    varchar(100),
     created_by        varchar(100) NOT NULL,
     created_time      timestamp NOT NULL DEFAULT current_timestamp,
     amended_by        varchar(100),
@@ -197,9 +205,8 @@ CREATE TABLE prisoner_contact
     active boolean NOT NULL DEFAULT true,
     contact_type varchar(10), -- Reference codes - CONTACT_TYPE (SOCIAL or OFFICIAL)
     relationship_type varchar(12) NOT NULL, -- Reference codes - RELATIONSHIP
+    current_term boolean NOT NULL DEFAULT true, -- True if it applies to latest booking sequence 1
     approved_visitor boolean NOT NULL DEFAULT false,
-    aware_of_charges boolean NOT NULL DEFAULT false,
-    can_be_contacted boolean NOT NULL DEFAULT false,
     next_of_kin boolean NOT NULL DEFAULT false,
     emergency_contact boolean NOT NULL DEFAULT false,
     comments varchar(240),
@@ -230,6 +237,7 @@ CREATE TABLE prisoner_contact_restriction
     start_date date,
     expiry_date date,
     comments varchar(255),
+    staff_username varchar(100),
     authorised_by varchar(100),
     authorised_time timestamp,
     created_by varchar(100) NOT NULL,

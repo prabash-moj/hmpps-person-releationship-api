@@ -28,17 +28,14 @@ data class UpdatePrisonerContactRequest(
   @Schema(description = "Additional comments about the prisoner contact", example = "Close family friend", nullable = true)
   val comments: String?,
 
-  @Schema(description = "Indicates if the prisoner contact is active", example = "true", nullable = true)
-  val active: Boolean? = false,
+  @Schema(description = "Indicates if the prisoner contact is active", example = "true")
+  val active: Boolean = true,
 
-  @Schema(description = "Indicates if the prisoner contact is an approved visitor", example = "true", nullable = true)
-  val approvedVisitor: Boolean? = false,
+  @Schema(description = "Indicates if the prisoner contact is an approved visitor", example = "false")
+  val approvedVisitor: Boolean = false,
 
-  @Schema(description = "Indicates if the prisoner contact is aware of charges", example = "true", nullable = true)
-  val awareOfCharges: Boolean? = false,
-
-  @Schema(description = "Indicates if the prisoner contact can be contacted", example = "true", nullable = true)
-  val canBeContacted: Boolean? = false,
+  @Schema(description = "Indicates if this relationship applies to the latest booking", example = "true")
+  val currentTerm: Boolean = true,
 
   @Schema(description = "The user who approved the prisoner contact", example = "officer123", nullable = true)
   val approvedBy: String? = null,

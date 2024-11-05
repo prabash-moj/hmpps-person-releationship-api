@@ -27,6 +27,8 @@ data class PrisonerContactRestrictionEntity(
 
   val comments: String? = null,
 
+  val staffUsername: String,
+
   val authorisedBy: String? = null,
 
   val authorisedTime: LocalDateTime? = null,

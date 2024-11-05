@@ -199,8 +199,21 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
 
   private fun addresses() =
     listOf(
-      MigrateAddress(addressId = 201L, type = CodedValue("HOME", "Home"), premise = "10", street = "Dublin Road", postCode = "D1 1DN", primaryAddress = true),
-      MigrateAddress(addressId = 202L, type = CodedValue("WORK", "Work"), premise = "11", street = "Dublin Road", postCode = "D1 2DN"),
+      MigrateAddress(
+        addressId = 201L,
+        type = CodedValue("HOME", "Home"),
+        premise = "10",
+        street = "Dublin Road",
+        postCode = "D1 1DN",
+        primaryAddress = true,
+      ),
+      MigrateAddress(
+        addressId = 202L,
+        type = CodedValue("WORK", "Work"),
+        premise = "11",
+        street = "Dublin Road",
+        postCode = "D1 2DN",
+      ),
     )
 
   private fun addressesWithPhones() =
@@ -227,8 +240,22 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
 
   private fun restrictions() =
     listOf(
-      MigrateRestriction(id = 401L, type = CodedValue("ESCORTED", "Desc"), comment = "Active", effectiveDate = LocalDate.now(), expiryDate = LocalDate.now().plusDays(30)),
-      MigrateRestriction(id = 402L, type = CodedValue("CHILDREN", "Desc"), comment = "Expired", effectiveDate = LocalDate.now().minusDays(30), expiryDate = LocalDate.now().minusDays(1)),
+      MigrateRestriction(
+        id = 401L,
+        type = CodedValue("ESCORTED", "Desc"),
+        comment = "Active",
+        staffUsername = aUsername,
+        effectiveDate = LocalDate.now(),
+        expiryDate = LocalDate.now().plusDays(30),
+      ),
+      MigrateRestriction(
+        id = 402L,
+        type = CodedValue("CHILDREN", "Desc"),
+        comment = "Expired",
+        staffUsername = aUsername,
+        effectiveDate = LocalDate.now().minusDays(30),
+        expiryDate = LocalDate.now().minusDays(1),
+      ),
     )
 
   private fun identifiers() =

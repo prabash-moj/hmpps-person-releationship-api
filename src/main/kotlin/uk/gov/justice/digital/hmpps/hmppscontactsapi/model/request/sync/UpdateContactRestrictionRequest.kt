@@ -21,6 +21,9 @@ data class UpdateContactRestrictionRequest(
   @Schema(description = "Any comments about the restriction ", example = "N/A")
   val comments: String? = null,
 
+  @Schema(description = "The username who entered the restriction", example = "X999X")
+  val staffUsername: String,
+
   @Schema(description = "The id of the user who updated the contact restriction", example = "JD000001")
   val updatedBy: String,
 

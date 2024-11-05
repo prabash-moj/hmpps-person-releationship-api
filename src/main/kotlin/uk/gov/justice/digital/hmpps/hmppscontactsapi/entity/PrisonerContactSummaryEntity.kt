@@ -81,15 +81,13 @@ data class PrisonerContactSummaryEntity(
 
   val active: Boolean,
 
-  val canBeContacted: Boolean,
-
   val approvedVisitor: Boolean,
-
-  val awareOfCharges: Boolean,
 
   val nextOfKin: Boolean,
 
   val emergencyContact: Boolean,
+
+  val currentTerm: Boolean,
 
   val comments: String?,
 )

@@ -41,6 +41,9 @@ data class UpdateContactRequest(
   @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false)
   var isStaff: Boolean = false,
 
+  @Schema(description = "Whether the contact is a remitter", example = "false", nullable = false)
+  var remitter: Boolean = false,
+
   @Schema(description = "Whether the contact is deceased", example = "false", nullable = true)
   var deceasedFlag: Boolean? = false,
 

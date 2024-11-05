@@ -20,7 +20,7 @@ export API_BASE_URL_HMPPS_AUTH=https://sign-in-dev.hmpps.service.justice.gov.uk/
 export $(cat .env | xargs)  # If you want to set or update the current shell environment e.g. system client and secret.
 
 # Run the application with stdout and local profiles active
-SPRING_PROFILES_ACTIVE=stdout,local ./gradlew bootRun
+SPRING_PROFILES_ACTIVE=stdout,local,auto-db-clean ./gradlew bootRun
 
 # End
 

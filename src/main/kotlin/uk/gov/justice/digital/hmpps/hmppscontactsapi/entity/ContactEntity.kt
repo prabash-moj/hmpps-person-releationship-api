@@ -55,6 +55,8 @@ data class ContactEntity(
 
   var staffFlag: Boolean = false
 
+  var remitterFlag: Boolean = false
+
   var coronerNumber: String? = null
 
   var gender: String? = null

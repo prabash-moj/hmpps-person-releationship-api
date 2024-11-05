@@ -12,7 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.wiremock.Prison
 
 @ExtendWith(HmppsAuthApiExtension::class, PrisonerSearchApiExtension::class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@ActiveProfiles("test", "local-postgres")
+@ActiveProfiles("test", "local-postgres", "auto-db-clean")
 abstract class PostgresIntegrationTestBase : IntegrationTestBase() {
 
   companion object {

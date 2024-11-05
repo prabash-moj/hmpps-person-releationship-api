@@ -114,8 +114,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(emergencyContact).isFalse
         assertThat(active).isTrue
         assertThat(approvedVisitor).isFalse
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isFalse
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isNull()
         assertThat(approvedTime).isNull()
         assertThat(expiryDate).isNull()
@@ -155,8 +154,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(comments).isEqualTo("Create relationship")
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isTrue
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isEqualTo("officer456")
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
@@ -194,8 +192,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(comments).isEqualTo("Create relationship")
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isTrue
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isEqualTo("officer456")
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
@@ -231,8 +228,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(comments).isEqualTo("Updated relationship type to family")
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isTrue
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isEqualTo("officer456")
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
@@ -285,8 +281,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         comments = "Updated relationship type to family",
         active = true,
         approvedVisitor = true,
-        awareOfCharges = false,
-        canBeContacted = true,
+        currentTerm = true,
         approvedBy = "officer456",
         approvedTime = LocalDateTime.now(),
         expiryDate = LocalDate.of(2025, 12, 31),
@@ -306,8 +301,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         comments = "Create relationship",
         active = true,
         approvedVisitor = true,
-        awareOfCharges = false,
-        canBeContacted = true,
+        currentTerm = true,
         approvedBy = "officer456",
         approvedTime = LocalDateTime.now(),
         expiryDate = LocalDate.of(2025, 12, 31),

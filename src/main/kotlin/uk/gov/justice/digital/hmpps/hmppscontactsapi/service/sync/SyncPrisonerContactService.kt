@@ -44,12 +44,11 @@ class SyncPrisonerContactService(
       relationshipType = request.relationshipType,
       nextOfKin = request.nextOfKin,
       emergencyContact = request.emergencyContact,
+      active = request.active,
+      approvedVisitor = request.approvedVisitor,
+      currentTerm = request.currentTerm,
       comments = request.comments,
     ).also {
-      it.active = request.active
-      it.approvedVisitor = request.approvedVisitor
-      it.awareOfCharges = request.awareOfCharges
-      it.canBeContacted = request.canBeContacted
       it.approvedBy = request.approvedBy
       it.approvedTime = request.approvedTime
       it.expiryDate = request.expiryDate

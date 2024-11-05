@@ -231,7 +231,7 @@ class MigrationServiceTest {
         ContactAddressEntity(
           contactAddressId = 1L,
           contactId = 1L,
-          addressType = request.addresses[0].type.code,
+          addressType = request.addresses[0].type?.code,
           property = request.addresses[0].premise,
           street = request.addresses[0].street,
           postCode = request.addresses[0].postCode,
@@ -241,7 +241,7 @@ class MigrationServiceTest {
         ContactAddressEntity(
           contactAddressId = 2L,
           contactId = 1L,
-          addressType = request.addresses[1].type.code,
+          addressType = request.addresses[1].type?.code,
           property = request.addresses[1].premise,
           street = request.addresses[1].street,
           postCode = request.addresses[1].postCode,
@@ -344,6 +344,7 @@ class MigrationServiceTest {
           startDate = request.restrictions[0].effectiveDate,
           expiryDate = request.restrictions[0].expiryDate,
           comments = request.restrictions[0].comment,
+          staffUsername = request.restrictions[0].staffUsername,
           createdBy = aUsername,
           createdTime = aDateTime,
         ),
@@ -354,6 +355,7 @@ class MigrationServiceTest {
           startDate = request.restrictions[1].effectiveDate,
           expiryDate = request.restrictions[1].expiryDate,
           comments = request.restrictions[1].comment,
+          staffUsername = request.restrictions[1].staffUsername,
           createdBy = aUsername,
           createdTime = aDateTime,
         ),
@@ -402,8 +404,8 @@ class MigrationServiceTest {
         ContactEmploymentEntity(
           contactEmploymentId = 1L,
           contactId = 1L,
-          corporateId = request.employments[0].corporate.id,
-          corporateName = request.employments[0].corporate.name,
+          corporateId = request.employments[0].corporate?.id,
+          corporateName = request.employments[0].corporate?.name,
           active = request.employments[0].active,
           createdBy = aUsername,
           createdTime = aDateTime,
@@ -411,8 +413,8 @@ class MigrationServiceTest {
         ContactEmploymentEntity(
           contactEmploymentId = 2L,
           contactId = 1L,
-          corporateId = request.employments[1].corporate.id,
-          corporateName = request.employments[1].corporate.name,
+          corporateId = request.employments[1].corporate?.id,
+          corporateName = request.employments[1].corporate?.name,
           active = request.employments[1].active,
           createdBy = aUsername,
           createdTime = aDateTime,
@@ -466,12 +468,13 @@ class MigrationServiceTest {
           prisonerNumber = request.contacts[0].prisonerNumber,
           emergencyContact = request.contacts[0].emergencyContact,
           nextOfKin = request.contacts[0].nextOfKin,
+          approvedVisitor = request.contacts[0].approvedVisitor,
+          currentTerm = request.contacts[0].currentTerm,
+          active = request.contacts[0].active,
           comments = request.contacts[0].comment,
           createdBy = aUsername,
           createdTime = aDateTime,
-        ).also {
-          it.approvedVisitor = request.contacts[0].approvedVisitor
-        },
+        ),
         PrisonerContactEntity(
           prisonerContactId = 2L,
           contactId = 1L,
@@ -480,12 +483,13 @@ class MigrationServiceTest {
           prisonerNumber = request.contacts[1].prisonerNumber,
           emergencyContact = request.contacts[1].emergencyContact,
           nextOfKin = request.contacts[1].nextOfKin,
+          approvedVisitor = request.contacts[1].approvedVisitor,
+          currentTerm = request.contacts[1].currentTerm,
+          active = request.contacts[1].active,
           comments = request.contacts[1].comment,
           createdBy = aUsername,
           createdTime = aDateTime,
-        ).also {
-          it.approvedVisitor = request.contacts[1].approvedVisitor
-        },
+        ),
       )
 
       whenever(prisonerContactRepository.save(any()))
@@ -543,12 +547,13 @@ class MigrationServiceTest {
         prisonerNumber = request.contacts[0].prisonerNumber,
         emergencyContact = request.contacts[0].emergencyContact,
         nextOfKin = request.contacts[0].nextOfKin,
+        approvedVisitor = request.contacts[0].approvedVisitor,
+        currentTerm = request.contacts[0].currentTerm,
+        active = request.contacts[0].active,
         comments = request.contacts[0].comment,
         createdBy = aUsername,
         createdTime = aDateTime,
-      ).also {
-        it.approvedVisitor = request.contacts[0].approvedVisitor
-      }
+      )
 
       val restrictionResponses = listOf(
         PrisonerContactRestrictionEntity(
@@ -558,6 +563,7 @@ class MigrationServiceTest {
           startDate = request.contacts[0].restrictions[0].startDate,
           expiryDate = request.contacts[0].restrictions[0].expiryDate,
           comments = request.contacts[0].restrictions[0].comment,
+          staffUsername = request.contacts[0].restrictions[0].staffUsername,
           createdBy = request.contacts[0].restrictions[0].createUsername!!,
           createdTime = request.contacts[0].restrictions[0].createDateTime!!,
         ),
@@ -568,6 +574,7 @@ class MigrationServiceTest {
           startDate = request.contacts[0].restrictions[1].startDate,
           expiryDate = request.contacts[0].restrictions[1].expiryDate,
           comments = request.contacts[0].restrictions[1].comment,
+          staffUsername = request.contacts[0].restrictions[1].staffUsername,
           createdBy = request.contacts[0].restrictions[1].createUsername!!,
           createdTime = request.contacts[0].restrictions[1].createDateTime!!,
         ),
@@ -617,6 +624,9 @@ class MigrationServiceTest {
             comments = "",
             emergencyContact = false,
             nextOfKin = true,
+            approvedVisitor = false,
+            currentTerm = true,
+            active = true,
           ),
         ),
       )
@@ -634,6 +644,7 @@ class MigrationServiceTest {
                 startDate = LocalDate.now(),
                 expiryDate = LocalDate.now().plusDays(10),
                 comments = "Forbid",
+                staffUsername = "TEST",
                 createdBy = "TEST",
                 createdTime = LocalDateTime.now(),
               ),
@@ -647,6 +658,7 @@ class MigrationServiceTest {
                 startDate = LocalDate.now(),
                 expiryDate = LocalDate.now().plusDays(10),
                 comments = "Accompany",
+                staffUsername = "TEST",
                 createdBy = "TEST",
                 createdTime = LocalDateTime.now(),
               ),
@@ -729,30 +741,40 @@ class MigrationServiceTest {
 
   private fun emails() =
     listOf(
-      MigrateEmailAddress(emailAddressId = 1L, email = "a@.com")
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
-      MigrateEmailAddress(emailAddressId = 2L, email = "b@b.com")
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
+      MigrateEmailAddress(emailAddressId = 1L, email = "a@.com").also {
+        it.createDateTime = aDateTime
+        it.createUsername = aUsername
+      },
+      MigrateEmailAddress(emailAddressId = 2L, email = "b@b.com").also {
+        it.createDateTime = aDateTime
+        it.createUsername = aUsername
+      },
     )
 
   private fun restrictions() =
     listOf(
-      MigrateRestriction(id = 1L, type = CodedValue("ESCORTED", "Desc"), comment = "Active", effectiveDate = LocalDate.now(), expiryDate = LocalDate.now().plusDays(30))
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
-      MigrateRestriction(id = 2L, type = CodedValue("CHILDREN", "Desc"), comment = "Expired", effectiveDate = LocalDate.now().minusDays(30), expiryDate = LocalDate.now().minusDays(1))
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
+      MigrateRestriction(
+        id = 1L,
+        type = CodedValue("ESCORTED", "Desc"),
+        comment = "Active",
+        effectiveDate = LocalDate.now(),
+        expiryDate = LocalDate.now().plusDays(30),
+        staffUsername = aUsername,
+      ).also {
+        it.createDateTime = aDateTime
+        it.createUsername = aUsername
+      },
+      MigrateRestriction(
+        id = 2L,
+        type = CodedValue("CHILDREN", "Desc"),
+        comment = "Expired",
+        effectiveDate = LocalDate.now().minusDays(30),
+        expiryDate = LocalDate.now().minusDays(1),
+        staffUsername = aUsername,
+      ).also {
+        it.createDateTime = aDateTime
+        it.createUsername = aUsername
+      },
     )
 
   private fun employments() =
@@ -828,6 +850,7 @@ class MigrationServiceTest {
             comment = "This person is not allowed to visit",
             startDate = LocalDate.now().minusDays(30),
             expiryDate = LocalDate.now().plusDays(10),
+            staffUsername = aUsername,
           ).also {
             it.createDateTime = aDateTime
             it.createUsername = aUsername
@@ -838,6 +861,7 @@ class MigrationServiceTest {
             comment = "This person must be accompanied during visits",
             startDate = LocalDate.now().minusDays(30),
             expiryDate = LocalDate.now().plusDays(10),
+            staffUsername = aUsername,
           ).also {
             it.createDateTime = aDateTime
             it.createUsername = aUsername

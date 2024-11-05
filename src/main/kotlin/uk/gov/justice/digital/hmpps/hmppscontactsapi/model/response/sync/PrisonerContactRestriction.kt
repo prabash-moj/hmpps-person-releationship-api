@@ -25,6 +25,9 @@ data class PrisonerContactRestriction(
   @Schema(description = "Comments regarding the restriction", example = "Restriction applied due to safety concerns", nullable = true)
   val comments: String? = null,
 
+  @Schema(description = "Entered staff username", example = "N/A")
+  val staffUsername: String? = null,
+
   @Schema(description = "Person who authorized the restriction", example = "John Doe", nullable = true)
   val authorisedBy: String? = null,
 

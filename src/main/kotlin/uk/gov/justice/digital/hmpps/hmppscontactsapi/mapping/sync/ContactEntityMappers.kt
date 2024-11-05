@@ -19,6 +19,7 @@ fun ContactEntity.mapEntityToSyncResponse(): Contact {
     active = this.active,
     suspended = this.suspended,
     isStaff = this.staffFlag,
+    remitter = this.remitterFlag,
     deceasedFlag = this.isDeceased,
     deceasedDate = this.deceasedDate,
     coronerNumber = this.coronerNumber,
@@ -49,6 +50,7 @@ fun CreateContactRequest.mapSyncRequestToEntity() = ContactEntity(
   it.active = this.active
   it.suspended = this.suspended
   it.staffFlag = this.isStaff
+  it.remitterFlag = this.remitter
   it.coronerNumber = this.coronerNumber
   it.gender = this.gender
   it.domesticStatus = this.domesticStatus

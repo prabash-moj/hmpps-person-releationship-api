@@ -14,13 +14,12 @@ fun CreatePrisonerContactRequest.toEntity(): PrisonerContactEntity {
     nextOfKin = this.nextOfKin,
     emergencyContact = this.emergencyContact,
     comments = this.comments,
+    active = this.active ?: true,
+    approvedVisitor = this.approvedVisitor ?: false,
+    currentTerm = this.currentTerm ?: true,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
   ).also {
-    it.active = this.active
-    it.approvedVisitor = this.approvedVisitor
-    it.awareOfCharges = this.awareOfCharges
-    it.canBeContacted = this.canBeContacted
     it.approvedBy = this.approvedBy
     it.approvedTime = this.approvedTime
     it.expiryDate = this.expiryDate
@@ -42,8 +41,7 @@ fun PrisonerContactEntity.toResponse(): PrisonerContact {
     createdTime = this.createdTime,
     active = this.active,
     approvedVisitor = this.approvedVisitor,
-    awareOfCharges = this.awareOfCharges,
-    canBeContacted = this.canBeContacted,
+    currentTerm = this.currentTerm,
     approvedBy = this.approvedBy,
     approvedTime = this.approvedTime,
     expiryDate = this.expiryDate,

@@ -104,14 +104,17 @@ private fun newPrisonerContact(
 ): PrisonerContactEntity {
   return PrisonerContactEntity(
     0,
-    contactId,
-    prisonerNumber,
-    contactType,
-    relationshipType,
-    nextOfKin,
-    emergencyContact,
-    comments,
-    createdBy,
-    LocalDateTime.now(),
+    contactId = contactId,
+    prisonerNumber = prisonerNumber,
+    contactType = contactType,
+    relationshipType = relationshipType,
+    nextOfKin = nextOfKin,
+    emergencyContact = emergencyContact,
+    comments = comments,
+    createdBy = createdBy,
+    createdTime = LocalDateTime.now(),
+    active = true,
+    approvedVisitor = false,
+    currentTerm = true,
   )
 }

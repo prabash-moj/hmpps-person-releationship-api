@@ -119,9 +119,7 @@ class MigrationService(
           createdTime = req.createDateTime ?: LocalDateTime.now(),
         ).also {
           it.staffFlag = req.staff
-          // TODO: Add to ContactEntity and data model
-          // it.isRemitter??
-          // it.keepBiometrics??
+          it.remitterFlag = req.remitter
           it.gender = req.gender?.code
           it.languageCode = req.language?.code
           it.domesticStatus = req.domesticStatus?.code
@@ -160,7 +158,7 @@ class MigrationService(
           ContactAddressEntity(
             contactAddressId = 0L,
             contactId = contactId,
-            addressType = addr.type.code,
+            addressType = addr.type?.code,
             primaryAddress = addr.primaryAddress,
             flat = addr.flat,
             property = addr.premise,
@@ -288,6 +286,7 @@ class MigrationService(
             startDate = restriction.effectiveDate,
             expiryDate = restriction.expiryDate,
             comments = restriction.comment,
+            staffUsername = restriction.staffUsername,
             createdBy = restriction.createUsername ?: "MIGRATION",
             createdTime = restriction.createDateTime ?: LocalDateTime.now(),
           ).also {
@@ -309,8 +308,8 @@ class MigrationService(
           ContactEmploymentEntity(
             contactEmploymentId = 0L,
             contactId = contactId,
-            corporateId = employment.corporate.id,
-            corporateName = employment.corporate.name,
+            corporateId = employment.corporate?.id,
+            corporateName = employment.corporate?.name,
             active = employment.active,
             createdBy = employment.createUsername ?: "MIGRATION",
             createdTime = employment.createDateTime ?: LocalDateTime.now(),
@@ -366,11 +365,15 @@ class MigrationService(
             nextOfKin = relationship.nextOfKin,
             emergencyContact = relationship.emergencyContact,
             comments = relationship.comment,
+            active = relationship.active,
+            approvedVisitor = relationship.approvedVisitor,
+            currentTerm = relationship.currentTerm,
             createdBy = relationship.createUsername ?: "MIGRATION",
             createdTime = relationship.createDateTime ?: LocalDateTime.now(),
           ).also {
             it.amendedBy = relationship.modifyUsername
             it.amendedTime = relationship.modifyDateTime
+            it.expiryDate = relationship.expiryDate
           },
         ),
       )
@@ -398,6 +401,7 @@ class MigrationService(
               startDate = restriction.startDate,
               expiryDate = restriction.expiryDate,
               comments = restriction.comment,
+              staffUsername = restriction.staffUsername,
               createdBy = restriction.createUsername ?: "MIGRATION",
               createdTime = restriction.createDateTime ?: LocalDateTime.now(),
             ).also {

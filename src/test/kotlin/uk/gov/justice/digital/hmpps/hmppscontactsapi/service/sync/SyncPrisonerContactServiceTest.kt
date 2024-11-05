@@ -39,8 +39,7 @@ class SyncPrisonerContactServiceTest {
         assertThat(comments).isEqualTo("Updated relationship type to family")
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isTrue
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isEqualTo("officer456")
         assertThat(approvedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
@@ -83,8 +82,7 @@ class SyncPrisonerContactServiceTest {
         assertThat(comments).isEqualTo("Updated relationship type to family")
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isTrue
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isEqualTo("officer456")
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
@@ -106,8 +104,7 @@ class SyncPrisonerContactServiceTest {
         assertThat(comments).isEqualTo("Updated relationship type to family")
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isTrue
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isEqualTo("officer456")
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
@@ -160,8 +157,7 @@ class SyncPrisonerContactServiceTest {
         assertThat(comments).isEqualTo("Updated prison location")
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isTrue
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isEqualTo("officer123")
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
@@ -183,8 +179,7 @@ class SyncPrisonerContactServiceTest {
         assertThat(comments).isEqualTo("Updated relationship type to social")
         assertThat(active).isFalse
         assertThat(approvedVisitor).isFalse
-        assertThat(awareOfCharges).isFalse
-        assertThat(canBeContacted).isFalse
+        assertThat(currentTerm).isTrue
         assertThat(approvedBy).isEqualTo("ADMIN")
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
@@ -218,8 +213,7 @@ class SyncPrisonerContactServiceTest {
       comments = "Updated prison location",
       active = true,
       approvedVisitor = true,
-      awareOfCharges = false,
-      canBeContacted = true,
+      currentTerm = true,
       approvedBy = "officer123",
       approvedTime = LocalDateTime.now(),
       expiryDate = LocalDate.of(2025, 12, 31),
@@ -239,8 +233,7 @@ class SyncPrisonerContactServiceTest {
       comments = "Updated relationship type to family",
       active = true,
       approvedVisitor = true,
-      awareOfCharges = false,
-      canBeContacted = true,
+      currentTerm = true,
       approvedBy = "officer456",
       approvedTime = LocalDateTime.now(),
       expiryDate = LocalDate.of(2025, 12, 31),
@@ -258,14 +251,13 @@ class SyncPrisonerContactServiceTest {
       relationshipType = "Family",
       nextOfKin = true,
       emergencyContact = false,
+      approvedVisitor = true,
+      active = true,
+      currentTerm = true,
       comments = "Updated relationship type to family",
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     ).also {
-      it.active = true
-      it.approvedVisitor = true
-      it.awareOfCharges = false
-      it.canBeContacted = true
       it.approvedBy = "officer456"
       it.approvedTime = LocalDateTime.now()
       it.expiryDate = LocalDate.of(2025, 12, 31)
@@ -286,14 +278,13 @@ class SyncPrisonerContactServiceTest {
       relationshipType = "LAW",
       nextOfKin = true,
       emergencyContact = false,
+      active = false,
+      approvedVisitor = false,
+      currentTerm = true,
       comments = "Updated relationship type to social",
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     ).also {
-      it.active = false
-      it.approvedVisitor = false
-      it.awareOfCharges = false
-      it.canBeContacted = false
       it.approvedBy = "ADMIN"
       it.approvedTime = LocalDateTime.now()
       it.expiryDate = LocalDate.of(2025, 12, 31)

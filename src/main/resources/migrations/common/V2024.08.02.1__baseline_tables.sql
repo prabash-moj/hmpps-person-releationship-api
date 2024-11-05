@@ -51,7 +51,7 @@ CREATE TABLE contact_identity
 (
     contact_identity_id bigserial NOT NULL CONSTRAINT contact_identity_id_pk PRIMARY KEY,
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
-    identity_type varchar(20), -- Reference codes - ID_TYPE
+    identity_type varchar(12), -- Reference codes - ID_TYPE
     identity_value varchar(100), -- driving licence number, NI number, passport number
     issuing_authority varchar(40), -- e.g. UK passport agency, DVLA
     created_by varchar(100) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE contact_address
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
     address_type varchar(12), -- Reference code - ADDRESS_TYPE e.g. HOME, WORK, TEMPORARY, UNKNOWN - nullable
     primary_address boolean NOT NULL DEFAULT false,
-    flat varchar(20), -- flat number (nullable)
+    flat varchar(30), -- flat number (nullable)
     property varchar(50), -- house name or number - nullable
     street varchar(160), -- road or street - nullable
     area varchar(70), -- locality (nullable)
@@ -111,7 +111,7 @@ CREATE TABLE contact_email
 (
     contact_email_id bigserial NOT NULL CONSTRAINT contact_email_id_pk PRIMARY KEY,
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
-    email_type varchar(20) NOT NULL, -- Reference codes EMAIL_TYPE - e.g. WORK or PERSONAL
+    email_type varchar(12) NOT NULL, -- Reference codes EMAIL_TYPE - e.g. WORK or PERSONAL
     email_address varchar(240) NOT NULL,
     primary_email boolean NOT NULL DEFAULT false,
     created_by varchar(100) NOT NULL,
@@ -132,9 +132,9 @@ CREATE TABLE contact_phone
 (
     contact_phone_id bigserial NOT NULL CONSTRAINT contact_phone_id_pk PRIMARY KEY,
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
-    phone_type varchar(20) NOT NULL, -- Reference codes - PHONE_TYPE e.g. HOME, WORK or MOBILE
-    phone_number varchar(240) NOT NULL,
-    ext_number varchar(10),
+    phone_type varchar(12) NOT NULL, -- Reference codes - PHONE_TYPE e.g. HOME, WORK or MOBILE
+    phone_number varchar(40) NOT NULL,
+    ext_number varchar(7),
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
     amended_by varchar(100),

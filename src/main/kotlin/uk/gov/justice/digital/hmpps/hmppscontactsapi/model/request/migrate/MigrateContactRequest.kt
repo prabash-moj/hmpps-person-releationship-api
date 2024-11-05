@@ -104,10 +104,11 @@ data class MigratePhoneNumber(
   val phoneId: Long,
 
   @Schema(description = "Telephone number", example = "098989 98989893")
+  @field:NotNull(message = "The phone number must be provided")
   val number: String,
 
-  @Schema(description = "Extension number", nullable = true, example = "100")
-  val extension: String,
+  @Schema(description = "Extension number (optional)", nullable = true, example = "100")
+  val extension: String? = null,
 
   @Schema(description = "Type of phone number (from reference data)")
   val type: CodedValue,

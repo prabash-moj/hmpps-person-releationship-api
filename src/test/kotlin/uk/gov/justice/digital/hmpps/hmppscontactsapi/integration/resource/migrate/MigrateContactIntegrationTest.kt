@@ -260,7 +260,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
 
   private fun identifiers() =
     listOf(
-      MigrateIdentifier(sequence = 601L, type = CodedValue("DRIVING_LICENCE", "Driving Licence"), identifier = "DL1", issuedAuthority = "DVLA"),
+      MigrateIdentifier(sequence = 601L, type = CodedValue("DRIVING_LIC", "Driving Licence"), identifier = "DL1", issuedAuthority = "DVLA"),
       MigrateIdentifier(sequence = 602L, type = CodedValue("PASSPORT", "Passport"), identifier = "PASS1", issuedAuthority = "UKBORDER"),
     )
 

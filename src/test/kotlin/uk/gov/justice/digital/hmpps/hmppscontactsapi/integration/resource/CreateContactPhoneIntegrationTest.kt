@@ -227,7 +227,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     @JvmStatic
     fun allFieldConstraintViolations(): List<Arguments> {
       return listOf(
-        Arguments.of("phoneType must be <= 20 characters", aMinimalRequest().copy(phoneType = "".padStart(21))),
+        Arguments.of("phoneType must be <= 12 characters", aMinimalRequest().copy(phoneType = "".padStart(13))),
         Arguments.of("phoneNumber must be <= 240 characters", aMinimalRequest().copy(phoneNumber = "".padStart(241))),
         Arguments.of(
           "extNumber must be <= 7 characters",

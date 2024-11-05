@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size
 @Schema(description = "Request to update an existing phone number")
 data class UpdatePhoneRequest(
   @Schema(description = "Type of phone", example = "MOB")
-  @field:Size(max = 20, message = "phoneType must be <= 20 characters")
+  @field:Size(max = 12, message = "phoneType must be <= 12 characters")
   val phoneType: String,
 
   @Schema(description = "Phone number", example = "+1234567890")

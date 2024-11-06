@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.media.Schema
 import org.openapitools.jackson.nullable.JsonNullable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
@@ -9,6 +10,8 @@ import java.time.LocalDate
 data class PatchContactRequest(
 
   @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false, type = "boolean", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @get:JsonProperty(value = "isStaff")
+  @set:JsonProperty(value = "isStaff")
   var isStaff: JsonNullable<Boolean> = JsonNullable.undefined(),
 
   @Schema(description = "The domestic status code of the contact", example = "S", nullable = true, type = "string", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -20,10 +23,10 @@ data class PatchContactRequest(
   @Schema(description = "The language code of the contact", example = "EN", nullable = true, type = "string", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   var languageCode: JsonNullable<String?> = JsonNullable.undefined(),
 
-  @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true, format = "yyyy-MM-dd", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", type = "string", nullable = true, format = "yyyy-MM-dd", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   var dateOfBirth: JsonNullable<LocalDate?> = JsonNullable.undefined(),
 
-  @Schema(description = "If the date of birth is not known, this indicates whether they are believed to be over 18 or not", example = "YES", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(description = "If the date of birth is not known, this indicates whether they are believed to be over 18 or not", type = "string", example = "YES", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   var estimatedIsOverEighteen: JsonNullable<EstimatedIsOverEighteen?> = JsonNullable.undefined(),
 
   @Schema(description = "The id of the user who updated the contact", example = "JD000001", nullable = false, requiredMode = Schema.RequiredMode.REQUIRED)

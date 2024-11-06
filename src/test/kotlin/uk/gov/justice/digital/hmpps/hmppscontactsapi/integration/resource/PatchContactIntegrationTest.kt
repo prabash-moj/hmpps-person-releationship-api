@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.openapitools.jackson.nullable.JsonNullable
@@ -10,8 +11,11 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.web.util.UriComponentsBuilder
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import java.time.LocalDate
 
 @TestPropertySource(
   properties = [
@@ -324,6 +328,111 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(resetValue)
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+  }
+
+  @Nested
+  inner class DateOfBirth {
+    private var contactIdThatHasDOB = 0L
+
+    @BeforeEach
+    fun createContactWithDob() {
+      contactIdThatHasDOB = testAPIClient.createAContact(
+        CreateContactRequest(
+          lastName = "Date of birth",
+          firstName = "Has",
+          dateOfBirth = LocalDate.of(1982, 6, 15),
+          createdBy = "created",
+        ),
+      ).id
+    }
+
+    @Test
+    fun `should not patch the date of birth when not provided`() {
+      val req = PatchContactRequest(
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
+
+      assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(1982, 6, 15))
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    @Test
+    fun `should successfully patch the date of birth with null value`() {
+      val req = PatchContactRequest(
+        dateOfBirth = JsonNullable.of(null),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
+
+      assertThat(res.dateOfBirth).isNull()
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    @Test
+    fun `should successfully patch the date of birth with a value`() {
+      val req = PatchContactRequest(
+        dateOfBirth = JsonNullable.of(LocalDate.of(2000, 12, 25)),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
+
+      assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(2000, 12, 25))
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+  }
+
+  @Nested
+  inner class PatchEstimatedIsOverEighteen {
+    private var contactIdThatHasEstimatedDOB = 0L
+
+    @BeforeEach
+    fun createContactWithDob() {
+      contactIdThatHasEstimatedDOB = testAPIClient.createAContact(
+        CreateContactRequest(
+          lastName = "Date of birth",
+          firstName = "Has",
+          dateOfBirth = null,
+          estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
+          createdBy = "created",
+        ),
+      ).id
+    }
+
+    @Test
+    fun `should not patch estimated is over eighteen when not provided`() {
+      val req = PatchContactRequest(
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
+
+      assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    @Test
+    fun `should successfully patch estimated is over eighteen with null value`() {
+      val req = PatchContactRequest(
+        estimatedIsOverEighteen = JsonNullable.of(null),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
+
+      assertThat(res.estimatedIsOverEighteen).isEqualTo(null)
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+    }
+
+    @Test
+    fun `should successfully patch estimated is over eighteen with a value`() {
+      val req = PatchContactRequest(
+        estimatedIsOverEighteen = JsonNullable.of(EstimatedIsOverEighteen.DO_NOT_KNOW),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
+
+      assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
     }
   }

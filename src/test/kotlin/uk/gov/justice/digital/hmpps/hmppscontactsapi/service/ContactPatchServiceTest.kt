@@ -413,20 +413,19 @@ class ContactPatchServiceTest {
     estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
     createdBy = "Admin",
     createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
-  ).also {
-    it.placeOfBirth = "London"
-    it.active = true
-    it.suspended = false
-    it.staffFlag = false
-    it.coronerNumber = null
-    it.gender = "M"
-    it.domesticStatus = domesticStatus
-    it.languageCode = languageCode
-    it.nationalityCode = "GB"
-    it.interpreterRequired = false
-    it.amendedBy = "admin"
-    it.amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0)
-  }
+    placeOfBirth = "London",
+    active = true,
+    suspended = false,
+    staffFlag = false,
+    coronerNumber = null,
+    gender = "M",
+    domesticStatus = domesticStatus,
+    languageCode = languageCode,
+    nationalityCode = "GB",
+    interpreterRequired = false,
+    amendedBy = "admin",
+    amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+  )
 
   private fun assertUnchangedFields(updatedContact: PatchContactResponse) {
     assertThat(updatedContact.title).isEqualTo(originalContact.title)
@@ -445,5 +444,92 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
     assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)
     assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
+  }
+
+  @Nested
+  inner class DateOfBirth {
+
+    @Test
+    fun `should patch when date of birth is null`() {
+      originalContact = createDummyContactEntity().copy(dateOfBirth = LocalDate.of(1982, 6, 15))
+      val patchRequest = PatchContactRequest(
+        dateOfBirth = JsonNullable.of(null),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val updatedContact = service.patch(contactId, patchRequest)
+
+      assertThat(updatedContact.dateOfBirth).isNull()
+      assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
+    }
+
+    @Test
+    fun `should patch when date of birth provided`() {
+      originalContact = createDummyContactEntity().copy(dateOfBirth = LocalDate.of(1982, 6, 15))
+
+      val patchRequest = PatchContactRequest(
+        dateOfBirth = JsonNullable.of(LocalDate.of(2000, 12, 25)),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val updatedContact = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      assertThat(updatedContact.dateOfBirth).isEqualTo(LocalDate.of(2000, 12, 25))
+      assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
+    }
+  }
+
+  @Nested
+  inner class PatchEstimatedIsOverEighteen {
+
+    @Test
+    fun `should patch when estimated is over eighteen is null`() {
+      originalContact = createDummyContactEntity().copy(estimatedIsOverEighteen = EstimatedIsOverEighteen.YES)
+
+      val patchRequest = PatchContactRequest(
+        estimatedIsOverEighteen = JsonNullable.of(null),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val updatedContact = service.patch(contactId, patchRequest)
+
+      assertThat(updatedContact.estimatedIsOverEighteen).isEqualTo(null)
+      assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
+    }
+
+    @Test
+    fun `should patch when estimated is over eighteen provided`() {
+      originalContact = createDummyContactEntity().copy(estimatedIsOverEighteen = EstimatedIsOverEighteen.YES)
+
+      val patchRequest = PatchContactRequest(
+        estimatedIsOverEighteen = JsonNullable.of(EstimatedIsOverEighteen.DO_NOT_KNOW),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val updatedContact = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      assertThat(updatedContact.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
+      assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
+    }
   }
 }

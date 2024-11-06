@@ -151,7 +151,12 @@ class MigrationServiceTest {
         assertThat(result[i].first).isEqualTo(request.phoneNumbers[i].phoneId)
         assertThat(result[i].second)
           .extracting("contactId", "contactPhoneId", "phoneType", "phoneNumber")
-          .contains(responses[i].contactId, responses[i].contactPhoneId, responses[i].phoneType, responses[i].phoneNumber)
+          .contains(
+            responses[i].contactId,
+            responses[i].contactPhoneId,
+            responses[i].phoneType,
+            responses[i].phoneNumber,
+          )
       }
 
       verify(contactPhoneRepository, times(2)).save(contactPhoneCaptor.capture())
@@ -263,7 +268,12 @@ class MigrationServiceTest {
         assertThat(result[i].first).isEqualTo(request.addresses[i].addressId)
         assertThat(result[i].second)
           .extracting("contactId", "contactAddressId", "addressType", "postCode")
-          .contains(responses[i].contactId, responses[i].contactAddressId, responses[i].addressType, responses[i].postCode)
+          .contains(
+            responses[i].contactId,
+            responses[i].contactAddressId,
+            responses[i].addressType,
+            responses[i].postCode,
+          )
       }
 
       verify(contactAddressRepository, times(2)).save(contactAddressCaptor.capture())
@@ -505,7 +515,17 @@ class MigrationServiceTest {
       for (i in 0..1) {
         assertThat(result[i].first).isEqualTo(request.contacts[i].id)
         assertThat(result[i].second)
-          .extracting("contactId", "prisonerContactId", "contactType", "relationshipType", "prisonerNumber", "nextOfKin", "emergencyContact", "comments", "approvedVisitor")
+          .extracting(
+            "contactId",
+            "prisonerContactId",
+            "contactType",
+            "relationshipType",
+            "prisonerNumber",
+            "nextOfKin",
+            "emergencyContact",
+            "comments",
+            "approvedVisitor",
+          )
           .contains(
             responses[i].contactId,
             responses[i].prisonerContactId,
@@ -603,7 +623,12 @@ class MigrationServiceTest {
         with(prisonerContactRestrictionCaptor.allValues[x]) {
           assertThat(this)
             .extracting("prisonerContactId", "prisonerContactRestrictionId", "restrictionType", "comments")
-            .contains(relationshipResponse.prisonerContactId, 0L, restrictionResponses[x].restrictionType, restrictionResponses[x].comments)
+            .contains(
+              relationshipResponse.prisonerContactId,
+              0L,
+              restrictionResponses[x].restrictionType,
+              restrictionResponses[x].comments,
+            )
         }
       }
     }
@@ -706,10 +731,9 @@ class MigrationServiceTest {
       deceasedDate = null,
       createdBy = aUsername,
       createdTime = aDateTime,
-    ).also {
-      it.amendedTime = aDateTime
-      it.amendedBy = aUsername
-    }
+      amendedTime = aDateTime,
+      amendedBy = aUsername,
+    )
 
   private fun phoneNumbers() =
     listOf(
@@ -727,12 +751,25 @@ class MigrationServiceTest {
 
   private fun addresses() =
     listOf(
-      MigrateAddress(addressId = 1L, type = CodedValue("HOME", "Home"), premise = "10", street = "Dublin Road", postCode = "D1 1DN", primaryAddress = true)
+      MigrateAddress(
+        addressId = 1L,
+        type = CodedValue("HOME", "Home"),
+        premise = "10",
+        street = "Dublin Road",
+        postCode = "D1 1DN",
+        primaryAddress = true,
+      )
         .also {
           it.createDateTime = aDateTime
           it.createUsername = aUsername
         },
-      MigrateAddress(addressId = 2L, type = CodedValue("WORK", "Work"), premise = "11", street = "Dublin Road", postCode = "D1 2DN")
+      MigrateAddress(
+        addressId = 2L,
+        type = CodedValue("WORK", "Work"),
+        premise = "11",
+        street = "Dublin Road",
+        postCode = "D1 2DN",
+      )
         .also {
           it.createDateTime = aDateTime
           it.createUsername = aUsername

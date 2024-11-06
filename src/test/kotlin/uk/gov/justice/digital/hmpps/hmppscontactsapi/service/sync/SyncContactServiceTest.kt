@@ -211,18 +211,17 @@ class SyncContactServiceTest {
       deceasedDate = null,
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
-    ).also {
-      it.placeOfBirth = "London"
-      it.active = true
-      it.suspended = false
-      it.staffFlag = false
-      it.coronerNumber = null
-      it.gender = "Male"
-      it.domesticStatus = "Single"
-      it.languageCode = "EN"
-      it.nationalityCode = "GB"
-      it.interpreterRequired = false
-    }
+      placeOfBirth = "London",
+      active = true,
+      suspended = false,
+      staffFlag = false,
+      coronerNumber = null,
+      gender = "Male",
+      domesticStatus = "Single",
+      languageCode = "EN",
+      nationalityCode = "GB",
+      interpreterRequired = false,
+    )
 
   private fun UpdateContactRequest.toEntity(contactId: Long = 1L): ContactEntity {
     val updatedBy = this.updatedBy
@@ -239,19 +238,18 @@ class SyncContactServiceTest {
       isDeceased = false,
       deceasedDate = null,
       createdBy = "Admin",
-    ).also {
-      it.placeOfBirth = this.placeOfBirth
-      it.active = this.active
-      it.suspended = this.suspended
-      it.staffFlag = this.isStaff
-      it.coronerNumber = this.coronerNumber
-      it.gender = this.gender
-      it.domesticStatus = this.domesticStatus
-      it.languageCode = this.languageCode
-      it.nationalityCode = this.nationalityCode
-      it.interpreterRequired = this.interpreterRequired ?: false
-      it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
-    }
+      placeOfBirth = this.placeOfBirth,
+      active = this.active,
+      suspended = this.suspended,
+      staffFlag = this.isStaff,
+      coronerNumber = this.coronerNumber,
+      gender = this.gender,
+      domesticStatus = this.domesticStatus,
+      languageCode = this.languageCode,
+      nationalityCode = this.nationalityCode,
+      interpreterRequired = this.interpreterRequired ?: false,
+      amendedBy = updatedBy,
+      amendedTime = updatedTime,
+    )
   }
 }

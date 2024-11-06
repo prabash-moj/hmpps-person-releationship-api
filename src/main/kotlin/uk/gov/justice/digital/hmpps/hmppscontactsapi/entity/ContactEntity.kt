@@ -45,31 +45,30 @@ data class ContactEntity(
   @Column(updatable = false)
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
-) {
 
-  var placeOfBirth: String? = null
+  val placeOfBirth: String? = null,
 
-  var active: Boolean? = false
+  val active: Boolean? = false,
 
-  var suspended: Boolean? = false
+  val suspended: Boolean? = false,
 
-  var staffFlag: Boolean = false
+  val staffFlag: Boolean = false,
 
-  var remitterFlag: Boolean = false
+  val remitterFlag: Boolean = false,
 
-  var coronerNumber: String? = null
+  val coronerNumber: String? = null,
 
-  var gender: String? = null
+  val gender: String? = null,
 
-  var domesticStatus: String? = null
+  val domesticStatus: String? = null,
 
-  var languageCode: String? = null
+  val languageCode: String? = null,
 
-  var nationalityCode: String? = null
+  val nationalityCode: String? = null,
 
-  var interpreterRequired: Boolean = false
+  val interpreterRequired: Boolean = false,
 
-  var amendedBy: String? = null
+  val amendedBy: String? = null,
 
-  var amendedTime: LocalDateTime? = null
-}
+  val amendedTime: LocalDateTime? = null,
+)

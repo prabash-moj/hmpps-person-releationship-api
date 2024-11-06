@@ -53,20 +53,20 @@ class PatchContactEntityMappersKtTest {
       isDeceased = false,
       deceasedDate = null,
       createdTime = LocalDateTime.now(),
-    ).also {
-      it.placeOfBirth = "London"
-      it.active = true
-      it.suspended = false
-      it.staffFlag = false
-      it.coronerNumber = "1234"
-      it.gender = "Male"
-      it.domesticStatus = "Single"
-      it.languageCode = languageCode
-      it.nationalityCode = "GB"
-      it.interpreterRequired = false
-      it.amendedBy = "admin"
-      it.amendedTime = LocalDateTime.now()
-    }
+      placeOfBirth = "London",
+      active = true,
+      suspended = false,
+      staffFlag = false,
+      coronerNumber = "1234",
+      gender = "Male",
+      domesticStatus = "Single",
+      languageCode = languageCode,
+      nationalityCode = "GB",
+      interpreterRequired = false,
+      remitterFlag = false,
+      amendedBy = "admin",
+      amendedTime = LocalDateTime.now(),
+    )
     return contactEntity
   }
 }

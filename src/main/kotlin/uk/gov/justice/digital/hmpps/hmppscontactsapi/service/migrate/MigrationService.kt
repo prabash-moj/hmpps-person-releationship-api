@@ -117,16 +117,15 @@ class MigrationService(
           estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
           createdBy = req.createUsername ?: "MIGRATION",
           createdTime = req.createDateTime ?: LocalDateTime.now(),
-        ).also {
-          it.staffFlag = req.staff
-          it.remitterFlag = req.remitter
-          it.gender = req.gender?.code
-          it.languageCode = req.language?.code
-          it.domesticStatus = req.domesticStatus?.code
-          it.interpreterRequired = req.interpreterRequired
-          it.amendedBy = req.modifyUsername
-          it.amendedTime = req.modifyDateTime
-        },
+          staffFlag = req.staff,
+          remitterFlag = req.remitter,
+          gender = req.gender?.code,
+          languageCode = req.language?.code,
+          domesticStatus = req.domesticStatus?.code,
+          interpreterRequired = req.interpreterRequired,
+          amendedBy = req.modifyUsername,
+          amendedTime = req.modifyDateTime,
+        ),
       ),
     )
 

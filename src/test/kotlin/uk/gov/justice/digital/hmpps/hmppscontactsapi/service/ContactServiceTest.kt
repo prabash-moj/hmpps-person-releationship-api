@@ -416,9 +416,10 @@ class ContactServiceTest {
         Language(1, "FRE-FRA", "French", "Foo", "Bar", "X", 99),
       )
 
-      val entity = createContactEntity()
-      entity.languageCode = "FRE-FRA"
-      entity.interpreterRequired = true
+      val entity = createContactEntity().copy(
+        languageCode = "FRE-FRA",
+        interpreterRequired = true,
+      )
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)
@@ -433,8 +434,7 @@ class ContactServiceTest {
 
     @Test
     fun `should get a contact if language code null and not lookup the null`() {
-      val entity = createContactEntity()
-      entity.languageCode = null
+      val entity = createContactEntity().copy(languageCode = null)
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)
@@ -453,8 +453,7 @@ class ContactServiceTest {
         ReferenceCode(1, "DOMESTIC_STS", "S", "Single", 1, true),
       )
 
-      val entity = createContactEntity()
-      entity.domesticStatus = "S"
+      val entity = createContactEntity().copy(domesticStatus = "S")
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)
@@ -468,8 +467,7 @@ class ContactServiceTest {
 
     @Test
     fun `should get a contact with no domestic status and not look it up`() {
-      val entity = createContactEntity()
-      entity.domesticStatus = null
+      val entity = createContactEntity().copy(domesticStatus = null)
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)
@@ -484,9 +482,7 @@ class ContactServiceTest {
 
     @Test
     fun `should get a contact with staff flag`() {
-      val entity = createContactEntity().also {
-        it.staffFlag = true
-      }
+      val entity = createContactEntity().copy(staffFlag = true)
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)

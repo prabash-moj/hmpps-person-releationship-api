@@ -37,20 +37,16 @@ class ContactPatchService(
   fun ContactEntity.patchRequest(
     request: PatchContactRequest,
   ): ContactEntity {
-    val changedContact = this.copy().also {
-      it.placeOfBirth = this.placeOfBirth
-      it.active = this.active
-      it.suspended = this.suspended
-      it.staffFlag = request.isStaff.orElse(this.staffFlag)
-      it.coronerNumber = this.coronerNumber
-      it.gender = this.gender
-      it.domesticStatus = request.domesticStatus.orElse(this.domesticStatus)
-      it.nationalityCode = this.nationalityCode
-      it.interpreterRequired = request.interpreterRequired.orElse(this.interpreterRequired)
-      it.languageCode = request.languageCode.orElse(this.languageCode)
-      it.amendedBy = request.updatedBy
-      it.amendedTime = LocalDateTime.now()
-    }
+    val changedContact = this.copy(
+      staffFlag = request.isStaff.orElse(this.staffFlag),
+      domesticStatus = request.domesticStatus.orElse(this.domesticStatus),
+      interpreterRequired = request.interpreterRequired.orElse(this.interpreterRequired),
+      languageCode = request.languageCode.orElse(this.languageCode),
+      dateOfBirth = request.dateOfBirth.orElse(this.dateOfBirth),
+      estimatedIsOverEighteen = request.estimatedIsOverEighteen.orElse(this.estimatedIsOverEighteen),
+      amendedBy = request.updatedBy,
+      amendedTime = LocalDateTime.now(),
+    )
 
     return changedContact
   }

@@ -45,16 +45,17 @@ fun CreateContactRequest.mapSyncRequestToEntity() = ContactEntity(
   isDeceased = this.deceasedFlag!!,
   deceasedDate = this.deceasedDate,
   createdTime = this.createdTime,
-).also {
-  it.placeOfBirth = this.placeOfBirth
-  it.active = this.active
-  it.suspended = this.suspended
-  it.staffFlag = this.isStaff
-  it.remitterFlag = this.remitter
-  it.coronerNumber = this.coronerNumber
-  it.gender = this.gender
-  it.domesticStatus = this.domesticStatus
-  it.languageCode = this.languageCode
-  it.nationalityCode = this.nationalityCode
-  it.interpreterRequired = this.interpreterRequired ?: false
-}
+  placeOfBirth = this.placeOfBirth,
+  active = this.active,
+  suspended = this.suspended,
+  staffFlag = this.isStaff,
+  remitterFlag = this.remitter,
+  coronerNumber = this.coronerNumber,
+  gender = this.gender,
+  domesticStatus = this.domesticStatus,
+  languageCode = this.languageCode,
+  nationalityCode = this.nationalityCode,
+  interpreterRequired = this.interpreterRequired ?: false,
+  amendedBy = null,
+  amendedTime = null,
+)

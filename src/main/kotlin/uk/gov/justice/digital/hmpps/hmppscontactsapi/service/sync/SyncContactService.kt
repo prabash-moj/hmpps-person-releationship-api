@@ -46,20 +46,19 @@ class SyncContactService(
       isDeceased = request.deceasedFlag!!,
       deceasedDate = request.deceasedDate,
       estimatedIsOverEighteen = request.estimatedIsOverEighteen,
-    ).also {
-      it.placeOfBirth = request.placeOfBirth
-      it.active = request.active
-      it.suspended = request.suspended
-      it.staffFlag = request.isStaff
-      it.coronerNumber = request.coronerNumber
-      it.gender = request.gender
-      it.domesticStatus = request.domesticStatus
-      it.languageCode = request.languageCode
-      it.nationalityCode = request.nationalityCode
-      it.interpreterRequired = request.interpreterRequired ?: false
-      it.amendedBy = request.updatedBy
-      it.amendedTime = request.updatedTime
-    }
+      placeOfBirth = request.placeOfBirth,
+      active = request.active,
+      suspended = request.suspended,
+      staffFlag = request.isStaff,
+      coronerNumber = request.coronerNumber,
+      gender = request.gender,
+      domesticStatus = request.domesticStatus,
+      languageCode = request.languageCode,
+      nationalityCode = request.nationalityCode,
+      interpreterRequired = request.interpreterRequired ?: false,
+      amendedBy = request.updatedBy,
+      amendedTime = request.updatedTime,
+    )
 
     return contactRepository.saveAndFlush(changedContact).mapEntityToSyncResponse()
   }

@@ -20,8 +20,8 @@ class ContactPatchFacade(
   fun patch(id: Long, request: PatchContactRequest): PatchContactResponse {
     return contactService.patch(id, request)
       .also {
-        logger.info("Send patch domain event to {} {} ", OutboundEvent.PRISONER_CONTACT_AMENDED, id)
-        outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_AMENDED, id)
+        logger.info("Send patch domain event to {} {} ", OutboundEvent.CONTACT_AMENDED, id)
+        outboundEventsService.send(OutboundEvent.CONTACT_AMENDED, id)
       }
   }
 }

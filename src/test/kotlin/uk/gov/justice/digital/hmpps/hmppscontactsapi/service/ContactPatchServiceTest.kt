@@ -393,57 +393,144 @@ class ContactPatchServiceTest {
     }
   }
 
-  private fun whenUpdateIsSuccessful() {
-    whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+  @Nested
+  inner class Title {
+
+    @Test
+    fun `should patch when title is valid`() {
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(any(), any())).thenReturn(
+        ReferenceCode(
+          0,
+          "TITLE",
+          "MRS",
+          "Mrs",
+          0,
+          true,
+        ),
+      )
+
+      val patchRequest = PatchContactRequest(
+        title = JsonNullable.of("MRS"),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val response = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      val updatingEntity = contactCaptor.firstValue
+
+      assertThat(updatingEntity.title).isEqualTo("MRS")
+      assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
+
+      assertThat(response.title).isEqualTo("MRS")
+      assertThat(response.amendedBy).isEqualTo("Modifier")
+    }
+
+    @Test
+    fun `should patch when title is null`() {
+      val patchRequest = PatchContactRequest(
+        title = JsonNullable.of(null),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val response = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      val updatingEntity = contactCaptor.firstValue
+
+      assertThat(updatingEntity.title).isNull()
+      assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
+
+      assertThat(response.title).isNull()
+      assertThat(response.amendedBy).isEqualTo("Modifier")
+      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+    }
+
+    @Test
+    fun `should not patch title if it is invalid code`() {
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(any(), any())).thenReturn(null)
+
+      val patchRequest = PatchContactRequest(
+        title = JsonNullable.of("FOO"),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val exception = assertThrows<ValidationException> {
+        service.patch(contactId, patchRequest)
+      }
+      assertThat(exception.message).isEqualTo("Reference code with groupCode TITLE and code 'FOO' not found.")
+      verify(contactRepository, never()).saveAndFlush(any())
+    }
   }
 
-  private fun whenContactExists() {
-    whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(originalContact))
-  }
+  @Nested
+  inner class MiddleNames {
 
-  private fun createDummyContactEntity(languageCode: String? = countryCode, domesticStatus: String? = "M") = ContactEntity(
-    contactId = 1L,
-    title = "Mr.",
-    firstName = "John",
-    lastName = "Doe",
-    middleNames = "A",
-    dateOfBirth = LocalDate.of(1990, 1, 1),
-    isDeceased = false,
-    deceasedDate = null,
-    estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-    createdBy = "Admin",
-    createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
-    placeOfBirth = "London",
-    active = true,
-    suspended = false,
-    staffFlag = false,
-    coronerNumber = null,
-    gender = "M",
-    domesticStatus = domesticStatus,
-    languageCode = languageCode,
-    nationalityCode = "GB",
-    interpreterRequired = false,
-    amendedBy = "admin",
-    amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
-  )
+    @Test
+    fun `should patch when middle names is valid`() {
+      val patchRequest = PatchContactRequest(
+        middleNames = JsonNullable.of("Some Middle Names Updated"),
+        updatedBy = "Modifier",
+      )
 
-  private fun assertUnchangedFields(updatedContact: PatchContactResponse) {
-    assertThat(updatedContact.title).isEqualTo(originalContact.title)
-    assertThat(updatedContact.firstName).isEqualTo(originalContact.firstName)
-    assertThat(updatedContact.lastName).isEqualTo(originalContact.lastName)
-    assertThat(updatedContact.middleNames).isEqualTo(originalContact.middleNames)
-    assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
-    assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
-    assertThat(updatedContact.active).isEqualTo(originalContact.active)
-    assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
-    assertThat(updatedContact.isStaff).isEqualTo(originalContact.staffFlag)
-    assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
-    assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
-    assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
-    assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
-    assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
-    assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)
-    assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val response = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      val updatingEntity = contactCaptor.firstValue
+
+      assertThat(updatingEntity.middleNames).isEqualTo("Some Middle Names Updated")
+      assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
+
+      assertThat(response.middleNames).isEqualTo("Some Middle Names Updated")
+      assertThat(response.amendedBy).isEqualTo("Modifier")
+    }
+
+    @Test
+    fun `should patch when middle names is null`() {
+      val patchRequest = PatchContactRequest(
+        middleNames = JsonNullable.of(null),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val response = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      val updatingEntity = contactCaptor.firstValue
+
+      assertThat(updatingEntity.middleNames).isNull()
+      assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
+
+      assertThat(response.middleNames).isNull()
+      assertThat(response.amendedBy).isEqualTo("Modifier")
+      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+    }
   }
 
   @Nested
@@ -531,5 +618,58 @@ class ContactPatchServiceTest {
       assertThat(updatedContact.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
       assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
     }
+  }
+
+  private fun whenUpdateIsSuccessful() {
+    whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+  }
+
+  private fun whenContactExists() {
+    whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(originalContact))
+  }
+
+  private fun createDummyContactEntity(languageCode: String? = countryCode, domesticStatus: String? = "M") = ContactEntity(
+    contactId = 1L,
+    title = "Mr.",
+    firstName = "John",
+    lastName = "Doe",
+    middleNames = "A",
+    dateOfBirth = LocalDate.of(1990, 1, 1),
+    isDeceased = false,
+    deceasedDate = null,
+    estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+    createdBy = "Admin",
+    createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+    placeOfBirth = "London",
+    active = true,
+    suspended = false,
+    staffFlag = false,
+    coronerNumber = null,
+    gender = "M",
+    domesticStatus = domesticStatus,
+    languageCode = languageCode,
+    nationalityCode = "GB",
+    interpreterRequired = false,
+    amendedBy = "admin",
+    amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+  )
+
+  private fun assertUnchangedFields(updatedContact: PatchContactResponse) {
+    assertThat(updatedContact.title).isEqualTo(originalContact.title)
+    assertThat(updatedContact.firstName).isEqualTo(originalContact.firstName)
+    assertThat(updatedContact.lastName).isEqualTo(originalContact.lastName)
+    assertThat(updatedContact.middleNames).isEqualTo(originalContact.middleNames)
+    assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
+    assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
+    assertThat(updatedContact.active).isEqualTo(originalContact.active)
+    assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
+    assertThat(updatedContact.isStaff).isEqualTo(originalContact.staffFlag)
+    assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
+    assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
+    assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
+    assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
+    assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
+    assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)
+    assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
   }
 }

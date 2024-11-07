@@ -27,6 +27,7 @@ class ContactPatchService(
     validateInterpreterRequiredType(request)
     validateDomesticStatusCode(request)
     validateStaffFlag(request)
+    validateTitle(request)
 
     val changedContact = contact.patchRequest(request)
 
@@ -44,6 +45,8 @@ class ContactPatchService(
       languageCode = request.languageCode.orElse(this.languageCode),
       dateOfBirth = request.dateOfBirth.orElse(this.dateOfBirth),
       estimatedIsOverEighteen = request.estimatedIsOverEighteen.orElse(this.estimatedIsOverEighteen),
+      title = request.title.orElse(this.title),
+      middleNames = request.middleNames.orElse(this.middleNames),
       amendedBy = request.updatedBy,
       amendedTime = LocalDateTime.now(),
     )
@@ -74,6 +77,14 @@ class ContactPatchService(
       val code = request.domesticStatus.get()!!
       referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", code)
         ?: throw ValidationException("Reference code with groupCode DOMESTIC_STS and code '$code' not found.")
+    }
+  }
+
+  private fun validateTitle(request: PatchContactRequest) {
+    if (request.title.isPresent && request.title.get() != null) {
+      val code = request.title.get()!!
+      referenceCodeService.getReferenceDataByGroupAndCode("TITLE", code)
+        ?: throw ValidationException("Reference code with groupCode TITLE and code '$code' not found.")
     }
   }
 }

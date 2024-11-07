@@ -2,11 +2,15 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.Size
 import org.openapitools.jackson.nullable.JsonNullable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 
-@Schema(description = "Request to patch a new contact ")
+@Schema(
+  description = "Request to patch a new contact. " +
+    "firstName and lastName are not updatable so are intentionally missing from this request.",
+)
 data class PatchContactRequest(
 
   @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false, type = "boolean", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -28,6 +32,14 @@ data class PatchContactRequest(
 
   @Schema(description = "If the date of birth is not known, this indicates whether they are believed to be over 18 or not", type = "string", example = "YES", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   var estimatedIsOverEighteen: JsonNullable<EstimatedIsOverEighteen?> = JsonNullable.undefined(),
+
+  @Schema(description = "The title of the contact, if any", type = "string", example = "MR", nullable = true, maxLength = 12, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @field:Size(max = 12, message = "title must be <= 12 characters")
+  var title: JsonNullable<String> = JsonNullable.undefined(),
+
+  @Schema(description = "The middle names of the contact, if any", type = "string", example = "William", nullable = true, maxLength = 35, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @field:Size(max = 35, message = "middleNames must be <= 35 characters")
+  var middleNames: JsonNullable<String> = JsonNullable.undefined(),
 
   @Schema(description = "The id of the user who updated the contact", example = "JD000001", nullable = false, requiredMode = Schema.RequiredMode.REQUIRED)
   val updatedBy: String,

@@ -7,22 +7,18 @@ import org.junit.jupiter.api.Test
 import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import org.springframework.test.context.TestPropertySource
 import org.springframework.web.util.UriComponentsBuilder
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import java.time.LocalDate
 
-@TestPropertySource(
-  properties = [
-    "feature.event.contacts-api.prisoner-contact.amended=true",
-    "feature.events.sns.enabled=false",
-  ],
-)
 class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
   private val contactId = 21L
@@ -111,6 +107,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.languageCode).isEqualTo("ENG")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     @Test
@@ -125,6 +122,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.languageCode).isEqualTo(null)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     @Test
@@ -139,6 +137,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.languageCode).isEqualTo("FRE-FRA")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     private fun resetLanguageCode() {
@@ -151,6 +150,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.languageCode).isEqualTo("ENG")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.reset()
     }
   }
 
@@ -170,6 +170,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.interpreterRequired).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     @Test
@@ -183,6 +184,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.interpreterRequired).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     @Test
@@ -200,6 +202,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
 
       assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported interpreter required type null.")
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     private fun resetInterpreterRequired(resetValue: Boolean) {
@@ -212,6 +215,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.interpreterRequired).isEqualTo(resetValue)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.reset()
     }
   }
 
@@ -229,6 +233,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.domesticStatus).isEqualTo("P")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     @Test
@@ -243,6 +248,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.domesticStatus).isEqualTo(null)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     @Test
@@ -257,6 +263,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.domesticStatus).isEqualTo("M")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     private fun resetDomesticStatus() {
@@ -269,6 +276,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.domesticStatus).isEqualTo("P")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.reset()
     }
   }
 
@@ -287,6 +295,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.isStaff).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     @Test
@@ -300,6 +309,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.isStaff).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     @Test
@@ -317,6 +327,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
 
       assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported staff flag value null.")
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
     }
 
     private fun resetStaffFlag(resetValue: Boolean) {
@@ -329,6 +340,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.isStaff).isEqualTo(resetValue)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.reset()
     }
   }
 
@@ -357,6 +369,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(1982, 6, 15))
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasDOB))
     }
 
     @Test
@@ -369,6 +382,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.dateOfBirth).isNull()
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasDOB))
     }
 
     @Test
@@ -381,6 +395,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(2000, 12, 25))
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasDOB))
     }
   }
 
@@ -410,6 +425,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasEstimatedDOB))
     }
 
     @Test
@@ -422,6 +438,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(null)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasEstimatedDOB))
     }
 
     @Test
@@ -434,6 +451,131 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasEstimatedDOB))
+    }
+  }
+
+  @Nested
+  inner class PatchNames {
+    private var contactThatHasAllNameFields = 0L
+
+    @BeforeEach
+    fun createContactWithDob() {
+      contactThatHasAllNameFields = testAPIClient.createAContact(
+        CreateContactRequest(
+          lastName = "Last",
+          firstName = "First",
+          middleNames = "Middle Names",
+          title = "MR",
+          createdBy = "created",
+        ),
+      ).id
+    }
+
+    @Test
+    fun `should not patch names when not provided`() {
+      val req = PatchContactRequest(
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields")
+
+      assertThat(res.firstName).isEqualTo("First")
+      assertThat(res.lastName).isEqualTo("Last")
+      assertThat(res.middleNames).isEqualTo("Middle Names")
+      assertThat(res.title).isEqualTo("MR")
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+    }
+
+    @Test
+    fun `should not patch first or last names`() {
+      val res = webTestClient.patch()
+        .uri("/contact/$contactThatHasAllNameFields")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .bodyValue(
+          """
+          { "firstName": "update first", "lastName": "update last", "middleNames": "update middle", "title": "MRS", "updatedBy": "$updatedByUser" }
+          """.trimIndent(),
+        )
+        .exchange()
+        .expectStatus()
+        .isOk
+        .expectHeader().contentType(MediaType.APPLICATION_JSON)
+        .expectBody(PatchContactResponse::class.java)
+        .returnResult().responseBody!!
+
+      assertThat(res.firstName).isEqualTo("First")
+      assertThat(res.lastName).isEqualTo("Last")
+      assertThat(res.middleNames).isEqualTo("update middle")
+      assertThat(res.title).isEqualTo("MRS")
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+    }
+
+    @Test
+    fun `should successfully patch middle name and title with null values`() {
+      val req = PatchContactRequest(
+        title = JsonNullable.of(null),
+        middleNames = JsonNullable.of(null),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields")
+
+      assertThat(res.firstName).isEqualTo("First")
+      assertThat(res.lastName).isEqualTo("Last")
+      assertThat(res.middleNames).isNull()
+      assertThat(res.title).isNull()
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+    }
+
+    @Test
+    fun `should successfully patch middle name and title with a value`() {
+      val req = PatchContactRequest(
+        title = JsonNullable.of("MRS"),
+        middleNames = JsonNullable.of("Updated Middle"),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields")
+
+      assertThat(res.firstName).isEqualTo("First")
+      assertThat(res.lastName).isEqualTo("Last")
+      assertThat(res.middleNames).isEqualTo("Updated Middle")
+      assertThat(res.title).isEqualTo("MRS")
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+    }
+
+    @Test
+    fun `should not be able to patch to an invalid title value`() {
+      val req = PatchContactRequest(
+        title = JsonNullable.of("FOO"),
+        updatedBy = updatedByUser,
+      )
+
+      val uri = UriComponentsBuilder.fromPath("/contact/$contactThatHasAllNameFields")
+        .build()
+        .toUri()
+      val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
+      assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode TITLE and code 'FOO' not found.")
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+    }
+
+    @Test
+    fun `should not be able to patch middle name when it's too long`() {
+      val req = PatchContactRequest(
+        middleNames = JsonNullable.of("".padEnd(36, 'X')),
+        updatedBy = updatedByUser,
+      )
+
+      val uri = UriComponentsBuilder.fromPath("/contact/$contactThatHasAllNameFields")
+        .build()
+        .toUri()
+      val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
+      assertThat(errors.userMessage).isEqualTo("Validation failure(s): middleNames must be <= 35 characters")
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
     }
   }
 }

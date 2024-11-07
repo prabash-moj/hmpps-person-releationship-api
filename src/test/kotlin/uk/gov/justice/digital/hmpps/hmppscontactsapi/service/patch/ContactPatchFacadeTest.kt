@@ -31,6 +31,6 @@ class ContactPatchFacadeTest {
 
     assertThat(response).isEqualTo(result)
     verify(contactService).patch(contactId, request)
-    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_AMENDED, contactId)
+    verify(outboundEventsService).send(OutboundEvent.CONTACT_AMENDED, contactId)
   }
 }

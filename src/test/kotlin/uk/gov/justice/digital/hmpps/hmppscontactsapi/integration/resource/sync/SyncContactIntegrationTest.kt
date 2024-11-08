@@ -121,7 +121,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isEqualTo("2024-01-26")
         assertThat(coronerNumber).isNull()
-        assertThat(gender).isEqualTo("Female")
+        assertThat(gender).isEqualTo("F")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("ENG")
         assertThat(nationalityCode).isNull()
@@ -164,8 +164,8 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
         assertThat(coronerNumber).isNull()
-        assertThat(gender).isEqualTo("Male")
-        assertThat(domesticStatus).isEqualTo("Single")
+        assertThat(gender).isEqualTo("M")
+        assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isFalse
@@ -230,8 +230,8 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
         assertThat(coronerNumber).isNull()
-        assertThat(gender).isEqualTo("Male")
-        assertThat(domesticStatus).isEqualTo("Single")
+        assertThat(gender).isEqualTo("M")
+        assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isTrue()
@@ -287,8 +287,8 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         deceasedFlag = false,
         deceasedDate = null,
         coronerNumber = null,
-        gender = "Male",
-        domesticStatus = "Single",
+        gender = "M",
+        domesticStatus = "S",
         languageCode = "EN",
         nationalityCode = "GB",
         interpreterRequired = true,
@@ -312,8 +312,8 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         deceasedFlag = false,
         deceasedDate = null,
         coronerNumber = null,
-        gender = "Male",
-        domesticStatus = "Single",
+        gender = "M",
+        domesticStatus = "S",
         languageCode = "EN",
         nationalityCode = "GB",
         interpreterRequired = false,

@@ -13,7 +13,7 @@ data class UpdatePrisonerContactRequest(
   @Schema(description = "The prisoner number", example = "A1234BC")
   val prisonerNumber: String,
 
-  @Schema(description = "The type of the contact", example = "SOCIAL or OFFICIAL")
+  @Schema(description = "The type of contact (S) social or (O) official", allowableValues = ["S", "O"], example = "S")
   val contactType: String,
 
   @Schema(description = "The type of relationship", example = "Friend")

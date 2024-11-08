@@ -108,7 +108,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
       with(prisonerContact) {
         assertThat(contactId).isEqualTo(15L)
         assertThat(prisonerNumber).isEqualTo("G4793VF")
-        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(contactType).isEqualTo("S")
         assertThat(relationshipType).isEqualTo("UN")
         assertThat(nextOfKin).isFalse
         assertThat(emergencyContact).isFalse
@@ -147,7 +147,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(id).isGreaterThan(29L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(contactType).isEqualTo("S")
         assertThat(relationshipType).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
@@ -185,7 +185,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(id).isGreaterThan(29L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(contactType).isEqualTo("S")
         assertThat(relationshipType).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
@@ -221,7 +221,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(id).isGreaterThan(29L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("OFFICIAL")
+        assertThat(contactType).isEqualTo("O")
         assertThat(relationshipType).isEqualTo("LAW")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
@@ -274,7 +274,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
       UpdatePrisonerContactRequest(
         contactId = 1L,
         prisonerNumber = "A1234BC",
-        contactType = "OFFICIAL",
+        contactType = "O",
         relationshipType = "LAW",
         nextOfKin = true,
         emergencyContact = false,
@@ -294,7 +294,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
       CreatePrisonerContactRequest(
         contactId = 1L,
         prisonerNumber = "A1234BC",
-        contactType = "SOCIAL",
+        contactType = "S",
         relationshipType = "FRI",
         nextOfKin = true,
         emergencyContact = false,

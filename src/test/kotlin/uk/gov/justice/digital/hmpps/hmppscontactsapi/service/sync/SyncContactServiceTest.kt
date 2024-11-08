@@ -37,8 +37,8 @@ class SyncContactServiceTest {
         assertThat(lastName).isEqualTo("Smith")
         assertThat(createdBy).isEqualTo("TEST")
         assertThat(placeOfBirth).isEqualTo("London")
-        assertThat(gender).isEqualTo("Male")
-        assertThat(domesticStatus).isEqualTo("Single")
+        assertThat(gender).isEqualTo("M")
+        assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(nationalityCode).isEqualTo("GB")
         assertThat(dateOfBirth).isNull()
@@ -165,8 +165,8 @@ class SyncContactServiceTest {
       deceasedFlag = false,
       deceasedDate = null,
       coronerNumber = null,
-      gender = "Male",
-      domesticStatus = "Single",
+      gender = "M",
+      domesticStatus = "S",
       languageCode = "EN",
       nationalityCode = "GB",
       interpreterRequired = false,
@@ -191,8 +191,8 @@ class SyncContactServiceTest {
       deceasedFlag = false,
       deceasedDate = null,
       coronerNumber = null,
-      gender = "Male",
-      domesticStatus = "Single",
+      gender = "M",
+      domesticStatus = "S",
       languageCode = "EN",
       nationalityCode = "GB",
       interpreterRequired = false,
@@ -216,8 +216,8 @@ class SyncContactServiceTest {
       suspended = false,
       staffFlag = false,
       coronerNumber = null,
-      gender = "Male",
-      domesticStatus = "Single",
+      gender = "M",
+      domesticStatus = "S",
       languageCode = "EN",
       nationalityCode = "GB",
       interpreterRequired = false,

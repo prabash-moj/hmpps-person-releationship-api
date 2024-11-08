@@ -50,7 +50,7 @@ data class PatchContactResponse(
   @Schema(description = "The coroner's number, if applicable", example = "CRN12345", nullable = true)
   var coronerNumber: String? = null,
 
-  @Schema(description = "The gender of the contact", example = "Male", nullable = true)
+  @Schema(description = "The gender of the contact", allowableValues = ["M", "F", "NK", "NS"], example = "M", nullable = true)
   var gender: String? = null,
 
   @Schema(description = "The domestic status code of the contact", example = "S", nullable = true)

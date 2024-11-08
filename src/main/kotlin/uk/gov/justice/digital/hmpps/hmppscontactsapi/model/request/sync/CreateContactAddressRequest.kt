@@ -9,7 +9,7 @@ data class CreateContactAddressRequest(
   @Schema(description = "The id of the contact this address is linked with", example = "123456")
   val contactId: Long,
 
-  @Schema(description = "The type of address", examples = ["HOME", "WORK", "NONE", "UNKNOWN"])
+  @Schema(description = "The type of address", allowableValues = ["HOME", "WORK", "BUS"], example = "HOME")
   val addressType: String,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")
@@ -27,7 +27,7 @@ data class CreateContactAddressRequest(
   @Schema(description = "Area", example = "Morton Heights", nullable = true)
   val area: String? = null,
 
-  @Schema(description = "City code - from NOMIS", example = "BIRM", nullable = true)
+  @Schema(description = "City code - from NOMIS", example = "13232", nullable = true)
   val cityCode: String? = null,
 
   @Schema(description = "County code - from NOMIS", example = "WMIDS", nullable = true)

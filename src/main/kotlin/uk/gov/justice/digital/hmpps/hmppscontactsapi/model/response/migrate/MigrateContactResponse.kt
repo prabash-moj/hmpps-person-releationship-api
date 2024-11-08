@@ -44,10 +44,10 @@ data class IdPair(
   val elementType: ElementType,
 
   @Schema(description = "The unique ID for this piece of data provided in the request", example = "123435")
-  val nomisId: Long = 0,
+  val nomisId: Long,
 
   @Schema(description = "The unique ID created in the DPS contacts service", example = "1234")
-  val dpsId: Long = 0,
+  val dpsId: Long,
 )
 
 /**

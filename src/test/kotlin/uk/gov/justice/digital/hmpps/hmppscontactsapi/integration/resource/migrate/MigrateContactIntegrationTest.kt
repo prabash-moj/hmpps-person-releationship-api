@@ -183,7 +183,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
     lastName = lastName,
     firstName = firstName,
     dateOfBirth = dateOfBirth,
-    gender = CodedValue("Male", "Male"),
+    gender = CodedValue("M", "Male"),
   ).also {
     it.createUsername = aUsername
     it.createDateTime = aDateTime

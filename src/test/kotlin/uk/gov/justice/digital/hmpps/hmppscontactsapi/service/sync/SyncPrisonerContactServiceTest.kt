@@ -75,7 +75,7 @@ class SyncPrisonerContactServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(contactType).isEqualTo("S")
         assertThat(relationshipType).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
@@ -97,7 +97,7 @@ class SyncPrisonerContactServiceTest {
       with(contact) {
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("SOCIAL")
+        assertThat(contactType).isEqualTo("S")
         assertThat(relationshipType).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
@@ -150,7 +150,7 @@ class SyncPrisonerContactServiceTest {
         assertThat(prisonerContactId).isEqualTo(prisonerContactID)
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("OFFICIAL")
+        assertThat(contactType).isEqualTo("O")
         assertThat(relationshipType).isEqualTo("LAW")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
@@ -172,7 +172,7 @@ class SyncPrisonerContactServiceTest {
       with(updated) {
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("OFFICIAL")
+        assertThat(contactType).isEqualTo("O")
         assertThat(relationshipType).isEqualTo("LAW")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
@@ -206,7 +206,7 @@ class SyncPrisonerContactServiceTest {
     UpdatePrisonerContactRequest(
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      contactType = "OFFICIAL",
+      contactType = "O",
       relationshipType = "LAW",
       nextOfKin = true,
       emergencyContact = false,
@@ -226,7 +226,7 @@ class SyncPrisonerContactServiceTest {
     CreatePrisonerContactRequest(
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      contactType = "SOCIAL",
+      contactType = "S",
       relationshipType = "FRI",
       nextOfKin = true,
       emergencyContact = false,
@@ -247,7 +247,7 @@ class SyncPrisonerContactServiceTest {
       prisonerContactId = 1L,
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      contactType = "SOCIAL",
+      contactType = "S",
       relationshipType = "Family",
       nextOfKin = true,
       emergencyContact = false,
@@ -274,7 +274,7 @@ class SyncPrisonerContactServiceTest {
       prisonerContactId = 1L,
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      contactType = "OFFICIAL",
+      contactType = "O",
       relationshipType = "LAW",
       nextOfKin = true,
       emergencyContact = false,

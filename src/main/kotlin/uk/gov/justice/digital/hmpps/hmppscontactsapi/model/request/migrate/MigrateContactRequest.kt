@@ -241,7 +241,7 @@ data class MigrateRelationship(
   @Schema(description = "The ID in NOMIS", example = "123")
   val id: Long,
 
-  @Schema(description = "Coded value indicating either a social or official contact")
+  @Schema(description = "Coded value indicating either a social or official contact", allowableValues = ["S", "O"], example = "S")
   val contactType: CodedValue,
 
   @Schema(description = "Coded value indicating the type of relationship - from reference data")

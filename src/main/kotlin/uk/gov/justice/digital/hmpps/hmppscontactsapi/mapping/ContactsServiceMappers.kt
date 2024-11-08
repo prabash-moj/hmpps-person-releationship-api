@@ -46,7 +46,7 @@ fun ContactRelationship.toEntity(
 ) = newPrisonerContact(
   contactId,
   this.prisonerNumber,
-  "SOCIAL",
+  "S",
   this.relationshipCode,
   this.isNextOfKin,
   this.isEmergencyContact,

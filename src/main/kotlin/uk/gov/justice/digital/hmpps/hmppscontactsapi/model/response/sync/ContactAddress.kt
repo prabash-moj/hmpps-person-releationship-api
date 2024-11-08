@@ -13,7 +13,7 @@ data class ContactAddress(
   @Schema(description = "The id of the contact", example = "123456")
   val contactId: Long,
 
-  @Schema(description = "The type of address", example = "HOME")
+  @Schema(description = "The type of address", allowableValues = ["HOME", "WORK", "BUS"], example = "HOME")
   val addressType: String? = null,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")

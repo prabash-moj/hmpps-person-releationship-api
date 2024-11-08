@@ -4,8 +4,7 @@
 
 ---------------------------------------------------------------------------------------
 -- This is the core table for contacts - and holds the details of people who may
--- visit, or are related to, people in prison. Contacts can be either SOCIAL
--- (family, friends) or OFFICIAL (parole officer, social worker)
+-- visit, or are related to, people in prison.
 ----------------------------------------------------------------------------------------
 
 CREATE TABLE contact
@@ -25,7 +24,7 @@ CREATE TABLE contact
     deceased_flag boolean NOT NULL DEFAULT false,
     deceased_date date,
     coroner_number varchar(32),
-    gender varchar(20),
+    gender varchar(12),
     domestic_status varchar(12), -- Reference codes - DOMESTIC_STS - nullable
     language_code varchar(12), -- Reference codes - LANGUAGE - nullable
     nationality_code varchar(12), -- Reference data - NATIONALITY - nullable
@@ -201,7 +200,7 @@ CREATE TABLE prisoner_contact
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
     prisoner_number varchar(7) NOT NULL, -- The prison number (NOMS id) e.g. A1234AA
     active boolean NOT NULL DEFAULT true,
-    contact_type varchar(10), -- Reference codes - CONTACT_TYPE (SOCIAL or OFFICIAL)
+    contact_type varchar(12), -- Reference codes - CONTACT_TYPE (S) social or (O) official
     relationship_type varchar(12) NOT NULL, -- Reference codes - RELATIONSHIP
     current_term boolean NOT NULL DEFAULT true, -- True if it applies to latest booking sequence 1
     approved_visitor boolean NOT NULL DEFAULT false,

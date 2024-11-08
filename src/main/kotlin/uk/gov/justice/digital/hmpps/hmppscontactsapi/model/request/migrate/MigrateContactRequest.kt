@@ -176,7 +176,7 @@ data class MigrateEmailAddress(
   @Schema(description = "Unique email ID in NOMIS", example = "123")
   val emailAddressId: Long,
 
-  @Schema(description = "Email address", example = "sender@a.com")
+  @Schema(description = "Email address", example = "test@example.com")
   val email: String,
 
 ) : AbstractAuditable()

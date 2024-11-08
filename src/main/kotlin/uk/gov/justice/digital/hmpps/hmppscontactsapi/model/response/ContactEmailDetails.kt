@@ -11,17 +11,8 @@ data class ContactEmailDetails(
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of email", example = "WORK")
-  val emailType: String,
-
-  @Schema(description = "Type of email", example = "Work email")
-  val emailTypeDescription: String,
-
-  @Schema(description = "Email address", example = "work@example.com")
+  @Schema(description = "Email address", example = "test@example.com")
   val emailAddress: String,
-
-  @Schema(description = "Indicates if this is the primary Email address", example = "true")
-  val primaryEmail: Boolean,
 
   @Schema(description = "User who created the entry", example = "admin")
   val createdBy: String,

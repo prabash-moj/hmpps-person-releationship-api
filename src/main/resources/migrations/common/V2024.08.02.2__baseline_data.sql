@@ -73,11 +73,11 @@ values (1, 1, 'MOB', '07878 111111', null, 'TIM', '2024-10-01 12:00:00'),
 insert into contact_address_phone(contact_address_phone_id, contact_id, contact_address_id, contact_phone_id, created_by)
 values (1, 1, 1, 2, 'JAMES');
 
-insert into contact_email(contact_email_id, contact_id, email_type, email_address, primary_email, created_by)
-values (1, 1, 'PERSONAL', 'mr.last@example.com', true, 'TIM'),
-       (2, 2, 'PERSONAL', 'miss.last@example.com', true,  'TIM'),
-       (3, 3, 'PERSONAL', 'mrs.last@example.com', false, 'TIM'),
-       (4, 3, 'WORK', 'work@example.com', true, 'JAMES');
+insert into contact_email(contact_email_id, contact_id, email_address, created_by)
+values (1, 1, 'mr.last@example.com', 'TIM'),
+       (2, 2, 'miss.last@example.com',  'TIM'),
+       (3, 3, 'mrs.last@example.com', 'TIM'),
+       (4, 3, 'work@example.com', 'JAMES');
 
 insert into reference_codes(group_code, code, description, display_order, is_active, created_by)
 values ('CONTACT_TYPE', 'SOCIAL', 'Social contact', 0, true, 'TIM'),
@@ -125,8 +125,6 @@ values ('CONTACT_TYPE', 'SOCIAL', 'Social contact', 0, true, 'TIM'),
        ('ADDRESS_TYPE', 'TEMP', 'Temporary address', 0, true, 'TIM'),
        ('ADDRESS_TYPE', 'NONE', 'No fixed address', 0, true, 'TIM'),
        ('ADDRESS_TYPE', 'UNKNOWN', 'Unknown', 0, true, 'TIM'),
-       ('EMAIL_TYPE', 'WORK', 'Work email', 0, true, 'TIM'),
-       ('EMAIL_TYPE', 'PERSONAL', 'Personal email', 0, true, 'TIM'),
        ('PHONE_TYPE', 'HOME','Home', 1, true, 'JAMES'),
        ('PHONE_TYPE', 'BUS','Business', 2, true, 'JAMES'),
        ('PHONE_TYPE', 'FAX','Fax', 3, true, 'JAMES'),

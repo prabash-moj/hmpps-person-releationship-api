@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetailsEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
@@ -181,24 +181,18 @@ fun createContactAddressDetails(
   amendedTime,
 )
 
-fun createContactEmailDetailsEntity(
+fun createContactEmailEntity(
   id: Long = 1,
   contactId: Long = 1,
-  emailType: String = "WORK",
-  emailTypeDescription: String = "Work email",
   emailAddress: String = "test@example.com",
-  primaryEmail: Boolean = false,
   createdBy: String = "USER",
   createdTime: LocalDateTime = LocalDateTime.now(),
   amendedBy: String? = "AMEND_USER",
   amendedTime: LocalDateTime? = LocalDateTime.now(),
-) = ContactEmailDetailsEntity(
+) = ContactEmailEntity(
   id,
   contactId,
-  emailType,
-  emailTypeDescription,
   emailAddress,
-  primaryEmail,
   createdBy,
   createdTime,
   amendedBy,
@@ -208,10 +202,7 @@ fun createContactEmailDetailsEntity(
 fun createContactEmailDetails(
   id: Long = 1,
   contactId: Long = 1,
-  emailType: String = "WORK",
-  emailTypeDescription: String = "Work email",
   emailAddress: String = "test@example.com",
-  primaryEmail: Boolean = false,
   createdBy: String = "USER",
   createdTime: LocalDateTime = LocalDateTime.now(),
   amendedBy: String? = "AMEND_USER",
@@ -219,10 +210,7 @@ fun createContactEmailDetails(
 ) = ContactEmailDetails(
   id,
   contactId,
-  emailType,
-  emailTypeDescription,
   emailAddress,
-  primaryEmail,
   createdBy,
   createdTime,
   amendedBy,

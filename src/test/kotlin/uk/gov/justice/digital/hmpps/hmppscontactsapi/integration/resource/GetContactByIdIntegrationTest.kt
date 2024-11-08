@@ -167,19 +167,13 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
       with(contact.emailAddresses[0]) {
         assertThat(contactEmailId).isEqualTo(3)
         assertThat(contactId).isEqualTo(3)
-        assertThat(emailType).isEqualTo("PERSONAL")
-        assertThat(emailTypeDescription).isEqualTo("Personal email")
         assertThat(emailAddress).isEqualTo("mrs.last@example.com")
-        assertThat(primaryEmail).isFalse()
         assertThat(createdBy).isEqualTo("TIM")
       }
       with(contact.emailAddresses[1]) {
         assertThat(contactEmailId).isEqualTo(4)
         assertThat(contactId).isEqualTo(3)
-        assertThat(emailType).isEqualTo("WORK")
-        assertThat(emailTypeDescription).isEqualTo("Work email")
         assertThat(emailAddress).isEqualTo("work@example.com")
-        assertThat(primaryEmail).isTrue()
         assertThat(createdBy).isEqualTo("JAMES")
       }
     }

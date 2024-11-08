@@ -67,10 +67,6 @@ data class PrisonerContactSummaryEntity(
 
   val contactEmailId: Long?,
 
-  val emailType: String?,
-
-  val emailTypeDescription: String?,
-
   val emailAddress: String?,
 
   val prisonerNumber: String,

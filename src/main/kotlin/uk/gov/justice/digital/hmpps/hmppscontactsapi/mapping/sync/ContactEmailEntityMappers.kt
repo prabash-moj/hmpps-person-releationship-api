@@ -1,16 +1,14 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactEmail
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
 
-fun ContactEmailEntity.toModel(): ContactEmail {
-  return ContactEmail(
+fun ContactEmailEntity.toModel(): SyncContactEmail {
+  return SyncContactEmail(
     contactEmailId = this.contactEmailId,
-    contactId = this.contactId!!,
-    emailType = this.emailType,
-    emailAddress = this.emailAddress!!,
-    primaryEmail = this.primaryEmail,
+    contactId = this.contactId,
+    emailAddress = this.emailAddress,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     amendedBy = this.amendedBy,
@@ -20,12 +18,10 @@ fun ContactEmailEntity.toModel(): ContactEmail {
 
 fun List<ContactEmailEntity>.toModel() = map { it.toModel() }
 
-fun CreateContactEmailRequest.toEntity() = ContactEmailEntity(
+fun SyncCreateContactEmailRequest.toEntity() = ContactEmailEntity(
   contactEmailId = 0L,
   contactId = contactId,
-  emailType = emailType,
   emailAddress = emailAddress,
-  primaryEmail = primaryEmail,
   createdBy = createdBy,
   createdTime = createdTime,
 )

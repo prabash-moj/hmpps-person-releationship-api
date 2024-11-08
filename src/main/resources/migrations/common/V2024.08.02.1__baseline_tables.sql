@@ -111,9 +111,7 @@ CREATE TABLE contact_email
 (
     contact_email_id bigserial NOT NULL CONSTRAINT contact_email_id_pk PRIMARY KEY,
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
-    email_type varchar(12) NOT NULL, -- Reference codes EMAIL_TYPE - e.g. WORK or PERSONAL
     email_address varchar(240) NOT NULL,
-    primary_email boolean NOT NULL DEFAULT false,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
     amended_by varchar(100),

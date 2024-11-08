@@ -109,8 +109,6 @@ class PrisonerContactServiceTest {
       phoneNumber = "07123456789",
       extNumber = "0123",
       contactEmailId = 5L,
-      emailType = "Personal",
-      emailTypeDescription = "Personal Email",
       emailAddress = "john.doe@example.com",
       prisonerNumber = "A1234BC",
       relationshipType = "FRIEND",

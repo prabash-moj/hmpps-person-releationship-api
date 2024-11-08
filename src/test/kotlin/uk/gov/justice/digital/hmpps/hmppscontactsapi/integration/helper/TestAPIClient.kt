@@ -6,12 +6,15 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
@@ -220,6 +223,50 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectBody(ContactIdentityDetails::class.java)
       .returnResult().responseBody!!
   }
+
+  fun createAContactEmail(contactId: Long, request: CreateEmailRequest): ContactEmailDetails {
+    return webTestClient.post()
+      .uri("/contact/$contactId/email")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactEmailDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun updateAContactEmail(contactId: Long, contactEmailId: Long, request: UpdateEmailRequest): ContactEmailDetails {
+    return webTestClient.put()
+      .uri("/contact/$contactId/email/$contactEmailId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactEmailDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun getContactEmail(contactId: Long, contactEmailId: Long): ContactEmailDetails {
+    return webTestClient.get()
+      .uri("/contact/$contactId/email/$contactEmailId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactEmailDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
   fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(),

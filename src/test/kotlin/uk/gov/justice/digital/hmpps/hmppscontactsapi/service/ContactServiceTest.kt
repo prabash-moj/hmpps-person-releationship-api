@@ -24,7 +24,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressDetailsEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
@@ -38,7 +38,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailDetailsRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -57,7 +57,7 @@ class ContactServiceTest {
   private val contactAddressDetailsRepository: ContactAddressDetailsRepository = mock()
   private val contactPhoneDetailsRepository: ContactPhoneDetailsRepository = mock()
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
-  private val contactEmailDetailsRepository: ContactEmailDetailsRepository = mock()
+  private val contactEmailRepository: ContactEmailRepository = mock()
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository = mock()
   private val languageService: LanguageService = mock()
   private val referenceCodeService: ReferenceCodeService = mock()
@@ -69,7 +69,7 @@ class ContactServiceTest {
     contactAddressDetailsRepository,
     contactPhoneDetailsRepository,
     contactAddressPhoneRepository,
-    contactEmailDetailsRepository,
+    contactEmailRepository,
     contactIdentityDetailsRepository,
     languageService,
     referenceCodeService,
@@ -370,10 +370,10 @@ class ContactServiceTest {
 
     @Test
     fun `should get a contact with email addresses`() {
-      val emailAddressEntity1 = createContactEmailDetailsEntity(id = 1)
-      val emailAddressEntity2 = createContactEmailDetailsEntity(id = 2)
+      val emailAddressEntity1 = createContactEmailEntity(id = 1)
+      val emailAddressEntity2 = createContactEmailEntity(id = 2)
 
-      whenever(contactEmailDetailsRepository.findByContactId(contactId)).thenReturn(listOf(emailAddressEntity1, emailAddressEntity2))
+      whenever(contactEmailRepository.findByContactId(contactId)).thenReturn(listOf(emailAddressEntity1, emailAddressEntity2))
 
       val entity = createContactEntity()
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))

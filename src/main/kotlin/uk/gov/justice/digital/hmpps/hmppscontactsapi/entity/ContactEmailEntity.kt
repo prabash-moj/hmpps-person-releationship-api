@@ -16,19 +16,16 @@ data class ContactEmailEntity(
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val contactEmailId: Long,
 
-  val contactId: Long? = null,
+  val contactId: Long,
 
-  val emailType: String,
-
-  val emailAddress: String? = null,
-
-  val primaryEmail: Boolean = false,
+  val emailAddress: String,
 
   val createdBy: String,
 
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
-) {
-  var amendedBy: String? = null
-  var amendedTime: LocalDateTime? = null
-}
+
+  val amendedBy: String? = null,
+
+  val amendedTime: LocalDateTime? = null,
+)

@@ -15,8 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
@@ -28,17 +28,12 @@ class SyncContactEmailServiceTest {
   private val syncService = SyncContactEmailService(contactRepository, contactEmailRepository)
 
   @Nested
-  inner class ContactEmailTests {
+  inner class SyncContactEmailTests {
     @Test
     fun `should get a contact email by ID`() {
       whenever(contactEmailRepository.findById(1L)).thenReturn(Optional.of(contactEmailEntity()))
       val contactEmail = syncService.getContactEmailById(1L)
-      with(contactEmail) {
-        assertThat(emailType).isEqualTo("Personal")
-        assertThat(emailAddress).isEqualTo("test@test.com")
-        assertThat(emailAddress).isEqualTo("test@test.com")
-        assertThat(primaryEmail).isTrue()
-      }
+      assertThat(contactEmail.emailAddress).isEqualTo("test@test.com")
       verify(contactEmailRepository).findById(1L)
     }
 
@@ -64,18 +59,14 @@ class SyncContactEmailServiceTest {
 
       // Checks the entity saved
       with(emailCaptor.firstValue) {
-        assertThat(emailType).isEqualTo(request.emailType)
         assertThat(emailAddress).isEqualTo(request.emailAddress)
-        assertThat(primaryEmail).isEqualTo(request.primaryEmail)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
 
       // Checks the model response
       with(contactEmail) {
         assertThat(contactEmailId).isEqualTo(0L)
-        assertThat(emailType).isEqualTo(request.emailType)
         assertThat(emailAddress).isEqualTo(request.emailAddress)
-        assertThat(primaryEmail).isEqualTo(request.primaryEmail)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
 
@@ -123,18 +114,14 @@ class SyncContactEmailServiceTest {
 
       // Checks the entity saved
       with(emailCaptor.firstValue) {
-        assertThat(emailType).isEqualTo(request.emailType)
         assertThat(emailAddress).isEqualTo(request.emailAddress)
-        assertThat(primaryEmail).isEqualTo(request.primaryEmail)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
 
       // Checks the model returned
       with(updated) {
-        assertThat(emailType).isEqualTo(request.emailType)
         assertThat(emailAddress).isEqualTo(request.emailAddress)
-        assertThat(primaryEmail).isEqualTo(request.primaryEmail)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
@@ -164,21 +151,17 @@ class SyncContactEmailServiceTest {
   }
 
   private fun updateContactEmailRequest(contactId: Long = 1L) =
-    UpdateContactEmailRequest(
+    SyncUpdateContactEmailRequest(
       contactId = contactId,
-      emailType = "Personal",
       emailAddress = "test@test.com",
-      primaryEmail = true,
       updatedBy = "TEST",
       updatedTime = LocalDateTime.now(),
     )
 
   private fun createContactEmailRequest() =
-    CreateContactEmailRequest(
+    SyncCreateContactEmailRequest(
       contactId = 1L,
-      emailType = "Personal",
       emailAddress = "test@test.com",
-      primaryEmail = true,
       createdBy = "TEST",
     )
 
@@ -201,26 +184,21 @@ class SyncContactEmailServiceTest {
     ContactEmailEntity(
       contactEmailId = 1L,
       contactId = 1L,
-      emailType = "Personal",
       emailAddress = "test@test.com",
-      primaryEmail = true,
       createdBy = "TEST",
     )
 
-  private fun UpdateContactEmailRequest.toEntity(contactEmailId: Long = 1L): ContactEmailEntity {
+  private fun SyncUpdateContactEmailRequest.toEntity(contactEmailId: Long = 1L): ContactEmailEntity {
     val updatedBy = this.updatedBy
     val updatedTime = this.updatedTime
 
     return ContactEmailEntity(
       contactEmailId = contactEmailId,
       contactId = this.contactId,
-      emailType = this.emailType,
       emailAddress = this.emailAddress,
-      primaryEmail = this.primaryEmail,
       createdBy = "TEST",
-    ).also {
-      it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
-    }
+      amendedBy = updatedBy,
+      amendedTime = updatedTime,
+    )
   }
 }

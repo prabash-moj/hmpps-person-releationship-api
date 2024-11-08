@@ -27,5 +27,9 @@ feature:
         created: true
         amended: true
         deleted: true
+      contact-email:
+        created: true
+        amended: true
+        deleted: true
       contact:
         amended: true

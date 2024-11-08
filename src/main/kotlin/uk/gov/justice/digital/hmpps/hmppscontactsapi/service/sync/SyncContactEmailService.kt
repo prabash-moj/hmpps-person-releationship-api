@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactEmail
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 
@@ -25,7 +25,7 @@ class SyncContactEmailService(
   }
 
   @Transactional(readOnly = true)
-  fun getContactEmailById(contactEmailId: Long): ContactEmail {
+  fun getContactEmailById(contactEmailId: Long): SyncContactEmail {
     val contactEmailEntity = contactEmailRepository.findById(contactEmailId)
       .orElseThrow { EntityNotFoundException("Contact email with ID $contactEmailId not found") }
     return contactEmailEntity.toModel()
@@ -37,13 +37,13 @@ class SyncContactEmailService(
     contactEmailRepository.deleteById(contactEmailId)
   }
 
-  fun createContactEmail(request: CreateContactEmailRequest): ContactEmail {
+  fun createContactEmail(request: SyncCreateContactEmailRequest): SyncContactEmail {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
     return contactEmailRepository.saveAndFlush(request.toEntity()).toModel()
   }
 
-  fun updateContactEmail(contactEmailId: Long, request: UpdateContactEmailRequest): ContactEmail {
+  fun updateContactEmail(contactEmailId: Long, request: SyncUpdateContactEmailRequest): SyncContactEmail {
     val contact = contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
 
@@ -57,13 +57,10 @@ class SyncContactEmailService(
 
     val changedContactEmail = emailEntity.copy(
       contactId = request.contactId,
-      emailType = request.emailType,
       emailAddress = request.emailAddress,
-      primaryEmail = request.primaryEmail,
-    ).also {
-      it.amendedBy = request.updatedBy
-      it.amendedTime = request.updatedTime
-    }
+      amendedBy = request.updatedBy,
+      amendedTime = request.updatedTime,
+    )
 
     return contactEmailRepository.saveAndFlush(changedContactEmail).toModel()
   }

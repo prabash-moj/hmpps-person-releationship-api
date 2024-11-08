@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactEmail
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
 import java.time.LocalDateTime
 
 class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
 
   @Nested
-  inner class ContactEmailSyncTests {
+  inner class SyncContactEmailSyncTests {
     private var savedContactId = 0L
 
     @BeforeEach
@@ -109,14 +109,10 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactEmail::class.java)
+        .expectBody(SyncContactEmail::class.java)
         .returnResult().responseBody!!
 
-      with(contactEmail) {
-        assertThat(emailType).isEqualTo("PERSONAL")
-        assertThat(emailAddress).isEqualTo("miss.last@example.com")
-        assertThat(primaryEmail).isTrue()
-      }
+      assertThat(contactEmail.emailAddress).isEqualTo("miss.last@example.com")
     }
 
     @Test
@@ -131,16 +127,14 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactEmail::class.java)
+        .expectBody(SyncContactEmail::class.java)
         .returnResult().responseBody!!
 
       // The created email is returned
       with(contactEmail) {
         assertThat(contactEmailId).isGreaterThan(3)
         assertThat(contactId).isEqualTo(savedContactId)
-        assertThat(emailType).isEqualTo("Personal")
         assertThat(emailAddress).isEqualTo("test@test.co.uk")
-        assertThat(primaryEmail).isTrue()
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -158,13 +152,11 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactEmail::class.java)
+        .expectBody(SyncContactEmail::class.java)
         .returnResult().responseBody!!
 
       with(contactEmail) {
-        assertThat(emailType).isEqualTo("Personal")
         assertThat(emailAddress).isEqualTo("test@test.co.uk")
-        assertThat(primaryEmail).isTrue()
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -179,14 +171,13 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactEmail::class.java)
+        .expectBody(SyncContactEmail::class.java)
         .returnResult().responseBody!!
 
       // Check the updated copy
       with(updatedEmail) {
         assertThat(contactEmailId).isGreaterThan(4)
         assertThat(contactId).isEqualTo(savedContactId)
-        assertThat(emailType).isEqualTo("Personal")
         assertThat(emailAddress).isEqualTo("test@test.co.uk")
         assertThat(amendedBy).isEqualTo("UPDATE")
         assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -217,21 +208,17 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun updateContactEmailRequest(contactId: Long) =
-      UpdateContactEmailRequest(
+      SyncUpdateContactEmailRequest(
         contactId = contactId,
-        emailType = "Personal",
         emailAddress = "test@test.co.uk",
-        primaryEmail = true,
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
       )
 
     private fun createContactEmailRequest(contactId: Long) =
-      CreateContactEmailRequest(
+      SyncCreateContactEmailRequest(
         contactId = contactId,
-        emailType = "Personal",
         emailAddress = "test@test.co.uk",
-        primaryEmail = true,
         createdBy = "CREATE",
       )
   }

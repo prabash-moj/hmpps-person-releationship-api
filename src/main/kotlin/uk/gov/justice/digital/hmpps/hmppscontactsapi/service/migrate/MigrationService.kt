@@ -238,14 +238,12 @@ class MigrationService(
           ContactEmailEntity(
             contactEmailId = 0L,
             contactId = contactId,
-            emailType = "PERSONAL",
             emailAddress = requestEmail.email,
             createdBy = requestEmail.createUsername ?: "MIGRATION",
             createdTime = requestEmail.createDateTime ?: LocalDateTime.now(),
-          ).also {
-            it.amendedBy = requestEmail.modifyUsername
-            it.amendedTime = requestEmail.modifyDateTime
-          },
+            amendedBy = requestEmail.modifyUsername,
+            amendedTime = requestEmail.modifyDateTime,
+          ),
         ),
       )
     }

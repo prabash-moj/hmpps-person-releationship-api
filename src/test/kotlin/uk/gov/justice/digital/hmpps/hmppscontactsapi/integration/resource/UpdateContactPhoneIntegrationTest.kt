@@ -281,7 +281,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
           aMinimalRequest().copy(extNumber = "".padStart(8)),
         ),
         Arguments.of(
-          "updatedBy must be <= 100 characters",
+          "amendedBy must be <= 100 characters",
           aMinimalRequest().copy(amendedBy = "".padStart(101)),
         ),
       )

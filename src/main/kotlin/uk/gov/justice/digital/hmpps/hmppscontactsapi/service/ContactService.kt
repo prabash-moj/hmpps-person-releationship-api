@@ -19,7 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearc
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailDetailsRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -36,7 +36,7 @@ class ContactService(
   private val contactAddressDetailsRepository: ContactAddressDetailsRepository,
   private val contactPhoneDetailsRepository: ContactPhoneDetailsRepository,
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository,
-  private val contactEmailDetailsRepository: ContactEmailDetailsRepository,
+  private val contactEmailRepository: ContactEmailRepository,
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository,
   private val languageService: LanguageService,
   private val referenceCodeService: ReferenceCodeService,
@@ -93,7 +93,7 @@ class ContactService(
           ),
         )
       }
-    val emailAddresses = contactEmailDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
+    val emailAddresses = contactEmailRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
     val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
     val languageDescription = contactEntity.languageCode?.let { languageService.getLanguageByNomisCode(it).nomisDescription }
     val domesticStatusDescription = contactEntity.domesticStatus?.let { referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", it)?.description }

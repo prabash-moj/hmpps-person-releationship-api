@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactEmail
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactEmailService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
@@ -47,7 +47,7 @@ class ContactEmailSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactEmail::class),
+            schema = Schema(implementation = SyncContactEmail::class),
           ),
         ],
       ),
@@ -106,7 +106,7 @@ class ContactEmailSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactEmail::class),
+            schema = Schema(implementation = SyncContactEmail::class),
           ),
         ],
       ),
@@ -119,7 +119,7 @@ class ContactEmailSyncController(
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContactEmail(
-    @Valid @RequestBody createContactEmailRequest: CreateContactEmailRequest,
+    @Valid @RequestBody createContactEmailRequest: SyncCreateContactEmailRequest,
   ) = syncService.createContactEmail(createContactEmailRequest)
 
   @PutMapping(path = ["/contact-email/{contactEmailId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -139,7 +139,7 @@ class ContactEmailSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactEmail::class),
+            schema = Schema(implementation = SyncContactEmail::class),
           ),
         ],
       ),
@@ -157,6 +157,6 @@ class ContactEmailSyncController(
   fun updateContactEmail(
     @Parameter(description = "The internal ID for the contact email.", required = true)
     @PathVariable contactEmailId: Long,
-    @Valid @RequestBody updateContactEmailRequest: UpdateContactEmailRequest,
+    @Valid @RequestBody updateContactEmailRequest: SyncUpdateContactEmailRequest,
   ) = syncService.updateContactEmail(contactEmailId, updateContactEmailRequest)
 }

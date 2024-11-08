@@ -294,7 +294,6 @@ class MigrationServiceTest {
         ContactEmailEntity(
           contactEmailId = 1L,
           contactId = 1L,
-          emailType = "Unknown",
           emailAddress = request.emailAddresses[0].email,
           createdBy = aUsername,
           createdTime = aDateTime,
@@ -302,7 +301,6 @@ class MigrationServiceTest {
         ContactEmailEntity(
           contactEmailId = 2L,
           contactId = 1L,
-          emailType = "Unknown",
           emailAddress = request.emailAddresses[1].email,
           createdBy = aUsername,
           createdTime = aDateTime,
@@ -322,11 +320,10 @@ class MigrationServiceTest {
       for (i in 0..1) {
         assertThat(result[i].first).isEqualTo(request.emailAddresses[i].emailAddressId)
         assertThat(result[i].second)
-          .extracting("contactId", "contactEmailId", "emailType", "emailAddress")
+          .extracting("contactId", "contactEmailId", "emailAddress")
           .contains(
             responses[i].contactId,
             responses[i].contactEmailId,
-            responses[i].emailType,
             responses[i].emailAddress,
           )
       }

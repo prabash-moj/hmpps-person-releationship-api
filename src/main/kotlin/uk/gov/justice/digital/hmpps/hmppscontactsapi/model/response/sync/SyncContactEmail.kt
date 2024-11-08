@@ -4,21 +4,15 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 
 @Schema(description = "Email related to a contact")
-data class ContactEmail(
+data class SyncContactEmail(
   @Schema(description = "Unique identifier for the contact email", example = "1")
   val contactEmailId: Long,
 
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of email", example = "WORK")
-  val emailType: String,
-
-  @Schema(description = "Email address", example = "work@example.com")
+  @Schema(description = "Email address", example = "test@example.com")
   val emailAddress: String,
-
-  @Schema(description = "Indicates if this is the primary Email address", example = "true")
-  val primaryEmail: Boolean,
 
   @Schema(description = "User who created the entry", example = "admin")
   val createdBy: String,

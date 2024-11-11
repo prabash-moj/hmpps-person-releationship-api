@@ -32,4 +32,7 @@ feature:
         amended: true
         deleted: true
       contact:
+        created: true
         amended: true
+      prisoner-contact:
+        created: true

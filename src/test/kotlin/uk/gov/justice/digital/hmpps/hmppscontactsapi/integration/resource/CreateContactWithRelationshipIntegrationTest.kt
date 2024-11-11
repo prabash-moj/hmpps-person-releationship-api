@@ -11,6 +11,9 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactInfo
 
 class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
 
@@ -102,6 +105,9 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     val prisonerContact = prisonerContacts[0]
     assertThat(prisonerContact.lastName).isEqualTo(request.lastName)
     asserPrisonerContactEquals(prisonerContact, requestedRelationship)
+
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(prisonerContact.contactId))
+    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(prisonerContact.prisonerContactId))
   }
 
   @Test
@@ -129,6 +135,8 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     val prisonerContact = prisonerContacts[0]
     assertThat(prisonerContact.lastName).isEqualTo(request.lastName)
     asserPrisonerContactEquals(prisonerContact, requestedRelationship)
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(prisonerContact.contactId))
+    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(prisonerContact.prisonerContactId))
   }
 
   private fun asserPrisonerContactEquals(

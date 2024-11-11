@@ -92,7 +92,7 @@ class ContactServiceTest {
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
       whenever(contactAddressDetailsRepository.findByContactId(any())).thenReturn(listOf(aContactAddressDetailsEntity))
 
-      val createdContact = service.createContact(request)
+      val result = service.createContact(request)
 
       val contactCaptor = argumentCaptor<ContactEntity>()
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
@@ -105,15 +105,17 @@ class ContactServiceTest {
         assertThat(createdBy).isEqualTo(request.createdBy)
         assertThat(createdTime).isNotNull()
       }
-      with(createdContact) {
-        assertThat(title).isEqualTo(request.title)
-        assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(firstName).isEqualTo(request.firstName)
-        assertThat(middleNames).isEqualTo(request.middleNames)
-        assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
-        assertThat(createdBy).isEqualTo(request.createdBy)
-        assertThat(createdTime).isNotNull()
-        assertThat(addresses).isEqualTo(listOf(aContactAddressDetailsEntity.toModel(emptyList())))
+      with(result) {
+        with(createdContact) {
+          assertThat(title).isEqualTo(request.title)
+          assertThat(lastName).isEqualTo(request.lastName)
+          assertThat(firstName).isEqualTo(request.firstName)
+          assertThat(middleNames).isEqualTo(request.middleNames)
+          assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
+          assertThat(createdBy).isEqualTo(request.createdBy)
+          assertThat(createdTime).isNotNull()
+          assertThat(addresses).isEqualTo(listOf(aContactAddressDetailsEntity.toModel(emptyList())))
+        }
       }
     }
 
@@ -129,7 +131,7 @@ class ContactServiceTest {
       )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
 
-      val createdContact = service.createContact(request)
+      val result = service.createContact(request)
 
       val contactCaptor = argumentCaptor<ContactEntity>()
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
@@ -143,15 +145,17 @@ class ContactServiceTest {
         assertThat(createdBy).isEqualTo(request.createdBy)
         assertThat(createdTime).isNotNull()
       }
-      with(createdContact) {
-        assertThat(title).isEqualTo(request.title)
-        assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(firstName).isEqualTo(request.firstName)
-        assertThat(middleNames).isEqualTo(request.middleNames)
-        assertNull(dateOfBirth)
-        assertThat(estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
-        assertThat(createdBy).isEqualTo(request.createdBy)
-        assertThat(createdTime).isNotNull()
+      with(result) {
+        with(createdContact) {
+          assertThat(title).isEqualTo(request.title)
+          assertThat(lastName).isEqualTo(request.lastName)
+          assertThat(firstName).isEqualTo(request.firstName)
+          assertThat(middleNames).isEqualTo(request.middleNames)
+          assertNull(dateOfBirth)
+          assertThat(estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
+          assertThat(createdBy).isEqualTo(request.createdBy)
+          assertThat(createdTime).isNotNull()
+        }
       }
     }
 
@@ -167,7 +171,7 @@ class ContactServiceTest {
       )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
 
-      val createdContact = service.createContact(request)
+      val result = service.createContact(request)
 
       val contactCaptor = argumentCaptor<ContactEntity>()
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
@@ -175,10 +179,7 @@ class ContactServiceTest {
         assertThat(staffFlag).isFalse()
         assertThat(createdTime).isNotNull()
       }
-      with(createdContact) {
-        assertThat(title).isEqualTo(request.title)
-        assertThat(isStaff).isFalse()
-      }
+      assertThat(result.createdContact.isStaff).isFalse()
     }
 
     @Test

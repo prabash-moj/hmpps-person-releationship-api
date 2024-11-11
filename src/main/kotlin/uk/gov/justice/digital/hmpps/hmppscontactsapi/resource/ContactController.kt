@@ -33,8 +33,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchCo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchFacade
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
@@ -44,8 +43,7 @@ import java.net.URI
 @RequestMapping(value = ["contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
 class ContactController(
-  val contactService: ContactService,
-  val contactPatchFacade: ContactPatchFacade,
+  val contactFacade: ContactFacade,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -89,7 +87,7 @@ class ContactController(
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
   fun createContact(@Valid @RequestBody createContactRequest: CreateContactRequest): ResponseEntity<Any> {
-    val createdContact = contactService.createContact(createContactRequest)
+    val createdContact = contactFacade.createContact(createContactRequest)
     return ResponseEntity
       .created(URI.create("/contact/${createdContact.id}"))
       .body(createdContact)
@@ -126,7 +124,7 @@ class ContactController(
       example = "123456",
     ) contactId: Long,
   ): ResponseEntity<Any> {
-    val contact = contactService.getContact(contactId)
+    val contact = contactFacade.getContact(contactId)
     return if (contact != null) {
       ResponseEntity.ok(contact)
     } else {
@@ -168,7 +166,7 @@ class ContactController(
     ) contactId: Long,
     @Valid @RequestBody relationshipRequest: AddContactRelationshipRequest,
   ) {
-    contactService.addContactRelationship(contactId, relationshipRequest)
+    contactFacade.addContactRelationship(contactId, relationshipRequest)
   }
 
   @GetMapping("/search")
@@ -201,7 +199,7 @@ class ContactController(
     @PageableDefault(sort = ["lastName", "firstName", "middleNames", "createdTime"], direction = Direction.ASC)
     pageable: Pageable,
     @ModelAttribute @Valid @Parameter(description = "Contact search criteria", required = true) request: ContactSearchRequest,
-  ) = contactService.searchContacts(pageable, request)
+  ) = contactFacade.searchContacts(pageable, request)
 
   @PatchMapping("/{contactId}")
   @Operation(
@@ -242,5 +240,5 @@ class ContactController(
       example = "123456",
     ) contactId: Long,
     @Valid @RequestBody patchContactRequest: PatchContactRequest,
-  ) = contactPatchFacade.patch(contactId, patchContactRequest)
+  ) = contactFacade.patch(contactId, patchContactRequest)
 }

@@ -10,6 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneE
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
@@ -46,7 +47,7 @@ class ContactService(
   }
 
   @Transactional
-  fun createContact(request: CreateContactRequest): ContactDetails {
+  fun createContact(request: CreateContactRequest): ContactCreationResult {
     if (request.relationship != null) {
       validateRelationship(request.relationship)
     }
@@ -57,7 +58,7 @@ class ContactService(
 
     logger.info("Created new contact {}", createdContact)
     newRelationship?.let { logger.info("Created new relationship {}", newRelationship) }
-    return enrichContact(createdContact)
+    return ContactCreationResult(enrichContact(createdContact), newRelationship?.prisonerContactId)
   }
 
   fun getContact(id: Long): ContactDetails? {
@@ -69,10 +70,12 @@ class ContactService(
     contactSearchRepository.searchContacts(request, pageable).toModel()
 
   @Transactional
-  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest) {
+  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest): Long {
     validateRelationship(request.relationship)
     getContact(contactId) ?: throw EntityNotFoundException("Contact ($contactId) could not be found")
-    prisonerContactRepository.saveAndFlush(request.relationship.toEntity(contactId, request.createdBy))
+    val newRelationship = request.relationship.toEntity(contactId, request.createdBy)
+    prisonerContactRepository.saveAndFlush(newRelationship)
+    return newRelationship.prisonerContactId
   }
 
   private fun validateRelationship(relationship: ContactRelationship) {

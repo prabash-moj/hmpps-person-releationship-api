@@ -35,7 +35,7 @@ class ContactPatchService(
     return savedContact.mapToResponse()
   }
 
-  fun ContactEntity.patchRequest(
+  private fun ContactEntity.patchRequest(
     request: PatchContactRequest,
   ): ContactEntity {
     val changedContact = this.copy(

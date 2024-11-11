@@ -217,5 +217,5 @@ data class ContactPhoneInfo(val contactPhoneId: Long) : AdditionalInformation
 data class ContactEmailInfo(val contactEmailId: Long) : AdditionalInformation
 data class ContactIdentityInfo(val contactIdentityId: Long) : AdditionalInformation
 data class ContactRestrictionInfo(val contactRestrictionId: Long) : AdditionalInformation
-data class PrisonerContactInfo(val contactRestrictionId: Long) : AdditionalInformation
+data class PrisonerContactInfo(val prisonerContactId: Long) : AdditionalInformation
 data class PrisonerContactRestrictionInfo(val prisonerContactRestrictionId: Long) : AdditionalInformation

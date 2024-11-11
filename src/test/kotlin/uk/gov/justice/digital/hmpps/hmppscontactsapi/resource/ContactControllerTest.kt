@@ -27,17 +27,15 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchCo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchFacade
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactFacade
 import java.net.URI
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class ContactControllerTest {
 
-  private val contactService: ContactService = mock()
-  private val contactPatchFacade: ContactPatchFacade = mock()
-  private val controller = ContactController(contactService, contactPatchFacade)
+  private val contactFacade: ContactFacade = mock()
+  private val controller = ContactController(contactFacade)
 
   @Nested
   inner class CreateContact {
@@ -69,14 +67,14 @@ class ContactControllerTest {
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
-      whenever(contactService.createContact(request)).thenReturn(expectedContact)
+      whenever(contactFacade.createContact(request)).thenReturn(expectedContact)
 
       val response = controller.createContact(request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
       assertThat(response.body).isEqualTo(expectedContact)
       assertThat(response.headers.location).isEqualTo(URI.create("/contact/99"))
-      verify(contactService).createContact(request)
+      verify(contactFacade).createContact(request)
     }
 
     @Test
@@ -86,7 +84,7 @@ class ContactControllerTest {
         firstName = "first",
         createdBy = "created",
       )
-      whenever(contactService.createContact(request)).thenThrow(RuntimeException("Bang!"))
+      whenever(contactFacade.createContact(request)).thenThrow(RuntimeException("Bang!"))
 
       assertThrows<RuntimeException>("Bang!") {
         controller.createContact(request)
@@ -121,28 +119,28 @@ class ContactControllerTest {
 
     @Test
     fun `should get a contact successfully`() {
-      whenever(contactService.getContact(id)).thenReturn(contact)
+      whenever(contactFacade.getContact(id)).thenReturn(contact)
 
       val response = controller.getContact(id)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(response.body).isEqualTo(contact)
-      verify(contactService).getContact(id)
+      verify(contactFacade).getContact(id)
     }
 
     @Test
     fun `should return 404 if contact not found`() {
-      whenever(contactService.getContact(id)).thenReturn(null)
+      whenever(contactFacade.getContact(id)).thenReturn(null)
 
       val response = controller.getContact(id)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
-      verify(contactService).getContact(id)
+      verify(contactFacade).getContact(id)
     }
 
     @Test
     fun `should propagate exceptions getting a contact`() {
-      whenever(contactService.getContact(id)).thenThrow(RuntimeException("Bang!"))
+      whenever(contactFacade.getContact(id)).thenThrow(RuntimeException("Bang!"))
 
       assertThrows<RuntimeException>("Bang!") {
         controller.getContact(id)
@@ -164,16 +162,16 @@ class ContactControllerTest {
 
     @Test
     fun `should create a contact relationship successfully`() {
-      doNothing().whenever(contactService).addContactRelationship(id, request)
+      doNothing().whenever(contactFacade).addContactRelationship(id, request)
 
       controller.addContactRelationship(id, request)
 
-      verify(contactService).addContactRelationship(id, request)
+      verify(contactFacade).addContactRelationship(id, request)
     }
 
     @Test
     fun `should propagate exceptions getting a contact`() {
-      whenever(contactService.addContactRelationship(id, request)).thenThrow(RuntimeException("Bang!"))
+      whenever(contactFacade.addContactRelationship(id, request)).thenThrow(RuntimeException("Bang!"))
 
       assertThrows<RuntimeException>("Bang!") {
         controller.addContactRelationship(id, request)
@@ -195,7 +193,7 @@ class ContactControllerTest {
 
       // When
       whenever(
-        contactService.searchContacts(
+        contactFacade.searchContacts(
           pageable,
           ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)),
         ),
@@ -222,7 +220,7 @@ class ContactControllerTest {
     @Test
     fun `should patch a contact successfully`() {
       val request = patchContactRequest()
-      whenever(contactPatchFacade.patch(id, request)).thenReturn(contact)
+      whenever(contactFacade.patch(id, request)).thenReturn(contact)
 
       val result = controller.patchContact(id, request)
 
@@ -232,7 +230,7 @@ class ContactControllerTest {
     @Test
     fun `should return 404 if contact not found`() {
       val request = patchContactRequest()
-      whenever(contactPatchFacade.patch(id, request)).thenReturn(null)
+      whenever(contactFacade.patch(id, request)).thenReturn(null)
 
       val response = controller.patchContact(id, request)
 
@@ -242,7 +240,7 @@ class ContactControllerTest {
     @Test
     fun `should propagate exceptions getting a contact`() {
       val request = patchContactRequest()
-      whenever(contactPatchFacade.patch(id, request)).thenThrow(RuntimeException("Bang!"))
+      whenever(contactFacade.patch(id, request)).thenThrow(RuntimeException("Bang!"))
 
       assertThrows<RuntimeException>("Bang!") {
         controller.patchContact(id, request)

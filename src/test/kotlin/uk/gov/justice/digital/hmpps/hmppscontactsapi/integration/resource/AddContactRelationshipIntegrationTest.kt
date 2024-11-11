@@ -13,6 +13,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactInfo
 
 class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
@@ -139,7 +141,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should create the contact with minimal fields`() {
+  fun `should create the contact relationship with minimal fields`() {
     stubPrisonSearchWithResponse("A1234BC")
 
     val request = AddContactRelationshipRequest(
@@ -161,6 +163,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     assertThat(createdRelationship.nextOfKin).isTrue()
     assertThat(createdRelationship.emergencyContact).isFalse()
     assertThat(createdRelationship.comments).isNull()
+    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(createdRelationship.prisonerContactId))
   }
 
   @Test
@@ -187,6 +190,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     assertThat(createdRelationship.nextOfKin).isFalse()
     assertThat(createdRelationship.emergencyContact).isTrue()
     assertThat(createdRelationship.comments).isEqualTo("Some comments")
+    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(createdRelationship.prisonerContactId))
   }
 
   private fun aMinimalRequest() = AddContactRelationshipRequest(

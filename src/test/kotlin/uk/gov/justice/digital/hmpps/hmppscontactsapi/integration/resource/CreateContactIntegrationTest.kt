@@ -13,6 +13,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import java.time.LocalDate
 
 class CreateContactIntegrationTest : H2IntegrationTestBase() {
@@ -136,6 +138,7 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
 
     assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
     assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(contactReturnedOnCreate.id))
   }
 
   @Test
@@ -152,6 +155,7 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
     val contact = testAPIClient.createAContact(request)
 
     assertContactsAreEqualExcludingTimestamps(contact, request)
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(contact.id))
   }
 
   @ParameterizedTest
@@ -168,6 +172,7 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
     val contactReturnedOnCreate = testAPIClient.createAContact(request)
     assertThat(contactReturnedOnCreate.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
     assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(contactReturnedOnCreate.id))
   }
 
   private fun assertContactsAreEqualExcludingTimestamps(contact: ContactDetails, request: CreateContactRequest) {

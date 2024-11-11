@@ -8,7 +8,17 @@ import java.time.LocalDate
 @Schema(description = "Request to create a new contact")
 data class CreateContactRequest(
 
-  @Schema(description = "The title of the contact, if any", example = "Mr", nullable = true, maxLength = 12)
+  @Schema(
+    description =
+    """
+      The title code for the contact.
+      This is a coded value (from the group code TITLE in reference data).
+      Known values are MR, MRS, MISS, DR, MS, REV, SIR, BR, SR.
+      """,
+    example = "MR",
+    nullable = true,
+    maxLength = 12,
+  )
   @field:Size(max = 12, message = "title must be <= 12 characters")
   val title: String? = null,
 

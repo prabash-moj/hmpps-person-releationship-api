@@ -34,7 +34,7 @@ class ContactEmailServiceTest {
   private val contactId = 99L
   private val aContact = ContactEntity(
     contactId = contactId,
-    title = "Mr",
+    title = "MR",
     lastName = "last",
     middleNames = "middle",
     firstName = "first",

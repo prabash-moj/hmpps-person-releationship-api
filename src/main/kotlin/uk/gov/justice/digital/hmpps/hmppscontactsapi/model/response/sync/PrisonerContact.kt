@@ -16,7 +16,15 @@ data class PrisonerContact(
   @Schema(description = "The prisoner number", example = "A1234BC")
   val prisonerNumber: String,
 
-  @Schema(description = "The type of the contact (S) social or (O) official", allowableValues = ["S", "O"], example = "S")
+  @Schema(
+    description =
+    """
+      Coded value indicating either a social or official contact (mandatory).
+      This is a coded value (from the group code CONTACT_TYPE in reference data).
+      Known values are (S) Social/Family or (O) official.
+      """,
+    example = "S",
+  )
   val contactType: String,
 
   @Schema(description = "The relationship code from reference data", example = "Friend")

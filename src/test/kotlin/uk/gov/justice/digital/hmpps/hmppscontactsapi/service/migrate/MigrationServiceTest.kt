@@ -610,9 +610,9 @@ class MigrationServiceTest {
 
       assertThat(resultRestrictions[0].second.size).isEqualTo(2)
       assertThat(resultRestrictions[0].second[0].first).isEqualTo(20L)
-      assertThat(resultRestrictions[0].second[0].second.restrictionType).isEqualTo("FORBID")
+      assertThat(resultRestrictions[0].second[0].second.restrictionType).isEqualTo("NONCON")
       assertThat(resultRestrictions[0].second[1].first).isEqualTo(21L)
-      assertThat(resultRestrictions[0].second[1].second.restrictionType).isEqualTo("ACCOMP")
+      assertThat(resultRestrictions[0].second[1].second.restrictionType).isEqualTo("CLOSED")
 
       verify(prisonerContactRestrictionRepository, times(2)).save(prisonerContactRestrictionCaptor.capture())
 
@@ -662,10 +662,10 @@ class MigrationServiceTest {
               second = PrisonerContactRestrictionEntity(
                 prisonerContactRestrictionId = 1L,
                 prisonerContactId = 1L,
-                restrictionType = "FORBID",
+                restrictionType = "NONCON",
                 startDate = LocalDate.now(),
                 expiryDate = LocalDate.now().plusDays(10),
-                comments = "Forbid",
+                comments = "No contact",
                 staffUsername = "TEST",
                 createdBy = "TEST",
                 createdTime = LocalDateTime.now(),
@@ -676,10 +676,10 @@ class MigrationServiceTest {
               second = PrisonerContactRestrictionEntity(
                 prisonerContactRestrictionId = 2L,
                 prisonerContactId = 1L,
-                restrictionType = "ACCOMP",
+                restrictionType = "CLOSED",
                 startDate = LocalDate.now(),
                 expiryDate = LocalDate.now().plusDays(10),
-                comments = "Accompany",
+                comments = "Closed visit",
                 staffUsername = "TEST",
                 createdBy = "TEST",
                 createdTime = LocalDateTime.now(),
@@ -789,7 +789,7 @@ class MigrationServiceTest {
     listOf(
       MigrateRestriction(
         id = 1L,
-        type = CodedValue("ESCORTED", "Desc"),
+        type = CodedValue("PREINF", "Prior information"),
         comment = "Active",
         effectiveDate = LocalDate.now(),
         expiryDate = LocalDate.now().plusDays(30),
@@ -800,7 +800,7 @@ class MigrationServiceTest {
       },
       MigrateRestriction(
         id = 2L,
-        type = CodedValue("CHILDREN", "Desc"),
+        type = CodedValue("CHILD", "Child restrictions"),
         comment = "Expired",
         effectiveDate = LocalDate.now().minusDays(30),
         expiryDate = LocalDate.now().minusDays(1),
@@ -880,7 +880,7 @@ class MigrationServiceTest {
         restrictions = listOf(
           MigratePrisonerContactRestriction(
             id = 20L,
-            restrictionType = CodedValue("FORBID", "Forbidden"),
+            restrictionType = CodedValue("NONCON", "No contact"),
             comment = "This person is not allowed to visit",
             startDate = LocalDate.now().minusDays(30),
             expiryDate = LocalDate.now().plusDays(10),
@@ -891,7 +891,7 @@ class MigrationServiceTest {
           },
           MigratePrisonerContactRestriction(
             id = 21L,
-            restrictionType = CodedValue("ACCOMP", "Accompanied"),
+            restrictionType = CodedValue("CLOSED", "Closed visit"),
             comment = "This person must be accompanied during visits",
             startDate = LocalDate.now().minusDays(30),
             expiryDate = LocalDate.now().plusDays(10),

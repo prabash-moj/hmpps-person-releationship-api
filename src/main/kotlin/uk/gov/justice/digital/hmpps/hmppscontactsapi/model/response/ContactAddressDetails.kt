@@ -13,7 +13,16 @@ data class ContactAddressDetails(
   @Schema(description = "The id of the contact", example = "123456")
   val contactId: Long,
 
-  @Schema(description = "The type of address", example = "HOME", allowableValues = ["HOME", "WORK", "BUS"], nullable = true)
+  @Schema(
+    description =
+    """
+      The type of address (optional).
+      This is a coded value (from the group code ADDRESS_TYPE in reference data).
+      The known values are HOME, WORK or BUS (business address).
+    """,
+    example = "HOME",
+    nullable = true,
+  )
   val addressType: String?,
 
   @Schema(description = "The description of the address type", example = "HOME", nullable = true)

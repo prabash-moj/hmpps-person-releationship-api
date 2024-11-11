@@ -36,7 +36,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       with(prisonerContactRestriction) {
         assertThat(prisonerContactRestrictionId).isEqualTo(1L)
         assertThat(contactId).isEqualTo(12345L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("NONCON")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -73,7 +73,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(prisonerContactRestrictionId).isEqualTo(0L)
         assertThat(prisonerContactId).isEqualTo(12345L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("NONCON")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -89,7 +89,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       with(contact) {
         assertThat(prisonerContactRestrictionId).isGreaterThan(0)
         assertThat(contactId).isEqualTo(12345L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("NONCON")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -143,7 +143,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(prisonerContactRestrictionId).isEqualTo(1L)
         assertThat(prisonerContactId).isEqualTo(12345L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("NONCON")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -159,7 +159,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       with(updated) {
         assertThat(prisonerContactRestrictionId).isEqualTo(1L)
         assertThat(contactId).isEqualTo(12345L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("NONCON")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -186,7 +186,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
   private fun updatePrisonerContactRestrictionRequest() =
     UpdatePrisonerContactRestrictionRequest(
       contactId = 12345L,
-      restrictionType = "NoContact",
+      restrictionType = "NONCON",
       startDate = LocalDate.of(2024, 1, 1),
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
@@ -200,7 +200,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
   private fun createPrisonerContactRestrictionRequest() =
     CreatePrisonerContactRestrictionRequest(
       contactId = 12345L,
-      restrictionType = "NoContact",
+      restrictionType = "NONCON",
       startDate = LocalDate.of(2024, 1, 1),
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
@@ -218,7 +218,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
     PrisonerContactRestrictionEntity(
       prisonerContactRestrictionId = 1L,
       prisonerContactId = 12345L,
-      restrictionType = "NoContact",
+      restrictionType = "NONCON",
       startDate = LocalDate.of(2024, 1, 1),
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
@@ -239,7 +239,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
     return PrisonerContactRestrictionEntity(
       prisonerContactRestrictionId = 1L,
       prisonerContactId = 12345L,
-      restrictionType = "NoContact",
+      restrictionType = "NONCON",
       startDate = LocalDate.of(2024, 1, 1),
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",

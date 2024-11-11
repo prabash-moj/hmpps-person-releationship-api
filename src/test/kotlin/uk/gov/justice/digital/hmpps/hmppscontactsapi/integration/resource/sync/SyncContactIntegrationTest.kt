@@ -151,7 +151,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
       // The created is returned
       with(contact) {
         assertThat(id).isGreaterThan(19)
-        assertThat(title).isEqualTo("Mr")
+        assertThat(title).isEqualTo("MR")
         assertThat(firstName).isEqualTo("John")
         assertThat(lastName).isEqualTo("Doe")
         assertThat(middleName).isEqualTo("William")
@@ -191,7 +191,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
 
       with(contact) {
         assertThat(id).isGreaterThan(19)
-        assertThat(title).isEqualTo("Mr")
+        assertThat(title).isEqualTo("MR")
         assertThat(firstName).isEqualTo("John")
         assertThat(lastName).isEqualTo("Doe")
         assertThat(middleName).isEqualTo("William")
@@ -216,7 +216,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
       // Check the updated copy
       with(updatedContact) {
         assertThat(id).isGreaterThan(19)
-        assertThat(title).isEqualTo("Mr")
+        assertThat(title).isEqualTo("MR")
         assertThat(firstName).isEqualTo("John")
         assertThat(lastName).isEqualTo("Doe")
         assertThat(middleName).isEqualTo("William")
@@ -274,7 +274,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
 
     private fun updateContactRequest() =
       UpdateContactRequest(
-        title = "Mr",
+        title = "MR",
         firstName = "John",
         lastName = "Doe",
         middleName = "William",
@@ -299,7 +299,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
     private fun createContactRequest() =
       CreateContactRequest(
         firstName = "John",
-        title = "Mr",
+        title = "MR",
         lastName = "Doe",
         middleName = "William",
         dateOfBirth = LocalDate.of(1980, 1, 1),

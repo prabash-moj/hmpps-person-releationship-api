@@ -108,7 +108,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
       with(prisonerContactRestriction) {
         assertThat(prisonerContactRestrictionId).isEqualTo(1L)
         assertThat(contactId).isEqualTo(1L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("PREINF")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -140,7 +140,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
       with(prisonerContactRestriction) {
         assertThat(prisonerContactRestrictionId).isGreaterThan(0)
         assertThat(contactId).isEqualTo(1L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("PREINF")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -171,7 +171,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
       with(prisonerContactRestriction) {
         assertThat(prisonerContactRestrictionId).isGreaterThan(3L)
         assertThat(contactId).isEqualTo(1L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("PREINF")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -200,7 +200,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
       with(updatedPrisonerContactRestriction) {
         assertThat(prisonerContactRestrictionId).isGreaterThan(3L)
         assertThat(contactId).isEqualTo(1L)
-        assertThat(restrictionType).isEqualTo("NoContact")
+        assertThat(restrictionType).isEqualTo("PREINF")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
@@ -248,7 +248,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
     private fun updatePrisonerContactRestrictionRequest() =
       UpdatePrisonerContactRestrictionRequest(
         contactId = 1L,
-        restrictionType = "NoContact",
+        restrictionType = "PREINF",
         startDate = LocalDate.of(2024, 1, 1),
         expiryDate = LocalDate.of(2024, 12, 31),
         comments = "Restriction due to ongoing investigation",
@@ -262,7 +262,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
     private fun createPrisonerContactRestrictionRequest() =
       CreatePrisonerContactRestrictionRequest(
         contactId = 1L,
-        restrictionType = "NoContact",
+        restrictionType = "PREINF",
         startDate = LocalDate.of(2024, 1, 1),
         expiryDate = LocalDate.of(2024, 12, 31),
         comments = "Restriction due to ongoing investigation",

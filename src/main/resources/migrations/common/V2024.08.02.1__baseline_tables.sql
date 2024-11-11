@@ -140,6 +140,7 @@ CREATE TABLE contact_phone
 
 CREATE INDEX idx_contact_phone_contact_id ON contact_phone(contact_id);
 CREATE INDEX idx_contact_phone_number ON contact_phone(phone_number);
+CREATE INDEX idx_contact_phone_created_time ON contact_phone(created_time);
 
 ---------------------------------------------------------------------------------------
 -- Address-specific phone numbers.
@@ -218,8 +219,10 @@ CREATE TABLE prisoner_contact
 );
 
 CREATE INDEX idx_prisoner_contact_contact_id ON prisoner_contact(contact_id);
+CREATE INDEX idx_prisoner_contact_contact_id_current ON prisoner_contact(contact_id, current_term);
 CREATE INDEX idx_prisoner_contact_prisoner_number ON prisoner_contact(prisoner_number);
 CREATE INDEX idx_prisoner_contact_relationship_type on prisoner_contact(relationship_type);
+CREATE INDEX idx_prisoner_contact_created_time on prisoner_contact(created_time);
 
 ---------------------------------------------------------------------------------------
 -- Prisoners and their contacts can have restrictions placed on the relationship.
@@ -284,8 +287,8 @@ CREATE TABLE reference_codes
     group_code          varchar(40) NOT NULL,
     code                varchar(40) NOT NULL,
     description         varchar(100) NOT NULL,
-    display_order          integer NOT NULL,
-    is_active          boolean NOT NULL,
+    display_order       integer NOT NULL,
+    is_active           boolean NOT NULL,
     created_by          varchar(100) NOT NULL,
     created_time        timestamp NOT NULL DEFAULT current_timestamp,
     amended_by          varchar(100),
@@ -311,6 +314,8 @@ CREATE TABLE nationality_reference
     display_sequence        INTEGER
 );
 
+CREATE INDEX idx_nationality_reference_nomis_code ON nationality_reference(nomis_code);
+
 ---------------------------------------------------------------------------------------
 -- Language reference data exported from NOMIS enriched with ISO codes.
 -- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%LANG%';
@@ -326,6 +331,8 @@ CREATE TABLE language_reference
     iso_language_desc    VARCHAR(100) NOT NULL,
     display_sequence     INTEGER NOT NULL
 );
+
+CREATE INDEX idx_language_reference_nomis_code ON language_reference(nomis_code);
 
 ---------------------------------------------------------------------------------------
 -- Country reference data exported from NOMIS enriched with ISO codes.
@@ -344,6 +351,8 @@ CREATE TABLE country_reference
     display_sequence  INTEGER NOT NULL
 );
 
+CREATE INDEX idx_country_reference_nomis_code ON country_reference(nomis_code);
+
 ---------------------------------------------------------------------------------------
 -- County reference data exported from NOMIS.
 -- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%COUNTY%' ;
@@ -357,6 +366,7 @@ CREATE TABLE county_reference
     display_sequence  INTEGER NOT NULL
 );
 
+CREATE INDEX idx_county_reference_nomis_code ON county_reference(nomis_code);
 
 ---------------------------------------------------------------------------------------
 -- City reference data exported from NOMIS.
@@ -370,6 +380,8 @@ CREATE TABLE city_reference
     nomis_description VARCHAR(100) NOT NULL,
     display_sequence  INTEGER NOT NULL
 );
+
+CREATE INDEX idx_city_reference_nomis_code ON city_reference(nomis_code);
 
 ---
 -- END

@@ -256,7 +256,7 @@ class ContactControllerTest {
 
     private fun patchContactResponse(id: Long) = PatchContactResponse(
       id = id,
-      title = "Mr",
+      title = "MR",
       lastName = "Doe",
       firstName = "John",
       middleNames = "William",

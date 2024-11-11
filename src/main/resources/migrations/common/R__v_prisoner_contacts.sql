@@ -34,9 +34,14 @@ AS
       ce.contact_email_id,
       ce.email_address,
       pc.prisoner_contact_id,
+      pc.contact_type,
       pc.prisoner_number,
       pc.relationship_type,
-      rc4.description as relationship_description,
+      case
+          when pc.contact_type = 'S' then rc3.description
+          when pc.contact_type = 'O' then rc4.description
+          else 'Unknown relationship type'
+      end as relationship_description,
       pc.active,
       pc.approved_visitor,
       pc.current_term,
@@ -46,12 +51,16 @@ AS
   from contact c
        join prisoner_contact pc ON pc.contact_id = c.contact_id
   left join contact_address ca ON ca.contact_id = c.contact_id AND ca.primary_address = true
-  left join (select contact_id, contact_phone_id, phone_type, phone_number, ext_number, row_number() over (partition by contact_id order by created_time desc) as rn
-            from contact_phone) cp on (cp.contact_id = c.contact_id and cp.rn = 1)
+  left join (
+      select contact_id, contact_phone_id, phone_type, phone_number, ext_number, row_number()
+      over (partition by contact_id order by created_time desc) as rn
+      from contact_phone
+    ) cp on (cp.contact_id = c.contact_id and cp.rn = 1)
   left join contact_email ce ON ce.contact_id = c.contact_id
   left join reference_codes rc1 ON rc1.group_code = 'TITLE' and rc1.code = c.title
   left join reference_codes rc2 ON rc2.group_code = 'PHONE_TYPE' and rc2.code = cp.phone_type
-  left join reference_codes rc4 ON rc4.group_code = 'RELATIONSHIP' and rc4.code = pc.relationship_type
+  left join reference_codes rc3 ON rc3.group_code = 'RELATIONSHIP' and rc3.code = pc.relationship_type
+  left join reference_codes rc4 ON rc4.group_code = 'OFF_RELATION' and rc4.code = pc.relationship_type
   left join city_reference city_ref on city_ref.nomis_code = ca.city_code
   left join county_reference county_ref on county_ref.nomis_code = ca.county_code
   left join country_reference country_ref on country_ref.nomis_code = ca.country_code

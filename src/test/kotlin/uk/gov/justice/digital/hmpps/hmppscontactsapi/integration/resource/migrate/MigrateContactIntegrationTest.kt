@@ -242,7 +242,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
     listOf(
       MigrateRestriction(
         id = 401L,
-        type = CodedValue("ESCORTED", "Desc"),
+        type = CodedValue("CHILD", "Desc"),
         comment = "Active",
         staffUsername = aUsername,
         effectiveDate = LocalDate.now(),
@@ -250,7 +250,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
       ),
       MigrateRestriction(
         id = 402L,
-        type = CodedValue("CHILDREN", "Desc"),
+        type = CodedValue("PREINF", "Desc"),
         comment = "Expired",
         staffUsername = aUsername,
         effectiveDate = LocalDate.now().minusDays(30),

@@ -43,7 +43,7 @@ class PatchContactEntityMappersKtTest {
   private fun contactEntity(languageCode: String?): ContactEntity {
     val contactEntity = ContactEntity(
       contactId = 1L,
-      title = "Mr",
+      title = "MR",
       firstName = "John",
       lastName = "Doe",
       middleNames = "A B",

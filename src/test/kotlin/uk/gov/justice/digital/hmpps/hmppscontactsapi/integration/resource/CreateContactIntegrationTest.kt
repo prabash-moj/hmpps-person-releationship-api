@@ -141,7 +141,7 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should create the contact with all fields`() {
     val request = CreateContactRequest(
-      title = "mr",
+      title = "MR",
       lastName = "last",
       firstName = "first",
       middleNames = "middle",

@@ -11,7 +11,16 @@ data class PatchContactResponse(
   @Schema(description = "The id of the contact", example = "123456")
   val id: Long,
 
-  @Schema(description = "The title of the contact, if any", example = "Mr", nullable = true)
+  @Schema(
+    description =
+    """
+    The title code for the contact.
+    This is a coded value (from the group code TITLE in reference data).
+    Known values are MR, MRS, MISS, DR, MS, REV, SIR, BR, SR.
+    """,
+    example = "MR",
+    nullable = true,
+  )
   val title: String? = null,
 
   @Schema(description = "The last name of the contact", example = "Doe")
@@ -50,7 +59,16 @@ data class PatchContactResponse(
   @Schema(description = "The coroner's number, if applicable", example = "CRN12345", nullable = true)
   var coronerNumber: String? = null,
 
-  @Schema(description = "The gender of the contact", allowableValues = ["M", "F", "NK", "NS"], example = "M", nullable = true)
+  @Schema(
+    description =
+    """
+    The gender code for the contact.
+    This is a coded value (from the group code GENDER in reference data).
+    Known values are (M) Male, (F) Female, (NK) Not Known, (NS) Not Specified.
+    """,
+    example = "M",
+    nullable = true,
+  )
   var gender: String? = null,
 
   @Schema(description = "The domestic status code of the contact", example = "S", nullable = true)

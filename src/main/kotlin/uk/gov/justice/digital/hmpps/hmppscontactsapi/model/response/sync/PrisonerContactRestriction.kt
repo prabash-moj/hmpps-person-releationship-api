@@ -13,7 +13,16 @@ data class PrisonerContactRestriction(
   @Schema(description = "ID of the contact to which the restriction applies", example = "12345")
   val contactId: Long,
 
-  @Schema(description = "Type of restriction applied", example = "NoContact", nullable = true)
+  @Schema(
+    description =
+    """
+    The coded type of restriction that applies to this relationship.
+    This is a coded value from the group RESTRICTION in reference codes.
+    Example values include ACC, BAN, CHILD, CLOSED, RESTRICTED, DIHCON, NONCON.
+    """,
+    example = "NONCON",
+    nullable = true,
+  )
   val restrictionType: String? = null,
 
   @Schema(description = "Start date of the restriction", example = "2024-01-01", nullable = true)

@@ -9,7 +9,15 @@ data class UpdateContactAddressRequest(
   @Schema(description = "The id of the contact linked to this address", example = "123456")
   val contactId: Long,
 
-  @Schema(description = "The type of address", allowableValues = ["HOME", "WORK", "BUS"], example = "HOME")
+  @Schema(
+    description =
+    """
+    The type of address.
+    This is a coded value (from the group code ADDRESS_TYPE in reference data).
+    The known values are HOME, WORK or BUS (business address).
+    """,
+    example = "HOME",
+  )
   val addressType: String,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")

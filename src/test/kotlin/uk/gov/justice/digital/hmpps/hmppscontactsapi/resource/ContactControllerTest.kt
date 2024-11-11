@@ -25,8 +25,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchFacade
 import java.net.URI
@@ -48,7 +48,7 @@ class ContactControllerTest {
         firstName = "first",
         createdBy = "created",
       )
-      val expectedContact = GetContactResponse(
+      val expectedContact = ContactDetails(
         id = 99,
         lastName = request.lastName,
         firstName = request.firstName,
@@ -64,6 +64,8 @@ class ContactControllerTest {
         identities = listOf(createContactIdentityDetails()),
         domesticStatusCode = "S",
         domesticStatusDescription = "Single",
+        gender = null,
+        genderDescription = null,
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -95,7 +97,7 @@ class ContactControllerTest {
   @Nested
   inner class GetContact {
     private val id = 123456L
-    private val contact = GetContactResponse(
+    private val contact = ContactDetails(
       id = id,
       lastName = "last",
       firstName = "first",
@@ -111,6 +113,8 @@ class ContactControllerTest {
       identities = listOf(createContactIdentityDetails()),
       domesticStatusCode = null,
       domesticStatusDescription = null,
+      gender = null,
+      genderDescription = null,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )

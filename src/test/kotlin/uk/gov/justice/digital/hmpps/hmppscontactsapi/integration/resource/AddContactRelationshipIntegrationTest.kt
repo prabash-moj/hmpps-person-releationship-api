@@ -12,11 +12,11 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 
 class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
-  private lateinit var contact: GetContactResponse
+  private lateinit var contact: ContactDetails
 
   @BeforeEach
   fun setUp() {

@@ -14,11 +14,11 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentit
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.MigrateContactResponse
@@ -27,7 +27,7 @@ import java.net.URI
 
 class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAuthHelper: JwtAuthorisationHelper) {
 
-  fun createAContact(request: CreateContactRequest): GetContactResponse {
+  fun createAContact(request: CreateContactRequest): ContactDetails {
     return webTestClient.post()
       .uri("/contact")
       .accept(MediaType.APPLICATION_JSON)
@@ -39,7 +39,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .isCreated
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectHeader().valuesMatch("Location", "/contact/(\\d)+")
-      .expectBody(GetContactResponse::class.java)
+      .expectBody(ContactDetails::class.java)
       .returnResult().responseBody!!
   }
 
@@ -58,7 +58,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody!!
   }
 
-  fun getContact(id: Long): GetContactResponse {
+  fun getContact(id: Long): ContactDetails {
     return webTestClient.get()
       .uri("/contact/$id")
       .accept(MediaType.APPLICATION_JSON)
@@ -67,7 +67,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectStatus()
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(GetContactResponse::class.java)
+      .expectBody(ContactDetails::class.java)
       .returnResult().responseBody!!
   }
 

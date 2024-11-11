@@ -231,6 +231,17 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
+  fun `should get contacts with gender details`() {
+    val contact = testAPIClient.getContact(16)
+
+    with(contact) {
+      assertThat(id).isEqualTo(16)
+      assertThat(gender).isEqualTo("F")
+      assertThat(genderDescription).isEqualTo("Female")
+    }
+  }
+
+  @Test
   fun `should get contacts with domestic status`() {
     val contact = testAPIClient.getContact(1)
 

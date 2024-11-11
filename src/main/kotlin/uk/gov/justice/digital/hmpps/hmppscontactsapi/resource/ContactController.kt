@@ -31,8 +31,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
@@ -71,7 +71,7 @@ class ContactController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = GetContactResponse::class),
+            schema = Schema(implementation = ContactDetails::class),
           ),
         ],
       ),
@@ -108,7 +108,7 @@ class ContactController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = GetContactResponse::class),
+            schema = Schema(implementation = ContactDetails::class),
           ),
         ],
       ),

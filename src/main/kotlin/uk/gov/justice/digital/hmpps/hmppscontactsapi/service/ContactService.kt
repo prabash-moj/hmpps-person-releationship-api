@@ -14,9 +14,9 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
@@ -46,7 +46,7 @@ class ContactService(
   }
 
   @Transactional
-  fun createContact(request: CreateContactRequest): GetContactResponse {
+  fun createContact(request: CreateContactRequest): ContactDetails {
     if (request.relationship != null) {
       validateRelationship(request.relationship)
     }
@@ -60,7 +60,7 @@ class ContactService(
     return enrichContact(createdContact)
   }
 
-  fun getContact(id: Long): GetContactResponse? {
+  fun getContact(id: Long): ContactDetails? {
     return contactRepository.findById(id).getOrNull()
       ?.let { enrichContact(it) }
   }
@@ -80,7 +80,7 @@ class ContactService(
       ?: throw EntityNotFoundException("Prisoner (${relationship.prisonerNumber}) could not be found")
   }
 
-  private fun enrichContact(contactEntity: ContactEntity): GetContactResponse {
+  private fun enrichContact(contactEntity: ContactEntity): ContactDetails {
     val phoneNumbers = contactPhoneDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
     val addressPhoneNumbers = contactAddressPhoneRepository.findByContactId(contactEntity.contactId)
     val addresses = contactAddressDetailsRepository.findByContactId(contactEntity.contactId)
@@ -97,7 +97,8 @@ class ContactService(
     val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
     val languageDescription = contactEntity.languageCode?.let { languageService.getLanguageByNomisCode(it).nomisDescription }
     val domesticStatusDescription = contactEntity.domesticStatus?.let { referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", it)?.description }
-    return GetContactResponse(
+    val genderDescription = contactEntity.gender?.let { referenceCodeService.getReferenceDataByGroupAndCode("GENDER", it)?.description }
+    return ContactDetails(
       id = contactEntity.contactId,
       title = contactEntity.title,
       lastName = contactEntity.lastName,
@@ -117,6 +118,8 @@ class ContactService(
       identities = identities,
       domesticStatusCode = contactEntity.domesticStatus,
       domesticStatusDescription = domesticStatusDescription,
+      gender = contactEntity.gender,
+      genderDescription = genderDescription,
       createdBy = contactEntity.createdBy,
       createdTime = contactEntity.createdTime,
     )

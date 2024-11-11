@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "The details of a contact as an individual")
-data class GetContactResponse(
+data class ContactDetails(
 
   @Schema(description = "The id of the contact", example = "123456")
   val id: Long,
@@ -64,6 +64,12 @@ data class GetContactResponse(
 
   @Schema(description = "The description of the domestic status code", example = "Single", nullable = true)
   val domesticStatusDescription: String?,
+
+  @Schema(description = "The NOMIS code for the contacts gender. See reference data with group code 'GENDER'", examples = ["M", "F"], nullable = true)
+  val gender: String?,
+
+  @Schema(description = "The description of gender code. See reference data with group code 'GENDER'", examples = ["Male", "Female"], nullable = true)
+  val genderDescription: String?,
 
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,

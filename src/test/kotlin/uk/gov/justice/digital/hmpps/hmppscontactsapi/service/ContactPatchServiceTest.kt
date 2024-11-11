@@ -672,4 +672,108 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)
     assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
   }
+
+  @Nested
+  inner class Gender {
+
+    @Test
+    fun `should patch when gender is null`() {
+      originalContact = createDummyContactEntity().copy(gender = "NS")
+
+      val patchRequest = PatchContactRequest(
+        gender = JsonNullable.of(null),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val updatedContact = service.patch(contactId, patchRequest)
+
+      assertThat(updatedContact.gender).isEqualTo(null)
+      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+    }
+
+    @Test
+    fun `should patch without validating undefined gender`() {
+      originalContact = createDummyContactEntity().copy(gender = "NS")
+
+      val patchRequest = PatchContactRequest(
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+
+      val patched = service.patch(contactId, patchRequest)
+
+      assertThat(patched.gender).isEqualTo("NS")
+      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+      verify(contactRepository, times(1)).saveAndFlush(any())
+    }
+
+    @Test
+    fun `should patch gender with a valid code`() {
+      originalContact = createDummyContactEntity().copy(gender = null)
+
+      val patchRequest = PatchContactRequest(
+        gender = JsonNullable.of("NS"),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("GENDER", "NS")).thenReturn(
+        ReferenceCode(1, "GENDER", "NS", "Not specified", 99, true),
+      )
+
+      val updatedContact = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+      verify(referenceCodeService, times(1)).getReferenceDataByGroupAndCode("GENDER", "NS")
+
+      assertThat(updatedContact.gender).isEqualTo("NS")
+      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+    }
+
+    @Test
+    fun `should reject gender when code is inactive`() {
+      originalContact = createDummyContactEntity().copy(gender = null)
+
+      val patchRequest = PatchContactRequest(
+        gender = JsonNullable.of("NS"),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("GENDER", "NS")).thenReturn(ReferenceCode(1, "GENDER", "NS", "Not specified", 99, false))
+
+      val exception = assertThrows<ValidationException> {
+        service.patch(contactId, patchRequest)
+      }
+      assertThat(exception.message).isEqualTo("Reference code with groupCode GENDER and code 'NS' is not active and is no longer supported.")
+    }
+
+    @Test
+    fun `should reject gender when code is not found`() {
+      originalContact = createDummyContactEntity().copy(gender = null)
+
+      val patchRequest = PatchContactRequest(
+        gender = JsonNullable.of("NS"),
+        updatedBy = "Modifier",
+      )
+
+      whenContactExists()
+      whenUpdateIsSuccessful()
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("GENDER", "NS")).thenReturn(null)
+
+      val exception = assertThrows<ValidationException> {
+        service.patch(contactId, patchRequest)
+      }
+      assertThat(exception.message).isEqualTo("Reference code with groupCode GENDER and code 'NS' not found.")
+    }
+  }
 }

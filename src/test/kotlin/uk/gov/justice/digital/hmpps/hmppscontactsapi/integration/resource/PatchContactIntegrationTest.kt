@@ -578,4 +578,90 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
     }
   }
+
+  @Nested
+  inner class PatchGender {
+    private var contactWithAGender = 0L
+
+    @BeforeEach
+    fun createContactWithDob() {
+      contactWithAGender = testAPIClient.createAContact(
+        CreateContactRequest(
+          lastName = "Last",
+          firstName = "First",
+          createdBy = "created",
+        ),
+      ).id
+      val entity = contactRepository.findById(contactWithAGender).get()
+      contactRepository.saveAndFlush(entity.copy(gender = "NS"))
+    }
+
+    @Test
+    fun `should not patch gender if undefined`() {
+      val req = PatchContactRequest(
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
+
+      assertThat(res.gender).isEqualTo("NS")
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+    }
+
+    @Test
+    fun `should successfully patch gender with null values`() {
+      val req = PatchContactRequest(
+        gender = JsonNullable.of(null),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
+
+      assertThat(res.gender).isNull()
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+    }
+
+    @Test
+    fun `should successfully patch gender with a value`() {
+      val req = PatchContactRequest(
+        gender = JsonNullable.of("M"),
+        updatedBy = updatedByUser,
+      )
+      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
+
+      assertThat(res.gender).isEqualTo("M")
+      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+    }
+
+    @Test
+    fun `should not be able to patch to an invalid gender value`() {
+      val req = PatchContactRequest(
+        gender = JsonNullable.of("FOO"),
+        updatedBy = updatedByUser,
+      )
+
+      val uri = UriComponentsBuilder.fromPath("/contact/$contactWithAGender")
+        .build()
+        .toUri()
+      val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
+      assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode GENDER and code 'FOO' not found.")
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+    }
+
+    @Test
+    fun `should not be able to patch to an inactive gender value`() {
+      val req = PatchContactRequest(
+        gender = JsonNullable.of("REF"),
+        updatedBy = updatedByUser,
+      )
+
+      val uri = UriComponentsBuilder.fromPath("/contact/$contactWithAGender")
+        .build()
+        .toUri()
+      val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
+      assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode GENDER and code 'REF' is not active and is no longer supported.")
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+    }
+  }
 }

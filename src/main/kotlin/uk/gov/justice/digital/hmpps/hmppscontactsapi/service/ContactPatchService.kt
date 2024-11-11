@@ -28,6 +28,7 @@ class ContactPatchService(
     validateDomesticStatusCode(request)
     validateStaffFlag(request)
     validateTitle(request)
+    validateGender(request)
 
     val changedContact = contact.patchRequest(request)
 
@@ -47,6 +48,7 @@ class ContactPatchService(
       estimatedIsOverEighteen = request.estimatedIsOverEighteen.orElse(this.estimatedIsOverEighteen),
       title = request.title.orElse(this.title),
       middleNames = request.middleNames.orElse(this.middleNames),
+      gender = request.gender.orElse(this.gender),
       amendedBy = request.updatedBy,
       amendedTime = LocalDateTime.now(),
     )
@@ -85,6 +87,17 @@ class ContactPatchService(
       val code = request.title.get()!!
       referenceCodeService.getReferenceDataByGroupAndCode("TITLE", code)
         ?: throw ValidationException("Reference code with groupCode TITLE and code '$code' not found.")
+    }
+  }
+
+  private fun validateGender(request: PatchContactRequest) {
+    if (request.gender.isPresent && request.gender.get() != null) {
+      val code = request.gender.get()!!
+      val referenceData = referenceCodeService.getReferenceDataByGroupAndCode("GENDER", code)
+      when {
+        referenceData == null -> throw ValidationException("Reference code with groupCode GENDER and code '$code' not found.")
+        !referenceData.isActive -> throw ValidationException("Reference code with groupCode GENDER and code '$code' is not active and is no longer supported.")
+      }
     }
   }
 }

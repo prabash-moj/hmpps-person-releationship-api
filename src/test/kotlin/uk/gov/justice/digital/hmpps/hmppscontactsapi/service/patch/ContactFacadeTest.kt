@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetails
@@ -19,6 +21,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -135,6 +138,20 @@ class ContactFacadeTest {
     assertThat(contactFacade.getContact(99L)).isEqualTo(expectedContact)
 
     verify(outboundEventsService, never()).send(any(), any())
+  }
+
+  @Test
+  fun `patch relationship should send domain event`() {
+    val contactId = 1L
+    val prisonerContactId = 1L
+    val request = mock(UpdateRelationshipRequest::class.java)
+
+    doNothing().whenever(contactService).updateContactRelationship(contactId, prisonerContactId, request)
+
+    contactFacade.patchRelationship(contactId, prisonerContactId, request)
+
+    verify(contactService).updateContactRelationship(contactId, prisonerContactId, request)
+    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_AMENDED, contactId)
   }
 
   private fun aContactDetails() = ContactDetails(

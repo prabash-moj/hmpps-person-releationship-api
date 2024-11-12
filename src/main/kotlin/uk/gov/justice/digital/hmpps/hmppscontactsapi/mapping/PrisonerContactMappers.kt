@@ -33,6 +33,7 @@ fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
     approvedVisitor = this.approvedVisitor,
     nextOfKin = this.nextOfKin,
     emergencyContact = this.emergencyContact,
+    isRelationshipActive = this.active,
     currentTerm = this.currentTerm,
     comments = this.comments,
   )

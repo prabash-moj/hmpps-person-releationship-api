@@ -1,9 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
+import jakarta.validation.ValidationException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -15,6 +17,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
+import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -33,6 +36,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
@@ -653,6 +657,402 @@ class ContactServiceTest {
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     )
+  }
+
+  @Nested
+  inner class UpdateContactRelationship {
+    private val contactId = 1L
+    private val prisonerContactId = 2L
+
+    private lateinit var prisonerContact: PrisonerContactEntity
+
+    @BeforeEach
+    fun before() {
+      prisonerContact = createPrisonerContact(contactId)
+    }
+
+    @Nested
+    inner class RelationshipType {
+
+      @Test
+      fun `should update the contact relationship type`() {
+        val relationShipTypeCode = "FRI"
+        val request = UpdateRelationshipRequest(
+          relationshipCode = JsonNullable.of(relationShipTypeCode),
+          updatedBy = "Admin",
+        )
+
+        whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", relationShipTypeCode)).thenReturn(
+          ReferenceCode(1, "RELATIONSHIP", "FRI", "Friend", 1, true),
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        service.updateContactRelationship(contactId, prisonerContactId, request)
+
+        val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
+        verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+        with(prisonerContactCaptor.firstValue) {
+          // assert changed
+          assertThat(relationshipType).isEqualTo("FRI")
+          assertThat(amendedBy).isEqualTo("Admin")
+          assertThat(amendedTime).isInThePast()
+          // assert unchanged
+          assertThat(nextOfKin).isTrue()
+          assertThat(emergencyContact).isTrue()
+          assertThat(active).isTrue()
+          assertThat(comments).isEqualTo("Updated relationship type to Brother")
+
+          assertUnchangedFields()
+        }
+      }
+
+      @Test
+      fun `should not update relationship type with null`() {
+        val request = UpdateRelationshipRequest(
+          relationshipCode = JsonNullable.of(null),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        val exception = assertThrows<ValidationException> {
+          service.updateContactRelationship(contactId, prisonerContactId, request)
+        }
+        assertThat(exception.message).isEqualTo("Unsupported relationship type null.")
+      }
+
+      @Test
+      fun `should not update relationship type with invalid type`() {
+        val request = UpdateRelationshipRequest(
+          relationshipCode = JsonNullable.of("OOO"),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        val exception = assertThrows<ValidationException> {
+          service.updateContactRelationship(contactId, prisonerContactId, request)
+        }
+        assertThat(exception.message).isEqualTo("Reference code with groupCode RELATIONSHIP and code 'OOO' not found.")
+      }
+    }
+
+    @Nested
+    inner class NextOfKin {
+
+      @Test
+      fun `should update the next of kin`() {
+        val request = UpdateRelationshipRequest(
+          isNextOfKin = JsonNullable.of(false),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        service.updateContactRelationship(contactId, prisonerContactId, request)
+
+        val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
+        verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+        with(prisonerContactCaptor.firstValue) {
+          // assert changed
+          assertThat(nextOfKin).isFalse()
+          assertThat(amendedBy).isEqualTo("Admin")
+          assertThat(amendedTime).isInThePast()
+          // assert unchanged
+          assertThat(relationshipType).isEqualTo("BRO")
+          assertThat(emergencyContact).isTrue()
+          assertThat(active).isTrue()
+          assertThat(comments).isEqualTo("Updated relationship type to Brother")
+
+          assertUnchangedFields()
+        }
+      }
+
+      @Test
+      fun `should not update relationship next of kin with null`() {
+        val request = UpdateRelationshipRequest(
+          isNextOfKin = JsonNullable.of(null),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        val exception = assertThrows<ValidationException> {
+          service.updateContactRelationship(contactId, prisonerContactId, request)
+        }
+        assertThat(exception.message).isEqualTo("Unsupported next of kin null.")
+      }
+    }
+
+    @Nested
+    inner class EmergencyContactStatus {
+
+      @Test
+      fun `should update the emergency contact status`() {
+        val request = UpdateRelationshipRequest(
+          isEmergencyContact = JsonNullable.of(false),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        service.updateContactRelationship(contactId, prisonerContactId, request)
+
+        val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
+        verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+        with(prisonerContactCaptor.firstValue) {
+          // assert changed
+          assertThat(emergencyContact).isFalse()
+          assertThat(amendedBy).isEqualTo("Admin")
+          assertThat(amendedTime).isInThePast()
+          // assert unchanged
+          assertThat(relationshipType).isEqualTo("BRO")
+          assertThat(nextOfKin).isTrue()
+          assertThat(active).isTrue()
+          assertThat(comments).isEqualTo("Updated relationship type to Brother")
+
+          assertUnchangedFields()
+        }
+      }
+
+      @Test
+      fun `should not update relationship emergency contact with null`() {
+        val request = UpdateRelationshipRequest(
+          isEmergencyContact = JsonNullable.of(null),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        val exception = assertThrows<ValidationException> {
+          service.updateContactRelationship(contactId, prisonerContactId, request)
+        }
+        assertThat(exception.message).isEqualTo("Unsupported emergency contact null.")
+      }
+    }
+
+    @Nested
+    inner class RelationshipActiveStatus {
+
+      @Test
+      fun `should update the relationship active status`() {
+        val request = UpdateRelationshipRequest(
+          isRelationshipActive = JsonNullable.of(false),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        service.updateContactRelationship(contactId, prisonerContactId, request)
+
+        val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
+        verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+        with(prisonerContactCaptor.firstValue) {
+          // assert changed
+          assertThat(active).isFalse()
+          assertThat(amendedBy).isEqualTo("Admin")
+          assertThat(amendedTime).isInThePast()
+          // assert unchanged
+          assertThat(relationshipType).isEqualTo("BRO")
+          assertThat(nextOfKin).isTrue()
+          assertThat(emergencyContact).isTrue()
+          assertThat(comments).isEqualTo("Updated relationship type to Brother")
+
+          assertUnchangedFields()
+        }
+      }
+
+      @Test
+      fun `should not update relationship active status with null`() {
+        val request = UpdateRelationshipRequest(
+          isRelationshipActive = JsonNullable.of(null),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        val exception = assertThrows<ValidationException> {
+          service.updateContactRelationship(contactId, prisonerContactId, request)
+        }
+        assertThat(exception.message).isEqualTo("Unsupported relationship status null.")
+      }
+    }
+
+    @Nested
+    inner class RelationshipComment {
+
+      @Test
+      fun `should update the contact relationship comment`() {
+        val relationShipTypeCode = "FRI"
+        val request = UpdateRelationshipRequest(
+          comments = JsonNullable.of("a comment"),
+          updatedBy = "Admin",
+        )
+
+        whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", relationShipTypeCode)).thenReturn(
+          ReferenceCode(1, "RELATIONSHIP", "FRI", "Friend", 1, true),
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        service.updateContactRelationship(contactId, prisonerContactId, request)
+
+        val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
+        verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+        with(prisonerContactCaptor.firstValue) {
+          // assert changed
+          assertThat(comments).isEqualTo("a comment")
+          assertThat(amendedBy).isEqualTo("Admin")
+          assertThat(amendedTime).isInThePast()
+          // assert unchanged
+          assertThat(relationshipType).isEqualTo("BRO")
+          assertThat(nextOfKin).isTrue()
+          assertThat(emergencyContact).isTrue()
+          assertThat(active).isTrue()
+
+          assertUnchangedFields()
+        }
+      }
+
+      @Test
+      fun `should not update relationship comment with null`() {
+        val request = UpdateRelationshipRequest(
+          relationshipCode = JsonNullable.of(null),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        val exception = assertThrows<ValidationException> {
+          service.updateContactRelationship(contactId, prisonerContactId, request)
+        }
+        assertThat(exception.message).isEqualTo("Unsupported relationship type null.")
+      }
+    }
+
+    @Test
+    fun `should update when only updated by filed is provided`() {
+      val request = UpdateRelationshipRequest(
+        updatedBy = "Admin",
+      )
+
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+      whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+      service.updateContactRelationship(contactId, prisonerContactId, request)
+
+      val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
+      verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+      with(prisonerContactCaptor.firstValue) {
+        // assert changed
+
+        assertThat(amendedBy).isEqualTo("Admin")
+        assertThat(amendedTime).isInThePast()
+        // assert unchanged
+        assertThat(nextOfKin).isTrue()
+        assertThat(relationshipType).isEqualTo("BRO")
+        assertThat(emergencyContact).isTrue()
+        assertThat(active).isTrue()
+        assertThat(comments).isEqualTo("Updated relationship type to Brother")
+
+        assertUnchangedFields()
+      }
+    }
+
+    @Test
+    fun `should blow up if prisoner contact do not match with the contact id`() {
+      val request = updateRelationshipRequest()
+      val prisonerContact = createPrisonerContact(5L)
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+
+      val exception = assertThrows<ValidationException> {
+        service.updateContactRelationship(contactId, prisonerContactId, request)
+      }
+      assertThat(exception.message).isEqualTo("The relationship between the prisoner and the contact is not associated with this contact ID: 1 and prisoner contact ID: 2.")
+    }
+
+    @Test
+    fun `should blow up if prisoner contact not found`() {
+      val request = updateRelationshipRequest()
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.updateContactRelationship(contactId, prisonerContactId, request)
+      }
+      assertThat(exception.message).isEqualTo("Prisoner contact with prisoner contact ID 2 not found")
+    }
+
+    @Test
+    fun `should propagate exceptions updating a prisoner contact relationship`() {
+      val request = updateRelationshipRequest()
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+      whenever(prisonerContactRepository.saveAndFlush(any())).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        service.updateContactRelationship(contactId, prisonerContactId, request)
+      }
+    }
+
+    private fun createPrisonerContact(cId: Long): PrisonerContactEntity {
+      return PrisonerContactEntity(
+        prisonerContactId = prisonerContactId,
+        contactId = cId,
+        prisonerNumber = "A1234BC",
+        contactType = "SOCIAL",
+        relationshipType = "BRO",
+        nextOfKin = true,
+        emergencyContact = true,
+        approvedVisitor = true,
+        active = true,
+        currentTerm = true,
+        comments = "Updated relationship type to Brother",
+        createdBy = "TEST",
+        createdTime = LocalDateTime.now(),
+      ).apply {
+        approvedBy = "officer456"
+        approvedTime = LocalDateTime.now()
+        expiryDate = LocalDate.of(2025, 12, 31)
+        createdAtPrison = "LONDON"
+        amendedBy = "adminUser"
+        amendedTime = LocalDateTime.now()
+      }
+    }
+
+    private fun PrisonerContactEntity.assertUnchangedFields() {
+      assertThat(prisonerNumber).isEqualTo("A1234BC")
+      assertThat(contactType).isEqualTo("SOCIAL")
+      assertThat(currentTerm).isTrue()
+      assertThat(approvedVisitor).isTrue()
+      assertThat(createdBy).isEqualTo("TEST")
+      assertThat(createdTime).isInThePast()
+      assertThat(approvedBy).isEqualTo("officer456")
+      assertThat(approvedTime).isInThePast()
+      assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
+      assertThat(createdAtPrison).isEqualTo("LONDON")
+    }
+
+    private fun updateRelationshipRequest(): UpdateRelationshipRequest {
+      return UpdateRelationshipRequest(
+        relationshipCode = JsonNullable.of("MOT"),
+        isEmergencyContact = JsonNullable.of(true),
+        isNextOfKin = JsonNullable.of(true),
+        isRelationshipActive = JsonNullable.of(false),
+        comments = JsonNullable.of("Foo"),
+        updatedBy = "Admin",
+      )
+    }
   }
 
   private fun createContactEntity(

@@ -12,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -252,6 +253,18 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectBody(ContactEmailDetails::class.java)
       .returnResult().responseBody!!
+  }
+
+  fun updateRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
+    webTestClient.patch()
+      .uri("/contact/$contactId/relationship/$prisonerContactId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isNoContent
   }
 
   fun getContactEmail(contactId: Long, contactEmailId: Long): ContactEmailDetails {

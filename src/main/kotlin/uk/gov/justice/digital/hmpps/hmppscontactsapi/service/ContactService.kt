@@ -2,12 +2,14 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
+import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ContactCreationResult
@@ -15,6 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
@@ -26,6 +29,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDeta
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
+import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -134,4 +138,95 @@ class ContactService(
     phoneNumbers: List<ContactPhoneDetails>,
   ) = addressPhoneNumbers.filter { it.contactAddressId == contactAddressId }
     .mapNotNull { addressPhone -> phoneNumbers.find { it.contactPhoneId == addressPhone.contactPhoneId } }
+
+  @Transactional
+  fun updateContactRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
+    val prisonerContactEntity = getPrisonerContactEntity(prisonerContactId)
+
+    validateRequest(request)
+    validateRelationshipIsValid(prisonerContactEntity, contactId, prisonerContactId)
+    validateRelationshipTypeCode(request)
+
+    val changedPrisonerContact = prisonerContactEntity.applyUpdate(request)
+
+    prisonerContactRepository.saveAndFlush(changedPrisonerContact)
+  }
+
+  private fun validateRequest(request: UpdateRelationshipRequest) {
+    unsupportedRelationshipType(request)
+    unsupportedEmergencyContact(request)
+    unsupportedNextOfKin(request)
+    unsupportedRelationshipActive(request)
+  }
+
+  private fun getPrisonerContactEntity(prisonerContactId: Long): PrisonerContactEntity {
+    val contact = prisonerContactRepository.findById(prisonerContactId)
+      .orElseThrow { EntityNotFoundException("Prisoner contact with prisoner contact ID $prisonerContactId not found") }
+    return contact
+  }
+
+  private fun validateRelationshipIsValid(
+    contact: PrisonerContactEntity,
+    contactId: Long,
+    prisonerContactId: Long,
+  ) {
+    if (contact.contactId != contactId) {
+      logger.error("The relationship between the prisoner and the contact is not associated with this contact ID: $contactId and prisoner contact ID: $prisonerContactId.")
+      throw ValidationException("The relationship between the prisoner and the contact is not associated with this contact ID: $contactId and prisoner contact ID: $prisonerContactId.")
+    }
+  }
+
+  private fun PrisonerContactEntity.applyUpdate(
+    request: UpdateRelationshipRequest,
+  ) = this.copy(
+    contactId = this.contactId,
+    prisonerNumber = this.prisonerNumber,
+    contactType = this.contactType,
+    approvedVisitor = this.approvedVisitor,
+    currentTerm = this.currentTerm,
+    nextOfKin = request.isNextOfKin.orElse(this.nextOfKin),
+    emergencyContact = request.isEmergencyContact.orElse(this.emergencyContact),
+    active = request.isRelationshipActive.orElse(this.active),
+    relationshipType = request.relationshipCode.orElse(this.relationshipType),
+    comments = request.comments.orElse(this.comments),
+  ).also {
+    it.approvedBy = this.approvedBy
+    it.approvedTime = this.approvedTime
+    it.expiryDate = this.expiryDate
+    it.createdAtPrison = this.createdAtPrison
+    it.amendedBy = request.updatedBy
+    it.amendedTime = LocalDateTime.now()
+  }
+
+  private fun validateRelationshipTypeCode(request: UpdateRelationshipRequest) {
+    if (request.relationshipCode.isPresent && request.relationshipCode.get() != null) {
+      val code = request.relationshipCode.get()!!
+      referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", code)
+        ?: throw ValidationException("Reference code with groupCode RELATIONSHIP and code '$code' not found.")
+    }
+  }
+
+  private fun unsupportedRelationshipType(request: UpdateRelationshipRequest) {
+    if (request.relationshipCode.isPresent && request.relationshipCode.get() == null) {
+      throw ValidationException("Unsupported relationship type null.")
+    }
+  }
+
+  private fun unsupportedEmergencyContact(request: UpdateRelationshipRequest) {
+    if (request.isEmergencyContact.isPresent && request.isEmergencyContact.get() == null) {
+      throw ValidationException("Unsupported emergency contact null.")
+    }
+  }
+
+  private fun unsupportedNextOfKin(request: UpdateRelationshipRequest) {
+    if (request.isNextOfKin.isPresent && request.isNextOfKin.get() == null) {
+      throw ValidationException("Unsupported next of kin null.")
+    }
+  }
+
+  private fun unsupportedRelationshipActive(request: UpdateRelationshipRequest) {
+    if (request.isRelationshipActive.isPresent && request.isRelationshipActive.get() == null) {
+      throw ValidationException("Unsupported relationship status null.")
+    }
+  }
 }

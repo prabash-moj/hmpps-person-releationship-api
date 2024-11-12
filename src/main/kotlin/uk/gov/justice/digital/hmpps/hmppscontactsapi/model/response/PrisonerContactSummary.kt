@@ -91,6 +91,9 @@ data class PrisonerContactSummary(
   @Schema(description = "Is this contact the prisoner's emergency contact?", example = "true")
   val emergencyContact: Boolean,
 
+  @Schema(description = "Is this prisoner's contact relationship active?", example = "true")
+  val isRelationshipActive: Boolean,
+
   @Schema(description = "Is this relationship active for the current booking?", example = "true")
   val currentTerm: Boolean,
 

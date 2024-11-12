@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -54,5 +55,13 @@ class ContactFacade(
 
   fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearchResultItem> {
     return contactService.searchContacts(pageable, request)
+  }
+
+  fun patchRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
+    return contactService.updateContactRelationship(contactId, prisonerContactId, request)
+      .also {
+        logger.info("Send patch relationship domain event to {} {} ", OutboundEvent.CONTACT_AMENDED, contactId)
+        outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_AMENDED, contactId)
+      }
   }
 }

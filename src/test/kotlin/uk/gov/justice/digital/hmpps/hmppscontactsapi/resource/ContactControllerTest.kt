@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetails
@@ -23,11 +24,11 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactFacade
 import java.net.URI
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -271,6 +272,36 @@ class ContactControllerTest {
       createdTime = LocalDateTime.now(),
       amendedBy = "UPDATE",
       amendedTime = LocalDateTime.now(),
+    )
+  }
+
+  @Nested
+  inner class PatchContactRelationship {
+    private val id = 123456L
+    private val prisonerContactId = 2L
+    private val request = patchContactRelationshipRequest()
+
+    @Test
+    fun `should update a contact relationship successfully`() {
+      doNothing().whenever(contactFacade).patchRelationship(id, prisonerContactId, request)
+
+      controller.patchContactRelationship(id, prisonerContactId, request)
+
+      verify(contactFacade).patchRelationship(id, prisonerContactId, request)
+    }
+
+    @Test
+    fun `should propagate exceptions patching a contact relationship`() {
+      whenever(contactFacade.patchRelationship(id, prisonerContactId, request)).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        controller.patchContactRelationship(id, prisonerContactId, request)
+      }
+    }
+
+    private fun patchContactRelationshipRequest() = UpdateRelationshipRequest(
+      relationshipCode = JsonNullable.of("ENG"),
+      updatedBy = "system",
     )
   }
 

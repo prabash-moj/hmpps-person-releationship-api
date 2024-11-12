@@ -61,8 +61,8 @@ data class ContactSearchResultItem(
   @Schema(description = "The description of country code, if known", example = "England", nullable = true)
   val countryDescription: String? = null,
 
-  @Schema(description = "Flag to indicate if mail can be sent to this address", example = "false", nullable = true)
-  val mailFlag: Boolean? = false,
+  @Schema(description = "If true this address should be considered for sending mail to", nullable = true, example = "true")
+  val mailAddress: Boolean?,
 
   @Schema(description = "The date from which this address can be considered active", example = "2022-10-01", nullable = true)
   val startDate: LocalDate? = null,

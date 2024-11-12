@@ -40,7 +40,13 @@ select
     ca.no_fixed_address,
     ca.comments
   from contact c
-  left join contact_address ca ON ca.contact_id = c.contact_id AND ca.primary_address = true
+  left join contact_address ca ON ca.contact_address_id = (
+      select contact_address_id from contact_address ca1
+      where ca1.contact_id = c.contact_id
+      and end_date is null
+      order by ca1.primary_address desc, ca1.mail_flag desc, ca1.start_date desc nulls last, ca1.created_time desc
+      limit 1
+  )
   left join city_reference city_ref on city_ref.nomis_code = ca.city_code
   left join county_reference county_ref on county_ref.nomis_code = ca.county_code
   left join country_reference country_ref on country_ref.nomis_code = ca.country_code

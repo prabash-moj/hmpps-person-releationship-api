@@ -80,12 +80,12 @@ class GetPrisonerContactsIntegrationTest : H2IntegrationTestBase() {
 
     val minimal = contacts.content.find { it.firstName == "Minimal" } ?: fail("Couldn't find 'Minimal' contact")
     assertThat(minimal.firstName).isEqualTo("Minimal")
-    assertThat(minimal.cityCode).isEqualTo("")
-    assertThat(minimal.cityDescription).isEqualTo("")
-    assertThat(minimal.countyCode).isEqualTo("")
-    assertThat(minimal.countyDescription).isEqualTo("")
-    assertThat(minimal.countryCode).isEqualTo("")
-    assertThat(minimal.countryDescription).isEqualTo("")
+    assertThat(minimal.cityCode).isNull()
+    assertThat(minimal.cityDescription).isNull()
+    assertThat(minimal.countyCode).isNull()
+    assertThat(minimal.countyDescription).isNull()
+    assertThat(minimal.countryCode).isNull()
+    assertThat(minimal.countryDescription).isNull()
   }
 
   @Test

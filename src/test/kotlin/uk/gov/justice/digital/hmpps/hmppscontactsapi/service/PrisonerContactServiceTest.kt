@@ -103,6 +103,8 @@ class PrisonerContactServiceTest {
       postCode = "NW1 6XE",
       countryCode = "UK",
       countryDescription = "United Kingdom",
+      primaryAddress = false,
+      mailFlag = false,
       contactPhoneId = 4L,
       phoneType = "Mobile",
       phoneTypeDescription = "Mobile Phone",

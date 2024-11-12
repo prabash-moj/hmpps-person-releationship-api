@@ -55,6 +55,10 @@ data class PrisonerContactSummaryEntity(
 
   val countryDescription: String?,
 
+  val primaryAddress: Boolean?,
+
+  val mailFlag: Boolean?,
+
   val contactPhoneId: Long?,
 
   val phoneType: String?,

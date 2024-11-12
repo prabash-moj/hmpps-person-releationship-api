@@ -41,34 +41,40 @@ data class PrisonerContactSummary(
   val flat: String?,
 
   @Schema(description = "Property name or number", example = "123")
-  val property: String,
+  val property: String?,
 
   @Schema(description = "Street name", example = "Baker Street")
-  val street: String,
+  val street: String?,
 
   @Schema(description = "Area or locality, if any", example = "Marylebone", nullable = true)
   val area: String?,
 
   @Schema(description = "City code", example = "25343")
-  val cityCode: String,
+  val cityCode: String?,
 
   @Schema(description = "The description of city code", example = "Sheffield")
-  val cityDescription: String,
+  val cityDescription: String?,
 
   @Schema(description = "County code", example = "S.YORKSHIRE")
-  val countyCode: String,
+  val countyCode: String?,
 
   @Schema(description = "The description of county code", example = "South Yorkshire")
-  val countyDescription: String,
+  val countyDescription: String?,
 
   @Schema(description = "Postal code", example = "NW1 6XE")
-  val postCode: String,
+  val postCode: String?,
 
   @Schema(description = "Country code", example = "ENG")
-  val countryCode: String,
+  val countryCode: String?,
 
   @Schema(description = "The description of country code", example = "England")
-  val countryDescription: String,
+  val countryDescription: String?,
+
+  @Schema(description = "If true this address should be considered as the primary residential address", nullable = true, example = "true")
+  val primaryAddress: Boolean?,
+
+  @Schema(description = "If true this address should be considered for sending mail to", nullable = true, example = "true")
+  val mailAddress: Boolean?,
 
   @Schema(description = "Type of the latest phone number", example = "MOB", nullable = true)
   val phoneType: String?,

@@ -38,15 +38,6 @@ data class UpdateContactRequest(
   )
   val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
-  @Schema(description = "The place of birth of the contact", example = "London", nullable = true)
-  var placeOfBirth: String? = null,
-
-  @Schema(description = "Whether the contact is active", example = "true", nullable = true)
-  var active: Boolean? = false,
-
-  @Schema(description = "Whether the contact is suspended", example = "false", nullable = true)
-  var suspended: Boolean? = false,
-
   @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false)
   var isStaff: Boolean = false,
 
@@ -58,9 +49,6 @@ data class UpdateContactRequest(
 
   @Schema(description = "The date the contact was deceased, if applicable", example = "2023-05-01", nullable = true)
   var deceasedDate: LocalDate? = null,
-
-  @Schema(description = "The coroner's number, if applicable", example = "CRN12345", nullable = true)
-  var coronerNumber: String? = null,
 
   @Schema(
     description =
@@ -79,9 +67,6 @@ data class UpdateContactRequest(
 
   @Schema(description = "The language code of the contact", example = "EN", nullable = true)
   var languageCode: String? = null,
-
-  @Schema(description = "The nationality code of the contact", example = "GB", nullable = true)
-  var nationalityCode: String? = null,
 
   @Schema(description = "Whether an interpreter is required", example = "false", nullable = true)
   var interpreterRequired: Boolean? = false,

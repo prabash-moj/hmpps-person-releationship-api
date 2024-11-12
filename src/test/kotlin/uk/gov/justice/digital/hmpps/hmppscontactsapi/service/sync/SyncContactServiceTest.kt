@@ -36,17 +36,12 @@ class SyncContactServiceTest {
         assertThat(middleName).isNull()
         assertThat(lastName).isEqualTo("Smith")
         assertThat(createdBy).isEqualTo("TEST")
-        assertThat(placeOfBirth).isEqualTo("London")
         assertThat(gender).isEqualTo("M")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
-        assertThat(nationalityCode).isEqualTo("GB")
         assertThat(dateOfBirth).isNull()
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.NO)
         assertThat(deceasedDate).isNull()
-        assertThat(coronerNumber).isNull()
-        assertThat(active).isTrue()
-        assertThat(suspended).isFalse()
         assertThat(isStaff).isFalse()
         assertThat(deceasedFlag).isFalse()
         assertThat(interpreterRequired).isFalse()
@@ -77,7 +72,6 @@ class SyncContactServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(active).isEqualTo(request.active)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
 
@@ -86,7 +80,6 @@ class SyncContactServiceTest {
         assertThat(id).isEqualTo(0L)
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(active).isEqualTo(request.active)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
     }
@@ -124,7 +117,6 @@ class SyncContactServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(active).isEqualTo(request.active)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
@@ -133,7 +125,6 @@ class SyncContactServiceTest {
       with(updated) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(active).isEqualTo(request.active)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
@@ -158,17 +149,12 @@ class SyncContactServiceTest {
       middleName = "William",
       dateOfBirth = LocalDate.of(1980, 1, 1),
       estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-      placeOfBirth = "London",
-      active = true,
-      suspended = false,
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
-      coronerNumber = null,
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
-      nationalityCode = "GB",
       interpreterRequired = false,
       updatedBy = "Admin",
       updatedTime = LocalDateTime.now(),
@@ -184,17 +170,12 @@ class SyncContactServiceTest {
       estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
       createdBy = "JD000001",
       createdTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0),
-      placeOfBirth = "London",
-      active = true,
-      suspended = false,
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
-      coronerNumber = null,
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
-      nationalityCode = "GB",
       interpreterRequired = false,
     )
 
@@ -211,15 +192,10 @@ class SyncContactServiceTest {
       deceasedDate = null,
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
-      placeOfBirth = "London",
-      active = true,
-      suspended = false,
       staffFlag = false,
-      coronerNumber = null,
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
-      nationalityCode = "GB",
       interpreterRequired = false,
     )
 
@@ -238,15 +214,10 @@ class SyncContactServiceTest {
       isDeceased = false,
       deceasedDate = null,
       createdBy = "Admin",
-      placeOfBirth = this.placeOfBirth,
-      active = this.active,
-      suspended = this.suspended,
       staffFlag = this.isStaff,
-      coronerNumber = this.coronerNumber,
       gender = this.gender,
       domesticStatus = this.domesticStatus,
       languageCode = this.languageCode,
-      nationalityCode = this.nationalityCode,
       interpreterRequired = this.interpreterRequired ?: false,
       amendedBy = updatedBy,
       amendedTime = updatedTime,

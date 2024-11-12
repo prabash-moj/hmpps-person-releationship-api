@@ -640,15 +640,10 @@ class ContactPatchServiceTest {
     estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
     createdBy = "Admin",
     createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
-    placeOfBirth = "London",
-    active = true,
-    suspended = false,
     staffFlag = false,
-    coronerNumber = null,
     gender = "M",
     domesticStatus = domesticStatus,
     languageCode = languageCode,
-    nationalityCode = "GB",
     interpreterRequired = false,
     amendedBy = "admin",
     amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
@@ -660,13 +655,8 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.lastName).isEqualTo(originalContact.lastName)
     assertThat(updatedContact.middleNames).isEqualTo(originalContact.middleNames)
     assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
-    assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
-    assertThat(updatedContact.active).isEqualTo(originalContact.active)
-    assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
     assertThat(updatedContact.isStaff).isEqualTo(originalContact.staffFlag)
-    assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
     assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
-    assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
     assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
     assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
     assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)

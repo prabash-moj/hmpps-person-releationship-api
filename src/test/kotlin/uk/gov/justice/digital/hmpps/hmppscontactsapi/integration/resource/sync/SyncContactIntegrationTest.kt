@@ -114,17 +114,12 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(middleName).isEqualTo("Middle")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(2000, 11, 26))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
-        assertThat(placeOfBirth).isEqualTo("London")
-        assertThat(active).isFalse()
-        assertThat(suspended).isFalse
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isEqualTo("2024-01-26")
-        assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("F")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("ENG")
-        assertThat(nationalityCode).isNull()
         assertThat(interpreterRequired).isFalse
         assertThat(createdBy).isEqualTo("TIM")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -157,17 +152,12 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(middleName).isEqualTo("William")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
-        assertThat(placeOfBirth).isEqualTo("London")
-        assertThat(active).isTrue
-        assertThat(suspended).isFalse
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
-        assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("M")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
-        assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isFalse
         assertThat(createdBy).isEqualTo("JD000001")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -195,7 +185,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(firstName).isEqualTo("John")
         assertThat(lastName).isEqualTo("Doe")
         assertThat(middleName).isEqualTo("William")
-        assertThat(active).isTrue()
         assertThat(createdBy).isEqualTo("JD000001")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -223,17 +212,12 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
         assertThat(createdBy).isEqualTo("JD000001")
-        assertThat(placeOfBirth).isEqualTo("Birmingham")
-        assertThat(active).isTrue
-        assertThat(suspended).isFalse
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
-        assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("M")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
-        assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isTrue()
         assertThat(amendedBy).isEqualTo("UPDATE")
         assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -280,17 +264,12 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         middleName = "William",
         dateOfBirth = LocalDate.of(1980, 1, 1),
         estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-        placeOfBirth = "Birmingham",
-        active = true,
-        suspended = false,
         isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,
-        coronerNumber = null,
         gender = "M",
         domesticStatus = "S",
         languageCode = "EN",
-        nationalityCode = "GB",
         interpreterRequired = true,
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
@@ -305,17 +284,12 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         dateOfBirth = LocalDate.of(1980, 1, 1),
         estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
         createdBy = "JD000001",
-        placeOfBirth = "London",
-        active = true,
-        suspended = false,
         isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,
-        coronerNumber = null,
         gender = "M",
         domesticStatus = "S",
         languageCode = "EN",
-        nationalityCode = "GB",
         interpreterRequired = false,
       )
   }

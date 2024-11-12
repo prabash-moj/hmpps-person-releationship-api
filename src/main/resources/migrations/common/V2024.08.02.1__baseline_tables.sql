@@ -16,18 +16,13 @@ CREATE TABLE contact
     middle_names varchar(35),
     date_of_birth date,
     estimated_is_over_eighteen varchar(11),
-    place_of_birth varchar(25),
-    active boolean NOT NULL default true,
-    suspended boolean NOT NULL DEFAULT false,
     staff_flag boolean NOT NULL DEFAULT false,
     remitter_flag boolean NOT NULL default false,
     deceased_flag boolean NOT NULL DEFAULT false,
     deceased_date date,
-    coroner_number varchar(32),
     gender varchar(12),
     domestic_status varchar(12), -- Reference codes - DOMESTIC_STS - nullable
     language_code varchar(12), -- Reference codes - LANGUAGE - nullable
-    nationality_code varchar(12), -- Reference data - NATIONALITY - nullable
     interpreter_required boolean NOT NULL DEFAULT false,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
@@ -38,6 +33,7 @@ CREATE TABLE contact
 CREATE INDEX idx_contact_last_name ON contact(last_name);
 CREATE INDEX idx_contact_first_name ON contact(first_name);
 CREATE INDEX idx_contact_date_of_birth ON contact(date_of_birth);
+CREATE INDEX idx_contact_created_time ON contact(created_time);
 
 ---------------------------------------------------------------------------------------
 -- Contacts need to provide one or more forms of ID.

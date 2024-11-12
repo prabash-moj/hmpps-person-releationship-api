@@ -46,25 +46,15 @@ data class ContactEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
 
-  val placeOfBirth: String? = null,
-
-  val active: Boolean? = false,
-
-  val suspended: Boolean? = false,
-
   val staffFlag: Boolean = false,
 
   val remitterFlag: Boolean = false,
-
-  val coronerNumber: String? = null,
 
   val gender: String? = null,
 
   val domesticStatus: String? = null,
 
   val languageCode: String? = null,
-
-  val nationalityCode: String? = null,
 
   val interpreterRequired: Boolean = false,
 

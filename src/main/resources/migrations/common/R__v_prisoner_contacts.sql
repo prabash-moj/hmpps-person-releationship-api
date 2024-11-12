@@ -49,13 +49,14 @@ AS
       pc.emergency_contact,
       pc.comments
   from contact c
-       join prisoner_contact pc ON pc.contact_id = c.contact_id
+  join prisoner_contact pc ON pc.contact_id = c.contact_id
   left join contact_address ca ON ca.contact_id = c.contact_id AND ca.primary_address = true
-  left join (
-      select contact_id, contact_phone_id, phone_type, phone_number, ext_number, row_number()
-      over (partition by contact_id order by created_time desc) as rn
-      from contact_phone
-    ) cp on (cp.contact_id = c.contact_id and cp.rn = 1)
+  left join contact_phone cp ON cp.contact_phone_id = (
+      select contact_phone_id from contact_phone cp1
+      where cp1.contact_id = c.contact_id
+      order by cp1.created_time desc
+      limit 1
+   )
   left join contact_email ce ON ce.contact_id = c.contact_id
   left join reference_codes rc1 ON rc1.group_code = 'TITLE' and rc1.code = c.title
   left join reference_codes rc2 ON rc2.group_code = 'PHONE_TYPE' and rc2.code = cp.phone_type

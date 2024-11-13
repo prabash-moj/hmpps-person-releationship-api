@@ -59,6 +59,10 @@ class MigrationService(
    *
    * Assemble a response object to contain both the NOMIS and DPS IDs for each entity and
    * sub-entity saved to allow the mapping service to link the IDs for subsequent syncs.
+   *
+   * The PERSON_ID from NOMIS is used as the CONTACT_ID (primary key) in Contacts. Where
+   * contacts are created in DPS, this will generate new CONTACT_IDs in a different range
+   * to NOMIS, starting at 20,000,000.
    */
   fun migrateContact(request: MigrateContactRequest): MigrateContactResponse {
     logger.info(
@@ -73,7 +77,7 @@ class MigrationService(
       request.contacts.size,
     )
 
-    // Extract, transform and save the different entities from the request and returning the NOMIS and DPS IDs for each
+    // Extract, transform and save the different entities from the request, returning the NOMIS and DPS IDs for each
     val contactPair = extractAndSaveContact(request)
     val contactId = contactPair.second.contactId
     val phoneNumberPairs = extractAndSavePhones(request, contactId)
@@ -101,12 +105,18 @@ class MigrationService(
     )
   }
 
-  fun extractAndSaveContact(req: MigrateContactRequest): Pair<Long, ContactEntity> =
-    Pair(
+  fun extractAndSaveContact(req: MigrateContactRequest): Pair<Long, ContactEntity> {
+    if (contactRepository.existsById(req.personId)) {
+      val message = "Migration: Duplicate person ID received ${req.personId}"
+      logger.error(message)
+      throw DuplicatePersonException(message)
+    }
+
+    return Pair(
       req.personId,
       contactRepository.save(
         ContactEntity(
-          contactId = 0L,
+          contactId = req.personId,
           title = req.title?.code,
           lastName = req.lastName,
           middleNames = req.middleName,
@@ -128,6 +138,7 @@ class MigrationService(
         ),
       ),
     )
+  }
 
   fun extractAndSavePhones(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactPhoneEntity>> =
     req.phoneNumbers.map { requestPhone ->
@@ -189,7 +200,6 @@ class MigrationService(
     contactAddresses: List<Pair<Long, ContactAddressEntity>>,
   ): List<Pair<Long, List<Pair<Long, ContactAddressPhoneEntity>>>> {
     val phones = req.addresses.map { addr ->
-
       val thisContactAddress = contactAddresses.find { it.first == addr.addressId }
 
       Pair(

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
@@ -13,12 +14,13 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapSyncRequestToEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Optional
 
 class SyncContactServiceTest {
   private val contactRepository: ContactRepository = mock()
@@ -60,7 +62,8 @@ class SyncContactServiceTest {
 
     @Test
     fun `should create a contact`() {
-      val request = createContactRequest()
+      whenever(contactRepository.existsById(2L)).thenReturn(false)
+      val request = createSyncContactRequest(2L)
       whenever(contactRepository.saveAndFlush(request.mapSyncRequestToEntity())).thenReturn(request.mapSyncRequestToEntity())
 
       val contact = syncService.createContact(request)
@@ -77,11 +80,24 @@ class SyncContactServiceTest {
 
       // Checks the model response
       with(contact) {
-        assertThat(id).isEqualTo(0L)
+        assertThat(id).isEqualTo(2L)
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
+    }
+
+    @Test
+    fun `should fail to create a contact if the personId already exists`() {
+      whenever(contactRepository.existsById(1L)).thenReturn(true)
+      val exceptionExpected = DuplicatePersonException("Sync: Duplicate person ID received 1")
+      val request = createSyncContactRequest(1L)
+      val exceptionThrown = assertThrows<DuplicatePersonException> {
+        syncService.createContact(request)
+      }
+      assertThat(exceptionThrown.message).isEqualTo(exceptionExpected.message)
+      assertThat(exceptionThrown.javaClass).isEqualTo(exceptionExpected.javaClass)
+      verify(contactRepository, never()).saveAndFlush(any())
     }
 
     @Test
@@ -160,8 +176,9 @@ class SyncContactServiceTest {
       updatedTime = LocalDateTime.now(),
     )
 
-  private fun createContactRequest() =
-    CreateContactRequest(
+  private fun createSyncContactRequest(personId: Long) =
+    SyncCreateContactRequest(
+      personId = personId,
       title = "Mr",
       firstName = "John",
       lastName = "Doe",

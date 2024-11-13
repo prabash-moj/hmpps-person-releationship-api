@@ -1,13 +1,18 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync
 
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.NotNull
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "Request to create a new contact")
-data class CreateContactRequest(
+data class SyncCreateContactRequest(
+
+  @Schema(description = "The person ID from NOMIS", example = "1233323")
+  @field:NotNull(message = "The NOMIS person ID must be present in this request")
+  val personId: Long,
 
   @Schema(
     description =

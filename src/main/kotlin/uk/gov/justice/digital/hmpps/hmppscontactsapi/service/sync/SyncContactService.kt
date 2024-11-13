@@ -1,20 +1,25 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync
 
 import jakarta.persistence.EntityNotFoundException
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapEntityToSyncResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapSyncRequestToEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 
 @Service
 @Transactional
 class SyncContactService(
   val contactRepository: ContactRepository,
 ) {
+  companion object {
+    private val logger = LoggerFactory.getLogger(this::class.java)
+  }
 
   @Transactional(readOnly = true)
   fun getContactById(contactId: Long): Contact {
@@ -29,7 +34,18 @@ class SyncContactService(
     contactRepository.deleteById(contactId)
   }
 
-  fun createContact(request: CreateContactRequest): Contact {
+  /**
+   * Creation of a contact via sync will accept the NOMIS person_id and use this as
+   * the primary key (contactId) in the contact database. There are two different sequence
+   * ranges for contactId - one for those created in NOMIS and another for those created
+   * in DPS. The ranges can not overlap.
+   */
+  fun createContact(request: SyncCreateContactRequest): Contact {
+    if (contactRepository.existsById(request.personId)) {
+      val message = "Sync: Duplicate person ID received ${request.personId}"
+      logger.error(message)
+      throw DuplicatePersonException(message)
+    }
     return contactRepository.saveAndFlush(request.mapSyncRequestToEntity()).mapEntityToSyncResponse()
   }
 

@@ -302,6 +302,20 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectBody(MigrateContactResponse::class.java)
       .returnResult().responseBody!!
 
+  fun migrateAContactErrorResponse(request: MigrateContactRequest) =
+    webTestClient.post()
+      .uri("/migrate/contact")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_PRISONER_CONTACTS__RW")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .is4xxClientError
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
   data class ContactSearchResponse(
     val content: List<ContactSearchResultItem>,
     val pageable: ReturnedPageable,

@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
 
 fun ContactEntity.mapEntityToSyncResponse(): Contact {
@@ -28,8 +28,8 @@ fun ContactEntity.mapEntityToSyncResponse(): Contact {
   )
 }
 
-fun CreateContactRequest.mapSyncRequestToEntity() = ContactEntity(
-  contactId = 0L,
+fun SyncCreateContactRequest.mapSyncRequestToEntity() = ContactEntity(
+  contactId = this.personId,
   title = this.title,
   firstName = this.firstName,
   lastName = this.lastName,

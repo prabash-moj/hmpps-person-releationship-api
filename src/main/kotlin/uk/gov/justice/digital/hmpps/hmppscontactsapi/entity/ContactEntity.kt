@@ -5,11 +5,11 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.jpa.SequenceOrUseId
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
@@ -18,8 +18,9 @@ import java.time.LocalDateTime.now
 @Table(name = "contact")
 data class ContactEntity(
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val contactId: Long,
+  @GeneratedValue(generator = "CONTACT_ID_SEQ")
+  @SequenceOrUseId(name = "CONTACT_ID_SEQ")
+  var contactId: Long = 0,
 
   val title: String?,
 

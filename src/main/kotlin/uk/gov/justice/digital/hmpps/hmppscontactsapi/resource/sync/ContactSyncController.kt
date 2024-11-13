@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactService
@@ -117,11 +117,16 @@ class ContactSyncController(
         description = "The request has invalid or missing fields",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
+      ApiResponse(
+        responseCode = "409",
+        description = "Conflict. The personId provided in the request already exists as a contact",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContact(
-    @Valid @RequestBody createContactRequest: CreateContactRequest,
+    @Valid @RequestBody createContactRequest: SyncCreateContactRequest,
   ) = syncService.createContact(createContactRequest)
 
   @PutMapping(path = ["/contact/{contactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])

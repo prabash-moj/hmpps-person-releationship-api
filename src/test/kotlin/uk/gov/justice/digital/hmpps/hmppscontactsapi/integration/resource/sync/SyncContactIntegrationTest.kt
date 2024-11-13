@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
 import java.time.LocalDate
@@ -26,16 +26,16 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isUnauthorized
 
-      webTestClient.put()
+      webTestClient.post()
         .uri("/sync/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(createContactRequest())
+        .bodyValue(createSyncContactRequest(5000L))
         .exchange()
         .expectStatus()
         .isUnauthorized
 
-      webTestClient.post()
+      webTestClient.put()
         .uri("/sync/contact/1")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -66,7 +66,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         .uri("/sync/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(createContactRequest())
+        .bodyValue(createSyncContactRequest(5000L))
         .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
         .exchange()
         .expectStatus()
@@ -135,7 +135,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
-        .bodyValue(createContactRequest())
+        .bodyValue(createSyncContactRequest(5000L))
         .exchange()
         .expectStatus()
         .isOk
@@ -145,7 +145,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
 
       // The created is returned
       with(contact) {
-        assertThat(id).isGreaterThan(19)
+        assertThat(id).isEqualTo(5000L)
         assertThat(title).isEqualTo("MR")
         assertThat(firstName).isEqualTo("John")
         assertThat(lastName).isEqualTo("Doe")
@@ -171,7 +171,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
-        .bodyValue(createContactRequest())
+        .bodyValue(createSyncContactRequest(5001L))
         .exchange()
         .expectStatus()
         .isOk
@@ -180,7 +180,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         .returnResult().responseBody!!
 
       with(contact) {
-        assertThat(id).isGreaterThan(19)
+        assertThat(id).isEqualTo(5001L)
         assertThat(title).isEqualTo("MR")
         assertThat(firstName).isEqualTo("John")
         assertThat(lastName).isEqualTo("Doe")
@@ -204,7 +204,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
 
       // Check the updated copy
       with(updatedContact) {
-        assertThat(id).isGreaterThan(19)
+        assertThat(id).isEqualTo(5001L)
         assertThat(title).isEqualTo("MR")
         assertThat(firstName).isEqualTo("John")
         assertThat(lastName).isEqualTo("Doe")
@@ -231,7 +231,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
-        .bodyValue(createContactRequest())
+        .bodyValue(createSyncContactRequest(5002L))
         .exchange()
         .expectStatus()
         .isOk
@@ -275,8 +275,9 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         updatedTime = LocalDateTime.now(),
       )
 
-    private fun createContactRequest() =
-      CreateContactRequest(
+    private fun createSyncContactRequest(personId: Long = 0L) =
+      SyncCreateContactRequest(
+        personId = personId,
         firstName = "John",
         title = "MR",
         lastName = "Doe",

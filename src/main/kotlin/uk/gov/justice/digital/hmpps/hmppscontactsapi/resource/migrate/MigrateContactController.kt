@@ -52,6 +52,11 @@ class MigrateContactController(val migrationService: MigrationService) {
         description = "The request failed validation with invalid or missing data supplied",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
+      ApiResponse(
+        responseCode = "409",
+        description = "Conflict. The request contained a personId which already exists",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_PRISONER_CONTACTS__RW')")

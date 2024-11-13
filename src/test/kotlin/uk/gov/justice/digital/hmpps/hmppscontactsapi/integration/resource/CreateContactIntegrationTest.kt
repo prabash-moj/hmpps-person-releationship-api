@@ -17,6 +17,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import java.time.LocalDate
 
+const val LOCAL_CONTACT_ID_SEQUENCE_MIN: Long = 20000000L
+
 class CreateContactIntegrationTest : H2IntegrationTestBase() {
 
   @Test
@@ -138,6 +140,10 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
 
     assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
     assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
+
+    // Verify that a contact created locally has an ID in the appropriate range - above 20,000,000
+    assertThat(contactReturnedOnCreate.id).isGreaterThanOrEqualTo(LOCAL_CONTACT_ID_SEQUENCE_MIN)
+
     stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(contactReturnedOnCreate.id))
   }
 

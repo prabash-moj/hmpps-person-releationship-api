@@ -4,7 +4,9 @@ import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
 import org.mockito.MockitoAnnotations.openMocks
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -80,11 +82,64 @@ class MigrationServiceTest {
   }
 
   @Nested
+  inner class MigrationOutcomes {
+    @Test
+    fun `should migrate a basic contact`() {
+      val request = migrateRequest(personId = 1L)
+      val contact = aContactEntity(1L)
+
+      whenever(contactRepository.existsById(1L)).thenReturn(false)
+      whenever(contactRepository.save(any())).thenReturn(contact)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      val result = migrationService.migrateContact(request)
+
+      // IDs should be the same
+      assertThat(result.contact.nomisId).isEqualTo(request.personId)
+      assertThat(result.contact.dpsId).isEqualTo(request.personId)
+
+      verify(contactRepository).save(contactCaptor.capture())
+
+      with(contactCaptor.firstValue) {
+        assertThat(this)
+          .extracting("contactId", "lastName", "firstName", "createdBy", "createdTime", "amendedBy", "amendedTime")
+          .contains(
+            request.personId,
+            request.lastName,
+            request.firstName,
+            request.createUsername,
+            request.createDateTime,
+            request.modifyUsername,
+            request.modifyDateTime,
+          )
+      }
+    }
+
+    @Test
+    fun `should identify duplicate requests for the same contact`() {
+      val request = migrateRequest(personId = 1L)
+      val exceptionExpected = DuplicatePersonException("Migration: Duplicate person ID received 1")
+
+      whenever(contactRepository.existsById(1L)).thenReturn(true)
+
+      val exceptionThrown = assertThrows<DuplicatePersonException> {
+        migrationService.migrateContact(request)
+      }
+
+      assertThat(exceptionThrown.message).isEqualTo(exceptionExpected.message)
+      assertThat(exceptionThrown.javaClass).isEqualTo(exceptionExpected.javaClass)
+
+      verify(contactRepository, never()).saveAndFlush(any())
+    }
+  }
+
+  @Nested
   inner class MigrationExtractFromRequest {
 
     @Test
     fun `should extract and save basic contact details`() {
-      val request = migrateRequest()
+      val request = migrateRequest(personId = 1L)
       val contact = aContactEntity(1L)
 
       whenever(contactRepository.save(any())).thenReturn(contact)
@@ -104,20 +159,20 @@ class MigrationServiceTest {
         assertThat(this)
           .extracting("contactId", "lastName", "firstName", "createdBy", "createdTime", "amendedBy", "amendedTime")
           .contains(
-            0L,
-            contact.lastName,
-            contact.firstName,
-            contact.createdBy,
-            contact.createdTime,
-            contact.amendedBy,
-            contact.amendedTime,
+            1L,
+            request.lastName,
+            request.firstName,
+            request.createUsername,
+            request.createDateTime,
+            request.modifyUsername,
+            request.modifyDateTime,
           )
       }
     }
 
     @Test
     fun `should extract and save contact phone numbers`() {
-      val request = migrateRequest().copy(phoneNumbers = phoneNumbers())
+      val request = migrateRequest(personId = 1L).copy(phoneNumbers = phoneNumbers())
       val responses = listOf(
         ContactPhoneEntity(
           contactId = 1L,
@@ -172,7 +227,7 @@ class MigrationServiceTest {
 
     @Test
     fun `should extract and save contact identifiers`() {
-      val request = migrateRequest().copy(identifiers = identifiers())
+      val request = migrateRequest(personId = 1L).copy(identifiers = identifiers())
 
       val responses = listOf(
         ContactIdentityEntity(
@@ -230,7 +285,7 @@ class MigrationServiceTest {
 
     @Test
     fun `should extract and save contact addresses`() {
-      val request = migrateRequest().copy(addresses = addresses())
+      val request = migrateRequest(personId = 1L).copy(addresses = addresses())
 
       val responses = listOf(
         ContactAddressEntity(
@@ -288,7 +343,7 @@ class MigrationServiceTest {
 
     @Test
     fun `should extract and save contact emails`() {
-      val request = migrateRequest().copy(emailAddresses = emails())
+      val request = migrateRequest(personId = 1L).copy(emailAddresses = emails())
 
       val responses = listOf(
         ContactEmailEntity(
@@ -341,7 +396,7 @@ class MigrationServiceTest {
 
     @Test
     fun `should extract and save contact (visitor) restrictions`() {
-      val request = migrateRequest().copy(restrictions = restrictions())
+      val request = migrateRequest(personId = 1L).copy(restrictions = restrictions())
 
       val responses = listOf(
         ContactRestrictionEntity(
@@ -405,7 +460,7 @@ class MigrationServiceTest {
 
     @Test
     fun `should extract and save contact employments`() {
-      val request = migrateRequest().copy(employments = employments())
+      val request = migrateRequest(personId = 1L).copy(employments = employments())
 
       val responses = listOf(
         ContactEmploymentEntity(
@@ -464,12 +519,12 @@ class MigrationServiceTest {
 
     @Test
     fun `should extract and save prisoner contact relationships`() {
-      val request = migrateRequest().copy(contacts = relationships())
+      val request = migrateRequest(personId = 2L).copy(contacts = relationships())
 
       val responses = listOf(
         PrisonerContactEntity(
           prisonerContactId = 1L,
-          contactId = 1L,
+          contactId = 2L,
           contactType = request.contacts[0].contactType.code,
           relationshipType = request.contacts[0].relationshipType.code,
           prisonerNumber = request.contacts[0].prisonerNumber,
@@ -484,7 +539,7 @@ class MigrationServiceTest {
         ),
         PrisonerContactEntity(
           prisonerContactId = 2L,
-          contactId = 1L,
+          contactId = 2L,
           contactType = request.contacts[1].contactType.code,
           relationshipType = request.contacts[1].relationshipType.code,
           prisonerNumber = request.contacts[1].prisonerNumber,
@@ -505,7 +560,7 @@ class MigrationServiceTest {
 
       val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
 
-      val result = migrationService.extractAndSavePrisonerContacts(request, 1L)
+      val result = migrationService.extractAndSavePrisonerContacts(request, 2L)
 
       assertThat(result.size).isEqualTo(2)
 
@@ -554,7 +609,7 @@ class MigrationServiceTest {
 
     @Test
     fun `should extract and save prisoner contact restrictions`() {
-      val request = migrateRequest().copy(contacts = relationshipsWithRestrictions())
+      val request = migrateRequest(personId = 1L).copy(contacts = relationshipsWithRestrictions())
 
       val relationshipResponse = PrisonerContactEntity(
         prisonerContactId = 1L,
@@ -701,9 +756,9 @@ class MigrationServiceTest {
     }
   }
 
-  private fun migrateRequest(): MigrateContactRequest =
+  private fun migrateRequest(personId: Long): MigrateContactRequest =
     MigrateContactRequest(
-      personId = 1,
+      personId = personId,
       title = CodedValue("MR", "Mr"),
       lastName = "Smith",
       firstName = "John",

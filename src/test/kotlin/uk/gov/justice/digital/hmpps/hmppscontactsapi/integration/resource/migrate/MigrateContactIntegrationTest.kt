@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.CodedValue
@@ -46,7 +47,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         .uri("/migrate/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(basicMigrationRequest())
+        .bodyValue(basicMigrationRequest(personId = 500))
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -58,7 +59,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         .uri("/migrate/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(basicMigrationRequest())
+        .bodyValue(basicMigrationRequest(personId = 500L))
         .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
         .exchange()
         .expectStatus()
@@ -67,7 +68,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
 
     @Test
     fun `should migrate a basic contact`() {
-      val request = basicMigrationRequest()
+      val request = basicMigrationRequest(personId = 500L)
       val countContactsBefore = contactRepository.count()
 
       val result = testAPIClient.migrateAContact(request)
@@ -76,7 +77,8 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         with(contact) {
           assertThat(elementType).isEqualTo(ElementType.CONTACT)
           assertThat(nomisId).isEqualTo(request.personId)
-          assertThat(dpsId).isGreaterThan(0L)
+          // NOTE: The dpsId and personId should both be the same
+          assertThat(dpsId).isEqualTo(request.personId)
         }
         assertThat(lastName).isEqualTo(request.lastName)
         assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
@@ -86,8 +88,28 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
     }
 
     @Test
+    fun `should prevent duplicate requests for the same personId and respond with a 409 error`() {
+      val request = basicMigrationRequest(personId = 501L)
+      val countContactsBefore = contactRepository.count()
+
+      // Initial request - success
+      val result1 = testAPIClient.migrateAContact(request)
+      assertThat(contactRepository.count()).isEqualTo(countContactsBefore + 1)
+
+      // Duplicate request - fail with 409 CONFLICT status
+      val result2 = testAPIClient.migrateAContactErrorResponse(request)
+      with(result2) {
+        assertThat(status).isEqualTo(HttpStatus.CONFLICT.value())
+        assertThat(userMessage).isEqualTo("Migration: Duplicate person ID received 501")
+      }
+
+      // No contact is added by the second request
+      assertThat(contactRepository.count()).isEqualTo(countContactsBefore + 1)
+    }
+
+    @Test
     fun `should migrate a contact with addresses, phones, emails, restrictions and identifiers`() {
-      val request = basicMigrationRequest().copy(
+      val request = basicMigrationRequest(502).copy(
         addresses = addresses(),
         phoneNumbers = phoneNumbers(),
         emailAddresses = emails(),
@@ -100,7 +122,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
       with(result) {
         assertThat(contact.elementType).isEqualTo(ElementType.CONTACT)
         assertThat(contact.nomisId).isEqualTo(request.personId)
-        assertThat(contact.dpsId).isGreaterThan(0L)
+        assertThat(contact.dpsId).isEqualTo(request.personId)
 
         assertThat(phoneNumbers).hasSize(2)
         assertThat(phoneNumbers).extracting("elementType", "nomisId")
@@ -133,7 +155,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
     fun `should migrate a contact with addresses with linked phone numbers`() {
       val phoneCount = contactPhoneRepository.count()
 
-      val request = basicMigrationRequest().copy(
+      val request = basicMigrationRequest(personId = 503).copy(
         addresses = addressesWithPhones(),
       )
 
@@ -173,7 +195,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
   }
 
   private fun basicMigrationRequest(
-    personId: Long = 1L,
+    personId: Long,
     lastName: String = "Smith",
     firstName: String = "John",
     dateOfBirth: LocalDate = LocalDate.of(2001, 1, 1),

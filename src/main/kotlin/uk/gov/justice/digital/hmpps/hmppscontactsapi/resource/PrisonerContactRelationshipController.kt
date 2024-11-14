@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationship
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummaryPage
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerContactRelationshipService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -36,7 +35,7 @@ class PrisonerContactRelationshipController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = PrisonerContactSummaryPage::class),
+            schema = Schema(implementation = PrisonerContactRelationshipDetails::class),
           ),
         ],
       ),
@@ -60,5 +59,5 @@ class PrisonerContactRelationshipController(
       description = "The id of the prisoner contact relationship to be returned",
       example = "1L",
     ) prisonerContactId: Long,
-  ): PrisonerContactRelationship = prisonerContactRelationshipService.getById(prisonerContactId)
+  ): PrisonerContactRelationshipDetails = prisonerContactRelationshipService.getById(prisonerContactId)
 }

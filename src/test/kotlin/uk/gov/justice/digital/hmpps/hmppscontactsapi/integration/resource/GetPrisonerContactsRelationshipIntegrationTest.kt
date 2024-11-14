@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 
 class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
   companion object {
@@ -54,7 +54,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should return OK`() {
-    val expectedPrisonerContactRelationship = PrisonerContactRelationship(
+    val expectedPrisonerContactRelationship = PrisonerContactRelationshipDetails(
       relationshipCode = "FA",
       relationshipDescription = "Father",
       nextOfKin = false,
@@ -70,7 +70,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(PrisonerContactRelationship::class.java)
+      .expectBody(PrisonerContactRelationshipDetails::class.java)
       .returnResult().responseBody!!
 
     assertThat(actualPrisonerContactSummary).isEqualTo(expectedPrisonerContactRelationship)

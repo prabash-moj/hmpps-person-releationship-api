@@ -14,7 +14,7 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactSummaryRepository
 import java.time.LocalDate
 import java.util.Optional
@@ -40,7 +40,7 @@ class PrisonerContactRelationshipServiceTest {
   @Test
   fun `should return when prisoner contact relationship exists`() {
     val prisonerContactId = 1L
-    val expectedPrisonerContactRelationship = PrisonerContactRelationship(
+    val expectedPrisonerContactRelationship = PrisonerContactRelationshipDetails(
       relationshipCode = "FRIEND",
       relationshipDescription = "Friend",
       nextOfKin = false,

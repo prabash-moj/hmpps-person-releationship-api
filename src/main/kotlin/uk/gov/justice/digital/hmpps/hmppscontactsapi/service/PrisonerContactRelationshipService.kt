@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactSummaryRepository
 
 @Service
@@ -11,13 +11,13 @@ class PrisonerContactRelationshipService(
   private val prisonerContactSummaryRepository: PrisonerContactSummaryRepository,
 ) {
 
-  fun getById(prisonerContactId: Long): PrisonerContactRelationship {
+  fun getById(prisonerContactId: Long): PrisonerContactRelationshipDetails {
     return prisonerContactSummaryRepository.findById(prisonerContactId)
       .orElseThrow { EntityNotFoundException("prisoner contact relationship with id $prisonerContactId not found") }.toRelationshipModel()
   }
 
-  fun PrisonerContactSummaryEntity.toRelationshipModel(): PrisonerContactRelationship {
-    return PrisonerContactRelationship(
+  fun PrisonerContactSummaryEntity.toRelationshipModel(): PrisonerContactRelationshipDetails {
+    return PrisonerContactRelationshipDetails(
       relationshipCode = this.relationshipType,
       relationshipDescription = this.relationshipDescription ?: "",
       nextOfKin = this.nextOfKin,

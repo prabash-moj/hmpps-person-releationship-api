@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "Describes the prisoner contact relationship")
-data class PrisonerContactRelationship(
+data class PrisonerContactRelationshipDetails(
 
   @Schema(description = "The relationship code between the prisoner and the contact", example = "FRI")
   val relationshipCode: String,

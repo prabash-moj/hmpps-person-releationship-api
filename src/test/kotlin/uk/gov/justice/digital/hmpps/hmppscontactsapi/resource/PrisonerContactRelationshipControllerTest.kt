@@ -8,7 +8,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerContactRelationshipService
 
 class PrisonerContactRelationshipControllerTest {
@@ -23,7 +23,7 @@ class PrisonerContactRelationshipControllerTest {
     val mockPrisonerContactRelationship = getMockPrisonerContactRelationship()
     whenever(prisonerContactRelationshipService.getById(prisonerContactId)).thenReturn(mockPrisonerContactRelationship)
 
-    val response: PrisonerContactRelationship = prisonerContactRelationshipController.getPrisonerContactById(prisonerContactId)
+    val response: PrisonerContactRelationshipDetails = prisonerContactRelationshipController.getPrisonerContactById(prisonerContactId)
 
     assertThat(response).isEqualTo(mockPrisonerContactRelationship)
     verify(prisonerContactRelationshipService).getById(prisonerContactId)
@@ -40,7 +40,7 @@ class PrisonerContactRelationshipControllerTest {
     verify(prisonerContactRelationshipService, times(1)).getById(prisonContactId)
   }
 
-  private fun getMockPrisonerContactRelationship() = PrisonerContactRelationship(
+  private fun getMockPrisonerContactRelationship() = PrisonerContactRelationshipDetails(
     relationshipCode = "FRI",
     relationshipDescription = "Friend",
     nextOfKin = false,

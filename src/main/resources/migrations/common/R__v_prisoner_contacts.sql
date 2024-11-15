@@ -65,7 +65,12 @@ AS
       order by cp1.created_time desc
       limit 1
   )
-  left join contact_email ce ON ce.contact_id = c.contact_id
+  left join contact_email ce ON ce.contact_email_id = (
+      select contact_email_id from contact_email ce1
+      where ce1.contact_id = c.contact_id
+      order by ce1.created_time desc
+      limit 1
+  )
   left join reference_codes rc1 ON rc1.group_code = 'TITLE' and rc1.code = c.title
   left join reference_codes rc2 ON rc2.group_code = 'PHONE_TYPE' and rc2.code = cp.phone_type
   left join reference_codes rc3 ON rc3.group_code = 'RELATIONSHIP' and rc3.code = pc.relationship_type

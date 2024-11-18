@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.CodedValue
@@ -88,22 +87,27 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
     }
 
     @Test
-    fun `should prevent duplicate requests for the same personId and respond with a 409 error`() {
+    fun `should allow duplicate requests for the same personId and recreate the contact`() {
       val request = basicMigrationRequest(personId = 501L)
       val countContactsBefore = contactRepository.count()
 
       // Initial request - success
       val result1 = testAPIClient.migrateAContact(request)
-      assertThat(contactRepository.count()).isEqualTo(countContactsBefore + 1)
-
-      // Duplicate request - fail with 409 CONFLICT status
-      val result2 = testAPIClient.migrateAContactErrorResponse(request)
-      with(result2) {
-        assertThat(status).isEqualTo(HttpStatus.CONFLICT.value())
-        assertThat(userMessage).isEqualTo("Migration: Duplicate person ID received 501")
+      with(result1) {
+        assertThat(this.contact.nomisId).isEqualTo(request.personId)
+        assertThat(this.contact.dpsId).isEqualTo(request.personId)
       }
 
-      // No contact is added by the second request
+      assertThat(contactRepository.count()).isEqualTo(countContactsBefore + 1)
+
+      // Duplicate request - should delete the original and replace it
+      val result2 = testAPIClient.migrateAContact(request)
+      with(result2) {
+        assertThat(this.contact.nomisId).isEqualTo(request.personId)
+        assertThat(this.contact.dpsId).isEqualTo(request.personId)
+      }
+
+      // Same count - the duplicate contact replaces the original
       assertThat(contactRepository.count()).isEqualTo(countContactsBefore + 1)
     }
 

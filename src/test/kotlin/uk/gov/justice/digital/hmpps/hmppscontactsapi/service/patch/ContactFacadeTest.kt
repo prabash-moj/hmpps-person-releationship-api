@@ -52,7 +52,7 @@ class ContactFacadeTest {
 
     assertThat(response).isEqualTo(result)
     verify(contactPatchService).patch(contactId, request)
-    verify(outboundEventsService).send(OutboundEvent.CONTACT_AMENDED, contactId)
+    verify(outboundEventsService).send(OutboundEvent.CONTACT_AMENDED, contactId, contactId)
   }
 
   @Test
@@ -68,7 +68,7 @@ class ContactFacadeTest {
     val result = contactFacade.createContact(request)
 
     assertThat(result).isEqualTo(createdContact)
-    verify(outboundEventsService).send(OutboundEvent.CONTACT_CREATED, 98765)
+    verify(outboundEventsService).send(OutboundEvent.CONTACT_CREATED, createdContact.id, createdContact.id)
   }
 
   @Test
@@ -91,8 +91,8 @@ class ContactFacadeTest {
     val result = contactFacade.createContact(request)
 
     assertThat(result).isEqualTo(createdContact)
-    verify(outboundEventsService).send(OutboundEvent.CONTACT_CREATED, 98765)
-    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_CREATED, 123456)
+    verify(outboundEventsService).send(OutboundEvent.CONTACT_CREATED, createdContact.id, createdContact.id)
+    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_CREATED, 123456, createdContact.id, "A1234BC")
   }
 
   @Test
@@ -113,7 +113,7 @@ class ContactFacadeTest {
 
     contactFacade.addContactRelationship(99, request)
 
-    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_CREATED, prisonerContactId)
+    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_CREATED, prisonerContactId, 99, "A1234BC")
   }
 
   @Test
@@ -126,7 +126,7 @@ class ContactFacadeTest {
 
     assertThat(contactFacade.searchContacts(pageable, request)).isEqualTo(result)
 
-    verify(outboundEventsService, never()).send(any(), any())
+    verify(outboundEventsService, never()).send(any(), any(), any(), any())
   }
 
   @Test
@@ -137,7 +137,7 @@ class ContactFacadeTest {
 
     assertThat(contactFacade.getContact(99L)).isEqualTo(expectedContact)
 
-    verify(outboundEventsService, never()).send(any(), any())
+    verify(outboundEventsService, never()).send(any(), any(), any(), any())
   }
 
   @Test
@@ -151,7 +151,7 @@ class ContactFacadeTest {
     contactFacade.patchRelationship(contactId, prisonerContactId, request)
 
     verify(contactService).updateContactRelationship(contactId, prisonerContactId, request)
-    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_AMENDED, contactId)
+    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_AMENDED, prisonerContactId, contactId)
   }
 
   private fun aContactDetails() = ContactDetails(

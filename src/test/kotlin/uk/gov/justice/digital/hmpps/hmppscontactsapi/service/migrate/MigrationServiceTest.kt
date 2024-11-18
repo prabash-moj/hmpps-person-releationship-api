@@ -4,9 +4,9 @@ import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
+import org.mockito.Mockito.reset
 import org.mockito.MockitoAnnotations.openMocks
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -117,20 +117,54 @@ class MigrationServiceTest {
     }
 
     @Test
-    fun `should identify duplicate requests for the same contact`() {
-      val request = migrateRequest(personId = 1L)
-      val exceptionExpected = DuplicatePersonException("Migration: Duplicate person ID received 1")
+    fun `should identify duplicate requests for the same contact and replace them`() {
+      val contactCaptor = argumentCaptor<ContactEntity>()
+      val contact = aContactEntity(1L)
 
+      whenever(contactRepository.existsById(1L)).thenReturn(false)
+      whenever(contactRepository.save(any())).thenReturn(contact)
+
+      val request = migrateRequest(personId = 1L)
+
+      val result1 = migrationService.migrateContact(request)
+
+      // IDs should be the same as the request
+      assertThat(result1.contact.nomisId).isEqualTo(request.personId)
+      assertThat(result1.contact.dpsId).isEqualTo(request.personId)
+
+      // Reset mocks to ignore the first usage
+      reset(contactRepository)
+      whenever(contactRepository.save(any())).thenReturn(contact)
       whenever(contactRepository.existsById(1L)).thenReturn(true)
 
-      val exceptionThrown = assertThrows<DuplicatePersonException> {
-        migrationService.migrateContact(request)
+      // Duplicate the request
+      val result2 = migrationService.migrateContact(request)
+
+      // IDs should be the same as the request
+      assertThat(result1.contact.nomisId).isEqualTo(request.personId)
+      assertThat(result1.contact.dpsId).isEqualTo(request.personId)
+
+      // Verify that the contact and all sub-entities are deleted for duplicated requests
+      verify(contactAddressPhoneRepository).deleteAllByContactId(request.personId)
+      verify(contactAddressRepository).deleteAllByContactId(request.personId)
+      verify(contactPhoneRepository).deleteAllByContactId(request.personId)
+      verify(contactEmailRepository).deleteAllByContactId(request.personId)
+      verify(contactIdentityRepository).deleteAllByContactId(request.personId)
+      verify(contactRestrictionRepository).deleteAllByContactId(request.personId)
+      verify(contactEmploymentRepository).deleteAllByContactId(request.personId)
+      verify(prisonerContactRepository).findAllByContactId(request.personId)
+      verify(prisonerContactRepository).deleteAllByContactId(request.personId)
+      verify(contactRepository).deleteAllByContactId(request.personId)
+
+      // No prisoner contact restrictions are on this request so will not be called
+      verify(prisonerContactRestrictionRepository, never()).deleteAllByPrisonerContactId(any())
+
+      // Will re-save the contact with the same person/contact ID
+      verify(contactRepository).save(contactCaptor.capture())
+
+      with(contactCaptor.firstValue) {
+        assertThat(this.contactId).isEqualTo(request.personId)
       }
-
-      assertThat(exceptionThrown.message).isEqualTo(exceptionExpected.message)
-      assertThat(exceptionThrown.javaClass).isEqualTo(exceptionExpected.javaClass)
-
-      verify(contactRepository, never()).saveAndFlush(any())
     }
   }
 

@@ -107,9 +107,8 @@ class MigrationService(
 
   fun extractAndSaveContact(req: MigrateContactRequest): Pair<Long, ContactEntity> {
     if (contactRepository.existsById(req.personId)) {
-      val message = "Migration: Duplicate person ID received ${req.personId}"
-      logger.error(message)
-      throw DuplicatePersonException(message)
+      logger.info("Migration: Duplicate person ID received ${req.personId} - replacing it")
+      removeExistingContactAndDetail(req.personId)
     }
 
     return Pair(
@@ -419,5 +418,20 @@ class MigrationService(
         )
       },
     )
+  }
+
+  fun removeExistingContactAndDetail(contactId: Long) {
+    contactAddressPhoneRepository.deleteAllByContactId(contactId)
+    contactAddressRepository.deleteAllByContactId(contactId)
+    contactPhoneRepository.deleteAllByContactId(contactId)
+    contactEmailRepository.deleteAllByContactId(contactId)
+    contactIdentityRepository.deleteAllByContactId(contactId)
+    contactRestrictionRepository.deleteAllByContactId(contactId)
+    contactEmploymentRepository.deleteAllByContactId(contactId)
+    prisonerContactRepository.findAllByContactId(contactId).map { pc ->
+      prisonerContactRestrictionRepository.deleteAllByPrisonerContactId(pc.prisonerContactId)
+    }
+    prisonerContactRepository.deleteAllByContactId(contactId)
+    contactRepository.deleteAllByContactId(contactId)
   }
 }

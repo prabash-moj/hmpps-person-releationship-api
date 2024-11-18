@@ -17,13 +17,21 @@ class ContactIdentityFacade(
 
   fun create(contactId: Long, request: CreateIdentityRequest): ContactIdentityDetails {
     return contactIdentityService.create(contactId, request).also {
-      outboundEventsService.send(OutboundEvent.CONTACT_IDENTITY_CREATED, it.contactIdentityId)
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_IDENTITY_CREATED,
+        identifier = it.contactIdentityId,
+        contactId = contactId,
+      )
     }
   }
 
   fun update(contactId: Long, contactIdentityId: Long, request: UpdateIdentityRequest): ContactIdentityDetails {
     return contactIdentityService.update(contactId, contactIdentityId, request).also {
-      outboundEventsService.send(OutboundEvent.CONTACT_IDENTITY_AMENDED, contactIdentityId)
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_IDENTITY_AMENDED,
+        identifier = contactIdentityId,
+        contactId = contactId,
+      )
     }
   }
 
@@ -33,7 +41,11 @@ class ContactIdentityFacade(
 
   fun delete(contactId: Long, contactIdentityId: Long) {
     contactIdentityService.delete(contactId, contactIdentityId).also {
-      outboundEventsService.send(OutboundEvent.CONTACT_IDENTITY_DELETED, contactIdentityId)
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_IDENTITY_DELETED,
+        identifier = contactIdentityId,
+        contactId = contactId,
+      )
     }
   }
 }

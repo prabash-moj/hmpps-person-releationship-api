@@ -16,7 +16,11 @@ class ContactPhoneFacade(
 
   fun create(contactId: Long, request: CreatePhoneRequest): ContactPhoneDetails {
     return contactPhoneService.create(contactId, request).also {
-      outboundEventsService.send(OutboundEvent.CONTACT_PHONE_CREATED, it.contactPhoneId)
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_PHONE_CREATED,
+        identifier = it.contactPhoneId,
+        contactId = contactId,
+      )
     }
   }
 
@@ -26,13 +30,21 @@ class ContactPhoneFacade(
 
   fun update(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails {
     return contactPhoneService.update(contactId, contactPhoneId, request).also {
-      outboundEventsService.send(OutboundEvent.CONTACT_PHONE_AMENDED, contactPhoneId)
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_PHONE_AMENDED,
+        identifier = contactPhoneId,
+        contactId = contactId,
+      )
     }
   }
 
   fun delete(contactId: Long, contactPhoneId: Long) {
     contactPhoneService.delete(contactId, contactPhoneId).also {
-      outboundEventsService.send(OutboundEvent.CONTACT_PHONE_DELETED, contactPhoneId)
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_PHONE_DELETED,
+        identifier = contactPhoneId,
+        contactId = contactId,
+      )
     }
   }
 }

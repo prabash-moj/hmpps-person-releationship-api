@@ -30,22 +30,45 @@ class ContactFacade(
   fun createContact(request: CreateContactRequest): ContactDetails {
     return contactService.createContact(request)
       .also { creationResult ->
-        outboundEventsService.send(OutboundEvent.CONTACT_CREATED, creationResult.createdContact.id)
-        creationResult.createdRelationship?.let { outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_CREATED, it) }
+        // Send the contact created event
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_CREATED,
+          identifier = creationResult.createdContact.id,
+          contactId = creationResult.createdContact.id,
+        )
+
+        // Send the prisons contact created event
+        creationResult.createdRelationship?.let {
+          outboundEventsService.send(
+            outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
+            identifier = it,
+            contactId = creationResult.createdContact.id,
+            noms = request.relationship?.prisonerNumber.let { request.relationship!!.prisonerNumber },
+          )
+        }
       }
       .createdContact
   }
 
   fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest) {
     val prisonerContactId = contactService.addContactRelationship(contactId, request)
-    outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_CREATED, prisonerContactId)
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
+      identifier = prisonerContactId,
+      contactId = contactId,
+      noms = request.relationship.prisonerNumber,
+    )
   }
 
   fun patch(id: Long, request: PatchContactRequest): PatchContactResponse {
     return contactPatchService.patch(id, request)
       .also {
         logger.info("Send patch domain event to {} {} ", OutboundEvent.CONTACT_AMENDED, id)
-        outboundEventsService.send(OutboundEvent.CONTACT_AMENDED, id)
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_AMENDED,
+          identifier = id,
+          contactId = id,
+        )
       }
   }
 
@@ -61,7 +84,12 @@ class ContactFacade(
     return contactService.updateContactRelationship(contactId, prisonerContactId, request)
       .also {
         logger.info("Send patch relationship domain event to {} {} ", OutboundEvent.CONTACT_AMENDED, contactId)
-        outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_AMENDED, contactId)
+        // TODO: Needs prisoner number adding as optional noms = prisonerNumber
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_AMENDED,
+          identifier = contactId,
+          contactId = contactId,
+        )
       }
   }
 }

@@ -12,15 +12,16 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
@@ -62,7 +63,7 @@ class ContactService(
 
     logger.info("Created new contact {}", createdContact)
     newRelationship?.let { logger.info("Created new relationship {}", newRelationship) }
-    return ContactCreationResult(enrichContact(createdContact), newRelationship?.prisonerContactId)
+    return ContactCreationResult(enrichContact(createdContact), newRelationship?.let { enrichRelationship(newRelationship) })
   }
 
   fun getContact(id: Long): ContactDetails? {
@@ -74,12 +75,12 @@ class ContactService(
     contactSearchRepository.searchContacts(request, pageable).toModel()
 
   @Transactional
-  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest): Long {
+  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
     validateRelationship(request.relationship)
     getContact(contactId) ?: throw EntityNotFoundException("Contact ($contactId) could not be found")
     val newRelationship = request.relationship.toEntity(contactId, request.createdBy)
     prisonerContactRepository.saveAndFlush(newRelationship)
-    return newRelationship.prisonerContactId
+    return enrichRelationship(newRelationship)
   }
 
   private fun validateRelationship(relationship: ContactRelationship) {
@@ -201,9 +202,12 @@ class ContactService(
   private fun validateRelationshipTypeCode(request: UpdateRelationshipRequest) {
     if (request.relationshipCode.isPresent && request.relationshipCode.get() != null) {
       val code = request.relationshipCode.get()!!
-      referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", code)
-        ?: throw ValidationException("Reference code with groupCode RELATIONSHIP and code '$code' not found.")
+      getRelationshipDescriptionIfValid(code)
     }
+  }
+
+  private fun getRelationshipDescriptionIfValid(code: String): String {
+    return referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", code)?.description ?: throw ValidationException("Reference code with groupCode RELATIONSHIP and code '$code' not found.")
   }
 
   private fun unsupportedRelationshipType(request: UpdateRelationshipRequest) {
@@ -228,5 +232,17 @@ class ContactService(
     if (request.isRelationshipActive.isPresent && request.isRelationshipActive.get() == null) {
       throw ValidationException("Unsupported relationship status null.")
     }
+  }
+
+  private fun enrichRelationship(createdRelationship: PrisonerContactEntity): PrisonerContactRelationshipDetails {
+    return PrisonerContactRelationshipDetails(
+      prisonerContactId = createdRelationship.prisonerContactId,
+      relationshipCode = createdRelationship.relationshipType,
+      relationshipDescription = getRelationshipDescriptionIfValid(createdRelationship.relationshipType),
+      emergencyContact = createdRelationship.emergencyContact,
+      nextOfKin = createdRelationship.nextOfKin,
+      isRelationshipActive = createdRelationship.active,
+      comments = createdRelationship.comments,
+    )
   }
 }

@@ -33,8 +33,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
@@ -70,7 +72,7 @@ class ContactController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactDetails::class),
+            schema = Schema(implementation = ContactCreationResult::class),
           ),
         ],
       ),
@@ -88,10 +90,10 @@ class ContactController(
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
   fun createContact(@Valid @RequestBody createContactRequest: CreateContactRequest): ResponseEntity<Any> {
-    val createdContact = contactFacade.createContact(createContactRequest)
+    val created = contactFacade.createContact(createContactRequest)
     return ResponseEntity
-      .created(URI.create("/contact/${createdContact.id}"))
-      .body(createdContact)
+      .created(URI.create("/contact/${created.createdContact.id}"))
+      .body(created)
   }
 
   @GetMapping("/{contactId}")
@@ -144,6 +146,12 @@ class ContactController(
       ApiResponse(
         responseCode = "201",
         description = "Created the relationship successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = PrisonerContactRelationshipDetails::class),
+          ),
+        ],
       ),
       ApiResponse(
         responseCode = "400",
@@ -166,8 +174,8 @@ class ContactController(
       example = "123456",
     ) contactId: Long,
     @Valid @RequestBody relationshipRequest: AddContactRelationshipRequest,
-  ) {
-    contactFacade.addContactRelationship(contactId, relationshipRequest)
+  ): PrisonerContactRelationshipDetails {
+    return contactFacade.addContactRelationship(contactId, relationshipRequest)
   }
 
   @GetMapping("/search")

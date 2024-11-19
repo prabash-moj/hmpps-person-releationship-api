@@ -19,6 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddres
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneNumberDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
@@ -27,6 +28,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOv
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import java.net.URI
@@ -47,7 +49,7 @@ class ContactControllerTest {
         firstName = "first",
         createdBy = "created",
       )
-      val expectedContact = ContactDetails(
+      val createdContact = ContactDetails(
         id = 99,
         lastName = request.lastName,
         firstName = request.firstName,
@@ -68,12 +70,14 @@ class ContactControllerTest {
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
-      whenever(contactFacade.createContact(request)).thenReturn(expectedContact)
+      val createdRelationship = createPrisonerContactRelationshipDetails(id = 123456)
+      val expected = ContactCreationResult(createdContact, createdRelationship)
+      whenever(contactFacade.createContact(request)).thenReturn(expected)
 
       val response = controller.createContact(request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
-      assertThat(response.body).isEqualTo(expectedContact)
+      assertThat(response.body).isEqualTo(expected)
       assertThat(response.headers.location).isEqualTo(URI.create("/contact/99"))
       verify(contactFacade).createContact(request)
     }
@@ -163,10 +167,12 @@ class ContactControllerTest {
 
     @Test
     fun `should create a contact relationship successfully`() {
-      doNothing().whenever(contactFacade).addContactRelationship(id, request)
+      val created = createPrisonerContactRelationshipDetails()
+      whenever(contactFacade.addContactRelationship(id, request)).thenReturn(created)
 
-      controller.addContactRelationship(id, request)
+      val result = controller.addContactRelationship(id, request)
 
+      assertThat(result).isEqualTo(created)
       verify(contactFacade).addContactRelationship(id, request)
     }
 

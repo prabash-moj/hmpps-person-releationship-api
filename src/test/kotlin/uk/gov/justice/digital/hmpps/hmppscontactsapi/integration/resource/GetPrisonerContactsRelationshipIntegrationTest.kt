@@ -55,6 +55,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return OK`() {
     val expectedPrisonerContactRelationship = PrisonerContactRelationshipDetails(
+      prisonerContactId = 1,
       relationshipCode = "FA",
       relationshipDescription = "Father",
       nextOfKin = false,

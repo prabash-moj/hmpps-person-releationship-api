@@ -15,11 +15,13 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.MigrateContactResponse
@@ -40,7 +42,23 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .isCreated
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectHeader().valuesMatch("Location", "/contact/(\\d)+")
-      .expectBody(ContactDetails::class.java)
+      .expectBody(ContactCreationResult::class.java)
+      .returnResult().responseBody!!.createdContact
+  }
+
+  fun createAContactWithARelationship(request: CreateContactRequest): ContactCreationResult {
+    return webTestClient.post()
+      .uri("/contact")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectHeader().valuesMatch("Location", "/contact/(\\d)+")
+      .expectBody(ContactCreationResult::class.java)
       .returnResult().responseBody!!
   }
 
@@ -94,8 +112,8 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody
   }
 
-  fun addAContactRelationship(contactId: Long, request: AddContactRelationshipRequest) {
-    webTestClient.post()
+  fun addAContactRelationship(contactId: Long, request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
+    return webTestClient.post()
       .uri("/contact/$contactId/relationship")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
@@ -104,6 +122,9 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .exchange()
       .expectStatus()
       .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PrisonerContactRelationshipDetails::class.java)
+      .returnResult().responseBody!!
   }
 
   fun getSearchContactResults(uri: URI) = webTestClient.get()

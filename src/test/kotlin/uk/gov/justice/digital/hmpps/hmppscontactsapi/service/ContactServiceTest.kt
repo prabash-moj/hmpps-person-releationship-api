@@ -209,6 +209,9 @@ class ContactServiceTest {
       )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", "FRI")).thenReturn(
+        ReferenceCode(1, "RELATIONSHIP", "FRI", "Friend", 1, true),
+      )
 
       service.createContact(request)
 
@@ -550,6 +553,9 @@ class ContactServiceTest {
       )
       whenever(contactRepository.findById(id)).thenReturn(Optional.of(contact))
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", "MOT")).thenReturn(
+        ReferenceCode(1, "RELATIONSHIP", "MOT", "Mother", 1, true),
+      )
 
       service.addContactRelationship(id, request)
 

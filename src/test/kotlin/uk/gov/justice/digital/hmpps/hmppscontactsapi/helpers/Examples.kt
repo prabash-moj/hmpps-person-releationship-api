@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddre
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -267,4 +268,22 @@ fun createContactIdentityDetails(
   createdTime,
   amendedBy,
   amendedTime,
+)
+
+fun createPrisonerContactRelationshipDetails(
+  id: Long = 1,
+  relationshipCode: String = "FRI",
+  relationshipDescription: String = "Friend",
+  emergencyContact: Boolean = false,
+  nextOfKin: Boolean = false,
+  isRelationshipActive: Boolean = true,
+  comments: String? = null,
+) = PrisonerContactRelationshipDetails(
+  id,
+  relationshipCode,
+  relationshipDescription,
+  emergencyContact,
+  nextOfKin,
+  isRelationshipActive,
+  comments,
 )

@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema
 @Schema(description = "Describes the prisoner contact relationship")
 data class PrisonerContactRelationshipDetails(
 
+  @Schema(description = "The unique identifier for the prisoner contact", example = "123456")
+  val prisonerContactId: Long,
+
   @Schema(description = "The relationship code between the prisoner and the contact", example = "FRI")
   val relationshipCode: String,
 

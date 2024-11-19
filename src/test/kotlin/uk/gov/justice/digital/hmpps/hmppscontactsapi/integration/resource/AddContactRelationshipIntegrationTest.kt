@@ -154,10 +154,8 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "USER",
     )
 
-    testAPIClient.addAContactRelationship(contact.id, request)
+    val createdRelationship = testAPIClient.addAContactRelationship(contact.id, request)
 
-    val contacts = testAPIClient.getPrisonerContacts("A1234BC").content
-    val createdRelationship = contacts.find { it.firstName == contact.firstName && it.lastName == contact.lastName }!!
     assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
     assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
     assertThat(createdRelationship.nextOfKin).isTrue()
@@ -181,10 +179,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "USER",
     )
 
-    testAPIClient.addAContactRelationship(contact.id, request)
-
-    val contacts = testAPIClient.getPrisonerContacts("A1234BC").content
-    val createdRelationship = contacts.find { it.firstName == contact.firstName && it.lastName == contact.lastName }!!
+    val createdRelationship = testAPIClient.addAContactRelationship(contact.id, request)
     assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
     assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
     assertThat(createdRelationship.nextOfKin).isFalse()

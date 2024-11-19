@@ -15,7 +15,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddres
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneNumberDetails
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ContactCreationResult
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
@@ -24,6 +24,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOv
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPatchService
@@ -63,11 +64,12 @@ class ContactFacadeTest {
       createdBy = "created",
     )
     val createdContact = aContactDetails().copy(id = 98765)
-    whenever(contactService.createContact(request)).thenReturn(ContactCreationResult(createdContact, null))
+    val expected = ContactCreationResult(createdContact, null)
+    whenever(contactService.createContact(request)).thenReturn(expected)
 
     val result = contactFacade.createContact(request)
 
-    assertThat(result).isEqualTo(createdContact)
+    assertThat(result).isEqualTo(expected)
     verify(outboundEventsService).send(OutboundEvent.CONTACT_CREATED, createdContact.id, createdContact.id)
   }
 
@@ -86,11 +88,13 @@ class ContactFacadeTest {
       createdBy = "created",
     )
     val createdContact = aContactDetails().copy(id = 98765)
-    whenever(contactService.createContact(request)).thenReturn(ContactCreationResult(createdContact, 123456))
+    val createdRelationship = createPrisonerContactRelationshipDetails(id = 123456)
+    val expected = ContactCreationResult(createdContact, createdRelationship)
+    whenever(contactService.createContact(request)).thenReturn(expected)
 
     val result = contactFacade.createContact(request)
 
-    assertThat(result).isEqualTo(createdContact)
+    assertThat(result).isEqualTo(expected)
     verify(outboundEventsService).send(OutboundEvent.CONTACT_CREATED, createdContact.id, createdContact.id)
     verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_CREATED, 123456, createdContact.id, "A1234BC")
   }
@@ -108,8 +112,8 @@ class ContactFacadeTest {
       "user",
     )
     val prisonerContactId = 123456L
-
-    whenever(contactService.addContactRelationship(99, request)).thenReturn(prisonerContactId)
+    val createdRelationship = createPrisonerContactRelationshipDetails(id = prisonerContactId)
+    whenever(contactService.addContactRelationship(99, request)).thenReturn(createdRelationship)
 
     contactFacade.addContactRelationship(99, request)
 

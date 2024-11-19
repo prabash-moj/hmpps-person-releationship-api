@@ -41,6 +41,7 @@ class PrisonerContactRelationshipServiceTest {
   fun `should return when prisoner contact relationship exists`() {
     val prisonerContactId = 1L
     val expectedPrisonerContactRelationship = PrisonerContactRelationshipDetails(
+      prisonerContactId = prisonerContactId,
       relationshipCode = "FRIEND",
       relationshipDescription = "Friend",
       nextOfKin = false,

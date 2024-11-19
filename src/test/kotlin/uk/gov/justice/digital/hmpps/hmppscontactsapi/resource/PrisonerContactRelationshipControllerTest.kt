@@ -41,6 +41,7 @@ class PrisonerContactRelationshipControllerTest {
   }
 
   private fun getMockPrisonerContactRelationship() = PrisonerContactRelationshipDetails(
+    prisonerContactId = 1,
     relationshipCode = "FRI",
     relationshipDescription = "Friend",
     nextOfKin = false,

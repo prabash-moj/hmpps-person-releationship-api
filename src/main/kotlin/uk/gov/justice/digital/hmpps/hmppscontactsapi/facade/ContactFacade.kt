@@ -10,8 +10,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPatchService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
@@ -27,7 +29,7 @@ class ContactFacade(
     private val logger = LoggerFactory.getLogger(this::class.java)
   }
 
-  fun createContact(request: CreateContactRequest): ContactDetails {
+  fun createContact(request: CreateContactRequest): ContactCreationResult {
     return contactService.createContact(request)
       .also { creationResult ->
         // Send the contact created event
@@ -41,23 +43,23 @@ class ContactFacade(
         creationResult.createdRelationship?.let {
           outboundEventsService.send(
             outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
-            identifier = it,
+            identifier = it.prisonerContactId,
             contactId = creationResult.createdContact.id,
             noms = request.relationship?.prisonerNumber.let { request.relationship!!.prisonerNumber },
           )
         }
       }
-      .createdContact
   }
 
-  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest) {
-    val prisonerContactId = contactService.addContactRelationship(contactId, request)
+  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
+    val createdRelationship = contactService.addContactRelationship(contactId, request)
     outboundEventsService.send(
       outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
-      identifier = prisonerContactId,
+      identifier = createdRelationship.prisonerContactId,
       contactId = contactId,
       noms = request.relationship.prisonerNumber,
     )
+    return createdRelationship
   }
 
   fun patch(id: Long, request: PatchContactRequest): PatchContactResponse {

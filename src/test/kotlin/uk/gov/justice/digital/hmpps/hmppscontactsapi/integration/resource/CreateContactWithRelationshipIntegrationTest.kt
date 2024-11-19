@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.mo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactInfo
@@ -97,17 +97,13 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       relationship = requestedRelationship,
     )
 
-    testAPIClient.createAContact(request)
+    val created = testAPIClient.createAContactWithARelationship(request)
 
-    val prisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
-    assertThat(prisonerContacts).hasSize(1)
+    assertThat(created.createdContact.lastName).isEqualTo(request.lastName)
+    asserPrisonerContactEquals(created.createdRelationship!!, requestedRelationship)
 
-    val prisonerContact = prisonerContacts[0]
-    assertThat(prisonerContact.lastName).isEqualTo(request.lastName)
-    asserPrisonerContactEquals(prisonerContact, requestedRelationship)
-
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(prisonerContact.contactId))
-    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(prisonerContact.prisonerContactId))
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(created.createdContact.id))
+    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(created.createdRelationship!!.prisonerContactId))
   }
 
   @Test
@@ -128,19 +124,16 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       relationship = requestedRelationship,
     )
 
-    testAPIClient.createAContact(request)
-    val prisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
-    assertThat(prisonerContacts).hasSize(1)
+    val created = testAPIClient.createAContactWithARelationship(request)
 
-    val prisonerContact = prisonerContacts[0]
-    assertThat(prisonerContact.lastName).isEqualTo(request.lastName)
-    asserPrisonerContactEquals(prisonerContact, requestedRelationship)
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(prisonerContact.contactId))
-    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(prisonerContact.prisonerContactId))
+    assertThat(created.createdContact.lastName).isEqualTo(request.lastName)
+    asserPrisonerContactEquals(created.createdRelationship!!, requestedRelationship)
+    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(created.createdContact.id))
+    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(created.createdRelationship!!.prisonerContactId))
   }
 
   private fun asserPrisonerContactEquals(
-    prisonerContact: PrisonerContactSummary,
+    prisonerContact: PrisonerContactRelationshipDetails,
     relationship: ContactRelationship,
   ) {
     with(prisonerContact) {

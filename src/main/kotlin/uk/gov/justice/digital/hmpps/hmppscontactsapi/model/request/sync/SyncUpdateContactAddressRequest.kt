@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "Request to update a contact address")
-data class UpdateContactAddressRequest(
+data class SyncUpdateContactAddressRequest(
   @Schema(description = "The id of the contact linked to this address", example = "123456")
   val contactId: Long,
 

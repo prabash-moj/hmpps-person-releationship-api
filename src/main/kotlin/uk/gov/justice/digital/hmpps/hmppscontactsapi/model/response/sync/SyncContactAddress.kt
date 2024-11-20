@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "An address related to a contact")
-data class ContactAddress(
+data class SyncContactAddress(
 
   @Schema(description = "The id of the contact address", example = "123456")
   val contactAddressId: Long = 0,

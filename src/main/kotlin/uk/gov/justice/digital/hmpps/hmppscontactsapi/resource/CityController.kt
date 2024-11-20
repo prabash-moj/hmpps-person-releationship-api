@@ -68,7 +68,7 @@ class CityController(private val cityService: CityService) {
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun getAllCountries() = cityService.getAllCountries()
+  fun getAllCities() = cityService.getAllCities()
 
   @GetMapping("/nomis-code/{code}")
   @Operation(

@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestrictionRepository
 
@@ -25,7 +25,7 @@ class SyncContactRestrictionService(
   }
 
   @Transactional(readOnly = true)
-  fun getContactRestrictionById(contactRestrictionId: Long): ContactRestriction {
+  fun getContactRestrictionById(contactRestrictionId: Long): SyncContactRestriction {
     val contactRestrictionEntity = contactRestrictionRepository.findById(contactRestrictionId)
       .orElseThrow { EntityNotFoundException("Contact restriction with ID $contactRestrictionId not found") }
     return contactRestrictionEntity.toModel()
@@ -37,13 +37,13 @@ class SyncContactRestrictionService(
     contactRestrictionRepository.deleteById(contactRestrictionId)
   }
 
-  fun createContactRestriction(request: CreateContactRestrictionRequest): ContactRestriction {
+  fun createContactRestriction(request: SyncCreateContactRestrictionRequest): SyncContactRestriction {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
     return contactRestrictionRepository.saveAndFlush(request.toEntity()).toModel()
   }
 
-  fun updateContactRestriction(contactRestrictionId: Long, request: UpdateContactRestrictionRequest): ContactRestriction {
+  fun updateContactRestriction(contactRestrictionId: Long, request: SyncUpdateContactRestrictionRequest): SyncContactRestriction {
     val contact = contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
 

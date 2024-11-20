@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -110,7 +110,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactRestriction::class.java)
+        .expectBody(SyncContactRestriction::class.java)
         .returnResult().responseBody!!
 
       with(contactRestriction) {
@@ -133,7 +133,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactRestriction::class.java)
+        .expectBody(SyncContactRestriction::class.java)
         .returnResult().responseBody!!
 
       // The created restriction is returned
@@ -160,7 +160,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactRestriction::class.java)
+        .expectBody(SyncContactRestriction::class.java)
         .returnResult().responseBody!!
 
       with(contactRestriction) {
@@ -181,7 +181,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactRestriction::class.java)
+        .expectBody(SyncContactRestriction::class.java)
         .returnResult().responseBody!!
 
       // Check the updated copy
@@ -221,7 +221,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun updateContactRestrictionRequest(contactId: Long) =
-      UpdateContactRestrictionRequest(
+      SyncUpdateContactRestrictionRequest(
         contactId = contactId,
         restrictionType = "RESTRICTION",
         startDate = LocalDate.of(1982, 6, 15),
@@ -233,7 +233,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       )
 
     private fun createContactRestrictionRequest(contactId: Long) =
-      CreateContactRestrictionRequest(
+      SyncCreateContactRestrictionRequest(
         contactId = contactId,
         restrictionType = "NEW",
         startDate = LocalDate.of(1982, 6, 15),

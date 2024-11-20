@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "Restriction related to a contact")
-data class ContactRestriction(
+data class SyncContactRestriction(
   @Schema(description = "Unique identifier for the contact restriction", example = "1")
   val contactRestrictionId: Long,
 

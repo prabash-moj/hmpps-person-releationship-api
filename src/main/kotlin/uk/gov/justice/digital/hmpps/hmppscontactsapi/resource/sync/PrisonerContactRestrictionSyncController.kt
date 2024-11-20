@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.SyncFacade
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.PrisonerContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContactRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
@@ -52,7 +52,7 @@ class PrisonerContactRestrictionSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = PrisonerContactRestriction::class),
+            schema = Schema(implementation = SyncPrisonerContactRestriction::class),
           ),
         ],
       ),
@@ -63,7 +63,7 @@ class PrisonerContactRestrictionSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun getPrisonerContactRestrictionById(
+  fun syncGetPrisonerContactRestrictionById(
     @Parameter(description = "The internal ID for a prisoner contact restriction.", required = true)
     @PathVariable prisonerContactRestrictionId: Long,
   ) = syncFacade.getPrisonerContactRestrictionById(prisonerContactRestrictionId)
@@ -92,7 +92,7 @@ class PrisonerContactRestrictionSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun deletePrisonerContactRestrictionById(
+  fun syncDeletePrisonerContactRestrictionById(
     @Parameter(description = "The internal ID for the prisoner contact restriction.", required = true)
     @PathVariable prisonerContactRestrictionId: Long,
   ) = syncFacade.deletePrisonerContactRestriction(prisonerContactRestrictionId)
@@ -114,7 +114,7 @@ class PrisonerContactRestrictionSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = PrisonerContactRestriction::class),
+            schema = Schema(implementation = SyncPrisonerContactRestriction::class),
           ),
         ],
       ),
@@ -126,8 +126,8 @@ class PrisonerContactRestrictionSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun createPrisonerContactRestriction(
-    @Valid @RequestBody createPrisonerContactRestrictionRequest: CreatePrisonerContactRestrictionRequest,
+  fun syncCreatePrisonerContactRestriction(
+    @Valid @RequestBody createPrisonerContactRestrictionRequest: SyncCreatePrisonerContactRestrictionRequest,
   ) = syncFacade.createPrisonerContactRestriction(createPrisonerContactRestrictionRequest)
 
   @PutMapping(
@@ -150,7 +150,7 @@ class PrisonerContactRestrictionSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = PrisonerContactRestriction::class),
+            schema = Schema(implementation = SyncPrisonerContactRestriction::class),
           ),
         ],
       ),
@@ -165,9 +165,9 @@ class PrisonerContactRestrictionSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun updatePrisonerContactRestriction(
+  fun syncUpdatePrisonerContactRestriction(
     @Parameter(description = "The internal ID for the prisoner contact restriction.", required = true)
     @PathVariable prisonerContactRestrictionId: Long,
-    @Valid @RequestBody updatePrisonerContactRestrictionRequest: UpdatePrisonerContactRestrictionRequest,
+    @Valid @RequestBody updatePrisonerContactRestrictionRequest: SyncUpdatePrisonerContactRestrictionRequest,
   ) = syncFacade.updatePrisonerContactRestriction(prisonerContactRestrictionId, updatePrisonerContactRestrictionRequest)
 }

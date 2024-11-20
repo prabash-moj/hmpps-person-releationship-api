@@ -33,7 +33,7 @@ class ContactIdentityControllerTest {
       )
       whenever(facade.create(1, request)).thenReturn(createdIdentity)
 
-      val response = controller.create(1, request)
+      val response = controller.createIdentityNumber(1, request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
       assertThat(response.body).isEqualTo(createdIdentity)
@@ -51,7 +51,7 @@ class ContactIdentityControllerTest {
       whenever(facade.create(1, request)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.create(1, request)
+        controller.createIdentityNumber(1, request)
       }
 
       assertThat(exception).isEqualTo(expected)
@@ -72,7 +72,7 @@ class ContactIdentityControllerTest {
       )
       whenever(facade.update(1, 2, request)).thenReturn(updatedIdentity)
 
-      val response = controller.update(1, 2, request)
+      val response = controller.updateIdentityNumber(1, 2, request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(response.body).isEqualTo(updatedIdentity)
@@ -91,7 +91,7 @@ class ContactIdentityControllerTest {
       whenever(facade.update(1, 2, request)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.update(1, 2, request)
+        controller.updateIdentityNumber(1, 2, request)
       }
 
       assertThat(exception).isEqualTo(expected)
@@ -129,7 +129,7 @@ class ContactIdentityControllerTest {
       val expected = EntityNotFoundException("Bang!")
       whenever(facade.get(11, 99)).thenThrow(expected)
       val exception = assertThrows<EntityNotFoundException> {
-        controller.get(11, 99)
+        controller.getIdentityNumber(11, 99)
       }
       assertThat(exception).isEqualTo(expected)
     }
@@ -141,7 +141,7 @@ class ContactIdentityControllerTest {
     fun `should return 204 if deleted successfully`() {
       whenever(facade.delete(1, 2)).then { }
 
-      val response = controller.delete(1, 2)
+      val response = controller.deleteIdentityNumber(1, 2)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
       verify(facade).delete(1, 2)
@@ -153,7 +153,7 @@ class ContactIdentityControllerTest {
       whenever(facade.delete(1, 2)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.delete(1, 2)
+        controller.deleteIdentityNumber(1, 2)
       }
 
       assertThat(exception).isEqualTo(expected)

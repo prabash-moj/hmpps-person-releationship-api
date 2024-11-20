@@ -34,7 +34,7 @@ class ContactPhoneControllerTest {
       )
       whenever(facade.create(1, request)).thenReturn(createdPhone)
 
-      val response = controller.create(1, request)
+      val response = controller.createPhone(1, request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
       assertThat(response.body).isEqualTo(createdPhone)
@@ -53,7 +53,7 @@ class ContactPhoneControllerTest {
       whenever(facade.create(1, request)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.create(1, request)
+        controller.createPhone(1, request)
       }
 
       assertThat(exception).isEqualTo(expected)
@@ -89,7 +89,7 @@ class ContactPhoneControllerTest {
     fun `throw EntityNotFoundException when contact or phone cannot be found`() {
       whenever(facade.get(11, 99)).thenReturn(null)
       val exception = assertThrows<EntityNotFoundException> {
-        controller.get(11, 99)
+        controller.getPhone(11, 99)
       }
       assertThat(exception.message).isEqualTo("Contact phone with id (99) not found for contact (11)")
     }
@@ -108,7 +108,7 @@ class ContactPhoneControllerTest {
       )
       whenever(facade.update(1, 2, request)).thenReturn(updatedPhone)
 
-      val response = controller.update(1, 2, request)
+      val response = controller.updatePhone(1, 2, request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(response.body).isEqualTo(updatedPhone)
@@ -127,7 +127,7 @@ class ContactPhoneControllerTest {
       whenever(facade.update(1, 2, request)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.update(1, 2, request)
+        controller.updatePhone(1, 2, request)
       }
 
       assertThat(exception).isEqualTo(expected)
@@ -141,7 +141,7 @@ class ContactPhoneControllerTest {
     fun `should return 204 if deleted successfully`() {
       whenever(facade.delete(1, 2)).then { }
 
-      val response = controller.delete(1, 2)
+      val response = controller.deletePhone(1, 2)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
       verify(facade).delete(1, 2)
@@ -153,7 +153,7 @@ class ContactPhoneControllerTest {
       whenever(facade.delete(1, 2)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.delete(1, 2)
+        controller.deletePhone(1, 2)
       }
 
       assertThat(exception).isEqualTo(expected)

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 
 @Schema(description = "Request to update a new contact identity ")
-data class UpdateContactIdentityRequest(
+data class SyncUpdateContactIdentityRequest(
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 

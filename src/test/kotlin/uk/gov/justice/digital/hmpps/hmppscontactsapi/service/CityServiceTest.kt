@@ -69,12 +69,12 @@ class CityServiceTest {
   }
 
   @Nested
-  inner class GetAllCountries {
+  inner class GetAllCities {
 
     @Test
-    fun `should return a list of all countries`() {
+    fun `should return a list of all cities`() {
       // Given
-      val countries = listOf(
+      val cities = listOf(
         CityEntity(
           cityId = 1L,
           nomisCode = "USA",
@@ -88,10 +88,10 @@ class CityServiceTest {
           displaySequence = 123,
         ),
       )
-      whenever(cityRepository.findAll()).thenReturn(countries)
+      whenever(cityRepository.findAll()).thenReturn(cities)
 
       // When
-      val result = cityService.getAllCountries()
+      val result = cityService.getAllCities()
 
       // Then
       assertThat(result.size).isEqualTo(2)

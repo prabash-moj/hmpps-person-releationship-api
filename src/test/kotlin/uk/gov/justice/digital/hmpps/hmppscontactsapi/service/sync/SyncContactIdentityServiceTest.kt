@@ -15,8 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactIdentityRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
@@ -155,7 +155,7 @@ class SyncContactIdentityServiceTest {
   }
 
   private fun updateContactIdentityRequest(contactId: Long = 1L) =
-    UpdateContactIdentityRequest(
+    SyncUpdateContactIdentityRequest(
       contactId = contactId,
       identityType = "PASS",
       identityValue = "PP87878787878",
@@ -165,7 +165,7 @@ class SyncContactIdentityServiceTest {
     )
 
   private fun createContactIdentityRequest() =
-    CreateContactIdentityRequest(
+    SyncCreateContactIdentityRequest(
       contactId = 1L,
       identityType = "PASS",
       identityValue = "PP87878787878",
@@ -198,7 +198,7 @@ class SyncContactIdentityServiceTest {
       createdBy = "TEST",
     )
 
-  private fun UpdateContactIdentityRequest.toEntity(contactIdentityId: Long = 1L): ContactIdentityEntity {
+  private fun SyncUpdateContactIdentityRequest.toEntity(contactIdentityId: Long = 1L): ContactIdentityEntity {
     return ContactIdentityEntity(
       contactIdentityId = contactIdentityId,
       contactId = this.contactId,

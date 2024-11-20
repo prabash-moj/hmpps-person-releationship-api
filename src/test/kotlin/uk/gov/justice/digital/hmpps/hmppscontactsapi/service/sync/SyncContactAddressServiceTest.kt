@@ -14,8 +14,8 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
@@ -189,7 +189,7 @@ class SyncContactAddressServiceTest {
   }
 
   private fun updateContactAddressRequest(contactId: Long = 1L) =
-    UpdateContactAddressRequest(
+    SyncUpdateContactAddressRequest(
       contactId = contactId,
       addressType = "HOME",
       primaryAddress = true,
@@ -205,7 +205,7 @@ class SyncContactAddressServiceTest {
     )
 
   private fun createContactAddressRequest() =
-    CreateContactAddressRequest(
+    SyncCreateContactAddressRequest(
       contactId = 1L,
       addressType = "HOME",
       primaryAddress = true,
@@ -251,7 +251,7 @@ class SyncContactAddressServiceTest {
       createdBy = "TEST",
     )
 
-  private fun CreateContactAddressRequest.toEntity(contactAddressId: Long = 0) =
+  private fun SyncCreateContactAddressRequest.toEntity(contactAddressId: Long = 0) =
     ContactAddressEntity(
       contactAddressId = contactAddressId,
       contactId = this.contactId,
@@ -268,7 +268,7 @@ class SyncContactAddressServiceTest {
       createdBy = this.createdBy,
     )
 
-  private fun UpdateContactAddressRequest.toEntity(contactAddressId: Long = 1L): ContactAddressEntity {
+  private fun SyncUpdateContactAddressRequest.toEntity(contactAddressId: Long = 1L): ContactAddressEntity {
     val updatedBy = this.updatedBy
     val updatedTime = this.updatedTime
 

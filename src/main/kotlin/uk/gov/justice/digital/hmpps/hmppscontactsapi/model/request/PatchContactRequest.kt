@@ -1,10 +1,9 @@
-package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Size
 import org.openapitools.jackson.nullable.JsonNullable
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 
 @Schema(

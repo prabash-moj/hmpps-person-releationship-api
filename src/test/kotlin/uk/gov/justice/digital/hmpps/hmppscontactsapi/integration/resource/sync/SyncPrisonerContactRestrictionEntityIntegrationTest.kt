@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.PrisonerContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContactRestriction
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -102,7 +102,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContactRestriction::class.java)
+        .expectBody(SyncPrisonerContactRestriction::class.java)
         .returnResult().responseBody!!
 
       with(prisonerContactRestriction) {
@@ -133,7 +133,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContactRestriction::class.java)
+        .expectBody(SyncPrisonerContactRestriction::class.java)
         .returnResult().responseBody!!
 
       // The created is returned
@@ -165,7 +165,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContactRestriction::class.java)
+        .expectBody(SyncPrisonerContactRestriction::class.java)
         .returnResult().responseBody!!
 
       with(prisonerContactRestriction) {
@@ -193,7 +193,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContactRestriction::class.java)
+        .expectBody(SyncPrisonerContactRestriction::class.java)
         .returnResult().responseBody!!
 
       // Check the updated copy
@@ -225,7 +225,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContactRestriction::class.java)
+        .expectBody(SyncPrisonerContactRestriction::class.java)
         .returnResult().responseBody!!
 
       webTestClient.delete()
@@ -246,7 +246,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
     }
 
     private fun updatePrisonerContactRestrictionRequest() =
-      UpdatePrisonerContactRestrictionRequest(
+      SyncUpdatePrisonerContactRestrictionRequest(
         contactId = 1L,
         restrictionType = "PREINF",
         startDate = LocalDate.of(2024, 1, 1),
@@ -260,7 +260,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
       )
 
     private fun createPrisonerContactRestrictionRequest() =
-      CreatePrisonerContactRestrictionRequest(
+      SyncCreatePrisonerContactRestrictionRequest(
         contactId = 1L,
         restrictionType = "PREINF",
         startDate = LocalDate.of(2024, 1, 1),

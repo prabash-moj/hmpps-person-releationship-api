@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactAddress
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddress
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
@@ -40,7 +40,7 @@ class SyncContactAddressService(
   }
 
   @Transactional(readOnly = true)
-  fun getContactAddressById(contactAddressId: Long): ContactAddress {
+  fun getContactAddressById(contactAddressId: Long): SyncContactAddress {
     val contactAddress = contactAddressRepository.findById(contactAddressId)
       .orElseThrow { EntityNotFoundException("Contact address with ID $contactAddressId not found") }
     return contactAddress.toModel()
@@ -52,13 +52,13 @@ class SyncContactAddressService(
     contactAddressRepository.deleteById(contactAddressId)
   }
 
-  fun createContactAddress(request: CreateContactAddressRequest): ContactAddress {
+  fun createContactAddress(request: SyncCreateContactAddressRequest): SyncContactAddress {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
     return contactAddressRepository.saveAndFlush(request.toEntity()).toModel()
   }
 
-  fun updateContactAddress(contactAddressId: Long, request: UpdateContactAddressRequest): ContactAddress {
+  fun updateContactAddress(contactAddressId: Long, request: SyncUpdateContactAddressRequest): SyncContactAddress {
     val contact = contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
 

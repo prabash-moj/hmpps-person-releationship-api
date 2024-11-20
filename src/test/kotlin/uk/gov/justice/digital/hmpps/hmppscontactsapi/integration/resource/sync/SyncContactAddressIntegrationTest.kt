@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactAddress
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddress
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import java.time.LocalDateTime
 
@@ -113,7 +113,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactAddress::class.java)
+        .expectBody(SyncContactAddress::class.java)
         .returnResult().responseBody!!
 
       with(contactAddress) {
@@ -136,7 +136,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactAddress::class.java)
+        .expectBody(SyncContactAddress::class.java)
         .returnResult().responseBody!!
 
       // The created address is returned
@@ -163,7 +163,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactAddress::class.java)
+        .expectBody(SyncContactAddress::class.java)
         .returnResult().responseBody!!
 
       with(contactAddress) {
@@ -185,7 +185,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactAddress::class.java)
+        .expectBody(SyncContactAddress::class.java)
         .returnResult().responseBody!!
 
       // Check the updated copy
@@ -213,7 +213,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactAddress::class.java)
+        .expectBody(SyncContactAddress::class.java)
         .returnResult().responseBody!!
 
       with(contactAddress) {
@@ -234,7 +234,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactAddress::class.java)
+        .expectBody(SyncContactAddress::class.java)
         .returnResult().responseBody!!
 
       // Check the updated address is now verified (with who and when)
@@ -266,7 +266,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun updateContactAddressRequest(contactId: Long, verified: Boolean = false) =
-      UpdateContactAddressRequest(
+      SyncUpdateContactAddressRequest(
         contactId = contactId,
         addressType = "WORK",
         primaryAddress = false,
@@ -285,7 +285,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
       )
 
     private fun createContactAddressRequest(contactId: Long) =
-      CreateContactAddressRequest(
+      SyncCreateContactAddressRequest(
         contactId = contactId,
         addressType = "HOME",
         primaryAddress = false,

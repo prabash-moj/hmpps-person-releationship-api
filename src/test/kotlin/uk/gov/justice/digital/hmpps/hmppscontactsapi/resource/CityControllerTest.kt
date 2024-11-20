@@ -39,16 +39,16 @@ class CityControllerTest {
   }
 
   @Test
-  fun `getAllCountries should return list of countries`() {
-    val mockCountries = listOf(
+  fun `getAllCities should return list of countries`() {
+    val mockCities = listOf(
       getMockCity(1L),
       getMockCity(2L),
     )
-    whenever(cityService.getAllCountries()).thenReturn(mockCountries)
+    whenever(cityService.getAllCities()).thenReturn(mockCities)
 
-    val response: List<City> = cityController.getAllCountries()
+    val response: List<City> = cityController.getAllCities()
 
-    assertThat(response).isEqualTo(mockCountries)
+    assertThat(response).isEqualTo(mockCities)
   }
 
   @Test

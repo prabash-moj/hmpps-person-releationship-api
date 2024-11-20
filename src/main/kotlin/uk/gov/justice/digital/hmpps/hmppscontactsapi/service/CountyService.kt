@@ -21,5 +21,5 @@ class CountyService(private val countyRepository: CountyRepository) {
       .orElseThrow { EntityNotFoundException("County with nomis code $code not found") }.toModel()
 
   @Transactional(readOnly = true)
-  fun getAllCountries(): List<County> = countyRepository.findAll().toModel()
+  fun getAllCounties(): List<County> = countyRepository.findAll().toModel()
 }

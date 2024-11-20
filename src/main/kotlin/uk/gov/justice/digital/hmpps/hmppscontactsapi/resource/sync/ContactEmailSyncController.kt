@@ -58,7 +58,7 @@ class ContactEmailSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun getContactEmailById(
+  fun syncGetContactEmailById(
     @Parameter(description = "The internal ID for a contact email.", required = true)
     @PathVariable contactEmailId: Long,
   ) = syncFacade.getContactEmailById(contactEmailId)
@@ -84,7 +84,7 @@ class ContactEmailSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun deleteContactEmailById(
+  fun syncDeleteContactEmailById(
     @Parameter(description = "The internal ID for the contact email.", required = true)
     @PathVariable contactEmailId: Long,
   ) = syncFacade.deleteContactEmail(contactEmailId)
@@ -118,7 +118,7 @@ class ContactEmailSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun createContactEmail(
+  fun syncCreateContactEmail(
     @Valid @RequestBody request: SyncCreateContactEmailRequest,
   ) = syncFacade.createContactEmail(request)
 
@@ -154,7 +154,7 @@ class ContactEmailSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun updateContactEmail(
+  fun syncUpdateContactEmail(
     @Parameter(description = "The internal ID for the contact email.", required = true)
     @PathVariable contactEmailId: Long,
     @Valid @RequestBody request: SyncUpdateContactEmailRequest,

@@ -70,7 +70,7 @@ class CountyServiceTest {
   }
 
   @Nested
-  inner class GetAllCountries {
+  inner class GetAllCounties {
 
     @Test
     fun `should return a list of all countries`() {
@@ -92,7 +92,7 @@ class CountyServiceTest {
       whenever(countyRepository.findAll()).thenReturn(countries)
 
       // When
-      val result = countyService.getAllCountries()
+      val result = countyService.getAllCounties()
 
       // Then
       assertThat(result.size).isEqualTo(2)

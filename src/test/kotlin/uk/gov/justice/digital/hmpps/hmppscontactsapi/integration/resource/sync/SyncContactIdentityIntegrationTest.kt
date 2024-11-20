@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactIdentityRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactIdentityRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactIdentity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
 import java.time.LocalDateTime
 
 class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
@@ -109,7 +109,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactIdentity::class.java)
+        .expectBody(SyncContactIdentity::class.java)
         .returnResult().responseBody!!
 
       with(contactIdentity) {
@@ -129,7 +129,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactIdentity::class.java)
+        .expectBody(SyncContactIdentity::class.java)
         .returnResult().responseBody!!
 
       // The created identity is returned
@@ -155,7 +155,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactIdentity::class.java)
+        .expectBody(SyncContactIdentity::class.java)
         .returnResult().responseBody!!
 
       with(contactIdentity) {
@@ -174,7 +174,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(ContactIdentity::class.java)
+        .expectBody(SyncContactIdentity::class.java)
         .returnResult().responseBody!!
 
       // Check the updated copy
@@ -212,7 +212,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun updateContactIdentityRequest(contactId: Long) =
-      UpdateContactIdentityRequest(
+      SyncUpdateContactIdentityRequest(
         contactId = contactId,
         identityType = "PASS",
         identityValue = "PP87878787878",
@@ -222,7 +222,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
       )
 
     private fun createContactIdentityRequest(contactId: Long) =
-      CreateContactIdentityRequest(
+      SyncCreateContactIdentityRequest(
         contactId = contactId,
         identityType = "PASS",
         identityValue = "PP87878787878",

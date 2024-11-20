@@ -19,5 +19,5 @@ class CityService(private val cityRepository: CityRepository) {
     .orElseThrow { EntityNotFoundException("City with code $code not found") }.toModel()
 
   @Transactional(readOnly = true)
-  fun getAllCountries(): List<City> = cityRepository.findAll().toModel()
+  fun getAllCities(): List<City> = cityRepository.findAll().toModel()
 }

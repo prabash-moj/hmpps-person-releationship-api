@@ -2,10 +2,10 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 
-fun ContactEntity.mapEntityToSyncResponse(): Contact {
-  return Contact(
+fun ContactEntity.mapEntityToSyncResponse(): SyncContact {
+  return SyncContact(
     id = this.contactId,
     title = this.title,
     firstName = this.firstName,

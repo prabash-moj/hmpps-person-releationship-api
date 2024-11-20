@@ -16,9 +16,9 @@ import org.mockito.kotlin.whenever
 import org.openapitools.jackson.nullable.JsonNullable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.lang.Boolean.TRUE

@@ -39,17 +39,17 @@ class LanguageControllerTest {
   }
 
   @Test
-  fun `getAllCountries should return list of countries`() {
-    val mockCountries = listOf(
+  fun `getAllLanguages should return list of languages`() {
+    val mockLanguages = listOf(
       getMockLanguage(1L),
       getMockLanguage(2L),
     )
-    whenever(languageService.getAllCountries()).thenReturn(mockCountries)
+    whenever(languageService.getAllLanguages()).thenReturn(mockLanguages)
 
-    val response = languageController.getAllCountries()
+    val response = languageController.getAllLanguages()
 
-    assertThat(response).isEqualTo(mockCountries)
-    verify(languageService).getAllCountries()
+    assertThat(response).isEqualTo(mockLanguages)
+    verify(languageService).getAllLanguages()
   }
 
   @Test

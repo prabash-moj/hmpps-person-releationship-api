@@ -73,7 +73,7 @@ class LanguageController(private val languageService: LanguageService) {
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun getAllCountries() = languageService.getAllCountries()
+  fun getAllLanguages() = languageService.getAllLanguages()
 
   @GetMapping("/nomis-code/{code}")
   @Operation(

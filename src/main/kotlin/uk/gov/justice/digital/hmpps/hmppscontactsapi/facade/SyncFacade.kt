@@ -2,22 +2,22 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactIdentityRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactIdentityRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
@@ -81,7 +81,7 @@ class SyncFacade(
         )
       }
 
-  fun updateContact(contactId: Long, request: UpdateContactRequest) =
+  fun updateContact(contactId: Long, request: SyncUpdateContactRequest) =
     syncContactService.updateContact(contactId, request)
       .also {
         outboundEventsService.send(
@@ -160,13 +160,13 @@ class SyncFacade(
   fun getContactIdentityById(contactIdentityId: Long) =
     syncContactIdentityService.getContactIdentityById(contactIdentityId)
 
-  fun createContactIdentity(request: CreateContactIdentityRequest) =
+  fun createContactIdentity(request: SyncCreateContactIdentityRequest) =
     syncContactIdentityService.createContactIdentity(request)
       .also {
         logger.info("TODO - Create contact identity domain event")
       }
 
-  fun updateContactIdentity(contactIdentityId: Long, request: UpdateContactIdentityRequest) =
+  fun updateContactIdentity(contactIdentityId: Long, request: SyncUpdateContactIdentityRequest) =
     syncContactIdentityService.updateContactIdentity(contactIdentityId, request)
       .also {
         logger.info("TODO - Update contact identity domain event")
@@ -185,13 +185,13 @@ class SyncFacade(
   fun getContactRestrictionById(contactRestrictionId: Long) =
     syncContactRestrictionService.getContactRestrictionById(contactRestrictionId)
 
-  fun createContactRestriction(request: CreateContactRestrictionRequest) =
+  fun createContactRestriction(request: SyncCreateContactRestrictionRequest) =
     syncContactRestrictionService.createContactRestriction(request)
       .also {
         logger.info("TODO - Create contact restriction domain event")
       }
 
-  fun updateContactRestriction(contactRestrictionId: Long, request: UpdateContactRestrictionRequest) =
+  fun updateContactRestriction(contactRestrictionId: Long, request: SyncUpdateContactRestrictionRequest) =
     syncContactRestrictionService.updateContactRestriction(contactRestrictionId, request)
       .also {
         logger.info("TODO - Update contact restriction domain event")
@@ -210,13 +210,13 @@ class SyncFacade(
   fun getContactAddressById(contactAddressId: Long) =
     syncContactAddressService.getContactAddressById(contactAddressId)
 
-  fun createContactAddress(request: CreateContactAddressRequest) =
+  fun createContactAddress(request: SyncCreateContactAddressRequest) =
     syncContactAddressService.createContactAddress(request)
       .also {
         logger.info("TODO - Create contact address domain event")
       }
 
-  fun updateContactAddress(contactAddressId: Long, request: UpdateContactAddressRequest) =
+  fun updateContactAddress(contactAddressId: Long, request: SyncUpdateContactAddressRequest) =
     syncContactAddressService.updateContactAddress(contactAddressId, request)
       .also {
         logger.info("TODO - Update contact address domain event")
@@ -235,13 +235,13 @@ class SyncFacade(
   fun getPrisonerContactById(prisonerContactId: Long) =
     syncPrisonerContactService.getPrisonerContactById(prisonerContactId)
 
-  fun createPrisonerContact(request: CreatePrisonerContactRequest) =
+  fun createPrisonerContact(request: SyncCreatePrisonerContactRequest) =
     syncPrisonerContactService.createPrisonerContact(request)
       .also {
         logger.info("TODO - Create prisoner contact domain event")
       }
 
-  fun updatePrisonerContact(prisonerContactId: Long, request: UpdatePrisonerContactRequest) =
+  fun updatePrisonerContact(prisonerContactId: Long, request: SyncUpdatePrisonerContactRequest) =
     syncPrisonerContactService.updatePrisonerContact(prisonerContactId, request)
       .also {
         logger.info("TODO - Update prisoner contact domain event")
@@ -260,13 +260,13 @@ class SyncFacade(
   fun getPrisonerContactRestrictionById(prisonerContactRestrictionId: Long) =
     syncPrisonerContactRestrictionService.getPrisonerContactRestrictionById(prisonerContactRestrictionId)
 
-  fun createPrisonerContactRestriction(request: CreatePrisonerContactRestrictionRequest) =
+  fun createPrisonerContactRestriction(request: SyncCreatePrisonerContactRestrictionRequest) =
     syncPrisonerContactRestrictionService.createPrisonerContactRestriction(request)
       .also {
         logger.info("TODO - Create prisoner contact restriction domain event")
       }
 
-  fun updatePrisonerContactRestriction(prisonerContactRestrictionId: Long, request: UpdatePrisonerContactRestrictionRequest) =
+  fun updatePrisonerContactRestriction(prisonerContactRestrictionId: Long, request: SyncUpdatePrisonerContactRestrictionRequest) =
     syncPrisonerContactRestrictionService.updatePrisonerContactRestriction(prisonerContactRestrictionId, request)
       .also {
         logger.info("TODO - Update prisoner contact restriction domain event")

@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "Request object to create a prisoner contact details")
-data class CreatePrisonerContactRequest(
+data class SyncCreatePrisonerContactRequest(
 
   @Schema(description = "The ID of the prisoner contact", example = "12345")
   val contactId: Long,

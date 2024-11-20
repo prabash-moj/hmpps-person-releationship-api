@@ -32,7 +32,7 @@ class ContactEmailControllerTest {
       )
       whenever(facade.create(1, request)).thenReturn(createdEmail)
 
-      val response = controller.create(1, request)
+      val response = controller.createEmailAddress(1, request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
       assertThat(response.body).isEqualTo(createdEmail)
@@ -49,7 +49,7 @@ class ContactEmailControllerTest {
       whenever(facade.create(1, request)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.create(1, request)
+        controller.createEmailAddress(1, request)
       }
 
       assertThat(exception).isEqualTo(expected)
@@ -68,7 +68,7 @@ class ContactEmailControllerTest {
       )
       whenever(facade.update(1, 2, request)).thenReturn(updatedEmail)
 
-      val response = controller.update(1, 2, request)
+      val response = controller.updateEmailAddress(1, 2, request)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(response.body).isEqualTo(updatedEmail)
@@ -85,7 +85,7 @@ class ContactEmailControllerTest {
       whenever(facade.update(1, 2, request)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.update(1, 2, request)
+        controller.updateEmailAddress(1, 2, request)
       }
 
       assertThat(exception).isEqualTo(expected)
@@ -119,7 +119,7 @@ class ContactEmailControllerTest {
       val expected = EntityNotFoundException("Bang!")
       whenever(facade.get(11, 99)).thenThrow(expected)
       val exception = assertThrows<EntityNotFoundException> {
-        controller.get(11, 99)
+        controller.getEmailAddress(11, 99)
       }
       assertThat(exception).isEqualTo(expected)
     }
@@ -131,7 +131,7 @@ class ContactEmailControllerTest {
     fun `should return 204 if deleted successfully`() {
       whenever(facade.delete(1, 2)).then { }
 
-      val response = controller.delete(1, 2)
+      val response = controller.deleteEmailAddress(1, 2)
 
       assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
       verify(facade).delete(1, 2)
@@ -143,7 +143,7 @@ class ContactEmailControllerTest {
       whenever(facade.delete(1, 2)).thenThrow(expected)
 
       val exception = assertThrows<EntityNotFoundException> {
-        controller.delete(1, 2)
+        controller.deleteEmailAddress(1, 2)
       }
 
       assertThat(exception).isEqualTo(expected)

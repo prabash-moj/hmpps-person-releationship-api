@@ -12,8 +12,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.mo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent

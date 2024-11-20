@@ -68,7 +68,7 @@ class CountyController(private val countyService: CountyService) {
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun getAllCountries() = countyService.getAllCountries()
+  fun getAllCounties() = countyService.getAllCounties()
 
   @GetMapping("/nomis-code/{code}")
   @Operation(

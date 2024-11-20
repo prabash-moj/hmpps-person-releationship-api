@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.SyncFacade
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Sync endpoints - contact restriction")
@@ -47,7 +47,7 @@ class ContactRestrictionSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactRestriction::class),
+            schema = Schema(implementation = SyncContactRestriction::class),
           ),
         ],
       ),
@@ -58,7 +58,7 @@ class ContactRestrictionSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun getContactRestrictionById(
+  fun syncGetContactRestrictionById(
     @Parameter(description = "The internal ID for a contact restriction.", required = true)
     @PathVariable contactRestrictionId: Long,
   ) = syncFacade.getContactRestrictionById(contactRestrictionId)
@@ -84,7 +84,7 @@ class ContactRestrictionSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun deleteContactRestrictionById(
+  fun syncDeleteContactRestrictionById(
     @Parameter(description = "The internal ID for the contact restriction.", required = true)
     @PathVariable contactRestrictionId: Long,
   ) = syncFacade.deleteContactRestriction(contactRestrictionId)
@@ -106,7 +106,7 @@ class ContactRestrictionSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactRestriction::class),
+            schema = Schema(implementation = SyncContactRestriction::class),
           ),
         ],
       ),
@@ -118,8 +118,8 @@ class ContactRestrictionSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun createContactRestriction(
-    @Valid @RequestBody request: CreateContactRestrictionRequest,
+  fun syncCreateContactRestriction(
+    @Valid @RequestBody request: SyncCreateContactRestrictionRequest,
   ) = syncFacade.createContactRestriction(request)
 
   @PutMapping(path = ["/contact-restriction/{contactRestrictionId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -139,7 +139,7 @@ class ContactRestrictionSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactRestriction::class),
+            schema = Schema(implementation = SyncContactRestriction::class),
           ),
         ],
       ),
@@ -154,9 +154,9 @@ class ContactRestrictionSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun updateContactRestriction(
+  fun syncUpdateContactRestriction(
     @Parameter(description = "The internal ID for the contact restriction.", required = true)
     @PathVariable contactRestrictionId: Long,
-    @Valid @RequestBody request: UpdateContactRestrictionRequest,
+    @Valid @RequestBody request: SyncUpdateContactRestrictionRequest,
   ) = syncFacade.updateContactRestriction(contactRestrictionId, request)
 }

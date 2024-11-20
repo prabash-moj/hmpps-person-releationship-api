@@ -39,17 +39,17 @@ class CountyControllerTest {
   }
 
   @Test
-  fun `getAllCountries should return list of countries`() {
-    val mockCountries = listOf(
+  fun `getAllCounties should return list of counties`() {
+    val mockCounties = listOf(
       getCountry(1L),
       getCountry(2L),
     )
-    whenever(countyService.getAllCountries()).thenReturn(mockCountries)
+    whenever(countyService.getAllCounties()).thenReturn(mockCounties)
 
-    val response = countyController.getAllCountries()
+    val response = countyController.getAllCounties()
 
-    assertThat(response).isEqualTo(mockCountries)
-    verify(countyService).getAllCountries()
+    assertThat(response).isEqualTo(mockCounties)
+    verify(countyService).getAllCounties()
   }
 
   @Test

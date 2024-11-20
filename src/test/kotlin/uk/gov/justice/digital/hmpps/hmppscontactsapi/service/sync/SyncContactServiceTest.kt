@@ -15,7 +15,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapSyncRequestToEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 import java.time.LocalDate
@@ -158,7 +158,7 @@ class SyncContactServiceTest {
   }
 
   private fun updateContactRequest() =
-    UpdateContactRequest(
+    SyncUpdateContactRequest(
       title = "Mr",
       firstName = "John",
       lastName = "Doe",
@@ -216,7 +216,7 @@ class SyncContactServiceTest {
       interpreterRequired = false,
     )
 
-  private fun UpdateContactRequest.toEntity(contactId: Long = 1L): ContactEntity {
+  private fun SyncUpdateContactRequest.toEntity(contactId: Long = 1L): ContactEntity {
     val updatedBy = this.updatedBy
     val updatedTime = this.updatedTime
 

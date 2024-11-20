@@ -267,7 +267,7 @@ class LanguageIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Nested
-  inner class GetAllCountries {
+  inner class GetAllLanguages {
 
     @Test
     fun `should return unauthorized if no token`() {

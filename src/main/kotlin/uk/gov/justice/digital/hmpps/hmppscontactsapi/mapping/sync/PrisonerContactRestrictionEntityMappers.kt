@@ -1,10 +1,10 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.PrisonerContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContactRestriction
 
-fun CreatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestrictionEntity {
+fun SyncCreatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestrictionEntity {
   return PrisonerContactRestrictionEntity(
     prisonerContactRestrictionId = 0L,
     prisonerContactId = this.contactId,
@@ -20,8 +20,8 @@ fun CreatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestricti
   )
 }
 
-fun PrisonerContactRestrictionEntity.toResponse(): PrisonerContactRestriction {
-  return PrisonerContactRestriction(
+fun PrisonerContactRestrictionEntity.toResponse(): SyncPrisonerContactRestriction {
+  return SyncPrisonerContactRestriction(
     prisonerContactRestrictionId = this.prisonerContactRestrictionId,
     contactId = this.prisonerContactId,
     restrictionType = this.restrictionType,

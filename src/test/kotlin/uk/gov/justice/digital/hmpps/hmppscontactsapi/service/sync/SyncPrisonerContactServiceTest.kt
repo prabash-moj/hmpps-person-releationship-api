@@ -12,8 +12,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -203,7 +203,7 @@ class SyncPrisonerContactServiceTest {
   }
 
   private fun updatePrisonerContactRequest() =
-    UpdatePrisonerContactRequest(
+    SyncUpdatePrisonerContactRequest(
       contactId = 12345L,
       prisonerNumber = "A1234BC",
       contactType = "O",
@@ -223,7 +223,7 @@ class SyncPrisonerContactServiceTest {
     )
 
   private fun createPrisonerContactRequest() =
-    CreatePrisonerContactRequest(
+    SyncCreatePrisonerContactRequest(
       contactId = 12345L,
       prisonerNumber = "A1234BC",
       contactType = "S",
@@ -266,7 +266,7 @@ class SyncPrisonerContactServiceTest {
       it.amendedTime = LocalDateTime.now()
     }
 
-  private fun UpdatePrisonerContactRequest.toEntity(): PrisonerContactEntity {
+  private fun SyncUpdatePrisonerContactRequest.toEntity(): PrisonerContactEntity {
     val updatedBy = this.amendedBy
     val updatedTime = this.updatedTime
 

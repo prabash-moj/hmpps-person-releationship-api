@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.SyncFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
@@ -49,7 +49,7 @@ class ContactSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = Contact::class),
+            schema = Schema(implementation = SyncContact::class),
           ),
         ],
       ),
@@ -60,7 +60,7 @@ class ContactSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun getContactById(
+  fun syncGetContactById(
     @Parameter(description = "The internal ID for a contact.", required = true)
     @PathVariable contactId: Long,
   ) = syncFacade.getContactById(contactId)
@@ -86,7 +86,7 @@ class ContactSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun deleteContactById(
+  fun syncDeleteContactById(
     @Parameter(description = "The internal ID for the contact.", required = true)
     @PathVariable contactId: Long,
   ) = syncFacade.deleteContact(contactId)
@@ -108,7 +108,7 @@ class ContactSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = Contact::class),
+            schema = Schema(implementation = SyncContact::class),
           ),
         ],
       ),
@@ -125,7 +125,7 @@ class ContactSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun createContact(
+  fun syncCreateContact(
     @Valid @RequestBody createContactRequest: SyncCreateContactRequest,
   ) = syncFacade.createContact(createContactRequest)
 
@@ -146,7 +146,7 @@ class ContactSyncController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = Contact::class),
+            schema = Schema(implementation = SyncContact::class),
           ),
         ],
       ),
@@ -161,9 +161,9 @@ class ContactSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun updateContact(
+  fun syncUpdateContact(
     @Parameter(description = "The internal ID for the contact.", required = true)
     @PathVariable contactId: Long,
-    @Valid @RequestBody updateContactRequest: UpdateContactRequest,
+    @Valid @RequestBody updateContactRequest: SyncUpdateContactRequest,
   ) = syncFacade.updateContact(contactId, updateContactRequest)
 }

@@ -15,8 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestrictionRepository
 import java.time.LocalDate
@@ -168,7 +168,7 @@ class SyncContactRestrictionServiceTest {
   }
 
   private fun updateContactRestrictionRequest(contactId: Long = 1L) =
-    UpdateContactRestrictionRequest(
+    SyncUpdateContactRestrictionRequest(
       contactId = contactId,
       restrictionType = "DRIVING",
       startDate = LocalDate.of(1980, 2, 1),
@@ -180,7 +180,7 @@ class SyncContactRestrictionServiceTest {
     )
 
   private fun createContactRestrictionRequest() =
-    CreateContactRestrictionRequest(
+    SyncCreateContactRestrictionRequest(
       contactId = 1L,
       restrictionType = "DRIVING",
       startDate = LocalDate.of(1980, 2, 1),
@@ -217,7 +217,7 @@ class SyncContactRestrictionServiceTest {
       createdBy = "TEST",
     )
 
-  private fun UpdateContactRestrictionRequest.toEntity(contactRestrictionId: Long = 1L): ContactRestrictionEntity {
+  private fun SyncUpdateContactRestrictionRequest.toEntity(contactRestrictionId: Long = 1L): ContactRestrictionEntity {
     val updatedBy = this.updatedBy
     val updatedTime = this.updatedTime
 

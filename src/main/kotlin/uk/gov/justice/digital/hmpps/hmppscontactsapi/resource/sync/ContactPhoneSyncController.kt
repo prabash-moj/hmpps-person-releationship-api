@@ -58,7 +58,7 @@ class ContactPhoneSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun getContactPhoneById(
+  fun syncGetContactPhoneById(
     @Parameter(description = "The internal ID for a contact phone.", required = true)
     @PathVariable contactPhoneId: Long,
   ) = syncFacade.getContactPhoneById(contactPhoneId)
@@ -84,7 +84,7 @@ class ContactPhoneSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun deleteContactPhoneById(
+  fun syncDeleteContactPhoneById(
     @Parameter(description = "The internal ID for the contact phone.", required = true)
     @PathVariable contactPhoneId: Long,
   ) = syncFacade.deleteContactPhone(contactPhoneId)
@@ -118,7 +118,7 @@ class ContactPhoneSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun createContactPhone(
+  fun syncCreateContactPhone(
     @Valid @RequestBody request: SyncCreateContactPhoneRequest,
   ) = syncFacade.createContactPhone(request)
 
@@ -154,7 +154,7 @@ class ContactPhoneSyncController(
     ],
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun updateContactPhone(
+  fun syncUpdateContactPhone(
     @Parameter(description = "The internal ID for the contact phone.", required = true)
     @PathVariable contactPhoneId: Long,
     @Valid @RequestBody request: SyncUpdateContactPhoneRequest,

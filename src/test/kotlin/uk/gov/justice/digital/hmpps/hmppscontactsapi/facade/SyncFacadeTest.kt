@@ -10,8 +10,8 @@ import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
@@ -173,7 +173,7 @@ class SyncFacadeTest {
       )
 
     private fun contactResponse(contactId: Long) =
-      Contact(
+      SyncContact(
         id = contactId,
         firstName = "John",
         lastName = "Doe",
@@ -185,7 +185,7 @@ class SyncFacadeTest {
       )
 
     private fun updateContactSyncRequest() =
-      UpdateContactRequest(
+      SyncUpdateContactRequest(
         firstName = "John",
         lastName = "Doe",
         estimatedIsOverEighteen = null,

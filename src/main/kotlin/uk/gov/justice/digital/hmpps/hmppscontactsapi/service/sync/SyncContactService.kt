@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapEntityToSyncResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapSyncRequestToEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 
@@ -22,7 +22,7 @@ class SyncContactService(
   }
 
   @Transactional(readOnly = true)
-  fun getContactById(contactId: Long): Contact {
+  fun getContactById(contactId: Long): SyncContact {
     val contactEntity = contactRepository.findById(contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID $contactId not found") }
     return contactEntity.mapEntityToSyncResponse()
@@ -40,7 +40,7 @@ class SyncContactService(
    * ranges for contactId - one for those created in NOMIS and another for those created
    * in DPS. The ranges can not overlap.
    */
-  fun createContact(request: SyncCreateContactRequest): Contact {
+  fun createContact(request: SyncCreateContactRequest): SyncContact {
     if (contactRepository.existsById(request.personId)) {
       val message = "Sync: Duplicate person ID received ${request.personId}"
       logger.error(message)
@@ -49,7 +49,7 @@ class SyncContactService(
     return contactRepository.saveAndFlush(request.mapSyncRequestToEntity()).mapEntityToSyncResponse()
   }
 
-  fun updateContact(contactId: Long, request: UpdateContactRequest): Contact {
+  fun updateContact(contactId: Long, request: SyncUpdateContactRequest): SyncContact {
     val contact = contactRepository.findById(contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID $contactId not found") }
 

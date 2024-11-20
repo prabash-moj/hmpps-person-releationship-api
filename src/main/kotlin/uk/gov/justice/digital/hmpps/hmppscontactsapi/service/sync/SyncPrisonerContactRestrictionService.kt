@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.PrisonerContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContactRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionRepository
 
 @Service
@@ -17,7 +17,7 @@ class SyncPrisonerContactRestrictionService(
 ) {
 
   @Transactional(readOnly = true)
-  fun getPrisonerContactRestrictionById(prisonerContactRestrictionId: Long): PrisonerContactRestriction {
+  fun getPrisonerContactRestrictionById(prisonerContactRestrictionId: Long): SyncPrisonerContactRestriction {
     val contactEntity = prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)
       .orElseThrow { EntityNotFoundException("Prisoner contact restriction with ID $prisonerContactRestrictionId not found") }
     return contactEntity.toResponse()
@@ -29,11 +29,11 @@ class SyncPrisonerContactRestrictionService(
     prisonerContactRestrictionRepository.deleteById(prisonerContactRestrictionId)
   }
 
-  fun createPrisonerContactRestriction(request: CreatePrisonerContactRestrictionRequest): PrisonerContactRestriction {
+  fun createPrisonerContactRestriction(request: SyncCreatePrisonerContactRestrictionRequest): SyncPrisonerContactRestriction {
     return prisonerContactRestrictionRepository.saveAndFlush(request.toEntity()).toResponse()
   }
 
-  fun updatePrisonerContactRestriction(prisonerContactRestrictionId: Long, request: UpdatePrisonerContactRestrictionRequest): PrisonerContactRestriction {
+  fun updatePrisonerContactRestriction(prisonerContactRestrictionId: Long, request: SyncUpdatePrisonerContactRestrictionRequest): SyncPrisonerContactRestriction {
     val contact = prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)
       .orElseThrow { EntityNotFoundException("Prisoner contact restriction with ID $prisonerContactRestrictionId not found") }
 

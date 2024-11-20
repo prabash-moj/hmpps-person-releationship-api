@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.PrisonerContact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContact
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -102,7 +102,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContact::class.java)
+        .expectBody(SyncPrisonerContact::class.java)
         .returnResult().responseBody!!
 
       with(prisonerContact) {
@@ -139,7 +139,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContact::class.java)
+        .expectBody(SyncPrisonerContact::class.java)
         .returnResult().responseBody!!
 
       // The created is returned
@@ -178,7 +178,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContact::class.java)
+        .expectBody(SyncPrisonerContact::class.java)
         .returnResult().responseBody!!
 
       with(prisonerContact) {
@@ -213,7 +213,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContact::class.java)
+        .expectBody(SyncPrisonerContact::class.java)
         .returnResult().responseBody!!
 
       // Check the updated copy
@@ -250,7 +250,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         .expectStatus()
         .isOk
         .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBody(PrisonerContact::class.java)
+        .expectBody(SyncPrisonerContact::class.java)
         .returnResult().responseBody!!
 
       webTestClient.delete()
@@ -271,7 +271,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
     }
 
     private fun updatePrisonerContactRequest() =
-      UpdatePrisonerContactRequest(
+      SyncUpdatePrisonerContactRequest(
         contactId = 1L,
         prisonerNumber = "A1234BC",
         contactType = "O",
@@ -291,7 +291,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
       )
 
     private fun createPrisonerContactRequest() =
-      CreatePrisonerContactRequest(
+      SyncCreatePrisonerContactRequest(
         contactId = 1L,
         prisonerNumber = "A1234BC",
         contactType = "S",

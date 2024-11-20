@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactAddress
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddress
 
-fun ContactAddressEntity.toModel(): ContactAddress {
-  return ContactAddress(
+fun ContactAddressEntity.toModel(): SyncContactAddress {
+  return SyncContactAddress(
     contactAddressId = this.contactAddressId,
     contactId = this.contactId!!,
     addressType = this.addressType,
@@ -35,7 +35,7 @@ fun ContactAddressEntity.toModel(): ContactAddress {
 
 fun List<ContactAddressEntity>.toModel() = map { it.toModel() }
 
-fun CreateContactAddressRequest.toEntity(): ContactAddressEntity {
+fun SyncCreateContactAddressRequest.toEntity(): ContactAddressEntity {
   return ContactAddressEntity(
     contactAddressId = 0L,
     contactId = this.contactId,

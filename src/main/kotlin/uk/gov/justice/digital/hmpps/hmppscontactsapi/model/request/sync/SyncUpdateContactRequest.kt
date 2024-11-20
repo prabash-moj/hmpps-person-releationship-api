@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "Request to update a new contact ")
-data class UpdateContactRequest(
+data class SyncUpdateContactRequest(
 
   @Schema(
     description =

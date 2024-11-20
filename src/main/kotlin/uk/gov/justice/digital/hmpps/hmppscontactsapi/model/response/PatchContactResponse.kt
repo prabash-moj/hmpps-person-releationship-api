@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen

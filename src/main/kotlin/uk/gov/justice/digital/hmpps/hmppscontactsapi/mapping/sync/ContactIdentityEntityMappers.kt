@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactIdentityRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactIdentity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
 
-fun ContactIdentityEntity.toModel(): ContactIdentity {
-  return ContactIdentity(
+fun ContactIdentityEntity.toModel(): SyncContactIdentity {
+  return SyncContactIdentity(
     contactIdentityId = this.contactIdentityId,
     contactId = this.contactId!!,
     identityType = this.identityType,
@@ -20,7 +20,7 @@ fun ContactIdentityEntity.toModel(): ContactIdentity {
 
 fun List<ContactIdentityEntity>.toModel() = map { it.toModel() }
 
-fun CreateContactIdentityRequest.toEntity() = ContactIdentityEntity(
+fun SyncCreateContactIdentityRequest.toEntity() = ContactIdentityEntity(
   contactIdentityId = 0L,
   contactId = contactId,
   identityType = identityType,

@@ -14,13 +14,13 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentit
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode

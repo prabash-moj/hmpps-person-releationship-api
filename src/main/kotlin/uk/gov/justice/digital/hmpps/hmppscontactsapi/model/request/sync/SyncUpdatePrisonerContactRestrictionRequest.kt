@@ -1,29 +1,17 @@
-package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync
 
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@Schema(description = "Response object with prisoner contact restriction details")
-data class PrisonerContactRestriction(
-
-  @Schema(description = "ID of the prisoner contact restriction to which the restriction applies", example = "232")
-  val prisonerContactRestrictionId: Long,
+@Schema(description = "Request object to update prisoner contact restriction details")
+data class SyncUpdatePrisonerContactRestrictionRequest(
 
   @Schema(description = "ID of the contact to which the restriction applies", example = "12345")
   val contactId: Long,
 
-  @Schema(
-    description =
-    """
-    The coded type of restriction that applies to this relationship.
-    This is a coded value from the group RESTRICTION in reference codes.
-    Example values include ACC, BAN, CHILD, CLOSED, RESTRICTED, DIHCON, NONCON.
-    """,
-    example = "NONCON",
-    nullable = true,
-  )
-  val restrictionType: String? = null,
+  @Schema(description = "Type of restriction applied", example = "NoContact")
+  val restrictionType: String,
 
   @Schema(description = "Start date of the restriction", example = "2024-01-01", nullable = true)
   val startDate: LocalDate? = null,
@@ -34,20 +22,14 @@ data class PrisonerContactRestriction(
   @Schema(description = "Comments regarding the restriction", example = "Restriction applied due to safety concerns", nullable = true)
   val comments: String? = null,
 
-  @Schema(description = "Entered staff username", example = "N/A")
-  val staffUsername: String? = null,
+  @Schema(description = "The username who entered the restriction", example = "X999X")
+  val staffUsername: String,
 
   @Schema(description = "Person who authorized the restriction", example = "John Doe", nullable = true)
   val authorisedBy: String? = null,
 
   @Schema(description = "Time when the restriction was authorized", example = "2024-10-01T12:00:00Z", nullable = true)
   val authorisedTime: LocalDateTime? = null,
-
-  @Schema(description = "User who created the restriction record", example = "admin", nullable = true)
-  val createdBy: String? = null,
-
-  @Schema(description = "Time when the restriction record was created", example = "2024-10-01T12:00:00Z", nullable = true)
-  val createdTime: LocalDateTime? = null,
 
   @Schema(description = "User who last amended the restriction record", example = "editor", nullable = true)
   val amendedBy: String? = null,

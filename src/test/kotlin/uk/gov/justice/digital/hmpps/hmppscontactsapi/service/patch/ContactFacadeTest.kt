@@ -21,12 +21,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPatchService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent

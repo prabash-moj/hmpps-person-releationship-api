@@ -64,7 +64,7 @@ class ContactPhoneController(private val contactPhoneFacade: ContactPhoneFacade)
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun create(
+  fun createPhone(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
       description = "The id of the contact",
@@ -103,7 +103,7 @@ class ContactPhoneController(private val contactPhoneFacade: ContactPhoneFacade)
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun get(
+  fun getPhone(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
       description = "The id of the contact",
@@ -150,7 +150,7 @@ class ContactPhoneController(private val contactPhoneFacade: ContactPhoneFacade)
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun update(
+  fun updatePhone(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
       description = "The id of the contact",
@@ -192,7 +192,7 @@ class ContactPhoneController(private val contactPhoneFacade: ContactPhoneFacade)
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun delete(
+  fun deletePhone(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
       description = "The id of the contact",

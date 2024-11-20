@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
 
-fun ContactRestrictionEntity.toModel(): ContactRestriction {
-  return ContactRestriction(
+fun ContactRestrictionEntity.toModel(): SyncContactRestriction {
+  return SyncContactRestriction(
     contactRestrictionId = this.contactRestrictionId,
     contactId = this.contactId!!,
     restrictionType = this.restrictionType,
@@ -22,7 +22,7 @@ fun ContactRestrictionEntity.toModel(): ContactRestriction {
 
 fun List<ContactRestrictionEntity>.toModel() = map { it.toModel() }
 
-fun CreateContactRestrictionRequest.toEntity() = ContactRestrictionEntity(
+fun SyncCreateContactRestrictionRequest.toEntity() = ContactRestrictionEntity(
   contactRestrictionId = 0L,
   contactId = contactId,
   restrictionType = restrictionType,

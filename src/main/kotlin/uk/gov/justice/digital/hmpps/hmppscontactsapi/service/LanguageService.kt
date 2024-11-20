@@ -31,5 +31,5 @@ class LanguageService(private val languageRepository: LanguageRepository) {
       .orElseThrow { EntityNotFoundException("Language with alpha code 3 $code not found") }.toModel()
 
   @Transactional(readOnly = true)
-  fun getAllCountries(): List<Language> = languageRepository.findAll().toModel()
+  fun getAllLanguages(): List<Language> = languageRepository.findAll().toModel()
 }

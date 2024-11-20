@@ -6,8 +6,8 @@ import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch.mapToResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
 

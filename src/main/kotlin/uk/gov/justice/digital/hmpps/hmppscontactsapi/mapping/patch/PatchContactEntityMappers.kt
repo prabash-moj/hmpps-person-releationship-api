@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 
 fun ContactEntity.mapToResponse(): PatchContactResponse {
   return PatchContactResponse(

@@ -163,6 +163,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     assertThat(createdRelationship.nextOfKin).isTrue()
     assertThat(createdRelationship.emergencyContact).isFalse()
     assertThat(createdRelationship.comments).isNull()
+
     stubEvents.assertHasEvent(
       event = OutboundEvent.PRISONER_CONTACT_CREATED,
       additionalInfo = PrisonerContactInfo(createdRelationship.prisonerContactId, source = Source.DPS),
@@ -191,6 +192,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     assertThat(createdRelationship.nextOfKin).isFalse()
     assertThat(createdRelationship.emergencyContact).isTrue()
     assertThat(createdRelationship.comments).isEqualTo("Some comments")
+
     stubEvents.assertHasEvent(
       event = OutboundEvent.PRISONER_CONTACT_CREATED,
       additionalInfo = PrisonerContactInfo(createdRelationship.prisonerContactId, source = Source.DPS),

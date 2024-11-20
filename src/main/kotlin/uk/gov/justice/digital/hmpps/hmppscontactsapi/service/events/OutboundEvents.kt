@@ -236,9 +236,7 @@ enum class OutboundEvent(val eventType: String) {
  * This is inherited and expanded individually for each event type.
  */
 
-abstract class AdditionalInformation {
-  protected abstract val source: Source
-}
+open class AdditionalInformation(open val source: Source)
 
 /**
  * The class representing outbound domain events
@@ -258,14 +256,14 @@ data class OutboundHMPPSDomainEvent(
  * The additional information is mapped into JSON by the ObjectMapper as part of the event body.
  */
 
-data class ContactInfo(val contactId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
-data class ContactAddressInfo(val contactAddressId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
-data class ContactPhoneInfo(val contactPhoneId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
-data class ContactEmailInfo(val contactEmailId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
-data class ContactIdentityInfo(val contactIdentityId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
-data class ContactRestrictionInfo(val contactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
-data class PrisonerContactInfo(val prisonerContactId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
-data class PrisonerContactRestrictionInfo(val prisonerContactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+data class ContactInfo(val contactId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class ContactAddressInfo(val contactAddressId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class ContactPhoneInfo(val contactPhoneId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class ContactEmailInfo(val contactEmailId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class ContactIdentityInfo(val contactIdentityId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class ContactRestrictionInfo(val contactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class PrisonerContactInfo(val prisonerContactId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class PrisonerContactRestrictionInfo(val prisonerContactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 
 /**
  * The event source.
@@ -315,4 +313,6 @@ class PersonReference(personIdentifiers: List<PersonIdentifier>) {
 
     return identifiers == other.identifiers
   }
+
+  override fun toString(): String = this.identifiers.toString()
 }

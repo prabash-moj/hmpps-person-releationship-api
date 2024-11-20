@@ -34,5 +34,6 @@ feature:
       contact:
         created: true
         amended: true
+        deleted: true
       prisoner-contact:
         created: true

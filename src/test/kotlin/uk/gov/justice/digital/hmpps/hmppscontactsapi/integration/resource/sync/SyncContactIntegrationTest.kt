@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource.sync
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
@@ -9,6 +10,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOv
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -16,6 +21,11 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
 
   @Nested
   inner class ContactSyncTests {
+
+    @BeforeEach
+    fun resetEvents() {
+      stubEvents.reset()
+    }
 
     @Test
     fun `Sync endpoints should return unauthorized if no token provided`() {
@@ -162,6 +172,12 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("JD000001")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_CREATED,
+        additionalInfo = ContactInfo(contact.id, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contact.id),
+      )
     }
 
     @Test
@@ -188,6 +204,12 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("JD000001")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_CREATED,
+        additionalInfo = ContactInfo(contact.id, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contact.id),
+      )
 
       val updatedContact = webTestClient.put()
         .uri("/sync/contact/{contactId}", contact.id)
@@ -222,6 +244,12 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(amendedBy).isEqualTo("UPDATE")
         assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contact.id, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contact.id),
+      )
     }
 
     @Test
@@ -254,6 +282,18 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         .exchange()
         .expectStatus()
         .isNotFound
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_CREATED,
+        additionalInfo = ContactInfo(contact.id, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contact.id),
+      )
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_DELETED,
+        additionalInfo = ContactInfo(contact.id, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contact.id),
+      )
     }
 
     private fun updateContactRequest() =

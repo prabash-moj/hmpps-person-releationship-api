@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.SyncFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.PrisonerContact
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncPrisonerContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
@@ -31,7 +31,7 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 @RequestMapping(value = ["/sync"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
 class PrisonerContactSyncController(
-  val syncService: SyncPrisonerContactService,
+  val syncFacade: SyncFacade,
 ) {
   @GetMapping(path = ["/prisoner-contact/{prisonerContactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -63,7 +63,7 @@ class PrisonerContactSyncController(
   fun getPrisonerContactById(
     @Parameter(description = "The internal ID for a prisoner contact.", required = true)
     @PathVariable prisonerContactId: Long,
-  ) = syncService.getPrisonerContactById(prisonerContactId)
+  ) = syncFacade.getPrisonerContactById(prisonerContactId)
 
   @DeleteMapping(path = ["/prisoner-contact/{prisonerContactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -89,7 +89,7 @@ class PrisonerContactSyncController(
   fun deletePrisonerContactById(
     @Parameter(description = "The internal ID for the prisoner contact.", required = true)
     @PathVariable prisonerContactId: Long,
-  ) = syncService.deletePrisonerContact(prisonerContactId)
+  ) = syncFacade.deletePrisonerContact(prisonerContactId)
 
   @PostMapping(path = ["/prisoner-contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -122,7 +122,7 @@ class PrisonerContactSyncController(
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createPrisonerContact(
     @Valid @RequestBody createPrisonerContactRequest: CreatePrisonerContactRequest,
-  ) = syncService.createPrisonerContact(createPrisonerContactRequest)
+  ) = syncFacade.createPrisonerContact(createPrisonerContactRequest)
 
   @PutMapping(path = ["/prisoner-contact/{prisonerContactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -160,5 +160,5 @@ class PrisonerContactSyncController(
     @Parameter(description = "The internal ID for the prisoner contact.", required = true)
     @PathVariable prisonerContactId: Long,
     @Valid @RequestBody updatePrisonerContactRequest: UpdatePrisonerContactRequest,
-  ) = syncService.updatePrisonerContact(prisonerContactId, updatePrisonerContactRequest)
+  ) = syncFacade.updatePrisonerContact(prisonerContactId, updatePrisonerContactRequest)
 }

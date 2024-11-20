@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.SyncFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactIdentity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactIdentityService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Sync endpoints - contact identity")
 @RestController
 @RequestMapping(value = ["/sync"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ContactIdentitySyncController(
-  val syncService: SyncContactIdentityService,
+  val syncFacade: SyncFacade,
 ) {
   @GetMapping(path = ["/contact-identity/{contactIdentityId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -61,7 +61,7 @@ class ContactIdentitySyncController(
   fun getContactIdentityById(
     @Parameter(description = "The internal ID for a contact identity.", required = true)
     @PathVariable contactIdentityId: Long,
-  ) = syncService.getContactIdentityById(contactIdentityId)
+  ) = syncFacade.getContactIdentityById(contactIdentityId)
 
   @DeleteMapping(path = ["/contact-identity/{contactIdentityId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -87,7 +87,7 @@ class ContactIdentitySyncController(
   fun deleteContactIdentityById(
     @Parameter(description = "The internal ID for the contact identity.", required = true)
     @PathVariable contactIdentityId: Long,
-  ) = syncService.deleteContactIdentity(contactIdentityId)
+  ) = syncFacade.deleteContactIdentity(contactIdentityId)
 
   @PostMapping(path = ["/contact-identity"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -120,7 +120,7 @@ class ContactIdentitySyncController(
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContactIdentity(
     @Valid @RequestBody createContactIdentityRequest: CreateContactIdentityRequest,
-  ) = syncService.createContactIdentity(createContactIdentityRequest)
+  ) = syncFacade.createContactIdentity(createContactIdentityRequest)
 
   @PutMapping(path = ["/contact-identity/{contactIdentityId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -158,5 +158,5 @@ class ContactIdentitySyncController(
     @Parameter(description = "The internal ID for the contact identity.", required = true)
     @PathVariable contactIdentityId: Long,
     @Valid @RequestBody updateContactIdentityRequest: UpdateContactIdentityRequest,
-  ) = syncService.updateContactIdentity(contactIdentityId, updateContactIdentityRequest)
+  ) = syncFacade.updateContactIdentity(contactIdentityId, updateContactIdentityRequest)
 }

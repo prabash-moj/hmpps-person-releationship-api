@@ -15,6 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactEmailInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -101,7 +103,11 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_EMAIL_AMENDED, ContactEmailInfo(savedContactEmailId))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
+    )
   }
 
   @ParameterizedTest
@@ -121,7 +127,11 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_EMAIL_AMENDED, ContactEmailInfo(savedContactEmailId))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
+    )
   }
 
   @Test
@@ -142,7 +152,11 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_EMAIL_AMENDED, ContactEmailInfo(savedContactEmailId))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
+    )
   }
 
   @Test
@@ -163,7 +177,11 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact email (-99) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_EMAIL_AMENDED, ContactEmailInfo(-99))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      additionalInfo = ContactEmailInfo(-99, Source.DPS),
+    )
   }
 
   @Test
@@ -187,7 +205,11 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Email address is invalid")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_EMAIL_AMENDED, ContactEmailInfo(-99))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      additionalInfo = ContactEmailInfo(-99, Source.DPS),
+    )
   }
 
   @Test
@@ -205,7 +227,12 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       assertThat(amendedBy).isEqualTo("amended")
       assertThat(amendedTime).isNotNull()
     }
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_EMAIL_AMENDED, ContactEmailInfo(savedContactEmailId))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
   }
 
   companion object {

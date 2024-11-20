@@ -15,6 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactEmailInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class CreateContactEmailIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -164,7 +166,12 @@ class CreateContactEmailIntegrationTest : H2IntegrationTestBase() {
     val created = testAPIClient.createAContactEmail(savedContactId, request)
 
     assertEqualsExcludingTimestamps(created, request)
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_EMAIL_CREATED, ContactEmailInfo(created.contactEmailId))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_EMAIL_CREATED,
+      additionalInfo = ContactEmailInfo(created.contactEmailId, Source.DPS),
+      personReference = PersonReference(dpsContactId = created.contactId),
+    )
   }
 
   private fun assertEqualsExcludingTimestamps(email: ContactEmailDetails, request: CreateEmailRequest) {

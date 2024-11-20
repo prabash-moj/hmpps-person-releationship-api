@@ -17,6 +17,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchCo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDate
 
 class PatchContactIntegrationTest : H2IntegrationTestBase() {
@@ -103,11 +105,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo("ENG")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -118,11 +126,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         languageCode = JsonNullable.of(null),
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo(null)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -133,11 +147,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         languageCode = JsonNullable.of("FRE-FRA"),
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo("FRE-FRA")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     private fun resetLanguageCode() {
@@ -145,11 +165,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         languageCode = JsonNullable.of("ENG"),
         updatedBy = updatedByUser,
       )
-      val res =
-        testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo("ENG")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+
       stubEvents.reset()
     }
   }
@@ -165,12 +186,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         interpreterRequired = JsonNullable.of(true),
         updatedBy = updatedByUser,
       )
-      val res =
-        testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -180,11 +206,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -202,7 +234,8 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
 
       assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported interpreter required type null.")
-      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId, Source.DPS))
     }
 
     private fun resetInterpreterRequired(resetValue: Boolean) {
@@ -215,6 +248,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.interpreterRequired).isEqualTo(resetValue)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+
       stubEvents.reset()
     }
   }
@@ -229,11 +263,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("P")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -248,7 +288,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.domesticStatus).isEqualTo(null)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -259,11 +304,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         domesticStatus = JsonNullable.of("M"),
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("M")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     private fun resetDomesticStatus() {
@@ -271,11 +322,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         domesticStatus = JsonNullable.of("P"),
         updatedBy = updatedByUser,
       )
-      val res =
-        testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("P")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
+
       stubEvents.reset()
     }
   }
@@ -291,11 +343,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         isStaff = JsonNullable.of(true),
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -305,11 +363,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(true)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactId, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -327,7 +391,8 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
 
       assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported staff flag value null.")
-      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId))
+
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactId, Source.DPS))
     }
 
     private fun resetStaffFlag(resetValue: Boolean) {
@@ -335,8 +400,8 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         isStaff = JsonNullable.of(resetValue),
         updatedBy = updatedByUser,
       )
-      val res =
-        testAPIClient.patchAContact(req, "/contact/$contactId")
+
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(resetValue)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
@@ -365,11 +430,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(1982, 6, 15))
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasDOB))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactIdThatHasDOB, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactIdThatHasDOB),
+      )
     }
 
     @Test
@@ -378,11 +449,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         dateOfBirth = JsonNullable.of(null),
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isNull()
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasDOB))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactIdThatHasDOB, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactIdThatHasDOB),
+      )
     }
 
     @Test
@@ -391,11 +468,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         dateOfBirth = JsonNullable.of(LocalDate.of(2000, 12, 25)),
         updatedBy = updatedByUser,
       )
+
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(2000, 12, 25))
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasDOB))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactIdThatHasDOB, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactIdThatHasDOB),
+      )
     }
   }
 
@@ -425,7 +508,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasEstimatedDOB))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactIdThatHasEstimatedDOB, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactIdThatHasEstimatedDOB),
+      )
     }
 
     @Test
@@ -438,7 +526,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(null)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasEstimatedDOB))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactIdThatHasEstimatedDOB, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactIdThatHasEstimatedDOB),
+      )
     }
 
     @Test
@@ -451,7 +544,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactIdThatHasEstimatedDOB))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactIdThatHasEstimatedDOB, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactIdThatHasEstimatedDOB),
+      )
     }
   }
 
@@ -484,7 +582,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(res.middleNames).isEqualTo("Middle Names")
       assertThat(res.title).isEqualTo("MR")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactThatHasAllNameFields, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactThatHasAllNameFields),
+      )
     }
 
     @Test
@@ -511,7 +614,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(res.middleNames).isEqualTo("update middle")
       assertThat(res.title).isEqualTo("MRS")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactThatHasAllNameFields, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactThatHasAllNameFields),
+      )
     }
 
     @Test
@@ -528,7 +636,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(res.middleNames).isNull()
       assertThat(res.title).isNull()
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactThatHasAllNameFields, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactThatHasAllNameFields),
+      )
     }
 
     @Test
@@ -545,7 +658,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(res.middleNames).isEqualTo("Updated Middle")
       assertThat(res.title).isEqualTo("MRS")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactThatHasAllNameFields, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactThatHasAllNameFields),
+      )
     }
 
     @Test
@@ -560,7 +678,11 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         .toUri()
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
       assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode TITLE and code 'FOO' not found.")
-      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+
+      stubEvents.assertHasNoEvents(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactThatHasAllNameFields, Source.DPS),
+      )
     }
 
     @Test
@@ -575,7 +697,11 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         .toUri()
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
       assertThat(errors.userMessage).isEqualTo("Validation failure(s): middleNames must be <= 35 characters")
-      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactThatHasAllNameFields))
+
+      stubEvents.assertHasNoEvents(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactThatHasAllNameFields, Source.DPS),
+      )
     }
   }
 
@@ -605,7 +731,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.gender).isEqualTo("NS")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactWithAGender, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactWithAGender),
+      )
     }
 
     @Test
@@ -618,7 +749,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.gender).isNull()
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactWithAGender, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactWithAGender),
+      )
     }
 
     @Test
@@ -631,7 +767,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
       assertThat(res.gender).isEqualTo("M")
       assertThat(res.amendedBy).isEqualTo(updatedByUser)
-      stubEvents.assertHasEvent(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_AMENDED,
+        additionalInfo = ContactInfo(contactWithAGender, Source.DPS),
+        personReference = PersonReference(dpsContactId = contactWithAGender),
+      )
     }
 
     @Test
@@ -646,7 +787,8 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         .toUri()
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
       assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode GENDER and code 'FOO' not found.")
-      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender, Source.DPS))
     }
 
     @Test
@@ -661,7 +803,8 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         .toUri()
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
       assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode GENDER and code 'REF' is not active and is no longer supported.")
-      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender))
+
+      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_AMENDED, ContactInfo(contactWithAGender, Source.DPS))
     }
   }
 }

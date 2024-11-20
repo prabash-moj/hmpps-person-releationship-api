@@ -13,7 +13,9 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
 
@@ -102,8 +104,17 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     assertThat(created.createdContact.lastName).isEqualTo(request.lastName)
     asserPrisonerContactEquals(created.createdRelationship!!, requestedRelationship)
 
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(created.createdContact.id))
-    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(created.createdRelationship!!.prisonerContactId))
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_CREATED,
+      additionalInfo = ContactInfo(created.createdContact.id, Source.DPS),
+      personReference = PersonReference(dpsContactId = created.createdContact.id),
+    )
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_CREATED,
+      additionalInfo = PrisonerContactInfo(created.createdRelationship!!.prisonerContactId, Source.DPS),
+      personReference = PersonReference(dpsContactId = created.createdContact.id, nomsNumber = request.relationship!!.prisonerNumber),
+    )
   }
 
   @Test
@@ -128,8 +139,18 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     assertThat(created.createdContact.lastName).isEqualTo(request.lastName)
     asserPrisonerContactEquals(created.createdRelationship!!, requestedRelationship)
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(created.createdContact.id))
-    stubEvents.assertHasEvent(OutboundEvent.PRISONER_CONTACT_CREATED, PrisonerContactInfo(created.createdRelationship!!.prisonerContactId))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_CREATED,
+      additionalInfo = ContactInfo(created.createdContact.id, Source.DPS),
+      personReference = PersonReference(dpsContactId = created.createdContact.id),
+    )
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_CREATED,
+      additionalInfo = PrisonerContactInfo(created.createdRelationship!!.prisonerContactId, Source.DPS),
+      personReference = PersonReference(dpsContactId = created.createdContact.id, nomsNumber = request.relationship!!.prisonerNumber),
+    )
   }
 
   private fun asserPrisonerContactEquals(

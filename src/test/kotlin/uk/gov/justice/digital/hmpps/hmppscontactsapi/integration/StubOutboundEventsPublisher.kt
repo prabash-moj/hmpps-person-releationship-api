@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.AdditionalIn
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsPublisher
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundHMPPSDomainEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
 
 class StubOutboundEventsPublisher(private val receivedEvents: MutableList<OutboundHMPPSDomainEvent> = mutableListOf()) : OutboundEventsPublisher {
   companion object {
@@ -22,10 +23,10 @@ class StubOutboundEventsPublisher(private val receivedEvents: MutableList<Outbou
     receivedEvents.clear()
   }
 
-  fun assertHasEvent(event: OutboundEvent, additionalInfo: AdditionalInformation) {
+  fun assertHasEvent(event: OutboundEvent, additionalInfo: AdditionalInformation, personReference: PersonReference) {
     assertThat(receivedEvents)
-      .extracting(OutboundHMPPSDomainEvent::eventType, OutboundHMPPSDomainEvent::additionalInformation)
-      .contains(tuple(event.eventType, additionalInfo))
+      .extracting(OutboundHMPPSDomainEvent::eventType, OutboundHMPPSDomainEvent::additionalInformation, OutboundHMPPSDomainEvent::personReference)
+      .contains(tuple(event.eventType, additionalInfo, personReference))
   }
 
   fun assertHasNoEvents(event: OutboundEvent, additionalInfo: AdditionalInformation) {

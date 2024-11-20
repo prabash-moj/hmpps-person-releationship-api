@@ -15,6 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentit
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactIdentityInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -191,7 +193,12 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     val created = testAPIClient.createAContactIdentity(savedContactId, request)
 
     assertEqualsExcludingTimestamps(created, request)
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_IDENTITY_CREATED, ContactIdentityInfo(created.contactIdentityId))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+      additionalInfo = ContactIdentityInfo(created.contactIdentityId, Source.DPS),
+      personReference = PersonReference(dpsContactId = created.contactId),
+    )
   }
 
   @Test
@@ -206,7 +213,12 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     val created = testAPIClient.createAContactIdentity(savedContactId, request)
 
     assertEqualsExcludingTimestamps(created, request)
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_IDENTITY_CREATED, ContactIdentityInfo(created.contactIdentityId))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+      additionalInfo = ContactIdentityInfo(created.contactIdentityId, Source.DPS),
+      personReference = PersonReference(created.contactId),
+    )
   }
 
   private fun assertEqualsExcludingTimestamps(identity: ContactIdentityDetails, request: CreateIdentityRequest) {

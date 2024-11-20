@@ -2,6 +2,10 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events
 
 import java.time.LocalDateTime
 
+/**
+ * An enum class containing all events that can be raised from the service.
+ * Each can tailor its own AdditionalInformation and PersonReference content.
+ */
 enum class OutboundEvent(val eventType: String) {
   CONTACT_CREATED("contacts-api.contact.created") {
     override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
@@ -227,10 +231,18 @@ enum class OutboundEvent(val eventType: String) {
   ): OutboundHMPPSDomainEvent
 }
 
+/**
+ * Base class for the additional information within events.
+ * This is inherited and expanded individually for each event type.
+ */
+
 abstract class AdditionalInformation {
-  val source: Source = Source.DPS
+  protected abstract val source: Source
 }
 
+/**
+ * The class representing outbound domain events
+ */
 data class OutboundHMPPSDomainEvent(
   val eventType: String,
   val additionalInformation: AdditionalInformation,
@@ -240,19 +252,42 @@ data class OutboundHMPPSDomainEvent(
   val occurredAt: LocalDateTime = LocalDateTime.now(),
 )
 
-// Event content - this is mapped into JSON by the ObjectMapper as the event body
-data class ContactInfo(val contactId: Long) : AdditionalInformation()
-data class ContactAddressInfo(val contactAddressId: Long) : AdditionalInformation()
-data class ContactPhoneInfo(val contactPhoneId: Long) : AdditionalInformation()
-data class ContactEmailInfo(val contactEmailId: Long) : AdditionalInformation()
-data class ContactIdentityInfo(val contactIdentityId: Long) : AdditionalInformation()
-data class ContactRestrictionInfo(val contactRestrictionId: Long) : AdditionalInformation()
-data class PrisonerContactInfo(val prisonerContactId: Long) : AdditionalInformation()
-data class PrisonerContactRestrictionInfo(val prisonerContactRestrictionId: Long) : AdditionalInformation()
-enum class Source { DPS }
+/**
+ * These are classes which define the different event content for AdditionalInformation.
+ * All inherit the base class AdditionalInformation and extend it to contain the required fields.
+ * The additional information is mapped into JSON by the ObjectMapper as part of the event body.
+ */
+
+data class ContactInfo(val contactId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+data class ContactAddressInfo(val contactAddressId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+data class ContactPhoneInfo(val contactPhoneId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+data class ContactEmailInfo(val contactEmailId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+data class ContactIdentityInfo(val contactIdentityId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+data class ContactRestrictionInfo(val contactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+data class PrisonerContactInfo(val prisonerContactId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+data class PrisonerContactRestrictionInfo(val prisonerContactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation()
+
+/**
+ * The event source.
+ * When data is changed within the DPS Contacts service by UI action or local process, events will have the source DPS.
+ * When data is changed as a result of receiving a sync event, events will have the source NOMIS.
+ */
+enum class Source { DPS, NOMIS }
+
+/**
+ * Each event will provide a reference to the person (or people) it relates to.
+ * In most cases this will be the contact, e.g. DPS_CONTACT_ID = contactId.
+ * When an event relates to more than one person e.g. a relationship between prisoner and contact, the
+ * PersonReference will contain both identifiers - e.g. NOMS = prisonerNumber, DPS_CONTACT_ID = contactId.
+ */
 enum class Identifier { NOMS, DPS_CONTACT_ID }
 data class PersonIdentifier(val type: Identifier, val value: String)
 
+/**
+ * The PersonReference contain the list of identifiers related to the subject of the event.
+ * Most events contain just one person reference - the DPS_CONTACT_ID.
+ * Some events relate to a relationship with a prisoner, so also have the NOMS number.
+ */
 class PersonReference(personIdentifiers: List<PersonIdentifier>) {
   constructor(nomsNumber: String, dpsContactId: Long) : this(
     listOf(
@@ -272,4 +307,12 @@ class PersonReference(personIdentifiers: List<PersonIdentifier>) {
 
   fun nomsNumber(): String? = identifiers.find { it.type == Identifier.NOMS }?.value
   fun dpsContactId(): String? = identifiers.find { it.type == Identifier.DPS_CONTACT_ID }?.value
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as PersonReference
+
+    return identifiers == other.identifiers
+  }
 }

@@ -46,7 +46,7 @@ class SyncContactAddressService(
     return contactAddress.toModel()
   }
 
-  fun deleteContactAddressById(contactAddressId: Long) {
+  fun deleteContactAddress(contactAddressId: Long) {
     contactAddressRepository.findById(contactAddressId)
       .orElseThrow { EntityNotFoundException("Contact address with ID $contactAddressId not found") }
     contactAddressRepository.deleteById(contactAddressId)

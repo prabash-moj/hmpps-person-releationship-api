@@ -15,6 +15,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactEmailService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class ContactEmailFacadeTest {
 
@@ -29,7 +30,7 @@ class ContactEmailFacadeTest {
   @Test
   fun `should send event if create success`() {
     whenever(emailService.create(any(), any())).thenReturn(contactEmailDetails)
-    whenever(eventsService.send(any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
     val request = CreateEmailRequest(
       emailAddress = "test@example.com",
       createdBy = "created",
@@ -39,14 +40,19 @@ class ContactEmailFacadeTest {
 
     assertThat(result).isEqualTo(contactEmailDetails)
     verify(emailService).create(contactId, request)
-    verify(eventsService).send(OutboundEvent.CONTACT_EMAIL_CREATED, contactEmailId, contactId)
+    verify(eventsService).send(
+      outboundEvent = OutboundEvent.CONTACT_EMAIL_CREATED,
+      identifier = contactEmailId,
+      contactId = contactId,
+      source = Source.DPS,
+    )
   }
 
   @Test
   fun `should not send event if create throws exception and propagate the exception`() {
     val expectedException = RuntimeException("Bang!")
     whenever(emailService.create(any(), any())).thenThrow(expectedException)
-    whenever(eventsService.send(any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
     val request = CreateEmailRequest(
       emailAddress = "test@example.com",
       createdBy = "created",
@@ -58,13 +64,13 @@ class ContactEmailFacadeTest {
 
     assertThat(exception).isEqualTo(exception)
     verify(emailService).create(contactId, request)
-    verify(eventsService, never()).send(any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any())
   }
 
   @Test
   fun `should send event if update success`() {
     whenever(emailService.update(any(), any(), any())).thenReturn(contactEmailDetails)
-    whenever(eventsService.send(any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
     val request = UpdateEmailRequest(
       emailAddress = "test@example.com",
       amendedBy = "amended",
@@ -74,14 +80,19 @@ class ContactEmailFacadeTest {
 
     assertThat(result).isEqualTo(contactEmailDetails)
     verify(emailService).update(contactId, contactEmailId, request)
-    verify(eventsService).send(OutboundEvent.CONTACT_EMAIL_AMENDED, contactEmailId, contactId)
+    verify(eventsService).send(
+      outboundEvent = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      identifier = contactEmailId,
+      contactId = contactId,
+      source = Source.DPS,
+    )
   }
 
   @Test
   fun `should not send event if update throws exception and propagate the exception`() {
     val expectedException = RuntimeException("Bang!")
     whenever(emailService.update(any(), any(), any())).thenThrow(expectedException)
-    whenever(eventsService.send(any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
     val request = UpdateEmailRequest(
       emailAddress = "test@example.com",
       amendedBy = "amended",
@@ -93,7 +104,7 @@ class ContactEmailFacadeTest {
 
     assertThat(exception).isEqualTo(exception)
     verify(emailService).update(contactId, contactEmailId, request)
-    verify(eventsService, never()).send(any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any())
   }
 
   @Test
@@ -104,7 +115,7 @@ class ContactEmailFacadeTest {
 
     assertThat(result).isEqualTo(contactEmailDetails)
     verify(emailService).get(contactId, contactEmailId)
-    verify(eventsService, never()).send(any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any())
   }
 
   @Test
@@ -117,13 +128,13 @@ class ContactEmailFacadeTest {
 
     assertThat(exception.message).isEqualTo("Contact email with id (99) not found for contact (11)")
     verify(emailService).get(contactId, contactEmailId)
-    verify(eventsService, never()).send(any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any())
   }
 
   @Test
   fun `should send event if delete success`() {
     whenever(emailService.delete(any(), any())).then {}
-    whenever(eventsService.send(any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
 
     facade.delete(contactId, contactEmailId)
 
@@ -135,7 +146,7 @@ class ContactEmailFacadeTest {
   fun `should not send event if delete throws exception and propagate the exception`() {
     val expectedException = RuntimeException("Bang!")
     whenever(emailService.delete(any(), any())).thenThrow(expectedException)
-    whenever(eventsService.send(any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
 
     val exception = assertThrows<RuntimeException> {
       facade.delete(contactId, contactEmailId)
@@ -143,6 +154,6 @@ class ContactEmailFacadeTest {
 
     assertThat(exception).isEqualTo(exception)
     verify(emailService).delete(contactId, contactEmailId)
-    verify(eventsService, never()).send(any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any())
   }
 }

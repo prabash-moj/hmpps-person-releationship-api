@@ -10,6 +10,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactEmailInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class DeleteContactEmailIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -79,7 +81,11 @@ class DeleteContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_EMAIL_DELETED, ContactEmailInfo(savedContactEmailId))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_DELETED,
+      additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
+    )
   }
 
   @Test
@@ -96,7 +102,11 @@ class DeleteContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact email (-99) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_EMAIL_DELETED, ContactEmailInfo(-99))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_DELETED,
+      additionalInfo = ContactEmailInfo(-99, Source.DPS),
+    )
   }
 
   @Test
@@ -117,6 +127,10 @@ class DeleteContactEmailIntegrationTest : H2IntegrationTestBase() {
       .expectStatus()
       .isNotFound
 
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_EMAIL_DELETED, ContactEmailInfo(savedContactEmailId))
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_EMAIL_DELETED,
+      additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
   }
 }

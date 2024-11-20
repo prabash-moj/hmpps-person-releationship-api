@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.SyncFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactPhoneService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Sync endpoints - contact phone")
 @RestController
 @RequestMapping(value = ["/sync"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ContactPhoneSyncController(
-  val syncService: SyncContactPhoneService,
+  val syncFacade: SyncFacade,
 ) {
   @GetMapping(path = ["/contact-phone/{contactPhoneId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -61,7 +61,7 @@ class ContactPhoneSyncController(
   fun getContactPhoneById(
     @Parameter(description = "The internal ID for a contact phone.", required = true)
     @PathVariable contactPhoneId: Long,
-  ) = syncService.getContactPhoneById(contactPhoneId)
+  ) = syncFacade.getContactPhoneById(contactPhoneId)
 
   @DeleteMapping(path = ["/contact-phone/{contactPhoneId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -87,7 +87,7 @@ class ContactPhoneSyncController(
   fun deleteContactPhoneById(
     @Parameter(description = "The internal ID for the contact phone.", required = true)
     @PathVariable contactPhoneId: Long,
-  ) = syncService.deleteContactPhone(contactPhoneId)
+  ) = syncFacade.deleteContactPhone(contactPhoneId)
 
   @PostMapping(path = ["/contact-phone"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -119,16 +119,16 @@ class ContactPhoneSyncController(
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContactPhone(
-    @Valid @RequestBody createContactPhoneRequest: SyncCreateContactPhoneRequest,
-  ) = syncService.createContactPhone(createContactPhoneRequest)
+    @Valid @RequestBody request: SyncCreateContactPhoneRequest,
+  ) = syncFacade.createContactPhone(request)
 
   @PutMapping(path = ["/contact-phone/{contactPhoneId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
   @Operation(
-    summary = "Updates a contact phone with new or extra detail",
+    summary = "Updates a phone number for a contact",
     description = """
       Requires role: ROLE_CONTACTS_MIGRATION.
-      Used to update a contact phone.
+      Used to update a contact's phone number.
       """,
   )
   @ApiResponses(
@@ -157,6 +157,6 @@ class ContactPhoneSyncController(
   fun updateContactPhone(
     @Parameter(description = "The internal ID for the contact phone.", required = true)
     @PathVariable contactPhoneId: Long,
-    @Valid @RequestBody updateContactPhoneRequest: SyncUpdateContactPhoneRequest,
-  ) = syncService.updateContactPhone(contactPhoneId, updateContactPhoneRequest)
+    @Valid @RequestBody request: SyncUpdateContactPhoneRequest,
+  ) = syncFacade.updateContactPhone(contactPhoneId, request)
 }

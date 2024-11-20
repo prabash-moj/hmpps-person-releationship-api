@@ -10,6 +10,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactIdentityInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -80,7 +82,11 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_DELETED, ContactIdentityInfo(savedContactIdentityId))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_IDENTITY_DELETED,
+      additionalInfo = ContactIdentityInfo(savedContactIdentityId, Source.DPS),
+    )
   }
 
   @Test
@@ -97,7 +103,11 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact identity (-99) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_DELETED, ContactIdentityInfo(-99))
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_IDENTITY_DELETED,
+      additionalInfo = ContactIdentityInfo(-99, Source.DPS),
+    )
   }
 
   @Test
@@ -118,6 +128,10 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .expectStatus()
       .isNotFound
 
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_IDENTITY_DELETED, ContactIdentityInfo(savedContactIdentityId))
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_IDENTITY_DELETED,
+      additionalInfo = ContactIdentityInfo(savedContactIdentityId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
   }
 }

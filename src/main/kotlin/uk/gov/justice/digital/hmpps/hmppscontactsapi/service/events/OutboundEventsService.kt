@@ -14,64 +14,71 @@ class OutboundEventsService(
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
   }
 
-  fun send(outboundEvent: OutboundEvent, identifier: Long, contactId: Long, noms: String = "") {
+  fun send(
+    outboundEvent: OutboundEvent,
+    identifier: Long,
+    contactId: Long,
+    noms: String = "",
+    source: Source = Source.DPS,
+  ) {
     if (featureSwitches.isEnabled(outboundEvent)) {
-      log.info("Sending outbound event $outboundEvent for identifier $identifier  (contactId $contactId, noms $noms)")
+      log.info("Sending outbound event $outboundEvent with source $source for identifier $identifier  (contactId $contactId, noms $noms)")
+
       when (outboundEvent) {
         OutboundEvent.CONTACT_CREATED,
         OutboundEvent.CONTACT_AMENDED,
         OutboundEvent.CONTACT_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactInfo(identifier), PersonReference(dpsContactId = contactId))
+          sendSafely(outboundEvent, ContactInfo(identifier, source), PersonReference(dpsContactId = contactId))
         }
 
         OutboundEvent.CONTACT_ADDRESS_CREATED,
         OutboundEvent.CONTACT_ADDRESS_AMENDED,
         OutboundEvent.CONTACT_ADDRESS_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactAddressInfo(identifier), PersonReference(dpsContactId = contactId))
+          sendSafely(outboundEvent, ContactAddressInfo(identifier, source), PersonReference(dpsContactId = contactId))
         }
 
         OutboundEvent.CONTACT_PHONE_CREATED,
         OutboundEvent.CONTACT_PHONE_AMENDED,
         OutboundEvent.CONTACT_PHONE_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactPhoneInfo(identifier), PersonReference(dpsContactId = contactId))
+          sendSafely(outboundEvent, ContactPhoneInfo(identifier, source), PersonReference(dpsContactId = contactId))
         }
 
         OutboundEvent.CONTACT_EMAIL_CREATED,
         OutboundEvent.CONTACT_EMAIL_AMENDED,
         OutboundEvent.CONTACT_EMAIL_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactEmailInfo(identifier), PersonReference(dpsContactId = contactId))
+          sendSafely(outboundEvent, ContactEmailInfo(identifier, source), PersonReference(dpsContactId = contactId))
         }
 
         OutboundEvent.CONTACT_IDENTITY_CREATED,
         OutboundEvent.CONTACT_IDENTITY_AMENDED,
         OutboundEvent.CONTACT_IDENTITY_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactIdentityInfo(identifier), PersonReference(dpsContactId = contactId))
+          sendSafely(outboundEvent, ContactIdentityInfo(identifier, source), PersonReference(dpsContactId = contactId))
         }
 
         OutboundEvent.CONTACT_RESTRICTION_CREATED,
         OutboundEvent.CONTACT_RESTRICTION_AMENDED,
         OutboundEvent.CONTACT_RESTRICTION_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactRestrictionInfo(identifier), PersonReference(dpsContactId = contactId))
+          sendSafely(outboundEvent, ContactRestrictionInfo(identifier, source), PersonReference(dpsContactId = contactId))
         }
 
         OutboundEvent.PRISONER_CONTACT_CREATED,
         OutboundEvent.PRISONER_CONTACT_AMENDED,
         OutboundEvent.PRISONER_CONTACT_DELETED,
         -> {
-          sendSafely(outboundEvent, PrisonerContactInfo(identifier), PersonReference(dpsContactId = contactId, nomsNumber = noms))
+          sendSafely(outboundEvent, PrisonerContactInfo(identifier, source), PersonReference(dpsContactId = contactId, nomsNumber = noms))
         }
 
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_AMENDED,
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_DELETED,
         -> {
-          sendSafely(outboundEvent, PrisonerContactRestrictionInfo(identifier), PersonReference(dpsContactId = contactId, nomsNumber = noms))
+          sendSafely(outboundEvent, PrisonerContactRestrictionInfo(identifier, source), PersonReference(dpsContactId = contactId, nomsNumber = noms))
         }
       }
     } else {

@@ -108,7 +108,7 @@ class SyncContactAddressServiceTest {
     @Test
     fun `should delete contact address by ID`() {
       whenever(contactAddressRepository.findById(1L)).thenReturn(Optional.of(contactAddressEntity()))
-      syncContactAddressService.deleteContactAddressById(1L)
+      syncContactAddressService.deleteContactAddress(1L)
       verify(contactAddressRepository).deleteById(1L)
     }
 
@@ -116,7 +116,7 @@ class SyncContactAddressServiceTest {
     fun `should fail to delete contact address by ID when not found`() {
       whenever(contactAddressRepository.findById(1L)).thenReturn(Optional.empty())
       assertThrows<EntityNotFoundException> {
-        syncContactAddressService.deleteContactAddressById(1L)
+        syncContactAddressService.deleteContactAddress(1L)
       }
       verify(contactAddressRepository).findById(1L)
     }

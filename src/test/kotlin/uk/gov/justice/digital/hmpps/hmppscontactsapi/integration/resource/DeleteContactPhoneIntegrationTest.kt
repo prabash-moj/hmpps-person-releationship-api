@@ -15,6 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPh
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactPhoneInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -130,7 +132,11 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .expectStatus()
       .isNotFound
 
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_PHONE_DELETED, ContactPhoneInfo(savedContactPhoneId))
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_PHONE_DELETED,
+      additionalInfo = ContactPhoneInfo(savedContactPhoneId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
   }
 
   @Test
@@ -178,7 +184,12 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .expectStatus()
       .isNotFound
 
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_PHONE_DELETED, ContactPhoneInfo(savedContactPhoneId))
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_PHONE_DELETED,
+      additionalInfo = ContactPhoneInfo(savedContactPhoneId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
+
     assertThat(addressPhoneRepository.findById(addressPhone.contactPhoneId)).isNotPresent
     assertThat(addressRepository.findById(address.contactAddressId)).isPresent
   }

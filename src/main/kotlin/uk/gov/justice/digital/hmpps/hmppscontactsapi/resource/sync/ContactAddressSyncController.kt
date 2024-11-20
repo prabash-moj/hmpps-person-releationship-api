@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.SyncFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactAddress
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactAddressService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Sync endpoints - contact address")
 @RestController
 @RequestMapping(value = ["/sync"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ContactAddressSyncController(
-  val syncContactAddressService: SyncContactAddressService,
+  val syncFacade: SyncFacade,
 ) {
   @GetMapping(path = ["/contact-address/{contactAddressId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -61,11 +61,11 @@ class ContactAddressSyncController(
   fun getContactAddressById(
     @Parameter(description = "The internal ID for a contact address.", required = true)
     @PathVariable contactAddressId: Long,
-  ) = syncContactAddressService.getContactAddressById(contactAddressId)
+  ) = syncFacade.getContactAddressById(contactAddressId)
 
   @DeleteMapping(path = ["/contact-address/{contactAddressId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
-    summary = "Deletes one contact address by internal ID",
+    summary = "Deletes a contact address by internal ID",
     description = """
       Requires role: ROLE_CONTACTS_MIGRATION.
       Used to delete a contact address.
@@ -87,7 +87,7 @@ class ContactAddressSyncController(
   fun deleteContactAddressById(
     @Parameter(description = "The internal ID for the contact address.", required = true)
     @PathVariable contactAddressId: Long,
-  ) = syncContactAddressService.deleteContactAddressById(contactAddressId)
+  ) = syncFacade.deleteContactAddress(contactAddressId)
 
   @PostMapping(path = ["/contact-address"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -120,7 +120,7 @@ class ContactAddressSyncController(
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContactAddress(
     @Valid @RequestBody createContactAddressRequest: CreateContactAddressRequest,
-  ) = syncContactAddressService.createContactAddress(createContactAddressRequest)
+  ) = syncFacade.createContactAddress(createContactAddressRequest)
 
   @PutMapping(path = ["/contact-address/{contactAddressId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -158,5 +158,5 @@ class ContactAddressSyncController(
     @Parameter(description = "The internal ID for the contact address.", required = true)
     @PathVariable contactAddressId: Long,
     @Valid @RequestBody updateContactAddressRequest: UpdateContactAddressRequest,
-  ) = syncContactAddressService.updateContactAddress(contactAddressId, updateContactAddressRequest)
+  ) = syncFacade.updateContactAddress(contactAddressId, updateContactAddressRequest)
 }

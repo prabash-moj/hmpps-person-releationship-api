@@ -15,6 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentit
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactIdentityInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -239,7 +241,12 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       assertThat(amendedBy).isEqualTo("amended")
       assertThat(amendedTime).isNotNull()
     }
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_IDENTITY_AMENDED,
+      additionalInfo = ContactIdentityInfo(savedContactIdentityId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
   }
 
   @Test
@@ -262,7 +269,12 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       assertThat(amendedBy).isEqualTo("amended")
       assertThat(amendedTime).isNotNull()
     }
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_IDENTITY_AMENDED,
+      additionalInfo = ContactIdentityInfo(savedContactIdentityId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
   }
 
   companion object {

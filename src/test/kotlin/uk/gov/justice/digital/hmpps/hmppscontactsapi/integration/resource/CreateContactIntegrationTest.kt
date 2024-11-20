@@ -15,6 +15,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOv
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDate
 
 const val LOCAL_CONTACT_ID_SEQUENCE_MIN: Long = 20000000L
@@ -144,7 +146,11 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
     // Verify that a contact created locally has an ID in the appropriate range - above 20,000,000
     assertThat(contactReturnedOnCreate.id).isGreaterThanOrEqualTo(LOCAL_CONTACT_ID_SEQUENCE_MIN)
 
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(contactReturnedOnCreate.id))
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_CREATED,
+      additionalInfo = ContactInfo(contactReturnedOnCreate.id, Source.DPS),
+      personReference = PersonReference(dpsContactId = contactReturnedOnCreate.id),
+    )
   }
 
   @Test
@@ -161,7 +167,12 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
     val contact = testAPIClient.createAContact(request)
 
     assertContactsAreEqualExcludingTimestamps(contact, request)
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(contact.id))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_CREATED,
+      additionalInfo = ContactInfo(contact.id, Source.DPS),
+      personReference = PersonReference(contact.id),
+    )
   }
 
   @ParameterizedTest
@@ -176,9 +187,15 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
     )
 
     val contactReturnedOnCreate = testAPIClient.createAContact(request)
+
     assertThat(contactReturnedOnCreate.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
     assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
-    stubEvents.assertHasEvent(OutboundEvent.CONTACT_CREATED, ContactInfo(contactReturnedOnCreate.id))
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_CREATED,
+      additionalInfo = ContactInfo(contactReturnedOnCreate.id, Source.DPS),
+      personReference = PersonReference(dpsContactId = contactReturnedOnCreate.id),
+    )
   }
 
   private fun assertContactsAreEqualExcludingTimestamps(contact: ContactDetails, request: CreateContactRequest) {

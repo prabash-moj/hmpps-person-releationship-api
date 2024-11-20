@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.SyncFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactEmailService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Sync endpoints - contact email")
 @RestController
 @RequestMapping(value = ["/sync"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ContactEmailSyncController(
-  val syncService: SyncContactEmailService,
+  val syncFacade: SyncFacade,
 ) {
   @GetMapping(path = ["/contact-email/{contactEmailId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -61,7 +61,7 @@ class ContactEmailSyncController(
   fun getContactEmailById(
     @Parameter(description = "The internal ID for a contact email.", required = true)
     @PathVariable contactEmailId: Long,
-  ) = syncService.getContactEmailById(contactEmailId)
+  ) = syncFacade.getContactEmailById(contactEmailId)
 
   @DeleteMapping(path = ["/contact-email/{contactEmailId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -87,7 +87,7 @@ class ContactEmailSyncController(
   fun deleteContactEmailById(
     @Parameter(description = "The internal ID for the contact email.", required = true)
     @PathVariable contactEmailId: Long,
-  ) = syncService.deleteContactEmail(contactEmailId)
+  ) = syncFacade.deleteContactEmail(contactEmailId)
 
   @PostMapping(path = ["/contact-email"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -119,8 +119,8 @@ class ContactEmailSyncController(
   )
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContactEmail(
-    @Valid @RequestBody createContactEmailRequest: SyncCreateContactEmailRequest,
-  ) = syncService.createContactEmail(createContactEmailRequest)
+    @Valid @RequestBody request: SyncCreateContactEmailRequest,
+  ) = syncFacade.createContactEmail(request)
 
   @PutMapping(path = ["/contact-email/{contactEmailId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -157,6 +157,6 @@ class ContactEmailSyncController(
   fun updateContactEmail(
     @Parameter(description = "The internal ID for the contact email.", required = true)
     @PathVariable contactEmailId: Long,
-    @Valid @RequestBody updateContactEmailRequest: SyncUpdateContactEmailRequest,
-  ) = syncService.updateContactEmail(contactEmailId, updateContactEmailRequest)
+    @Valid @RequestBody request: SyncUpdateContactEmailRequest,
+  ) = syncFacade.updateContactEmail(contactEmailId, request)
 }

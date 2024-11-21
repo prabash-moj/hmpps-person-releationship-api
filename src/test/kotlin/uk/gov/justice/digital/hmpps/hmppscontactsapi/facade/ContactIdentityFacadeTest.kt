@@ -84,7 +84,7 @@ class ContactIdentityFacadeTest {
     assertThat(result).isEqualTo(contactIdentityDetails)
     verify(identityService).update(contactId, contactIdentityId, request)
     verify(eventsService).send(
-      outboundEvent = OutboundEvent.CONTACT_IDENTITY_AMENDED,
+      outboundEvent = OutboundEvent.CONTACT_IDENTITY_UPDATED,
       identifier = contactIdentityId,
       contactId = contactId,
       source = Source.DPS,

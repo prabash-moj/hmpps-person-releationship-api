@@ -107,7 +107,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_UPDATED, ContactIdentityInfo(savedContactIdentityId))
   }
 
   @ParameterizedTest
@@ -127,7 +127,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_UPDATED, ContactIdentityInfo(savedContactIdentityId))
   }
 
   @Test
@@ -152,7 +152,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported identity type (MACRO)")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_UPDATED, ContactIdentityInfo(savedContactIdentityId))
   }
 
   @Test
@@ -177,7 +177,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Identity type (NHS) is no longer supported for creating or updating identities")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_UPDATED, ContactIdentityInfo(savedContactIdentityId))
   }
 
   @Test
@@ -198,7 +198,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(savedContactIdentityId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_UPDATED, ContactIdentityInfo(savedContactIdentityId))
   }
 
   @Test
@@ -219,7 +219,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact identity (-99) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_AMENDED, ContactIdentityInfo(-99))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_UPDATED, ContactIdentityInfo(-99))
   }
 
   @Test
@@ -243,7 +243,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     }
 
     stubEvents.assertHasEvent(
-      event = OutboundEvent.CONTACT_IDENTITY_AMENDED,
+      event = OutboundEvent.CONTACT_IDENTITY_UPDATED,
       additionalInfo = ContactIdentityInfo(savedContactIdentityId, Source.DPS),
       personReference = PersonReference(dpsContactId = savedContactId),
     )
@@ -271,7 +271,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     }
 
     stubEvents.assertHasEvent(
-      event = OutboundEvent.CONTACT_IDENTITY_AMENDED,
+      event = OutboundEvent.CONTACT_IDENTITY_UPDATED,
       additionalInfo = ContactIdentityInfo(savedContactIdentityId, Source.DPS),
       personReference = PersonReference(dpsContactId = savedContactId),
     )

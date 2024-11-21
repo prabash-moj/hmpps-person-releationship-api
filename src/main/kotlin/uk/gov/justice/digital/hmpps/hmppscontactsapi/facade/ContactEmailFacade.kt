@@ -28,7 +28,7 @@ class ContactEmailFacade(
   fun update(contactId: Long, contactEmailId: Long, request: UpdateEmailRequest): ContactEmailDetails {
     return contactEmailService.update(contactId, contactEmailId, request).also {
       outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_EMAIL_AMENDED,
+        outboundEvent = OutboundEvent.CONTACT_EMAIL_UPDATED,
         identifier = contactEmailId,
         contactId = contactId,
       )

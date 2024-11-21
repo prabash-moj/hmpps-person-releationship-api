@@ -85,7 +85,7 @@ class SyncFacade(
     syncContactService.updateContact(contactId, request)
       .also {
         outboundEventsService.send(
-          outboundEvent = OutboundEvent.CONTACT_AMENDED,
+          outboundEvent = OutboundEvent.CONTACT_UPDATED,
           identifier = it.id,
           contactId = it.id,
           source = Source.NOMIS,

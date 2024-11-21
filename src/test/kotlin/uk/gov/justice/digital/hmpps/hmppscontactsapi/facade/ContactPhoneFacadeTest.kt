@@ -83,7 +83,7 @@ class ContactPhoneFacadeTest {
     assertThat(result).isEqualTo(contactPhoneDetails)
     verify(phoneService).update(contactId, contactPhoneId, request)
     verify(eventsService).send(
-      outboundEvent = OutboundEvent.CONTACT_PHONE_AMENDED,
+      outboundEvent = OutboundEvent.CONTACT_PHONE_UPDATED,
       identifier = contactPhoneId,
       contactId = contactId,
       source = Source.DPS,

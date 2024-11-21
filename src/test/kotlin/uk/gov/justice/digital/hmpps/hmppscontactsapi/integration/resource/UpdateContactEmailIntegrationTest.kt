@@ -105,7 +105,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
 
     stubEvents.assertHasNoEvents(
-      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      event = OutboundEvent.CONTACT_EMAIL_UPDATED,
       additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
     )
   }
@@ -129,7 +129,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
 
     stubEvents.assertHasNoEvents(
-      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      event = OutboundEvent.CONTACT_EMAIL_UPDATED,
       additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
     )
   }
@@ -154,7 +154,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
 
     stubEvents.assertHasNoEvents(
-      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      event = OutboundEvent.CONTACT_EMAIL_UPDATED,
       additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
     )
   }
@@ -179,7 +179,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact email (-99) not found")
 
     stubEvents.assertHasNoEvents(
-      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      event = OutboundEvent.CONTACT_EMAIL_UPDATED,
       additionalInfo = ContactEmailInfo(-99, Source.DPS),
     )
   }
@@ -207,7 +207,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Validation failure: Email address is invalid")
 
     stubEvents.assertHasNoEvents(
-      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      event = OutboundEvent.CONTACT_EMAIL_UPDATED,
       additionalInfo = ContactEmailInfo(-99, Source.DPS),
     )
   }
@@ -229,7 +229,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
     }
 
     stubEvents.assertHasEvent(
-      event = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      event = OutboundEvent.CONTACT_EMAIL_UPDATED,
       additionalInfo = ContactEmailInfo(savedContactEmailId, Source.DPS),
       personReference = PersonReference(dpsContactId = savedContactId),
     )

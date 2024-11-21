@@ -81,7 +81,7 @@ class ContactEmailFacadeTest {
     assertThat(result).isEqualTo(contactEmailDetails)
     verify(emailService).update(contactId, contactEmailId, request)
     verify(eventsService).send(
-      outboundEvent = OutboundEvent.CONTACT_EMAIL_AMENDED,
+      outboundEvent = OutboundEvent.CONTACT_EMAIL_UPDATED,
       identifier = contactEmailId,
       contactId = contactId,
       source = Source.DPS,

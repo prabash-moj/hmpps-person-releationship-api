@@ -28,7 +28,7 @@ class ContactIdentityFacade(
   fun update(contactId: Long, contactIdentityId: Long, request: UpdateIdentityRequest): ContactIdentityDetails {
     return contactIdentityService.update(contactId, contactIdentityId, request).also {
       outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_IDENTITY_AMENDED,
+        outboundEvent = OutboundEvent.CONTACT_IDENTITY_UPDATED,
         identifier = contactIdentityId,
         contactId = contactId,
       )

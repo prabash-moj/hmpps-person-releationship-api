@@ -31,7 +31,7 @@ class ContactPhoneFacade(
   fun update(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails {
     return contactPhoneService.update(contactId, contactPhoneId, request).also {
       outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_PHONE_AMENDED,
+        outboundEvent = OutboundEvent.CONTACT_PHONE_UPDATED,
         identifier = contactPhoneId,
         contactId = contactId,
       )

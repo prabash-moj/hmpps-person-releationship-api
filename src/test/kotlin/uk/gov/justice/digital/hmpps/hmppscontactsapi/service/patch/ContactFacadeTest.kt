@@ -53,7 +53,7 @@ class ContactFacadeTest {
 
     assertThat(response).isEqualTo(result)
     verify(contactPatchService).patch(contactId, request)
-    verify(outboundEventsService).send(OutboundEvent.CONTACT_AMENDED, contactId, contactId)
+    verify(outboundEventsService).send(OutboundEvent.CONTACT_UPDATED, contactId, contactId)
   }
 
   @Test
@@ -155,7 +155,7 @@ class ContactFacadeTest {
     contactFacade.patchRelationship(contactId, prisonerContactId, request)
 
     verify(contactService).updateContactRelationship(contactId, prisonerContactId, request)
-    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_AMENDED, prisonerContactId, contactId)
+    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_UPDATED, prisonerContactId, contactId)
   }
 
   private fun aContactDetails() = ContactDetails(

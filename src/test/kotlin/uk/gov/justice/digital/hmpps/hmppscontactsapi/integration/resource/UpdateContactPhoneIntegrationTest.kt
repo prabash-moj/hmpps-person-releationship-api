@@ -106,7 +106,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_AMENDED, ContactPhoneInfo(savedContactPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_UPDATED, ContactPhoneInfo(savedContactPhoneId))
   }
 
   @ParameterizedTest
@@ -126,7 +126,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_AMENDED, ContactPhoneInfo(savedContactPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_UPDATED, ContactPhoneInfo(savedContactPhoneId))
   }
 
   @ParameterizedTest
@@ -155,7 +155,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Phone number invalid, it can only contain numbers, () and whitespace with an optional + at the start")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_AMENDED, ContactPhoneInfo(savedContactPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_UPDATED, ContactPhoneInfo(savedContactPhoneId))
   }
 
   @Test
@@ -180,7 +180,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported phone type (SATELLITE)")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_AMENDED, ContactPhoneInfo(savedContactPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_UPDATED, ContactPhoneInfo(savedContactPhoneId))
   }
 
   @Test
@@ -201,7 +201,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_AMENDED, ContactPhoneInfo(savedContactPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_UPDATED, ContactPhoneInfo(savedContactPhoneId))
   }
 
   @Test
@@ -222,7 +222,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact phone (-99) not found")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_AMENDED, ContactPhoneInfo(-99))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_PHONE_UPDATED, ContactPhoneInfo(-99))
   }
 
   @Test
@@ -247,7 +247,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     }
 
     stubEvents.assertHasEvent(
-      event = OutboundEvent.CONTACT_PHONE_AMENDED,
+      event = OutboundEvent.CONTACT_PHONE_UPDATED,
       additionalInfo = ContactPhoneInfo(savedContactPhoneId),
       personReference = PersonReference(savedContactId),
     )
@@ -275,7 +275,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     }
 
     stubEvents.assertHasEvent(
-      event = OutboundEvent.CONTACT_PHONE_AMENDED,
+      event = OutboundEvent.CONTACT_PHONE_UPDATED,
       additionalInfo = ContactPhoneInfo(savedContactPhoneId),
       personReference = PersonReference(dpsContactId = savedContactId),
     )

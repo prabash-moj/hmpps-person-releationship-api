@@ -246,7 +246,7 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
       }
 
       stubEvents.assertHasEvent(
-        event = OutboundEvent.CONTACT_AMENDED,
+        event = OutboundEvent.CONTACT_UPDATED,
         additionalInfo = ContactInfo(contact.id, Source.NOMIS),
         personReference = PersonReference(dpsContactId = contact.id),
       )

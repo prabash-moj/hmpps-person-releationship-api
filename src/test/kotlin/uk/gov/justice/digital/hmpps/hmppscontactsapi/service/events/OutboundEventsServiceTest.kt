@@ -37,14 +37,14 @@ class OutboundEventsServiceTest {
   }
 
   @Test
-  fun `contact amended event with id 1 is sent to the events publisher`() {
-    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_AMENDED) } doReturn true }
-    outboundEventsService.send(OutboundEvent.CONTACT_AMENDED, 1L, 1L)
+  fun `contact updated event with id 1 is sent to the events publisher`() {
+    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_UPDATED) } doReturn true }
+    outboundEventsService.send(OutboundEvent.CONTACT_UPDATED, 1L, 1L)
     verify(
-      expectedEventType = "contacts-api.contact.amended",
+      expectedEventType = "contacts-api.contact.updated",
       expectedAdditionalInformation = ContactInfo(contactId = 1L, source = Source.DPS),
       expectedPersonReference = PersonReference(dpsContactId = 1L),
-      expectedDescription = "A contact has been amended",
+      expectedDescription = "A contact has been updated",
     )
   }
 
@@ -73,14 +73,14 @@ class OutboundEventsServiceTest {
   }
 
   @Test
-  fun `contact address amended event with id 1 is sent to the events publisher`() {
-    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_ADDRESS_AMENDED) } doReturn true }
-    outboundEventsService.send(OutboundEvent.CONTACT_ADDRESS_AMENDED, 1L, 1L)
+  fun `contact address updated event with id 1 is sent to the events publisher`() {
+    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_ADDRESS_UPDATED) } doReturn true }
+    outboundEventsService.send(OutboundEvent.CONTACT_ADDRESS_UPDATED, 1L, 1L)
     verify(
-      expectedEventType = "contacts-api.contact-address.amended",
+      expectedEventType = "contacts-api.contact-address.updated",
       expectedAdditionalInformation = ContactAddressInfo(contactAddressId = 1L, source = Source.DPS),
       expectedPersonReference = PersonReference(dpsContactId = 1L),
-      expectedDescription = "A contact address has been amended",
+      expectedDescription = "A contact address has been updated",
     )
   }
 
@@ -109,14 +109,14 @@ class OutboundEventsServiceTest {
   }
 
   @Test
-  fun `contact email amended event with id 1 is sent to the events publisher`() {
-    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_EMAIL_AMENDED) } doReturn true }
-    outboundEventsService.send(OutboundEvent.CONTACT_EMAIL_AMENDED, 1L, 1L)
+  fun `contact email updated event with id 1 is sent to the events publisher`() {
+    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_EMAIL_UPDATED) } doReturn true }
+    outboundEventsService.send(OutboundEvent.CONTACT_EMAIL_UPDATED, 1L, 1L)
     verify(
-      expectedEventType = "contacts-api.contact-email.amended",
+      expectedEventType = "contacts-api.contact-email.updated",
       expectedAdditionalInformation = ContactEmailInfo(contactEmailId = 1, source = Source.DPS),
       expectedPersonReference = PersonReference(dpsContactId = 1L),
-      expectedDescription = "A contact email address has been amended",
+      expectedDescription = "A contact email address has been updated",
     )
   }
 
@@ -145,14 +145,14 @@ class OutboundEventsServiceTest {
   }
 
   @Test
-  fun `contact phone amended event with id 1 is sent to the events publisher`() {
-    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_PHONE_AMENDED) } doReturn true }
-    outboundEventsService.send(OutboundEvent.CONTACT_PHONE_AMENDED, 1L, 1L)
+  fun `contact phone updated event with id 1 is sent to the events publisher`() {
+    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_PHONE_UPDATED) } doReturn true }
+    outboundEventsService.send(OutboundEvent.CONTACT_PHONE_UPDATED, 1L, 1L)
     verify(
-      expectedEventType = "contacts-api.contact-phone.amended",
+      expectedEventType = "contacts-api.contact-phone.updated",
       expectedAdditionalInformation = ContactPhoneInfo(contactPhoneId = 1, source = Source.DPS),
       expectedPersonReference = PersonReference(dpsContactId = 1L),
-      expectedDescription = "A contact phone number has been amended",
+      expectedDescription = "A contact phone number has been updated",
     )
   }
 
@@ -181,14 +181,14 @@ class OutboundEventsServiceTest {
   }
 
   @Test
-  fun `contact identity amended event with id 1 is sent to the events publisher`() {
-    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_IDENTITY_AMENDED) } doReturn true }
-    outboundEventsService.send(OutboundEvent.CONTACT_IDENTITY_AMENDED, 1L, 1L)
+  fun `contact identity updated event with id 1 is sent to the events publisher`() {
+    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_IDENTITY_UPDATED) } doReturn true }
+    outboundEventsService.send(OutboundEvent.CONTACT_IDENTITY_UPDATED, 1L, 1L)
     verify(
-      expectedEventType = "contacts-api.contact-identity.amended",
+      expectedEventType = "contacts-api.contact-identity.updated",
       expectedAdditionalInformation = ContactIdentityInfo(contactIdentityId = 1, source = Source.DPS),
       expectedPersonReference = PersonReference(dpsContactId = 1L),
-      expectedDescription = "A contact proof of identity has been amended",
+      expectedDescription = "A contact proof of identity has been updated",
     )
   }
 
@@ -217,14 +217,14 @@ class OutboundEventsServiceTest {
   }
 
   @Test
-  fun `contact restriction amended event with id 1 is sent to the events publisher`() {
-    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_RESTRICTION_AMENDED) } doReturn true }
-    outboundEventsService.send(OutboundEvent.CONTACT_RESTRICTION_AMENDED, 1L, 1L)
+  fun `contact restriction updated event with id 1 is sent to the events publisher`() {
+    featureSwitches.stub { on { isEnabled(OutboundEvent.CONTACT_RESTRICTION_UPDATED) } doReturn true }
+    outboundEventsService.send(OutboundEvent.CONTACT_RESTRICTION_UPDATED, 1L, 1L)
     verify(
-      expectedEventType = "contacts-api.contact-restriction.amended",
+      expectedEventType = "contacts-api.contact-restriction.updated",
       expectedAdditionalInformation = ContactRestrictionInfo(contactRestrictionId = 1L, source = Source.DPS),
       expectedPersonReference = PersonReference(dpsContactId = 1L),
-      expectedDescription = "A contact restriction has been amended",
+      expectedDescription = "A contact restriction has been updated",
     )
   }
 
@@ -253,14 +253,14 @@ class OutboundEventsServiceTest {
   }
 
   @Test
-  fun `prisoner contact amended event with id 1 is sent to the events publisher`() {
-    featureSwitches.stub { on { isEnabled(OutboundEvent.PRISONER_CONTACT_AMENDED) } doReturn true }
-    outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_AMENDED, 1L, 1L, "A1234AA")
+  fun `prisoner contact updated event with id 1 is sent to the events publisher`() {
+    featureSwitches.stub { on { isEnabled(OutboundEvent.PRISONER_CONTACT_UPDATED) } doReturn true }
+    outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_UPDATED, 1L, 1L, "A1234AA")
     verify(
-      expectedEventType = "contacts-api.prisoner-contact.amended",
+      expectedEventType = "contacts-api.prisoner-contact.updated",
       expectedAdditionalInformation = PrisonerContactInfo(prisonerContactId = 1L, source = Source.DPS),
       expectedPersonReference = PersonReference(dpsContactId = 1L, nomsNumber = "A1234AA"),
-      expectedDescription = "A prisoner contact has been amended",
+      expectedDescription = "A prisoner contact has been updated",
     )
   }
 
@@ -289,14 +289,14 @@ class OutboundEventsServiceTest {
   }
 
   @Test
-  fun `prisoner contact restriction amended event with id 1 is sent to the events publisher`() {
-    featureSwitches.stub { on { isEnabled(OutboundEvent.PRISONER_CONTACT_RESTRICTION_AMENDED) } doReturn true }
-    outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_RESTRICTION_AMENDED, 1L, 1L, "A1234AA")
+  fun `prisoner contact restriction updated event with id 1 is sent to the events publisher`() {
+    featureSwitches.stub { on { isEnabled(OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED) } doReturn true }
+    outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED, 1L, 1L, "A1234AA")
     verify(
-      expectedEventType = "contacts-api.prisoner-contact-restriction.amended",
+      expectedEventType = "contacts-api.prisoner-contact-restriction.updated",
       expectedAdditionalInformation = PrisonerContactRestrictionInfo(prisonerContactRestrictionId = 1L, source = Source.DPS),
       expectedPersonReference = PersonReference(dpsContactId = 1L, nomsNumber = "A1234AA"),
-      expectedDescription = "A prisoner contact restriction has been amended",
+      expectedDescription = "A prisoner contact restriction has been updated",
     )
   }
 

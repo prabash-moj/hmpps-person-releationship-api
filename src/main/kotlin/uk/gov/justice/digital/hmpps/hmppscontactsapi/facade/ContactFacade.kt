@@ -65,9 +65,9 @@ class ContactFacade(
   fun patch(id: Long, request: PatchContactRequest): PatchContactResponse {
     return contactPatchService.patch(id, request)
       .also {
-        logger.info("Send patch domain event to {} {} ", OutboundEvent.CONTACT_AMENDED, id)
+        logger.info("Send patch domain event to {} {} ", OutboundEvent.CONTACT_UPDATED, id)
         outboundEventsService.send(
-          outboundEvent = OutboundEvent.CONTACT_AMENDED,
+          outboundEvent = OutboundEvent.CONTACT_UPDATED,
           identifier = id,
           contactId = id,
         )
@@ -85,10 +85,10 @@ class ContactFacade(
   fun patchRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
     return contactService.updateContactRelationship(contactId, prisonerContactId, request)
       .also {
-        logger.info("Send patch relationship domain event to {} {} ", OutboundEvent.CONTACT_AMENDED, contactId)
+        logger.info("Send patch relationship domain event to {} {} ", OutboundEvent.CONTACT_UPDATED, contactId)
         // TODO: Needs prisoner number adding as optional noms = prisonerNumber
         outboundEventsService.send(
-          outboundEvent = OutboundEvent.PRISONER_CONTACT_AMENDED,
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_UPDATED,
           identifier = contactId,
           contactId = contactId,
         )

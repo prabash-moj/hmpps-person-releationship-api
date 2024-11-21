@@ -105,7 +105,7 @@ class SyncFacadeTest {
       verify(syncContactService).updateContact(3L, request)
 
       verify(outboundEventsService).send(
-        outboundEvent = OutboundEvent.CONTACT_AMENDED,
+        outboundEvent = OutboundEvent.CONTACT_UPDATED,
         identifier = result.id,
         contactId = result.id,
         source = Source.NOMIS,

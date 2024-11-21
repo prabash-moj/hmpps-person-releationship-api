@@ -21,19 +21,19 @@ feature:
     contacts-api:
       contact-phone:
         created: true
-        amended: true
+        updated: true
         deleted: true
       contact-identity:
         created: true
-        amended: true
+        updated: true
         deleted: true
       contact-email:
         created: true
-        amended: true
+        updated: true
         deleted: true
       contact:
         created: true
-        amended: true
+        updated: true
         deleted: true
       prisoner-contact:
         created: true

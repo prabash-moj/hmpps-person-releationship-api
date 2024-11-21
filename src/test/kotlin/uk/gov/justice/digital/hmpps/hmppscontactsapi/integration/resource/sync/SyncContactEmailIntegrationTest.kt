@@ -179,8 +179,8 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
         assertThat(contactEmailId).isGreaterThan(4)
         assertThat(contactId).isEqualTo(savedContactId)
         assertThat(emailAddress).isEqualTo("test@test.co.uk")
-        assertThat(amendedBy).isEqualTo("UPDATE")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("UPDATE")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }

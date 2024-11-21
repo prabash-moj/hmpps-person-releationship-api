@@ -183,8 +183,8 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         assertThat(contactId).isEqualTo(savedContactId)
         assertThat(identityType).isEqualTo("PASS")
         assertThat(issuingAuthority).isEqualTo("UKBORDER")
-        assertThat(amendedBy).isEqualTo("UPDATE")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("UPDATE")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }

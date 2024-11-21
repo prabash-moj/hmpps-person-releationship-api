@@ -141,8 +141,8 @@ class SyncContactServiceTest {
       with(updated) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
     }
 

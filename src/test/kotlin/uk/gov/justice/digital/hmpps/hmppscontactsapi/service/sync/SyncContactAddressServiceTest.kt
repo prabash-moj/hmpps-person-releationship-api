@@ -160,8 +160,8 @@ class SyncContactAddressServiceTest {
         assertThat(countyCode).isEqualTo(request.countyCode)
         assertThat(countyCode).isEqualTo(request.countyCode)
         assertThat(postcode).isEqualTo(request.postcode)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
     }
 

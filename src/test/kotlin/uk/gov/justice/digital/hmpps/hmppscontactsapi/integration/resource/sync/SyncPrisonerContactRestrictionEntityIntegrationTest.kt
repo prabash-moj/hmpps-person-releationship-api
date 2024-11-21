@@ -116,8 +116,8 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(authorisedTime).isEqualTo(LocalDateTime.of(2024, 10, 1, 12, 0, 0))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isEqualTo(LocalDateTime.of(2024, 10, 1, 12, 0, 0))
-        assertThat(amendedBy).isEqualTo("editor")
-        assertThat(amendedTime).isEqualTo(LocalDateTime.of(2024, 10, 2, 15, 30, 0))
+        assertThat(updatedBy).isEqualTo("editor")
+        assertThat(updatedTime).isEqualTo(LocalDateTime.of(2024, 10, 2, 15, 30, 0))
       }
     }
 
@@ -148,8 +148,8 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
       }
     }
 
@@ -179,8 +179,8 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
       }
 
       val updatedPrisonerContactRestriction = webTestClient.put()
@@ -208,8 +208,8 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isEqualTo("UpdatedUser")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("UpdatedUser")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
     }
 
@@ -255,8 +255,8 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         staffUsername = "UpdatedUser",
         authorisedBy = "John Doe",
         authorisedTime = LocalDateTime.now(),
-        amendedBy = "UpdatedUser",
-        amendedTime = LocalDateTime.now(),
+        updatedBy = "UpdatedUser",
+        updatedTime = LocalDateTime.now(),
       )
 
     private fun createPrisonerContactRestrictionRequest() =

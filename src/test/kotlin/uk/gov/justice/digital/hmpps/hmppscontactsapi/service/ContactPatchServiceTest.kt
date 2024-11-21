@@ -71,7 +71,7 @@ class ContactPatchServiceTest {
 
     assertUnchangedFields(updatedContact)
 
-    assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+    assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
   }
 
   @Nested
@@ -90,7 +90,7 @@ class ContactPatchServiceTest {
       val updatedContact = service.patch(contactId, patchRequest)
 
       assertThat(updatedContact.languageCode).isEqualTo(null)
-      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
@@ -147,7 +147,7 @@ class ContactPatchServiceTest {
       verify(languageService, times(1)).getLanguageByNomisCode(countryCode)
 
       assertThat(updatedContact.languageCode).isEqualTo(countryCode)
-      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
@@ -173,7 +173,7 @@ class ContactPatchServiceTest {
       assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
 
       assertThat(response.languageCode).isEqualTo(patchRequest.languageCode.get())
-      assertThat(response.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(response.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
   }
 
@@ -202,7 +202,7 @@ class ContactPatchServiceTest {
       assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
 
       assertThat(response.interpreterRequired).isEqualTo(patchRequest.interpreterRequired.get())
-      assertThat(response.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(response.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
@@ -237,7 +237,7 @@ class ContactPatchServiceTest {
       val updatedContact = service.patch(contactId, patchRequest)
 
       assertThat(updatedContact.domesticStatus).isEqualTo(null)
-      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
@@ -301,7 +301,7 @@ class ContactPatchServiceTest {
       verify(referenceCodeService, times(1)).getReferenceDataByGroupAndCode("DOMESTIC_STS", domesticStatusCode)
 
       assertThat(updatedContact.domesticStatus).isEqualTo(domesticStatusCode)
-      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
@@ -330,7 +330,7 @@ class ContactPatchServiceTest {
       assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
 
       assertThat(response.domesticStatus).isEqualTo(patchRequest.domesticStatus.get())
-      assertThat(response.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(response.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
   }
 
@@ -359,7 +359,7 @@ class ContactPatchServiceTest {
       assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
 
       assertThat(response.isStaff).isEqualTo(patchRequest.isStaff.get())
-      assertThat(response.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(response.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
@@ -429,7 +429,7 @@ class ContactPatchServiceTest {
       assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
 
       assertThat(response.title).isEqualTo("MRS")
-      assertThat(response.amendedBy).isEqualTo("Modifier")
+      assertThat(response.updatedBy).isEqualTo("Modifier")
     }
 
     @Test
@@ -454,7 +454,7 @@ class ContactPatchServiceTest {
       assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
 
       assertThat(response.title).isNull()
-      assertThat(response.amendedBy).isEqualTo("Modifier")
+      assertThat(response.updatedBy).isEqualTo("Modifier")
       verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
     }
 
@@ -503,7 +503,7 @@ class ContactPatchServiceTest {
       assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
 
       assertThat(response.middleNames).isEqualTo("Some Middle Names Updated")
-      assertThat(response.amendedBy).isEqualTo("Modifier")
+      assertThat(response.updatedBy).isEqualTo("Modifier")
     }
 
     @Test
@@ -528,7 +528,7 @@ class ContactPatchServiceTest {
       assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
 
       assertThat(response.middleNames).isNull()
-      assertThat(response.amendedBy).isEqualTo("Modifier")
+      assertThat(response.updatedBy).isEqualTo("Modifier")
       verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
     }
   }
@@ -550,7 +550,7 @@ class ContactPatchServiceTest {
       val updatedContact = service.patch(contactId, patchRequest)
 
       assertThat(updatedContact.dateOfBirth).isNull()
-      assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
+      assertThat(updatedContact.updatedBy).isEqualTo("Modifier")
     }
 
     @Test
@@ -572,7 +572,7 @@ class ContactPatchServiceTest {
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
 
       assertThat(updatedContact.dateOfBirth).isEqualTo(LocalDate.of(2000, 12, 25))
-      assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
+      assertThat(updatedContact.updatedBy).isEqualTo("Modifier")
     }
   }
 
@@ -594,7 +594,7 @@ class ContactPatchServiceTest {
       val updatedContact = service.patch(contactId, patchRequest)
 
       assertThat(updatedContact.estimatedIsOverEighteen).isEqualTo(null)
-      assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
+      assertThat(updatedContact.updatedBy).isEqualTo("Modifier")
     }
 
     @Test
@@ -616,7 +616,7 @@ class ContactPatchServiceTest {
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
 
       assertThat(updatedContact.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
-      assertThat(updatedContact.amendedBy).isEqualTo("Modifier")
+      assertThat(updatedContact.updatedBy).isEqualTo("Modifier")
     }
   }
 
@@ -659,7 +659,7 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
     assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
     assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
-    assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)
+    assertThat(updatedContact.updatedTime).isAfter(originalContact.amendedTime)
     assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
   }
 
@@ -681,7 +681,7 @@ class ContactPatchServiceTest {
       val updatedContact = service.patch(contactId, patchRequest)
 
       assertThat(updatedContact.gender).isEqualTo(null)
-      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
@@ -725,7 +725,7 @@ class ContactPatchServiceTest {
       verify(referenceCodeService, times(1)).getReferenceDataByGroupAndCode("GENDER", "NS")
 
       assertThat(updatedContact.gender).isEqualTo("NS")
-      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test

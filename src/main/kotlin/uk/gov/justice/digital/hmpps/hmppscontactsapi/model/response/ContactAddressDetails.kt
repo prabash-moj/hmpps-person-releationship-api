@@ -97,9 +97,9 @@ data class ContactAddressDetails(
   @Schema(description = "The timestamp of when the contact was created", example = "2024-01-01T00:00:00Z")
   val createdTime: LocalDateTime,
 
-  @Schema(description = "The id of the user who last amended the contact address", example = "JD000001", nullable = true)
-  val amendedBy: String?,
+  @Schema(description = "The id of the user who last updated the contact address", example = "JD000001", nullable = true)
+  val updatedBy: String?,
 
-  @Schema(description = "The timestamp of when the contact address was last amended", example = "2024-01-01T00:00:00Z", nullable = true)
-  val amendedTime: LocalDateTime?,
+  @Schema(description = "The timestamp of when the contact address was last updated", example = "2024-01-01T00:00:00Z", nullable = true)
+  val updatedTime: LocalDateTime?,
 )

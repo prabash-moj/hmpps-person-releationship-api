@@ -276,8 +276,8 @@ class ContactControllerTest {
       interpreterRequired = false,
       createdBy = "JD000001",
       createdTime = LocalDateTime.now(),
-      amendedBy = "UPDATE",
-      amendedTime = LocalDateTime.now(),
+      updatedBy = "UPDATE",
+      updatedTime = LocalDateTime.now(),
     )
   }
 

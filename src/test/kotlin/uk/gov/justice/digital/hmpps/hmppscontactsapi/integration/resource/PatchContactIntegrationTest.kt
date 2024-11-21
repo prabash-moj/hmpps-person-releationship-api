@@ -109,7 +109,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo("ENG")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -130,7 +130,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo(null)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -151,7 +151,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo("FRE-FRA")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -169,7 +169,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo("ENG")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.reset()
     }
@@ -190,7 +190,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(true)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -210,7 +210,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(true)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -247,7 +247,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(resetValue)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.reset()
     }
@@ -267,7 +267,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("P")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -287,7 +287,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo(null)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -308,7 +308,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("M")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -326,7 +326,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("P")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.reset()
     }
@@ -347,7 +347,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(true)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -367,7 +367,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(true)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -404,7 +404,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(resetValue)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
       stubEvents.reset()
     }
   }
@@ -434,7 +434,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(1982, 6, 15))
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -453,7 +453,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isNull()
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -472,7 +472,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(2000, 12, 25))
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -507,7 +507,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -525,7 +525,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(null)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -543,7 +543,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -581,7 +581,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(res.lastName).isEqualTo("Last")
       assertThat(res.middleNames).isEqualTo("Middle Names")
       assertThat(res.title).isEqualTo("MR")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -613,7 +613,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(res.lastName).isEqualTo("Last")
       assertThat(res.middleNames).isEqualTo("update middle")
       assertThat(res.title).isEqualTo("MRS")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -635,7 +635,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(res.lastName).isEqualTo("Last")
       assertThat(res.middleNames).isNull()
       assertThat(res.title).isNull()
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -657,7 +657,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(res.lastName).isEqualTo("Last")
       assertThat(res.middleNames).isEqualTo("Updated Middle")
       assertThat(res.title).isEqualTo("MRS")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -730,7 +730,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
 
       assertThat(res.gender).isEqualTo("NS")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -748,7 +748,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
 
       assertThat(res.gender).isNull()
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,
@@ -766,7 +766,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
 
       assertThat(res.gender).isEqualTo("M")
-      assertThat(res.amendedBy).isEqualTo(updatedByUser)
+      assertThat(res.updatedBy).isEqualTo(updatedByUser)
 
       stubEvents.assertHasEvent(
         event = OutboundEvent.CONTACT_AMENDED,

@@ -64,7 +64,7 @@ class ContactEmailControllerTest {
       val updatedEmail = createContactEmailDetails(id = 2, contactId = 1)
       val request = UpdateEmailRequest(
         emailAddress = "test@example.com",
-        amendedBy = "JAMES",
+        updatedBy = "JAMES",
       )
       whenever(facade.update(1, 2, request)).thenReturn(updatedEmail)
 
@@ -79,7 +79,7 @@ class ContactEmailControllerTest {
     fun `should propagate exceptions if update fails`() {
       val request = UpdateEmailRequest(
         emailAddress = "test@example.com",
-        amendedBy = "JAMES",
+        updatedBy = "JAMES",
       )
       val expected = EntityNotFoundException("Couldn't find contact")
       whenever(facade.update(1, 2, request)).thenThrow(expected)
@@ -101,8 +101,8 @@ class ContactEmailControllerTest {
       emailAddress = "test@example.com",
       createdBy = "USER1",
       createdTime = LocalDateTime.now(),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test

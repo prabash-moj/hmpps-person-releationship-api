@@ -139,8 +139,8 @@ class SyncContactRestrictionServiceTest {
         assertThat(startDate).isEqualTo(request.startDate)
         assertThat(expiryDate).isEqualTo(request.expiryDate)
         assertThat(comments).isEqualTo(request.comments)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
     }
 

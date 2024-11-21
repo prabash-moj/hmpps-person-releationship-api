@@ -46,8 +46,8 @@ class SyncPrisonerContactRestrictionService(
       authorisedBy = request.authorisedBy,
       authorisedTime = request.authorisedTime,
     ).also {
-      it.amendedBy = request.amendedBy
-      it.amendedTime = request.amendedTime
+      it.amendedBy = request.updatedBy
+      it.amendedTime = request.updatedTime
     }
 
     return prisonerContactRestrictionRepository.saveAndFlush(changedPrisonerContactRestriction).toResponse()

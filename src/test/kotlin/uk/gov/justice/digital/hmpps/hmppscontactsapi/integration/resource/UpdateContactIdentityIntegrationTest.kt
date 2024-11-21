@@ -83,12 +83,12 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "identityType must not be null;{\"identityType\": null, \"identityValue\": \"0123456789\", \"amendedBy\": \"created\"}",
-      "identityType must not be null;{\"identityValue\": \"0123456789\", \"amendedBy\": \"created\"}",
-      "identityValue must not be null;{\"identityType\": \"DL\", \"identityValue\": null, \"amendedBy\": \"created\"}",
-      "identityValue must not be null;{\"identityType\": \"DL\", \"amendedBy\": \"created\"}",
-      "amendedBy must not be null;{\"identityType\": \"DL\", \"identityValue\": \"0123456789\", \"amendedBy\": null}",
-      "amendedBy must not be null;{\"identityType\": \"DL\", \"identityValue\": \"0123456789\"}",
+      "identityType must not be null;{\"identityType\": null, \"identityValue\": \"0123456789\", \"updatedBy\": \"created\"}",
+      "identityType must not be null;{\"identityValue\": \"0123456789\", \"updatedBy\": \"created\"}",
+      "identityValue must not be null;{\"identityType\": \"DL\", \"identityValue\": null, \"updatedBy\": \"created\"}",
+      "identityValue must not be null;{\"identityType\": \"DL\", \"updatedBy\": \"created\"}",
+      "updatedBy must not be null;{\"identityType\": \"DL\", \"identityValue\": \"0123456789\", \"updatedBy\": null}",
+      "updatedBy must not be null;{\"identityType\": \"DL\", \"identityValue\": \"0123456789\"}",
     ],
     delimiter = ';',
   )
@@ -135,7 +135,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     val request = UpdateIdentityRequest(
       identityType = "MACRO",
       identityValue = "DL123456789",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
 
     val errors = webTestClient.put()
@@ -160,7 +160,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     val request = UpdateIdentityRequest(
       identityType = "NHS",
       identityValue = "Is active is false",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
 
     val errors = webTestClient.put()
@@ -228,7 +228,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       identityType = "PASS",
       identityValue = "P978654312",
       issuingAuthority = null,
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
     val updated = testAPIClient.updateAContactIdentity(savedContactId, savedContactIdentityId, request)
 
@@ -238,8 +238,8 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       assertThat(issuingAuthority).isNull()
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
-      assertThat(amendedBy).isEqualTo("amended")
-      assertThat(amendedTime).isNotNull()
+      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedTime).isNotNull()
     }
 
     stubEvents.assertHasEvent(
@@ -255,7 +255,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       identityType = "PASS",
       identityValue = "P978654312",
       issuingAuthority = "Passport office",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
 
     val updated = testAPIClient.updateAContactIdentity(savedContactId, savedContactIdentityId, request)
@@ -266,8 +266,8 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       assertThat(issuingAuthority).isEqualTo(request.issuingAuthority)
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
-      assertThat(amendedBy).isEqualTo("amended")
-      assertThat(amendedTime).isNotNull()
+      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedTime).isNotNull()
     }
 
     stubEvents.assertHasEvent(
@@ -288,8 +288,8 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
           aMinimalRequest().copy(issuingAuthority = "".padStart(41)),
         ),
         Arguments.of(
-          "amendedBy must be <= 100 characters",
-          aMinimalRequest().copy(amendedBy = "".padStart(101)),
+          "updatedBy must be <= 100 characters",
+          aMinimalRequest().copy(updatedBy = "".padStart(101)),
         ),
       )
     }
@@ -297,7 +297,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     private fun aMinimalRequest() = UpdateIdentityRequest(
       identityType = "DL",
       identityValue = "DL123456789",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
   }
 }

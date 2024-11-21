@@ -58,7 +58,7 @@ class ContactPhoneService(
       phoneType = request.phoneType,
       phoneNumber = request.phoneNumber,
       extNumber = request.extNumber,
-      amendedBy = request.amendedBy,
+      amendedBy = request.updatedBy,
       amendedTime = LocalDateTime.now(),
     )
 

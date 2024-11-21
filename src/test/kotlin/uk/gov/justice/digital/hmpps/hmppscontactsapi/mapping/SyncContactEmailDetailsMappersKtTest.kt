@@ -27,8 +27,8 @@ class SyncContactEmailDetailsMappersKtTest {
         emailAddress = "test@example.com",
         createdBy = "USER",
         createdTime = LocalDateTime.of(2024, 1, 1, 1, 1, 1, 1),
-        amendedBy = "AMEND_USER",
-        amendedTime = LocalDateTime.of(2024, 2, 2, 2, 2, 2, 2),
+        updatedBy = "AMEND_USER",
+        updatedTime = LocalDateTime.of(2024, 2, 2, 2, 2, 2, 2),
       ),
     )
   }

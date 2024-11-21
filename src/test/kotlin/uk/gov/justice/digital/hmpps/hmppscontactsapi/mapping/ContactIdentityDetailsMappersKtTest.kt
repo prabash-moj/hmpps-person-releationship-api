@@ -34,8 +34,8 @@ class ContactIdentityDetailsMappersKtTest {
         issuingAuthority = "UK",
         createdBy = "CRE",
         createdTime = LocalDateTime.of(2024, 2, 2, 2, 2, 2),
-        amendedBy = "AMD",
-        amendedTime = LocalDateTime.of(2024, 3, 3, 3, 3, 3),
+        updatedBy = "AMD",
+        updatedTime = LocalDateTime.of(2024, 3, 3, 3, 3, 3),
       ),
     )
   }

@@ -26,9 +26,9 @@ data class SyncContactIdentity(
   @Schema(description = "Timestamp when the entry was created", example = "2023-09-23T10:15:30")
   val createdTime: LocalDateTime,
 
-  @Schema(description = "User who amended the entry", example = "admin2")
-  val amendedBy: String?,
+  @Schema(description = "User who updated the entry", example = "admin2")
+  val updatedBy: String?,
 
-  @Schema(description = "Timestamp when the entry was amended", example = "2023-09-24T12:00:00")
-  val amendedTime: LocalDateTime?,
+  @Schema(description = "Timestamp when the entry was updated", example = "2023-09-24T12:00:00")
+  val updatedTime: LocalDateTime?,
 )

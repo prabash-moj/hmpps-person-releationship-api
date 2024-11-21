@@ -81,10 +81,10 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "emailAddress must not be null;{\"emailAddress\": null, \"emailValue\": \"0123456789\", \"amendedBy\": \"created\"}",
-      "emailAddress must not be null;{\"emailValue\": \"test@example.com\", \"amendedBy\": \"created\"}",
-      "amendedBy must not be null;{\"emailAddress\": \"DL\", \"emailValue\": \"test@example.com\", \"amendedBy\": null}",
-      "amendedBy must not be null;{\"emailAddress\": \"DL\", \"emailValue\": \"test@example.com\"}",
+      "emailAddress must not be null;{\"emailAddress\": null, \"emailValue\": \"0123456789\", \"updatedBy\": \"created\"}",
+      "emailAddress must not be null;{\"emailValue\": \"test@example.com\", \"updatedBy\": \"created\"}",
+      "updatedBy must not be null;{\"emailAddress\": \"DL\", \"emailValue\": \"test@example.com\", \"updatedBy\": null}",
+      "updatedBy must not be null;{\"emailAddress\": \"DL\", \"emailValue\": \"test@example.com\"}",
     ],
     delimiter = ';',
   )
@@ -188,7 +188,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
   fun `should not update the email if the email address is invalid`() {
     val request = UpdateEmailRequest(
       emailAddress = "@example.com",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
 
     val errors = webTestClient.put()
@@ -216,7 +216,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
   fun `should update the email`() {
     val request = UpdateEmailRequest(
       emailAddress = "updated@example.com",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
     val updated = testAPIClient.updateAContactEmail(savedContactId, savedContactEmailId, request)
 
@@ -224,8 +224,8 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       assertThat(emailAddress).isEqualTo("updated@example.com")
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
-      assertThat(amendedBy).isEqualTo("amended")
-      assertThat(amendedTime).isNotNull()
+      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedTime).isNotNull()
     }
 
     stubEvents.assertHasEvent(
@@ -241,15 +241,15 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       return listOf(
         Arguments.of("emailAddress must be <= 240 characters", aMinimalRequest().copy(emailAddress = "".padStart(241))),
         Arguments.of(
-          "amendedBy must be <= 100 characters",
-          aMinimalRequest().copy(amendedBy = "".padStart(101)),
+          "updatedBy must be <= 100 characters",
+          aMinimalRequest().copy(updatedBy = "".padStart(101)),
         ),
       )
     }
 
     private fun aMinimalRequest() = UpdateEmailRequest(
       emailAddress = "updated@example.com",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
   }
 }

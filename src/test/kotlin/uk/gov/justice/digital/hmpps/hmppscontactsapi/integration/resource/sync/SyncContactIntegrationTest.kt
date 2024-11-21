@@ -133,8 +133,8 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(interpreterRequired).isFalse
         assertThat(createdBy).isEqualTo("TIM")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
       }
     }
 
@@ -241,8 +241,8 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(interpreterRequired).isTrue()
-        assertThat(amendedBy).isEqualTo("UPDATE")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("UPDATE")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
 
       stubEvents.assertHasEvent(

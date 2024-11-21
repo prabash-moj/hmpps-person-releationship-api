@@ -122,8 +122,8 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(comments).isEqualTo("Comment")
         assertThat(createdBy).isEqualTo("TIM")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusYears(1))
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
       }
     }
 
@@ -159,8 +159,8 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
         assertThat(createdBy).isEqualTo("adminUser")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -197,8 +197,8 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
         assertThat(createdBy).isEqualTo("adminUser")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -233,8 +233,8 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
-        assertThat(amendedBy).isEqualTo("UpdatedUser")
-        assertThat(amendedTime).isNotNull
+        assertThat(updatedBy).isEqualTo("UpdatedUser")
+        assertThat(updatedTime).isNotNull
       }
     }
 
@@ -286,7 +286,7 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         approvedTime = LocalDateTime.now(),
         expiryDate = LocalDate.of(2025, 12, 31),
         createdAtPrison = "LONDN",
-        amendedBy = "UpdatedUser",
+        updatedBy = "UpdatedUser",
         updatedTime = LocalDateTime.now(),
       )
 

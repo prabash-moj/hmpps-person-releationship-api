@@ -13,8 +13,8 @@ fun ContactPhoneEntity.toModel(): SyncContactPhone {
     extNumber = this.extNumber,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
-    amendedBy = this.amendedBy,
-    amendedTime = this.amendedTime,
+    updatedBy = this.amendedBy,
+    updatedTime = this.amendedTime,
   )
 }
 

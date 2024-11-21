@@ -70,13 +70,13 @@ data class SyncPrisonerContact(
   @Schema(description = "The timestamp when the prisoner contact was created", example = "2024-01-01T12:00:00")
   val createdTime: LocalDateTime,
 
-  @Schema(description = "The user who last amended the prisoner contact", example = "adminUser", nullable = true)
-  val amendedBy: String? = null,
+  @Schema(description = "The user who last updated the prisoner contact", example = "adminUser", nullable = true)
+  val updatedBy: String? = null,
 
   @Schema(
-    description = "The timestamp when the prisoner contact was last amended",
+    description = "The timestamp when the prisoner contact was last updated",
     example = "2024-02-01T16:00:00Z",
     nullable = true,
   )
-  val amendedTime: LocalDateTime? = null,
+  val updatedTime: LocalDateTime? = null,
 )

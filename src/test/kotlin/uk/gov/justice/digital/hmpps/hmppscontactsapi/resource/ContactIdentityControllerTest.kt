@@ -111,8 +111,8 @@ class ContactIdentityControllerTest {
       issuingAuthority = null,
       createdBy = "USER1",
       createdTime = LocalDateTime.now(),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test

@@ -31,8 +31,8 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.domesticStatus).isEqualTo(contactEntity.domesticStatus)
     assertThat(response.languageCode).isEqualTo(contactEntity.languageCode)
     assertThat(response.interpreterRequired).isEqualTo(contactEntity.interpreterRequired)
-    assertThat(response.amendedBy).isEqualTo(contactEntity.amendedBy)
-    assertThat(response.amendedTime).isEqualTo(contactEntity.amendedTime)
+    assertThat(response.updatedBy).isEqualTo(contactEntity.amendedBy)
+    assertThat(response.updatedTime).isEqualTo(contactEntity.amendedTime)
   }
 
   private fun contactEntity(languageCode: String?) =

@@ -192,8 +192,8 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         assertThat(startDate).isEqualTo(LocalDate.of(1982, 6, 15))
         assertThat(expiryDate).isEqualTo(LocalDate.of(1928, 6, 15))
         assertThat(comments).isEqualTo("N/A")
-        assertThat(amendedBy).isEqualTo("UPDATE")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("UPDATE")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }

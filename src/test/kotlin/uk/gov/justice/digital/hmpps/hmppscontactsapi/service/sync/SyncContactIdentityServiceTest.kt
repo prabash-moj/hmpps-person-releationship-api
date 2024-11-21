@@ -126,8 +126,8 @@ class SyncContactIdentityServiceTest {
       with(updated) {
         assertThat(identityType).isEqualTo(request.identityType)
         assertThat(issuingAuthority).isEqualTo(request.issuingAuthority)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
     }
 

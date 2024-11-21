@@ -161,8 +161,8 @@ class ContactPhoneServiceTest {
           extNumber = "0123",
           createdBy = "USER1",
           createdTime = created.createdTime,
-          amendedBy = null,
-          amendedTime = null,
+          updatedBy = null,
+          updatedTime = null,
         ),
       )
     }
@@ -200,8 +200,8 @@ class ContactPhoneServiceTest {
           extNumber = null,
           createdBy = "USER1",
           createdTime = createdTime,
-          amendedBy = null,
-          amendedTime = null,
+          updatedBy = null,
+          updatedTime = null,
         ),
       )
     }
@@ -338,7 +338,7 @@ class ContactPhoneServiceTest {
       }
 
       val updated = service.update(contactId, contactPhoneId, request)
-      assertThat(updated.amendedTime).isNotNull()
+      assertThat(updated.updatedTime).isNotNull()
       assertThat(updated).isEqualTo(
         ContactPhoneDetails(
           contactPhoneId = 9999,
@@ -349,8 +349,8 @@ class ContactPhoneServiceTest {
           extNumber = "0123",
           createdBy = "USER99",
           createdTime = existingPhone.createdTime,
-          amendedBy = "amended",
-          amendedTime = updated.amendedTime,
+          updatedBy = "amended",
+          updatedTime = updated.updatedTime,
         ),
       )
     }

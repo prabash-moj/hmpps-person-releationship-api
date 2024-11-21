@@ -130,8 +130,8 @@ class ContactIdentityServiceTest {
           issuingAuthority = "DVLA",
           createdBy = "created",
           createdTime = created.createdTime,
-          amendedBy = null,
-          amendedTime = null,
+          updatedBy = null,
+          updatedTime = null,
         ),
       )
     }
@@ -233,7 +233,7 @@ class ContactIdentityServiceTest {
       }
 
       val updated = service.update(contactId, contactIdentityId, request)
-      assertThat(updated.amendedTime).isNotNull()
+      assertThat(updated.updatedTime).isNotNull()
       assertThat(updated).isEqualTo(
         ContactIdentityDetails(
           contactIdentityId = 9999,
@@ -245,8 +245,8 @@ class ContactIdentityServiceTest {
           issuingAuthority = "Passport office",
           createdBy = "USER99",
           createdTime = existingIdentity.createdTime,
-          amendedBy = "amended",
-          amendedTime = updated.amendedTime,
+          updatedBy = "amended",
+          updatedTime = updated.updatedTime,
         ),
       )
     }
@@ -286,8 +286,8 @@ class ContactIdentityServiceTest {
           issuingAuthority = "DVLA",
           createdBy = "USER1",
           createdTime = createdTime,
-          amendedBy = null,
-          amendedTime = null,
+          updatedBy = null,
+          updatedTime = null,
         ),
       )
     }

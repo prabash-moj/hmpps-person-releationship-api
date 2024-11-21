@@ -187,8 +187,8 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         assertThat(contactId).isEqualTo(savedContactId)
         assertThat(phoneType).isEqualTo("Mobile")
         assertThat(phoneNumber).isEqualTo("555-1234")
-        assertThat(amendedBy).isEqualTo("UPDATE")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("UPDATE")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }

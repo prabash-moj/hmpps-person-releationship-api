@@ -122,8 +122,8 @@ class SyncContactEmailServiceTest {
       // Checks the model returned
       with(updated) {
         assertThat(emailAddress).isEqualTo(request.emailAddress)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
     }
 

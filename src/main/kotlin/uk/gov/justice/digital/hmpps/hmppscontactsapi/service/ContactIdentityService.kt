@@ -50,7 +50,7 @@ class ContactIdentityService(
       identityType = request.identityType,
       identityValue = request.identityValue,
       issuingAuthority = request.issuingAuthority,
-      amendedBy = request.amendedBy,
+      amendedBy = request.updatedBy,
       amendedTime = LocalDateTime.now(),
     )
 
@@ -102,7 +102,7 @@ class ContactIdentityService(
     issuingAuthority = this.issuingAuthority,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
-    amendedBy = this.amendedBy,
-    amendedTime = this.amendedTime,
+    updatedBy = this.amendedBy,
+    updatedTime = this.amendedTime,
   )
 }

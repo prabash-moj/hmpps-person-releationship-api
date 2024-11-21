@@ -71,8 +71,8 @@ class ContactAddressDetailsMappersKtTest {
         phoneNumbers = emptyList(),
         createdBy = "USER1",
         createdTime = LocalDateTime.of(2023, 2, 3, 11, 15, 15),
-        amendedBy = "AMEND_USER",
-        amendedTime = LocalDateTime.of(2024, 5, 6, 12, 30, 30),
+        updatedBy = "AMEND_USER",
+        updatedTime = LocalDateTime.of(2024, 5, 6, 12, 30, 30),
       ),
     )
   }

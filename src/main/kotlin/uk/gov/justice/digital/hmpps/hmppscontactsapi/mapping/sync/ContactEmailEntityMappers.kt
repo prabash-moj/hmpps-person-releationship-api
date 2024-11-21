@@ -11,8 +11,8 @@ fun ContactEmailEntity.toModel(): SyncContactEmail {
     emailAddress = this.emailAddress,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
-    amendedBy = this.amendedBy,
-    amendedTime = this.amendedTime,
+    updatedBy = this.amendedBy,
+    updatedTime = this.amendedTime,
   )
 }
 

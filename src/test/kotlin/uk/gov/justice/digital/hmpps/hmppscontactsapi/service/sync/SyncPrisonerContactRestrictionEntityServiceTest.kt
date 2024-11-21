@@ -44,8 +44,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isEqualTo("editor")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("editor")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
       verify(prisonerContactRestrictionRepository).findById(1L)
     }
@@ -97,8 +97,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
       }
     }
 
@@ -167,8 +167,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isEqualTo("editor")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("editor")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
     }
 
@@ -193,8 +193,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       staffUsername = "editor",
       authorisedBy = "John Doe",
       authorisedTime = LocalDateTime.now(),
-      amendedBy = "editor",
-      amendedTime = LocalDateTime.now(),
+      updatedBy = "editor",
+      updatedTime = LocalDateTime.now(),
     )
 
   private fun createPrisonerContactRestrictionRequest() =
@@ -233,8 +233,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
     }
 
   private fun SyncUpdatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestrictionEntity {
-    val updatedBy = this.amendedBy
-    val updatedTime = this.amendedTime
+    val updatedBy = this.updatedBy
+    val updatedTime = this.updatedTime
 
     return PrisonerContactRestrictionEntity(
       prisonerContactRestrictionId = 1L,

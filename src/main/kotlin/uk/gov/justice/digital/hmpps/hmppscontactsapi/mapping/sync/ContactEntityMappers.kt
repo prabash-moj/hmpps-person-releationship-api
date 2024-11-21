@@ -23,8 +23,8 @@ fun ContactEntity.mapEntityToSyncResponse(): SyncContact {
     domesticStatus = this.domesticStatus,
     languageCode = this.languageCode,
     interpreterRequired = this.interpreterRequired,
-    amendedBy = this.amendedBy,
-    amendedTime = this.amendedTime,
+    updatedBy = this.amendedBy,
+    updatedTime = this.amendedTime,
   )
 }
 

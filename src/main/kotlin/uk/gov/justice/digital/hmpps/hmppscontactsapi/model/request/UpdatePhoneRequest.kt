@@ -18,6 +18,6 @@ data class UpdatePhoneRequest(
   val extNumber: String? = null,
 
   @Schema(description = "User who updated the entry", example = "admin")
-  @field:Size(max = 100, message = "amendedBy must be <= 100 characters")
-  val amendedBy: String,
+  @field:Size(max = 100, message = "updatedBy must be <= 100 characters")
+  val updatedBy: String,
 )

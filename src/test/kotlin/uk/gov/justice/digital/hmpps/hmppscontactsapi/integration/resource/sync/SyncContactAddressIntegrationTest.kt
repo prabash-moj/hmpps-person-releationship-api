@@ -144,8 +144,8 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         assertThat(flat).isEqualTo("1B")
         assertThat(addressType).isEqualTo("HOME")
         assertThat(comments).isEqualTo("Some comments")
-        assertThat(amendedBy).isNullOrEmpty()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNullOrEmpty()
+        assertThat(updatedTime).isNull()
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -193,8 +193,8 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         assertThat(flat).isEqualTo("2B")
         assertThat(addressType).isEqualTo("WORK")
         assertThat(comments).isEqualTo("Updated comments")
-        assertThat(amendedBy).isEqualTo("UPDATE")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("UPDATE")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }
@@ -242,8 +242,8 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         assertThat(verified).isTrue()
         assertThat(verifiedBy).isEqualTo("UPDATE")
         assertThat(verifiedTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isEqualTo("UPDATE")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("UPDATE")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }

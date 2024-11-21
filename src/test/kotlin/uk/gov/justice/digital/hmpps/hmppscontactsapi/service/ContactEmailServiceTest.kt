@@ -92,8 +92,8 @@ class ContactEmailServiceTest {
           emailAddress = "test@example.com",
           createdBy = "created",
           createdTime = created.createdTime,
-          amendedBy = null,
-          amendedTime = null,
+          updatedBy = null,
+          updatedTime = null,
         ),
       )
     }
@@ -103,7 +103,7 @@ class ContactEmailServiceTest {
   inner class UpdateEmail {
     private val request = UpdateEmailRequest(
       emailAddress = "updated@example.com",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
     private val contactEmailId = 1234L
     private val existingEmail = ContactEmailEntity(
@@ -161,7 +161,7 @@ class ContactEmailServiceTest {
       }
 
       val updated = service.update(contactId, contactEmailId, request)
-      assertThat(updated.amendedTime).isNotNull()
+      assertThat(updated.updatedTime).isNotNull()
       assertThat(updated).isEqualTo(
         ContactEmailDetails(
           contactEmailId = 9999,
@@ -169,8 +169,8 @@ class ContactEmailServiceTest {
           emailAddress = "updated@example.com",
           createdBy = "USER99",
           createdTime = existingEmail.createdTime,
-          amendedBy = "amended",
-          amendedTime = updated.amendedTime,
+          updatedBy = "amended",
+          updatedTime = updated.updatedTime,
         ),
       )
     }
@@ -202,8 +202,8 @@ class ContactEmailServiceTest {
           emailAddress = "test@example.com",
           createdBy = "USER1",
           createdTime = createdTime,
-          amendedBy = null,
-          amendedTime = null,
+          updatedBy = null,
+          updatedTime = null,
         ),
       )
     }

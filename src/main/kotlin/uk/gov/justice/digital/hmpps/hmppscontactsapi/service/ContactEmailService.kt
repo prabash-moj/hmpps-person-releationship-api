@@ -47,7 +47,7 @@ class ContactEmailService(
 
     val updating = existing.copy(
       emailAddress = request.emailAddress,
-      amendedBy = request.amendedBy,
+      amendedBy = request.updatedBy,
       amendedTime = LocalDateTime.now(),
     )
 
@@ -90,7 +90,7 @@ class ContactEmailService(
     emailAddress = this.emailAddress,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
-    amendedBy = this.amendedBy,
-    amendedTime = this.amendedTime,
+    updatedBy = this.amendedBy,
+    updatedTime = this.amendedTime,
   )
 }

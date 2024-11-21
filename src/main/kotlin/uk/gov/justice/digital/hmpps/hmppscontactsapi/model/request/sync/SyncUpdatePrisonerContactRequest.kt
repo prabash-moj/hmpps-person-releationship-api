@@ -57,8 +57,8 @@ data class SyncUpdatePrisonerContactRequest(
   @Schema(description = "The prison where the prisoner contact was created", example = "HMP Belmarsh", nullable = true)
   val createdAtPrison: String? = null,
 
-  @Schema(description = "The user who last amended the prisoner contact", example = "adminUser", nullable = true)
-  val amendedBy: String? = null,
+  @Schema(description = "The user who last updated the prisoner contact", example = "adminUser", nullable = true)
+  val updatedBy: String? = null,
 
   @Schema(description = "The timestamp of when the prisoner contact was changed", example = "2024-01-01T00:00:00Z")
   val updatedTime: LocalDateTime,

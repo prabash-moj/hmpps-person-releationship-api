@@ -82,9 +82,9 @@ data class SyncContactAddress(
   @Schema(description = "The timestamp of when the contact was created", example = "2024-01-01T00:00:00Z")
   val createdTime: LocalDateTime,
 
-  @Schema(description = "The id of the user who last amended the contact address", example = "JD000001")
-  val amendedBy: String? = null,
+  @Schema(description = "The id of the user who last updated the contact address", example = "JD000001")
+  val updatedBy: String? = null,
 
-  @Schema(description = "The timestamp of when the contact address was last amended", example = "2024-01-01T00:00:00Z")
-  val amendedTime: LocalDateTime? = null,
+  @Schema(description = "The timestamp of when the contact address was last updated", example = "2024-01-01T00:00:00Z")
+  val updatedTime: LocalDateTime? = null,
 )

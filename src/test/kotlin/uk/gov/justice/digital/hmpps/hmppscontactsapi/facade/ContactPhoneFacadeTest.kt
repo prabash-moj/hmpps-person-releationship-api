@@ -75,7 +75,7 @@ class ContactPhoneFacadeTest {
     val request = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "0777777777",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
 
     val result = facade.update(contactId, contactPhoneId, request)
@@ -98,7 +98,7 @@ class ContactPhoneFacadeTest {
     val request = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "0777777777",
-      amendedBy = "amended",
+      updatedBy = "amended",
     )
 
     val exception = assertThrows<RuntimeException> {

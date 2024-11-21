@@ -46,8 +46,8 @@ class SyncPrisonerContactServiceTest {
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(createdBy).isEqualTo("TEST")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isEqualTo("adminUser")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("adminUser")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
       verify(prisonerContactRepository).findById(1L)
     }
@@ -111,8 +111,8 @@ class SyncPrisonerContactServiceTest {
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(createdBy).isEqualTo("adminUser")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
       }
     }
 
@@ -186,8 +186,8 @@ class SyncPrisonerContactServiceTest {
         assertThat(createdAtPrison).isEqualTo("HMP Wales")
         assertThat(createdBy).isEqualTo("TEST")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isEqualTo("adminUser")
-        assertThat(amendedTime).isNotNull
+        assertThat(updatedBy).isEqualTo("adminUser")
+        assertThat(updatedTime).isNotNull
       }
     }
 
@@ -218,7 +218,7 @@ class SyncPrisonerContactServiceTest {
       approvedTime = LocalDateTime.now(),
       expiryDate = LocalDate.of(2025, 12, 31),
       createdAtPrison = "HMP Wales",
-      amendedBy = "adminUser",
+      updatedBy = "adminUser",
       updatedTime = LocalDateTime.now(),
     )
 
@@ -267,7 +267,7 @@ class SyncPrisonerContactServiceTest {
     }
 
   private fun SyncUpdatePrisonerContactRequest.toEntity(): PrisonerContactEntity {
-    val updatedBy = this.amendedBy
+    val updatedBy = this.updatedBy
     val updatedTime = this.updatedTime
 
     return PrisonerContactEntity(

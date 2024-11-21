@@ -49,9 +49,9 @@ data class SyncPrisonerContactRestriction(
   @Schema(description = "Time when the restriction record was created", example = "2024-10-01T12:00:00Z", nullable = true)
   val createdTime: LocalDateTime? = null,
 
-  @Schema(description = "User who last amended the restriction record", example = "editor", nullable = true)
-  val amendedBy: String? = null,
+  @Schema(description = "User who last updated the restriction record", example = "editor", nullable = true)
+  val updatedBy: String? = null,
 
-  @Schema(description = "Time when the restriction record was last amended", example = "2024-10-02T15:30:00Z", nullable = true)
-  val amendedTime: LocalDateTime? = null,
+  @Schema(description = "Time when the restriction record was last updated", example = "2024-10-02T15:30:00Z", nullable = true)
+  val updatedTime: LocalDateTime? = null,
 )

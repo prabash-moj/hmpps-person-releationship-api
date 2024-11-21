@@ -179,8 +179,8 @@ class SyncFacadeTest {
         lastName = "Doe",
         createdBy = "ANYONE",
         createdTime = LocalDateTime.now(),
-        amendedBy = null,
-        amendedTime = null,
+        updatedBy = null,
+        updatedTime = null,
         estimatedIsOverEighteen = null,
       )
 

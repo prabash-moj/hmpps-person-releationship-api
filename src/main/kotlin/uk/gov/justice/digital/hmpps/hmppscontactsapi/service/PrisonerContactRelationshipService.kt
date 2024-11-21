@@ -19,6 +19,8 @@ class PrisonerContactRelationshipService(
   fun PrisonerContactSummaryEntity.toRelationshipModel(): PrisonerContactRelationshipDetails {
     return PrisonerContactRelationshipDetails(
       prisonerContactId = this.prisonerContactId,
+      contactId = this.contactId,
+      prisonerNumber = this.prisonerNumber,
       relationshipCode = this.relationshipType,
       relationshipDescription = this.relationshipDescription ?: "",
       nextOfKin = this.nextOfKin,

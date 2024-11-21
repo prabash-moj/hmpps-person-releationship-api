@@ -42,6 +42,8 @@ class PrisonerContactRelationshipServiceTest {
     val prisonerContactId = 1L
     val expectedPrisonerContactRelationship = PrisonerContactRelationshipDetails(
       prisonerContactId = prisonerContactId,
+      contactId = 2,
+      prisonerNumber = "A1234BC",
       relationshipCode = "FRIEND",
       relationshipDescription = "Friend",
       nextOfKin = false,

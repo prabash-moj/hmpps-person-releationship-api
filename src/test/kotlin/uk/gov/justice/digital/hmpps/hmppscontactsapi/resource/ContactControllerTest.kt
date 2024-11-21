@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
@@ -20,13 +19,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailD
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneNumberDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRelationshipDetails
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
@@ -154,39 +150,6 @@ class ContactControllerTest {
   }
 
   @Nested
-  inner class AddContactRelationship {
-    private val id = 123456L
-    private val relationship = ContactRelationship(
-      prisonerNumber = "A1234BC",
-      relationshipCode = "MOT",
-      isNextOfKin = true,
-      isEmergencyContact = false,
-      comments = "Foo",
-    )
-    private val request = AddContactRelationshipRequest(relationship, "USER")
-
-    @Test
-    fun `should create a contact relationship successfully`() {
-      val created = createPrisonerContactRelationshipDetails()
-      whenever(contactFacade.addContactRelationship(id, request)).thenReturn(created)
-
-      val result = controller.addContactRelationship(id, request)
-
-      assertThat(result).isEqualTo(created)
-      verify(contactFacade).addContactRelationship(id, request)
-    }
-
-    @Test
-    fun `should propagate exceptions getting a contact`() {
-      whenever(contactFacade.addContactRelationship(id, request)).thenThrow(RuntimeException("Bang!"))
-
-      assertThrows<RuntimeException>("Bang!") {
-        controller.addContactRelationship(id, request)
-      }
-    }
-  }
-
-  @Nested
   inner class SearchContact {
 
     @Test
@@ -278,36 +241,6 @@ class ContactControllerTest {
       createdTime = LocalDateTime.now(),
       updatedBy = "UPDATE",
       updatedTime = LocalDateTime.now(),
-    )
-  }
-
-  @Nested
-  inner class PatchContactRelationship {
-    private val id = 123456L
-    private val prisonerContactId = 2L
-    private val request = patchContactRelationshipRequest()
-
-    @Test
-    fun `should update a contact relationship successfully`() {
-      doNothing().whenever(contactFacade).patchRelationship(id, prisonerContactId, request)
-
-      controller.patchContactRelationship(id, prisonerContactId, request)
-
-      verify(contactFacade).patchRelationship(id, prisonerContactId, request)
-    }
-
-    @Test
-    fun `should propagate exceptions patching a contact relationship`() {
-      whenever(contactFacade.patchRelationship(id, prisonerContactId, request)).thenThrow(RuntimeException("Bang!"))
-
-      assertThrows<RuntimeException>("Bang!") {
-        controller.patchContactRelationship(id, prisonerContactId, request)
-      }
-    }
-
-    private fun patchContactRelationshipRequest() = UpdateRelationshipRequest(
-      relationshipCode = JsonNullable.of("ENG"),
-      updatedBy = "system",
     )
   }
 

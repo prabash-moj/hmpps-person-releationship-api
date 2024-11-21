@@ -36,7 +36,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return unauthorized if no token`() {
     webTestClient.post()
-      .uri("/contact/${contact.id}/relationship")
+      .uri("/prisoner-contact")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -48,7 +48,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if no role`() {
     webTestClient.post()
-      .uri("/contact/${contact.id}/relationship")
+      .uri("/prisoner-contact")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -61,7 +61,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if wrong role`() {
     webTestClient.post()
-      .uri("/contact/${contact.id}/relationship")
+      .uri("/prisoner-contact")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -89,7 +89,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   )
   fun `should return bad request if required fields are null`(expectedMessage: String, json: String) {
     val errors = webTestClient.post()
-      .uri("/contact/${contact.id}/relationship")
+      .uri("/prisoner-contact")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -107,7 +107,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `Should return 404 if the prisoner can't be found`() {
     val errors = webTestClient.post()
-      .uri("/contact/${contact.id}/relationship")
+      .uri("/prisoner-contact")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -127,11 +127,11 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse("A1234BC")
 
     val errors = webTestClient.post()
-      .uri("/contact/123456789/relationship")
+      .uri("/prisoner-contact")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-      .bodyValue(aMinimalRequest())
+      .bodyValue(aMinimalRequest().copy(contactId = 123456789))
       .exchange()
       .expectStatus()
       .isNotFound
@@ -147,6 +147,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse("A1234BC")
 
     val request = AddContactRelationshipRequest(
+      contactId = contact.id,
       relationship = ContactRelationship(
         prisonerNumber = "A1234BC",
         relationshipCode = "MOT",
@@ -156,7 +157,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "USER",
     )
 
-    val createdRelationship = testAPIClient.addAContactRelationship(contact.id, request)
+    val createdRelationship = testAPIClient.addAContactRelationship(request)
 
     assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
     assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
@@ -176,6 +177,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse("A1234BC")
 
     val request = AddContactRelationshipRequest(
+      contactId = contact.id,
       relationship = ContactRelationship(
         prisonerNumber = "A1234BC",
         relationshipCode = "MOT",
@@ -186,7 +188,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "USER",
     )
 
-    val createdRelationship = testAPIClient.addAContactRelationship(contact.id, request)
+    val createdRelationship = testAPIClient.addAContactRelationship(request)
     assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
     assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
     assertThat(createdRelationship.nextOfKin).isFalse()
@@ -201,6 +203,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   }
 
   private fun aMinimalRequest() = AddContactRelationshipRequest(
+    contactId = contact.id,
     relationship = ContactRelationship(
       prisonerNumber = "A1234BC",
       relationshipCode = "MOT",

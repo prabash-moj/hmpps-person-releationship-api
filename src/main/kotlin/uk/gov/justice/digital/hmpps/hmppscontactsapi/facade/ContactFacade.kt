@@ -51,12 +51,12 @@ class ContactFacade(
       }
   }
 
-  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
-    val createdRelationship = contactService.addContactRelationship(contactId, request)
+  fun addContactRelationship(request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
+    val createdRelationship = contactService.addContactRelationship(request)
     outboundEventsService.send(
       outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
       identifier = createdRelationship.prisonerContactId,
-      contactId = contactId,
+      contactId = createdRelationship.contactId,
       noms = request.relationship.prisonerNumber,
     )
     return createdRelationship
@@ -82,15 +82,15 @@ class ContactFacade(
     return contactService.searchContacts(pageable, request)
   }
 
-  fun patchRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
-    return contactService.updateContactRelationship(contactId, prisonerContactId, request)
+  fun patchRelationship(prisonerContactId: Long, request: UpdateRelationshipRequest) {
+    contactService.updateContactRelationship(prisonerContactId, request)
       .also {
-        logger.info("Send patch relationship domain event to {} {} ", OutboundEvent.CONTACT_UPDATED, contactId)
-        // TODO: Needs prisoner number adding as optional noms = prisonerNumber
+        logger.info("Send patch relationship domain event to {} {} ", OutboundEvent.PRISONER_CONTACT_UPDATED, it.contactId)
         outboundEventsService.send(
           outboundEvent = OutboundEvent.PRISONER_CONTACT_UPDATED,
-          identifier = contactId,
-          contactId = contactId,
+          identifier = it.prisonerContactId,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
         )
       }
   }

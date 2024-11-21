@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort.Direction
 import org.springframework.data.web.PageableDefault
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -24,19 +23,15 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactFacade
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
@@ -136,48 +131,6 @@ class ContactController(
     }
   }
 
-  @PostMapping("/{contactId}/relationship", consumes = [MediaType.APPLICATION_JSON_VALUE])
-  @Operation(
-    summary = "Add a new contact relationship",
-    description = "Creates a new relationship between the contact and a prisoner.",
-  )
-  @ApiResponses(
-    value = [
-      ApiResponse(
-        responseCode = "201",
-        description = "Created the relationship successfully",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = PrisonerContactRelationshipDetails::class),
-          ),
-        ],
-      ),
-      ApiResponse(
-        responseCode = "400",
-        description = "The request has invalid or missing fields",
-        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
-      ),
-      ApiResponse(
-        responseCode = "404",
-        description = "Could not find the prisoner or contact that this relationship relates to",
-        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
-      ),
-    ],
-  )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  @ResponseStatus(HttpStatus.CREATED)
-  fun addContactRelationship(
-    @PathVariable("contactId") @Parameter(
-      name = "contactId",
-      description = "The id of the contact",
-      example = "123456",
-    ) contactId: Long,
-    @Valid @RequestBody relationshipRequest: AddContactRelationshipRequest,
-  ): PrisonerContactRelationshipDetails {
-    return contactFacade.addContactRelationship(contactId, relationshipRequest)
-  }
-
   @GetMapping("/search")
   @Operation(
     summary = "Search contacts",
@@ -250,46 +203,4 @@ class ContactController(
     ) contactId: Long,
     @Valid @RequestBody patchContactRequest: PatchContactRequest,
   ) = contactFacade.patch(contactId, patchContactRequest)
-
-  @PatchMapping("/{contactId}/relationship/{prisonerContactId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
-  @Operation(
-    summary = "Update prisoner contact relationship",
-    description = "Update the relationship between the contact and a prisoner.",
-  )
-  @ApiResponses(
-    value = [
-      ApiResponse(
-        responseCode = "204",
-        description = "Updated the relationship successfully",
-      ),
-      ApiResponse(
-        responseCode = "400",
-        description = "The request has invalid or missing fields",
-        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
-      ),
-      ApiResponse(
-        responseCode = "404",
-        description = "Could not find the prisoner contact that this relationship relates to",
-        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
-      ),
-    ],
-  )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  @ResponseStatus(HttpStatus.CREATED)
-  fun patchContactRelationship(
-    @PathVariable("contactId") @Parameter(
-      name = "contactId",
-      description = "The id of the contact",
-      example = "123456",
-    ) contactId: Long,
-    @PathVariable("prisonerContactId") @Parameter(
-      name = "prisonerContactId",
-      description = "The id of the prisoner contact",
-      example = "123456",
-    ) prisonerContactId: Long,
-    @Valid @RequestBody relationshipRequest: UpdateRelationshipRequest,
-  ): ResponseEntity<Any> {
-    contactFacade.patchRelationship(contactId, prisonerContactId, relationshipRequest)
-    return ResponseEntity.noContent().build()
-  }
 }

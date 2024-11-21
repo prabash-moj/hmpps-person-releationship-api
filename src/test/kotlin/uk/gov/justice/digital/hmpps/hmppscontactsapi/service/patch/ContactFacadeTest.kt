@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.PageImpl
@@ -102,6 +101,7 @@ class ContactFacadeTest {
   @Test
   fun `create contact relationship should send prisoner contact domain event`() {
     val request = AddContactRelationshipRequest(
+      99,
       ContactRelationship(
         prisonerNumber = "A1234BC",
         relationshipCode = "FRI",
@@ -113,9 +113,9 @@ class ContactFacadeTest {
     )
     val prisonerContactId = 123456L
     val createdRelationship = createPrisonerContactRelationshipDetails(id = prisonerContactId)
-    whenever(contactService.addContactRelationship(99, request)).thenReturn(createdRelationship)
+    whenever(contactService.addContactRelationship(request)).thenReturn(createdRelationship)
 
-    contactFacade.addContactRelationship(99, request)
+    contactFacade.addContactRelationship(request)
 
     verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_CREATED, prisonerContactId, 99, "A1234BC")
   }
@@ -146,16 +146,19 @@ class ContactFacadeTest {
 
   @Test
   fun `patch relationship should send domain event`() {
-    val contactId = 1L
-    val prisonerContactId = 1L
+    val contactId = 321L
+    val prisonerContactId = 123L
+    val prisonerNumber = "A1234BC"
     val request = mock(UpdateRelationshipRequest::class.java)
 
-    doNothing().whenever(contactService).updateContactRelationship(contactId, prisonerContactId, request)
+    whenever(contactService.updateContactRelationship(prisonerContactId, request)).thenReturn(
+      createPrisonerContactRelationshipDetails(prisonerContactId, contactId, prisonerNumber),
+    )
 
-    contactFacade.patchRelationship(contactId, prisonerContactId, request)
+    contactFacade.patchRelationship(prisonerContactId, request)
 
-    verify(contactService).updateContactRelationship(contactId, prisonerContactId, request)
-    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_UPDATED, prisonerContactId, contactId)
+    verify(contactService).updateContactRelationship(prisonerContactId, request)
+    verify(outboundEventsService).send(OutboundEvent.PRISONER_CONTACT_UPDATED, prisonerContactId, contactId, prisonerNumber)
   }
 
   private fun aContactDetails() = ContactDetails(

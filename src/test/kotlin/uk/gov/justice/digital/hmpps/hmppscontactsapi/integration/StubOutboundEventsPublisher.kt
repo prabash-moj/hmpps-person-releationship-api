@@ -34,4 +34,10 @@ class StubOutboundEventsPublisher(private val receivedEvents: MutableList<Outbou
       .extracting(OutboundHMPPSDomainEvent::eventType, OutboundHMPPSDomainEvent::additionalInformation)
       .doesNotContain(tuple(event.eventType, additionalInfo))
   }
+
+  fun assertHasNoEvents(event: OutboundEvent) {
+    assertThat(receivedEvents)
+      .extracting(OutboundHMPPSDomainEvent::eventType)
+      .doesNotContain(tuple(event.eventType))
+  }
 }

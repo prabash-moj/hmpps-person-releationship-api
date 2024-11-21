@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.http.MediaType
-import org.springframework.web.util.UriComponentsBuilder
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
@@ -33,10 +32,9 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val prisonerContact = cretePrisonerContact(prisonerNumber)
 
     val prisonerContactId = prisonerContact.prisonerContactId
-    val contactId = prisonerContact.contactId
 
     val errors = webTestClient.patch()
-      .uri("/contact/$contactId/relationship/$prisonerContactId")
+      .uri("/prisoner-contact/$prisonerContactId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -52,29 +50,6 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should return a 404 if the prisoner can not be found`() {
-    val prisonerNumber = "A1234AB"
-    stubPrisonSearchWithNotFoundResponse(prisonerNumber)
-
-    val request = UpdateRelationshipRequest(
-      relationshipCode = JsonNullable.of("FRI"),
-      isNextOfKin = JsonNullable.of(true),
-      isEmergencyContact = JsonNullable.of(true),
-      isRelationshipActive = JsonNullable.of(true),
-      comments = JsonNullable.of("FRI"),
-      updatedBy = "Admin",
-    )
-
-    val uri = UriComponentsBuilder.fromPath("/contact/123456/relationship/1")
-      .build()
-      .toUri()
-    val errors = testAPIClient.getBadResponseErrorsWithPatch(request, uri)
-
-    assertThat(errors.userMessage)
-      .isEqualTo("Validation failure: The relationship between the prisoner and the contact is not associated with this contact ID: 123456 and prisoner contact ID: 1.")
-  }
-
-  @Test
   fun `should update the contact relationship with relationship code fields`() {
     val prisonerNumber = getRandomPrisonerCode()
     stubPrisonSearchWithResponse(prisonerNumber)
@@ -86,9 +61,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
 
     val prisonerContactId = prisonerContact.prisonerContactId
-    val contactId = prisonerContact.contactId
 
-    testAPIClient.updateRelationship(contactId, prisonerContactId, updateRequest)
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -107,9 +81,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
 
     val prisonerContactId = prisonerContact.prisonerContactId
-    val contactId = prisonerContact.contactId
 
-    testAPIClient.updateRelationship(contactId, prisonerContactId, updateRequest)
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -128,9 +101,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
 
     val prisonerContactId = prisonerContact.prisonerContactId
-    val contactId = prisonerContact.contactId
 
-    testAPIClient.updateRelationship(contactId, prisonerContactId, updateRequest)
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -149,9 +121,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
 
     val prisonerContactId = prisonerContact.prisonerContactId
-    val contactId = prisonerContact.contactId
 
-    testAPIClient.updateRelationship(contactId, prisonerContactId, updateRequest)
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -170,9 +141,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
 
     val prisonerContactId = prisonerContact.prisonerContactId
-    val contactId = prisonerContact.contactId
 
-    testAPIClient.updateRelationship(contactId, prisonerContactId, updateRequest)
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -190,9 +160,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
 
     val prisonerContactId = prisonerContact.prisonerContactId
-    val contactId = prisonerContact.contactId
 
-    testAPIClient.updateRelationship(contactId, prisonerContactId, updateRequest)
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -214,9 +183,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
 
     val prisonerContactId = prisonerContact.prisonerContactId
-    val contactId = prisonerContact.contactId
 
-    testAPIClient.updateRelationship(contactId, prisonerContactId, updateRequest)
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
 

@@ -5,12 +5,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
@@ -18,6 +20,9 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerCont
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
+
+  @Autowired
+  protected lateinit var contactRepository: ContactRepository
 
   @ParameterizedTest
   @CsvSource(
@@ -79,6 +84,46 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Prisoner (A1234AB) could not be found")
+  }
+
+  @Test
+  fun `should reject the contact relationship if it's not a supported relationship type`() {
+    val prisonerNumber = "A1234AB"
+    stubPrisonSearchWithResponse(prisonerNumber)
+    val requestedRelationship = ContactRelationship(
+      prisonerNumber = prisonerNumber,
+      relationshipCode = "FOO",
+      isNextOfKin = false,
+      isEmergencyContact = false,
+      comments = null,
+    )
+    val request = CreateContactRequest(
+      lastName = RandomStringUtils.random(35),
+      firstName = "a new guy",
+      createdBy = "created",
+      relationship = requestedRelationship,
+    )
+
+    val errors = webTestClient.post()
+      .uri("/contact")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode RELATIONSHIP and code 'FOO' not found.")
+    stubEvents.assertHasNoEvents(event = OutboundEvent.CONTACT_CREATED)
+    stubEvents.assertHasNoEvents(event = OutboundEvent.PRISONER_CONTACT_CREATED)
+
+    // Check that we do not create a contact without the relationship
+    val createdContact = contactRepository.findAll().find { it.lastName == request.lastName }
+    assertThat(createdContact).isNull()
   }
 
   @Test

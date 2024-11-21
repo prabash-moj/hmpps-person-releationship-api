@@ -272,6 +272,8 @@ fun createContactIdentityDetails(
 
 fun createPrisonerContactRelationshipDetails(
   id: Long = 1,
+  contactId: Long = 99,
+  prisonerNumber: String = "A1234BC",
   relationshipCode: String = "FRI",
   relationshipDescription: String = "Friend",
   emergencyContact: Boolean = false,
@@ -280,6 +282,8 @@ fun createPrisonerContactRelationshipDetails(
   comments: String? = null,
 ) = PrisonerContactRelationshipDetails(
   id,
+  contactId,
+  prisonerNumber,
   relationshipCode,
   relationshipDescription,
   emergencyContact,

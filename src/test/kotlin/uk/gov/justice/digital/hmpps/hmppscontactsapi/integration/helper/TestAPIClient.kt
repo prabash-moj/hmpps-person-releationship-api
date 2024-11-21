@@ -112,9 +112,9 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody
   }
 
-  fun addAContactRelationship(contactId: Long, request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
+  fun addAContactRelationship(request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
     return webTestClient.post()
-      .uri("/contact/$contactId/relationship")
+      .uri("/prisoner-contact")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(authorised())
@@ -276,9 +276,9 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody!!
   }
 
-  fun updateRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
+  fun updateRelationship(prisonerContactId: Long, request: UpdateRelationshipRequest) {
     webTestClient.patch()
-      .uri("/contact/$contactId/relationship/$prisonerContactId")
+      .uri("/prisoner-contact/$prisonerContactId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))

@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Size
 
 data class AddContactRelationshipRequest(
+  @Schema(description = "The id of the contact this relationship is for", example = "123456")
+  val contactId: Long,
+
   @Schema(description = "A description of the contacts relationship to a prisoner", exampleClasses = [ContactRelationship::class])
   val relationship: ContactRelationship,
 

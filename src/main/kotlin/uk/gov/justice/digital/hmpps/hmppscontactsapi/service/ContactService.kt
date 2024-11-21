@@ -75,10 +75,10 @@ class ContactService(
     contactSearchRepository.searchContacts(request, pageable).toModel()
 
   @Transactional
-  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
+  fun addContactRelationship(request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
     validateRelationship(request.relationship)
-    getContact(contactId) ?: throw EntityNotFoundException("Contact ($contactId) could not be found")
-    val newRelationship = request.relationship.toEntity(contactId, request.createdBy)
+    getContact(request.contactId) ?: throw EntityNotFoundException("Contact (${request.contactId}) could not be found")
+    val newRelationship = request.relationship.toEntity(request.contactId, request.createdBy)
     prisonerContactRepository.saveAndFlush(newRelationship)
     return enrichRelationship(newRelationship)
   }
@@ -141,16 +141,16 @@ class ContactService(
     .mapNotNull { addressPhone -> phoneNumbers.find { it.contactPhoneId == addressPhone.contactPhoneId } }
 
   @Transactional
-  fun updateContactRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
+  fun updateContactRelationship(prisonerContactId: Long, request: UpdateRelationshipRequest): PrisonerContactRelationshipDetails {
     val prisonerContactEntity = getPrisonerContactEntity(prisonerContactId)
 
     validateRequest(request)
-    validateRelationshipIsValid(prisonerContactEntity, contactId, prisonerContactId)
     validateRelationshipTypeCode(request)
 
     val changedPrisonerContact = prisonerContactEntity.applyUpdate(request)
 
     prisonerContactRepository.saveAndFlush(changedPrisonerContact)
+    return enrichRelationship(prisonerContactEntity)
   }
 
   private fun validateRequest(request: UpdateRelationshipRequest) {
@@ -164,17 +164,6 @@ class ContactService(
     val contact = prisonerContactRepository.findById(prisonerContactId)
       .orElseThrow { EntityNotFoundException("Prisoner contact with prisoner contact ID $prisonerContactId not found") }
     return contact
-  }
-
-  private fun validateRelationshipIsValid(
-    contact: PrisonerContactEntity,
-    contactId: Long,
-    prisonerContactId: Long,
-  ) {
-    if (contact.contactId != contactId) {
-      logger.error("The relationship between the prisoner and the contact is not associated with this contact ID: $contactId and prisoner contact ID: $prisonerContactId.")
-      throw ValidationException("The relationship between the prisoner and the contact is not associated with this contact ID: $contactId and prisoner contact ID: $prisonerContactId.")
-    }
   }
 
   private fun PrisonerContactEntity.applyUpdate(
@@ -234,15 +223,17 @@ class ContactService(
     }
   }
 
-  private fun enrichRelationship(createdRelationship: PrisonerContactEntity): PrisonerContactRelationshipDetails {
+  private fun enrichRelationship(relationship: PrisonerContactEntity): PrisonerContactRelationshipDetails {
     return PrisonerContactRelationshipDetails(
-      prisonerContactId = createdRelationship.prisonerContactId,
-      relationshipCode = createdRelationship.relationshipType,
-      relationshipDescription = getRelationshipDescriptionIfValid(createdRelationship.relationshipType),
-      emergencyContact = createdRelationship.emergencyContact,
-      nextOfKin = createdRelationship.nextOfKin,
-      isRelationshipActive = createdRelationship.active,
-      comments = createdRelationship.comments,
+      prisonerContactId = relationship.prisonerContactId,
+      contactId = relationship.contactId,
+      prisonerNumber = relationship.prisonerNumber,
+      relationshipCode = relationship.relationshipType,
+      relationshipDescription = getRelationshipDescriptionIfValid(relationship.relationshipType),
+      emergencyContact = relationship.emergencyContact,
+      nextOfKin = relationship.nextOfKin,
+      isRelationshipActive = relationship.active,
+      comments = relationship.comments,
     )
   }
 }

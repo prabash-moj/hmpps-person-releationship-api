@@ -8,13 +8,13 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerCont
 
 class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
   companion object {
-    private const val GET_PRISONER_CONTACT_RELATIONSHIP = "/prisoner-contact/relationship/1"
+    private const val GET_PRISONER_CONTACT_RELATIONSHIP = "/prisoner-contact/1"
   }
 
   @Test
   fun `should return unauthorized if no token`() {
     webTestClient.get()
-      .uri("/prisoner-contact/relationship/1")
+      .uri("/prisoner-contact/1")
       .exchange()
       .expectStatus()
       .isUnauthorized
@@ -23,7 +23,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if no role`() {
     webTestClient.get()
-      .uri("/prisoner-contact/relationship/1")
+      .uri("/prisoner-contact/1")
       .headers(setAuthorisation())
       .exchange()
       .expectStatus()
@@ -33,7 +33,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if wrong role`() {
     webTestClient.get()
-      .uri("/prisoner-contact/relationship/1")
+      .uri("/prisoner-contact/1")
       .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
       .exchange()
       .expectStatus()
@@ -45,7 +45,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithNotFoundResponse("A4385DZ")
 
     webTestClient.get()
-      .uri("/prisoner-contact/relationship/15453")
+      .uri("/prisoner-contact/15453")
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
       .exchange()
       .expectStatus()
@@ -56,6 +56,8 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
   fun `should return OK`() {
     val expectedPrisonerContactRelationship = PrisonerContactRelationshipDetails(
       prisonerContactId = 1,
+      contactId = 1,
+      prisonerNumber = "A1234BB",
       relationshipCode = "FA",
       relationshipDescription = "Father",
       nextOfKin = false,

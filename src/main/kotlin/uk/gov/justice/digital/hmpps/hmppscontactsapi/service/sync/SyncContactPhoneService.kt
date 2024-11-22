@@ -31,12 +31,6 @@ class SyncContactPhoneService(
     return contactPhoneEntity.toModel()
   }
 
-  fun deleteContactPhone(contactPhoneId: Long) {
-    contactPhoneRepository.findById(contactPhoneId)
-      .orElseThrow { EntityNotFoundException("Contact phone with ID $contactPhoneId not found") }
-    contactPhoneRepository.deleteById(contactPhoneId)
-  }
-
   fun createContactPhone(request: SyncCreateContactPhoneRequest): SyncContactPhone {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
@@ -65,5 +59,12 @@ class SyncContactPhoneService(
     )
 
     return contactPhoneRepository.saveAndFlush(changedContactPhone).toModel()
+  }
+
+  fun deleteContactPhone(contactPhoneId: Long): SyncContactPhone {
+    val rowToDelete = contactPhoneRepository.findById(contactPhoneId)
+      .orElseThrow { EntityNotFoundException("Contact phone with ID $contactPhoneId not found") }
+    contactPhoneRepository.deleteById(contactPhoneId)
+    return rowToDelete.toModel()
   }
 }

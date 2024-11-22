@@ -31,12 +31,6 @@ class SyncContactIdentityService(
     return contactIdentityEntity.toModel()
   }
 
-  fun deleteContactIdentity(contactIdentityId: Long) {
-    contactIdentityRepository.findById(contactIdentityId)
-      .orElseThrow { EntityNotFoundException("Contact identity with ID $contactIdentityId not found") }
-    contactIdentityRepository.deleteById(contactIdentityId)
-  }
-
   fun createContactIdentity(request: SyncCreateContactIdentityRequest): SyncContactIdentity {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
@@ -64,5 +58,12 @@ class SyncContactIdentityService(
     )
 
     return contactIdentityRepository.saveAndFlush(changedContactIdentity).toModel()
+  }
+
+  fun deleteContactIdentity(contactIdentityId: Long): SyncContactIdentity {
+    val rowToDelete = contactIdentityRepository.findById(contactIdentityId)
+      .orElseThrow { EntityNotFoundException("Contact identity with ID $contactIdentityId not found") }
+    contactIdentityRepository.deleteById(contactIdentityId)
+    return rowToDelete.toModel()
   }
 }

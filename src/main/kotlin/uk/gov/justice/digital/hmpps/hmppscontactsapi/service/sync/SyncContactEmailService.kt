@@ -31,12 +31,6 @@ class SyncContactEmailService(
     return contactEmailEntity.toModel()
   }
 
-  fun deleteContactEmail(contactEmailId: Long) {
-    contactEmailRepository.findById(contactEmailId)
-      .orElseThrow { EntityNotFoundException("Contact email with ID $contactEmailId not found") }
-    contactEmailRepository.deleteById(contactEmailId)
-  }
-
   fun createContactEmail(request: SyncCreateContactEmailRequest): SyncContactEmail {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
@@ -63,5 +57,12 @@ class SyncContactEmailService(
     )
 
     return contactEmailRepository.saveAndFlush(changedContactEmail).toModel()
+  }
+
+  fun deleteContactEmail(contactEmailId: Long): SyncContactEmail {
+    val rowToDelete = contactEmailRepository.findById(contactEmailId)
+      .orElseThrow { EntityNotFoundException("Contact email with ID $contactEmailId not found") }
+    contactEmailRepository.deleteById(contactEmailId)
+    return rowToDelete.toModel()
   }
 }

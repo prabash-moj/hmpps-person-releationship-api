@@ -9,9 +9,18 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
@@ -191,6 +200,274 @@ class SyncFacadeTest {
         estimatedIsOverEighteen = null,
         updatedBy = "ANYONE",
         updatedTime = LocalDateTime.now(),
+      )
+  }
+
+  @Nested
+  inner class ContactPhoneSyncFacadeEvents {
+    @Test
+    fun `should send domain event on contact phone create success`() {
+      val request = createContactPhoneRequest(contactId = 1L)
+      val response = contactPhoneResponse(contactId = 1L, contactPhoneId = 1L)
+
+      whenever(syncContactPhoneService.createContactPhone(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createContactPhone(request)
+
+      verify(syncContactPhoneService).createContactPhone(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_PHONE_CREATED,
+        identifier = result.contactPhoneId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact phone update success`() {
+      val request = updateContactPhoneRequest(contactId = 2L)
+      val response = contactPhoneResponse(contactId = 2L, contactPhoneId = 3L)
+
+      whenever(syncContactPhoneService.updateContactPhone(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updateContactPhone(3L, request)
+
+      verify(syncContactPhoneService).updateContactPhone(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_PHONE_UPDATED,
+        identifier = result.contactPhoneId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact phone delete success`() {
+      val response = contactPhoneResponse(contactId = 3L, contactPhoneId = 4L)
+
+      whenever(syncContactPhoneService.deleteContactPhone(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deleteContactPhone(4L)
+
+      verify(syncContactPhoneService).deleteContactPhone(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_PHONE_DELETED,
+        identifier = result.contactPhoneId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createContactPhoneRequest(contactId: Long) =
+      SyncCreateContactPhoneRequest(
+        contactId = contactId,
+        phoneType = "MOB",
+        phoneNumber = "0909 111222",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updateContactPhoneRequest(contactId: Long) =
+      SyncUpdateContactPhoneRequest(
+        contactId = contactId,
+        phoneType = "MOB",
+        phoneNumber = "0909 111222",
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun contactPhoneResponse(contactId: Long, contactPhoneId: Long) =
+      SyncContactPhone(
+        contactPhoneId = contactPhoneId,
+        contactId = contactId,
+        phoneType = "MOB",
+        phoneNumber = "0909 111222",
+        extNumber = null,
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class ContactEmailSyncFacadeEvents {
+    @Test
+    fun `should send domain event on contact email create success`() {
+      val request = createContactEmailRequest(contactId = 1L)
+      val response = contactEmailResponse(contactId = 1L, contactEmailId = 1L)
+
+      whenever(syncContactEmailService.createContactEmail(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createContactEmail(request)
+
+      verify(syncContactEmailService).createContactEmail(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_EMAIL_CREATED,
+        identifier = result.contactEmailId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact email update success`() {
+      val request = updateContactEmailRequest(contactId = 2L)
+      val response = contactEmailResponse(contactId = 2L, contactEmailId = 3L)
+
+      whenever(syncContactEmailService.updateContactEmail(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updateContactEmail(3L, request)
+
+      verify(syncContactEmailService).updateContactEmail(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_EMAIL_UPDATED,
+        identifier = result.contactEmailId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact email delete success`() {
+      val response = contactEmailResponse(contactId = 3L, contactEmailId = 4L)
+
+      whenever(syncContactEmailService.deleteContactEmail(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deleteContactEmail(4L)
+
+      verify(syncContactEmailService).deleteContactEmail(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_EMAIL_DELETED,
+        identifier = result.contactEmailId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createContactEmailRequest(contactId: Long) =
+      SyncCreateContactEmailRequest(
+        contactId = contactId,
+        emailAddress = "0909 111222",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updateContactEmailRequest(contactId: Long) =
+      SyncUpdateContactEmailRequest(
+        contactId = contactId,
+        emailAddress = "test@test.com",
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun contactEmailResponse(contactId: Long, contactEmailId: Long) =
+      SyncContactEmail(
+        contactEmailId = contactEmailId,
+        contactId = contactId,
+        emailAddress = "test@test.com",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class ContactIdentitySyncFacadeEvents {
+    @Test
+    fun `should send domain event on contact identity create success`() {
+      val request = createContactIdentityRequest(contactId = 1L)
+      val response = contactIdentityResponse(contactId = 1L, contactIdentityId = 1L)
+
+      whenever(syncContactIdentityService.createContactIdentity(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createContactIdentity(request)
+
+      verify(syncContactIdentityService).createContactIdentity(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_IDENTITY_CREATED,
+        identifier = result.contactIdentityId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact identity update success`() {
+      val request = updateContactIdentityRequest(contactId = 2L)
+      val response = contactIdentityResponse(contactId = 2L, contactIdentityId = 3L)
+
+      whenever(syncContactIdentityService.updateContactIdentity(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updateContactIdentity(3L, request)
+
+      verify(syncContactIdentityService).updateContactIdentity(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_IDENTITY_UPDATED,
+        identifier = result.contactIdentityId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact identity delete success`() {
+      val response = contactIdentityResponse(contactId = 3L, contactIdentityId = 4L)
+
+      whenever(syncContactIdentityService.deleteContactIdentity(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deleteContactIdentity(4L)
+
+      verify(syncContactIdentityService).deleteContactIdentity(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_IDENTITY_DELETED,
+        identifier = result.contactIdentityId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createContactIdentityRequest(contactId: Long) =
+      SyncCreateContactIdentityRequest(
+        contactId = contactId,
+        identityType = "PASS",
+        identityValue = "PW12345678",
+        issuingAuthority = "Passport Office",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updateContactIdentityRequest(contactId: Long) =
+      SyncUpdateContactIdentityRequest(
+        contactId = contactId,
+        identityType = "PASS",
+        identityValue = "PW12345678",
+        issuingAuthority = "Passport Office",
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun contactIdentityResponse(contactId: Long, contactIdentityId: Long) =
+      SyncContactIdentity(
+        contactIdentityId = contactIdentityId,
+        contactId = contactId,
+        identityType = "PASS",
+        identityValue = "PW12345678",
+        issuingAuthority = "Passport Office",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
       )
   }
 }

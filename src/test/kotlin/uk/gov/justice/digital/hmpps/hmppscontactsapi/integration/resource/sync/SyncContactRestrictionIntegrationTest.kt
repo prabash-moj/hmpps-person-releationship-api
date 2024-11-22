@@ -114,7 +114,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .returnResult().responseBody!!
 
       with(contactRestriction) {
-        assertThat(restrictionType).isEqualTo("PUBLIC")
+        assertThat(restrictionType).isEqualTo("BAN")
         assertThat(startDate).isEqualTo(LocalDate.of(2000, 11, 21))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2005, 11, 21))
         assertThat(comments).isEqualTo("N/A")

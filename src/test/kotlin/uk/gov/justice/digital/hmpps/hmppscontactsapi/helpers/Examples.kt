@@ -4,10 +4,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -290,4 +292,60 @@ fun createPrisonerContactRelationshipDetails(
   nextOfKin,
   isRelationshipActive,
   comments,
+)
+
+fun createContactRestrictionDetailsEntity(
+  id: Long = 1,
+  contactId: Long = 123,
+  restrictionType: String = "BAN",
+  restrictionTypeDescription: String = "Banned",
+  startDate: LocalDate? = LocalDate.of(2020, 1, 1),
+  expiryDate: LocalDate? = null,
+  comments: String? = null,
+  staffUsername: String? = null,
+  createdBy: String = "USER1",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+  updatedBy: String? = null,
+  updatedTime: LocalDateTime? = null,
+): ContactRestrictionDetailsEntity = ContactRestrictionDetailsEntity(
+  id,
+  contactId,
+  restrictionType,
+  restrictionTypeDescription,
+  startDate,
+  expiryDate,
+  comments,
+  staffUsername,
+  createdBy,
+  createdTime,
+  updatedBy,
+  updatedTime,
+)
+
+fun createContactRestrictionDetails(
+  id: Long = 1,
+  contactId: Long = 123,
+  restrictionType: String = "BAN",
+  restrictionTypeDescription: String = "Banned",
+  startDate: LocalDate? = LocalDate.of(2020, 1, 1),
+  expiryDate: LocalDate? = null,
+  comments: String? = null,
+  staffUsername: String? = null,
+  createdBy: String = "USER1",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+  updatedBy: String? = null,
+  updatedTime: LocalDateTime? = null,
+): ContactRestrictionDetails = ContactRestrictionDetails(
+  id,
+  contactId,
+  restrictionType,
+  restrictionTypeDescription,
+  startDate,
+  expiryDate,
+  comments,
+  staffUsername,
+  createdBy,
+  createdTime,
+  updatedBy,
+  updatedTime,
 )

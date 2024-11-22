@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.headers.Header
+import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -30,8 +31,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.RestrictionsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
@@ -42,6 +45,7 @@ import java.net.URI
 @AuthApiResponses
 class ContactController(
   val contactFacade: ContactFacade,
+  val restrictionsService: RestrictionsService,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -111,6 +115,7 @@ class ContactController(
       ApiResponse(
         responseCode = "404",
         description = "No contact with that id could be found",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
   )
@@ -203,4 +208,43 @@ class ContactController(
     ) contactId: Long,
     @Valid @RequestBody patchContactRequest: PatchContactRequest,
   ) = contactFacade.patch(contactId, patchContactRequest)
+
+  @GetMapping("/{contactId}/estate-wide-restrictions")
+  @Operation(
+    summary = "Get a contacts estate-wide restrictions",
+    description = """
+      Get a contacts estate-wide restrictions only. Estate-wide restrictions apply to all of a contacts relationships.
+
+      Additional restrictions between the contact and specific prisoners may also apply.
+      """,
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "200",
+        description = "Found the contact and their restrictions",
+        content = [
+          Content(
+            mediaType = "application/json",
+            array = ArraySchema(schema = Schema(implementation = ContactRestrictionDetails::class)),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "No contact with that id could be found",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun getEstateWideContactRestrictions(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+  ): List<ContactRestrictionDetails> {
+    return restrictionsService.getEstateWideRestrictionsForContact(contactId)
+  }
 }

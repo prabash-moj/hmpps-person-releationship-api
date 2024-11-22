@@ -19,6 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetai
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
@@ -31,19 +32,7 @@ import java.net.URI
 class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAuthHelper: JwtAuthorisationHelper) {
 
   fun createAContact(request: CreateContactRequest): ContactDetails {
-    return webTestClient.post()
-      .uri("/contact")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(authorised())
-      .bodyValue(request)
-      .exchange()
-      .expectStatus()
-      .isCreated
-      .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectHeader().valuesMatch("Location", "/contact/(\\d)+")
-      .expectBody(ContactCreationResult::class.java)
-      .returnResult().responseBody!!.createdContact
+    return createAContactWithARelationship(request).createdContact
   }
 
   fun createAContactWithARelationship(request: CreateContactRequest): ContactCreationResult {
@@ -307,8 +296,6 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     scopes: List<String> = listOf("read"),
   ): (HttpHeaders) -> Unit = jwtAuthHelper.setAuthorisationHeader(username = username, scope = scopes, roles = roles)
 
-  private fun authorised() = setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN"))
-
   fun migrateAContact(request: MigrateContactRequest) =
     webTestClient.post()
       .uri("/migrate/contact")
@@ -336,6 +323,18 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
+
+  fun getContactEstateWideRestrictions(contactId: Long): List<ContactRestrictionDetails> = webTestClient.get()
+    .uri("/contact/$contactId/estate-wide-restrictions")
+    .accept(MediaType.APPLICATION_JSON)
+    .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+    .exchange()
+    .expectStatus().isOk
+    .expectHeader().contentType(MediaType.APPLICATION_JSON)
+    .expectBodyList(ContactRestrictionDetails::class.java)
+    .returnResult().responseBody!!
+
+  private fun authorised() = setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN"))
 
   data class ContactSearchResponse(
     val content: List<ContactSearchResultItem>,

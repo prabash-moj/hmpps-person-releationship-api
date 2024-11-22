@@ -18,6 +18,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddres
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneNumberDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -27,6 +28,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreat
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.RestrictionsService
 import java.net.URI
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -34,7 +36,8 @@ import java.time.LocalDateTime
 class ContactControllerTest {
 
   private val contactFacade: ContactFacade = mock()
-  private val controller = ContactController(contactFacade)
+  private val restrictionsService: RestrictionsService = mock()
+  private val controller = ContactController(contactFacade, restrictionsService)
 
   @Nested
   inner class CreateContact {
@@ -214,6 +217,28 @@ class ContactControllerTest {
 
       assertThrows<RuntimeException>("Bang!") {
         controller.patchContact(id, request)
+      }
+    }
+
+    @Nested
+    inner class GetContactRestrictions {
+      @Test
+      fun `should get restrictions`() {
+        val expected = listOf(createContactRestrictionDetails())
+        whenever(restrictionsService.getEstateWideRestrictionsForContact(9)).thenReturn(expected)
+
+        val response = controller.getEstateWideContactRestrictions(9)
+
+        assertThat(response).isEqualTo(expected)
+      }
+
+      @Test
+      fun `should propagate exceptions creating a contact`() {
+        whenever(restrictionsService.getEstateWideRestrictionsForContact(9)).thenThrow(RuntimeException("Bang!"))
+
+        assertThrows<RuntimeException>("Bang!") {
+          controller.getEstateWideContactRestrictions(9)
+        }
       }
     }
 

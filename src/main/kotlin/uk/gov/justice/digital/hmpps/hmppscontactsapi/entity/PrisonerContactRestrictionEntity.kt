@@ -29,10 +29,6 @@ data class PrisonerContactRestrictionEntity(
 
   val staffUsername: String,
 
-  val authorisedBy: String? = null,
-
-  val authorisedTime: LocalDateTime? = null,
-
   @Column(updatable = false)
   val createdBy: String,
 

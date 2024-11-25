@@ -4,18 +4,24 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@Schema(description = "Restriction related to a contact, a.k.a estate-wide restrictions")
-data class ContactRestrictionDetails(
-  @Schema(description = "Unique identifier for the contact restriction", example = "1")
-  val contactRestrictionId: Long,
+@Schema(description = "Restriction related to a prisoner and contacts relationship")
+data class PrisonerContactRestrictionDetails(
+  @Schema(description = "The unique identifier for the prisoner contact restriction", example = "123456")
+  val prisonerContactRestrictionId: Long,
 
-  @Schema(description = "Unique identifier for the contact", example = "123")
+  @Schema(description = "The unique identifier for the prisoner contact", example = "123456")
+  val prisonerContactId: Long,
+
+  @Schema(description = "The unique identifier for the contact", example = "123456")
   val contactId: Long,
+
+  @Schema(description = "The prisoner number", example = "A1234BC")
+  val prisonerNumber: String,
 
   @Schema(
     description =
     """
-    The coded type of restriction that applies to this contact.
+    The coded type of restriction that applies to this relationship.
     This is a coded value from the group RESTRICTION in reference codes.
     Example values include ACC, BAN, CHILD, CLOSED, RESTRICTED, DIHCON, NONCON.
     """,

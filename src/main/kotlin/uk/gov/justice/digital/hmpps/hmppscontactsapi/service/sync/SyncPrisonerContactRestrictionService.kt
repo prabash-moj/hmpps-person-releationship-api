@@ -43,8 +43,6 @@ class SyncPrisonerContactRestrictionService(
       startDate = request.startDate,
       expiryDate = request.expiryDate,
       comments = request.comments,
-      authorisedBy = request.authorisedBy,
-      authorisedTime = request.authorisedTime,
     ).also {
       it.amendedBy = request.updatedBy
       it.amendedTime = request.updatedTime

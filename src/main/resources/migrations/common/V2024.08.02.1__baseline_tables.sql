@@ -234,8 +234,6 @@ CREATE TABLE prisoner_contact_restriction
     expiry_date date,
     comments varchar(255),
     staff_username varchar(100),
-    authorised_by varchar(100),
-    authorised_time timestamp,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
     amended_by varchar(100),

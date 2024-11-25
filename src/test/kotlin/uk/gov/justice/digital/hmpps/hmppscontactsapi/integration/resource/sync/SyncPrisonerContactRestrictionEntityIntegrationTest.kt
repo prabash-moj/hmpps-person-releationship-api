@@ -112,8 +112,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isEqualTo(LocalDateTime.of(2024, 10, 1, 12, 0, 0))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isEqualTo(LocalDateTime.of(2024, 10, 1, 12, 0, 0))
         assertThat(updatedBy).isEqualTo("editor")
@@ -144,8 +142,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(updatedBy).isNull()
@@ -175,8 +171,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(updatedBy).isNull()
@@ -204,8 +198,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(updatedBy).isEqualTo("UpdatedUser")
@@ -253,8 +245,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         expiryDate = LocalDate.of(2024, 12, 31),
         comments = "Restriction due to ongoing investigation",
         staffUsername = "UpdatedUser",
-        authorisedBy = "John Doe",
-        authorisedTime = LocalDateTime.now(),
         updatedBy = "UpdatedUser",
         updatedTime = LocalDateTime.now(),
       )
@@ -267,8 +257,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         expiryDate = LocalDate.of(2024, 12, 31),
         comments = "Restriction due to ongoing investigation",
         staffUsername = "admin",
-        authorisedBy = "John Doe",
-        authorisedTime = LocalDateTime.now(),
         createdBy = "admin",
         createdTime = LocalDateTime.now(),
       )

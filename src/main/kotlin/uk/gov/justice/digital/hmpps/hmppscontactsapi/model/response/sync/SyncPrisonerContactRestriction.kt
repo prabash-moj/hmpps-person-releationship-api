@@ -37,12 +37,6 @@ data class SyncPrisonerContactRestriction(
   @Schema(description = "Entered staff username", example = "N/A")
   val staffUsername: String? = null,
 
-  @Schema(description = "Person who authorized the restriction", example = "John Doe", nullable = true)
-  val authorisedBy: String? = null,
-
-  @Schema(description = "Time when the restriction was authorized", example = "2024-10-01T12:00:00Z", nullable = true)
-  val authorisedTime: LocalDateTime? = null,
-
   @Schema(description = "User who created the restriction record", example = "admin", nullable = true)
   val createdBy: String? = null,
 

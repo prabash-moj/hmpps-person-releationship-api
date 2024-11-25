@@ -18,14 +18,17 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionsResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerContactRelationshipService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.RestrictionsService
 
 class PrisonerContactControllerTest {
 
   private val prisonerContactRelationshipService: PrisonerContactRelationshipService = mock()
   private val contactFacade: ContactFacade = mock()
+  private val restrictionsService: RestrictionsService = mock()
 
-  private val controller = PrisonerContactController(prisonerContactRelationshipService, contactFacade)
+  private val controller = PrisonerContactController(prisonerContactRelationshipService, contactFacade, restrictionsService)
 
   @Nested
   inner class GetPrisonerContactRelationship {
@@ -124,6 +127,30 @@ class PrisonerContactControllerTest {
 
       assertThrows<RuntimeException>("Bang!") {
         controller.addContactRelationship(request)
+      }
+    }
+  }
+
+  @Nested
+  inner class GetPrisonerContactRelationshipRestrictions {
+    private val prisonerContactId = 123456L
+
+    @Test
+    fun `should get a prisoner contacts restrictions successfully`() {
+      val expected = PrisonerContactRestrictionsResponse(emptyList(), emptyList())
+      whenever(restrictionsService.getPrisonerContactRestrictions(prisonerContactId)).thenReturn(expected)
+
+      val result = controller.getPrisonerContactRestrictionsByPrisonerContactId(prisonerContactId)
+
+      assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun `should propagate exceptions getting a contact`() {
+      whenever(restrictionsService.getPrisonerContactRestrictions(prisonerContactId)).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        controller.getPrisonerContactRestrictionsByPrisonerContactId(prisonerContactId)
       }
     }
   }

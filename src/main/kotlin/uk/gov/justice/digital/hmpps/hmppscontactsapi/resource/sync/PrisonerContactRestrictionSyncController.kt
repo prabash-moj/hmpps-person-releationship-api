@@ -156,7 +156,7 @@ class PrisonerContactRestrictionSyncController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Prisoner contact restriction not found",
+        description = "Prisoner contact restriction or relationship was not found",
       ),
       ApiResponse(
         responseCode = "400",

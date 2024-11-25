@@ -31,12 +31,6 @@ class SyncContactRestrictionService(
     return contactRestrictionEntity.toModel()
   }
 
-  fun deleteContactRestriction(contactRestrictionId: Long) {
-    contactRestrictionRepository.findById(contactRestrictionId)
-      .orElseThrow { EntityNotFoundException("Contact restriction with ID $contactRestrictionId not found") }
-    contactRestrictionRepository.deleteById(contactRestrictionId)
-  }
-
   fun createContactRestriction(request: SyncCreateContactRestrictionRequest): SyncContactRestriction {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
@@ -67,5 +61,12 @@ class SyncContactRestrictionService(
     }
 
     return contactRestrictionRepository.saveAndFlush(changedContactRestriction).toModel()
+  }
+
+  fun deleteContactRestriction(contactRestrictionId: Long): SyncContactRestriction {
+    val rowToDelete = contactRestrictionRepository.findById(contactRestrictionId)
+      .orElseThrow { EntityNotFoundException("Contact restriction with ID $contactRestrictionId not found") }
+    contactRestrictionRepository.deleteById(contactRestrictionId)
+    return rowToDelete.toModel()
   }
 }

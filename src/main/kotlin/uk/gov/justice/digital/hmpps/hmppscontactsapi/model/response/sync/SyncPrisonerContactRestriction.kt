@@ -7,11 +7,17 @@ import java.time.LocalDateTime
 @Schema(description = "Response object with prisoner contact restriction details")
 data class SyncPrisonerContactRestriction(
 
-  @Schema(description = "ID of the prisoner contact restriction to which the restriction applies", example = "232")
+  @Schema(description = "ID of the prisoner contact restriction", example = "232")
   val prisonerContactRestrictionId: Long,
 
-  @Schema(description = "ID of the contact to which the restriction applies", example = "12345")
+  @Schema(description = "ID of the prisoner contact (relationship) to which the restriction applies", example = "12345")
+  val prisonerContactId: Long,
+
+  @Schema(description = "ID of the contact (person) to which the restriction applies", example = "12345")
   val contactId: Long,
+
+  @Schema(description = "The prisoner number involved in this relationship restriction", example = "A1234AA")
+  val prisonerNumber: String,
 
   @Schema(
     description =

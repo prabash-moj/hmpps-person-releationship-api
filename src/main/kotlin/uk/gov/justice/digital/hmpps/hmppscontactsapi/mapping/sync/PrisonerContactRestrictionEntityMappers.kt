@@ -7,7 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPri
 fun SyncCreatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestrictionEntity {
   return PrisonerContactRestrictionEntity(
     prisonerContactRestrictionId = 0L,
-    prisonerContactId = this.contactId,
+    prisonerContactId = this.prisonerContactId,
     restrictionType = this.restrictionType,
     startDate = this.startDate,
     expiryDate = this.expiryDate,
@@ -18,10 +18,15 @@ fun SyncCreatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestr
   )
 }
 
-fun PrisonerContactRestrictionEntity.toResponse(): SyncPrisonerContactRestriction {
+fun PrisonerContactRestrictionEntity.toResponse(
+  contactId: Long,
+  prisonerNumber: String,
+): SyncPrisonerContactRestriction {
   return SyncPrisonerContactRestriction(
     prisonerContactRestrictionId = this.prisonerContactRestrictionId,
-    contactId = this.prisonerContactId,
+    prisonerContactId = this.prisonerContactId,
+    contactId = contactId,
+    prisonerNumber = prisonerNumber,
     restrictionType = this.restrictionType,
     startDate = this.startDate,
     expiryDate = this.expiryDate,

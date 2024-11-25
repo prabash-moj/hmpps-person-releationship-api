@@ -9,18 +9,30 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddress
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContactRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
@@ -464,6 +476,437 @@ class SyncFacadeTest {
         identityType = "PASS",
         identityValue = "PW12345678",
         issuingAuthority = "Passport Office",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class ContactRestrictionSyncFacadeEvents {
+    @Test
+    fun `should send domain event on contact restriction create success`() {
+      val request = createContactRestrictionRequest(contactId = 1L)
+      val response = contactRestrictionResponse(contactId = 1L, contactRestrictionId = 1L)
+
+      whenever(syncContactRestrictionService.createContactRestriction(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createContactRestriction(request)
+
+      verify(syncContactRestrictionService).createContactRestriction(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+        identifier = result.contactRestrictionId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact restriction update success`() {
+      val request = updateContactRestrictionRequest(contactId = 2L)
+      val response = contactRestrictionResponse(contactId = 2L, contactRestrictionId = 3L)
+
+      whenever(syncContactRestrictionService.updateContactRestriction(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updateContactRestriction(3L, request)
+
+      verify(syncContactRestrictionService).updateContactRestriction(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
+        identifier = result.contactRestrictionId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact restriction delete success`() {
+      val response = contactRestrictionResponse(contactId = 3L, contactRestrictionId = 4L)
+
+      whenever(syncContactRestrictionService.deleteContactRestriction(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deleteContactRestriction(4L)
+
+      verify(syncContactRestrictionService).deleteContactRestriction(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_RESTRICTION_DELETED,
+        identifier = result.contactRestrictionId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createContactRestrictionRequest(contactId: Long) =
+      SyncCreateContactRestrictionRequest(
+        contactId = contactId,
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Comment",
+        staffUsername = "STAFF-USER",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updateContactRestrictionRequest(contactId: Long) =
+      SyncUpdateContactRestrictionRequest(
+        contactId = contactId,
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Comment",
+        staffUsername = "STAFF-USER",
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun contactRestrictionResponse(contactId: Long, contactRestrictionId: Long) =
+      SyncContactRestriction(
+        contactRestrictionId = contactRestrictionId,
+        contactId = contactId,
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Comment",
+        staffUsername = "STAFF-USER",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class ContactAddressSyncFacadeEvents {
+    @Test
+    fun `should send domain event on contact address create success`() {
+      val request = createContactAddressRequest(contactId = 1L)
+      val response = contactAddressResponse(contactId = 1L, contactAddressId = 1L)
+
+      whenever(syncContactAddressService.createContactAddress(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createContactAddress(request)
+
+      verify(syncContactAddressService).createContactAddress(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_ADDRESS_CREATED,
+        identifier = result.contactAddressId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact address update success`() {
+      val request = updateContactAddressRequest(contactId = 2L)
+      val response = contactAddressResponse(contactId = 2L, contactAddressId = 3L)
+
+      whenever(syncContactAddressService.updateContactAddress(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updateContactAddress(3L, request)
+
+      verify(syncContactAddressService).updateContactAddress(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+        identifier = result.contactAddressId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact address delete success`() {
+      val response = contactAddressResponse(contactId = 3L, contactAddressId = 4L)
+
+      whenever(syncContactAddressService.deleteContactAddress(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deleteContactAddress(4L)
+
+      verify(syncContactAddressService).deleteContactAddress(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_ADDRESS_DELETED,
+        identifier = result.contactAddressId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createContactAddressRequest(contactId: Long) =
+      SyncCreateContactAddressRequest(
+        contactId = contactId,
+        addressType = "HOME",
+        property = "24",
+        street = "Acacia Avenue",
+        area = "Dunstan",
+        comments = "Comment",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updateContactAddressRequest(contactId: Long) =
+      SyncUpdateContactAddressRequest(
+        contactId = contactId,
+        primaryAddress = false,
+        addressType = "HOME",
+        property = "24",
+        street = "Acacia Avenue",
+        area = "Dunstan",
+        comments = "Comment",
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun contactAddressResponse(contactId: Long, contactAddressId: Long) =
+      SyncContactAddress(
+        contactAddressId = contactAddressId,
+        contactId = contactId,
+        primaryAddress = false,
+        addressType = "HOME",
+        property = "24",
+        street = "Acacia Avenue",
+        area = "Dunstan",
+        comments = "Comment",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class PrisonerContactSyncFacadeEvents {
+    @Test
+    fun `should send domain event on prisoner contact create success`() {
+      val request = createPrisonerContactRequest(contactId = 1L)
+      val response = prisonerContactResponse(contactId = 1L, prisonerContactId = 1L)
+
+      whenever(syncPrisonerContactService.createPrisonerContact(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createPrisonerContact(request)
+
+      verify(syncPrisonerContactService).createPrisonerContact(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
+        identifier = result.id,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on prisoner contact update success`() {
+      val request = updatePrisonerContactRequest(contactId = 2L)
+      val response = prisonerContactResponse(contactId = 2L, prisonerContactId = 3L)
+
+      whenever(syncPrisonerContactService.updatePrisonerContact(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updatePrisonerContact(3L, request)
+
+      verify(syncPrisonerContactService).updatePrisonerContact(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_UPDATED,
+        identifier = result.id,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on prisoner contact delete success`() {
+      val response = prisonerContactResponse(contactId = 3L, prisonerContactId = 4L)
+
+      whenever(syncPrisonerContactService.deletePrisonerContact(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deletePrisonerContact(4L)
+
+      verify(syncPrisonerContactService).deletePrisonerContact(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_DELETED,
+        identifier = result.id,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createPrisonerContactRequest(contactId: Long) =
+      SyncCreatePrisonerContactRequest(
+        contactId = contactId,
+        contactType = "S",
+        relationshipType = "MOT",
+        prisonerNumber = "A1234AA",
+        approvedVisitor = false,
+        nextOfKin = false,
+        emergencyContact = false,
+        comments = "Comment",
+        active = true,
+        currentTerm = true,
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updatePrisonerContactRequest(contactId: Long) =
+      SyncUpdatePrisonerContactRequest(
+        contactId = contactId,
+        contactType = "S",
+        relationshipType = "MOT",
+        prisonerNumber = "A1234AA",
+        approvedVisitor = false,
+        nextOfKin = false,
+        emergencyContact = false,
+        comments = "Comment",
+        active = true,
+        currentTerm = true,
+        approvedTime = null,
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun prisonerContactResponse(contactId: Long, prisonerContactId: Long) =
+      SyncPrisonerContact(
+        id = prisonerContactId,
+        contactId = contactId,
+        contactType = "S",
+        relationshipType = "MOT",
+        prisonerNumber = "A1234AA",
+        approvedVisitor = false,
+        nextOfKin = false,
+        emergencyContact = false,
+        comments = "Comment",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        active = true,
+        currentTerm = true,
+        updatedBy = null,
+        updatedTime = null,
+        approvedTime = null,
+      )
+  }
+
+  @Nested
+  inner class PrisonerContactRestrictionSyncFacadeEvents {
+    @Test
+    fun `should send domain event on prisoner contact restriction create success`() {
+      val request = createPrisonerContactRestrictionRequest(prisonerContactId = 2L)
+      val response = prisonerContactRestrictionResponse(
+        prisonerContactRestrictionId = 3L,
+        prisonerContactId = 2L,
+        contactId = 1L,
+      )
+
+      whenever(syncPrisonerContactRestrictionService.createPrisonerContactRestriction(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createPrisonerContactRestriction(request)
+
+      verify(syncPrisonerContactRestrictionService).createPrisonerContactRestriction(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
+        identifier = result.prisonerContactRestrictionId,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on prisoner contact restriction update success`() {
+      val request = updatePrisonerContactRestrictionRequest()
+      val response = prisonerContactRestrictionResponse(
+        prisonerContactRestrictionId = 3L,
+        prisonerContactId = 2L,
+        contactId = 1L,
+      )
+
+      whenever(syncPrisonerContactRestrictionService.updatePrisonerContactRestriction(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updatePrisonerContactRestriction(3L, request)
+
+      verify(syncPrisonerContactRestrictionService).updatePrisonerContactRestriction(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+        identifier = result.prisonerContactRestrictionId,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on prisoner contact restriction delete success`() {
+      val response = prisonerContactRestrictionResponse(
+        prisonerContactRestrictionId = 3L,
+        prisonerContactId = 2L,
+        contactId = 1L,
+      )
+
+      whenever(syncPrisonerContactRestrictionService.deletePrisonerContactRestriction(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deletePrisonerContactRestriction(3L)
+
+      verify(syncPrisonerContactRestrictionService).deletePrisonerContactRestriction(3L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_DELETED,
+        identifier = result.prisonerContactRestrictionId,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createPrisonerContactRestrictionRequest(prisonerContactId: Long) =
+      SyncCreatePrisonerContactRestrictionRequest(
+        prisonerContactId = prisonerContactId,
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Not allowed to visit. Ever.",
+        staffUsername = "FRED",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updatePrisonerContactRestrictionRequest() =
+      SyncUpdatePrisonerContactRestrictionRequest(
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Not allowed to visit. Ever.",
+        staffUsername = "FRED",
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun prisonerContactRestrictionResponse(
+      prisonerContactRestrictionId: Long,
+      prisonerContactId: Long,
+      contactId: Long,
+    ) =
+      SyncPrisonerContactRestriction(
+        prisonerContactRestrictionId = prisonerContactRestrictionId,
+        prisonerContactId = prisonerContactId,
+        contactId = contactId,
+        prisonerNumber = "A1234AA",
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Not allowed to visit. Ever.",
+        staffUsername = "FRED",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
         updatedBy = null,

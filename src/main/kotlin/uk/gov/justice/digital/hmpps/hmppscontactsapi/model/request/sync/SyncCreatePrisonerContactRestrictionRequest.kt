@@ -4,11 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@Schema(description = "Request object to create a prisoner contact request details")
+@Schema(description = "Request object to create a prisoner contact restriction")
 data class SyncCreatePrisonerContactRestrictionRequest(
 
-  @Schema(description = "ID of the contact to which the restriction applies", example = "12345")
-  val contactId: Long,
+  @Schema(description = "ID of the prisoner contact (relationship) on which the restriction applies", example = "12345")
+  val prisonerContactId: Long,
 
   @Schema(description = "Type of restriction applied", example = "NoContact")
   val restrictionType: String,

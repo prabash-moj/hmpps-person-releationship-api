@@ -23,12 +23,6 @@ class SyncPrisonerContactService(
     return contactEntity.toResponse()
   }
 
-  fun deletePrisonerContact(prisonerContactId: Long) {
-    prisonerContactRepository.findById(prisonerContactId)
-      .orElseThrow { EntityNotFoundException("Prisoner contact with ID $prisonerContactId not found") }
-    prisonerContactRepository.deleteById(prisonerContactId)
-  }
-
   fun createPrisonerContact(request: SyncCreatePrisonerContactRequest): SyncPrisonerContact {
     return prisonerContactRepository.saveAndFlush(request.toEntity()).toResponse()
   }
@@ -58,5 +52,12 @@ class SyncPrisonerContactService(
     }
 
     return prisonerContactRepository.saveAndFlush(changedPrisonerContact).toResponse()
+  }
+
+  fun deletePrisonerContact(prisonerContactId: Long): SyncPrisonerContact {
+    val rowToDelete = prisonerContactRepository.findById(prisonerContactId)
+      .orElseThrow { EntityNotFoundException("Prisoner contact with ID $prisonerContactId not found") }
+    prisonerContactRepository.deleteById(prisonerContactId)
+    return rowToDelete.toResponse()
   }
 }

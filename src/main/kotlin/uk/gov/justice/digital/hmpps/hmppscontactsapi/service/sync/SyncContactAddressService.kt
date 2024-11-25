@@ -46,12 +46,6 @@ class SyncContactAddressService(
     return contactAddress.toModel()
   }
 
-  fun deleteContactAddress(contactAddressId: Long) {
-    contactAddressRepository.findById(contactAddressId)
-      .orElseThrow { EntityNotFoundException("Contact address with ID $contactAddressId not found") }
-    contactAddressRepository.deleteById(contactAddressId)
-  }
-
   fun createContactAddress(request: SyncCreateContactAddressRequest): SyncContactAddress {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
@@ -97,5 +91,13 @@ class SyncContactAddressService(
     }
 
     return contactAddressRepository.saveAndFlush(changedContactAddress).toModel()
+  }
+
+  // TODO: Should this delete the contact_phone rows that are specifically associated with this address?
+  fun deleteContactAddress(contactAddressId: Long): SyncContactAddress {
+    val rowToDelete = contactAddressRepository.findById(contactAddressId)
+      .orElseThrow { EntityNotFoundException("Contact address with ID $contactAddressId not found") }
+    contactAddressRepository.deleteById(contactAddressId)
+    return rowToDelete.toModel()
   }
 }

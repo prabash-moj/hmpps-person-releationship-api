@@ -233,19 +233,34 @@ class SyncFacade(
   fun createContactRestriction(request: SyncCreateContactRestrictionRequest) =
     syncContactRestrictionService.createContactRestriction(request)
       .also {
-        logger.info("TODO - Create contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+          identifier = it.contactRestrictionId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun updateContactRestriction(contactRestrictionId: Long, request: SyncUpdateContactRestrictionRequest) =
     syncContactRestrictionService.updateContactRestriction(contactRestrictionId, request)
       .also {
-        logger.info("TODO - Update contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
+          identifier = it.contactRestrictionId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun deleteContactRestriction(contactRestrictionId: Long) =
     syncContactRestrictionService.deleteContactRestriction(contactRestrictionId)
       .also {
-        logger.info("TODO - Delete contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_RESTRICTION_DELETED,
+          identifier = it.contactRestrictionId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================
@@ -258,19 +273,34 @@ class SyncFacade(
   fun createContactAddress(request: SyncCreateContactAddressRequest) =
     syncContactAddressService.createContactAddress(request)
       .also {
-        logger.info("TODO - Create contact address domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_CREATED,
+          identifier = it.contactAddressId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun updateContactAddress(contactAddressId: Long, request: SyncUpdateContactAddressRequest) =
     syncContactAddressService.updateContactAddress(contactAddressId, request)
       .also {
-        logger.info("TODO - Update contact address domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+          identifier = it.contactAddressId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun deleteContactAddress(contactAddressId: Long) =
     syncContactAddressService.deleteContactAddress(contactAddressId)
       .also {
-        logger.info("TODO - Delete contact address domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_DELETED,
+          identifier = it.contactAddressId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================
@@ -283,19 +313,37 @@ class SyncFacade(
   fun createPrisonerContact(request: SyncCreatePrisonerContactRequest) =
     syncPrisonerContactService.createPrisonerContact(request)
       .also {
-        logger.info("TODO - Create prisoner contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
+          identifier = it.id,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   fun updatePrisonerContact(prisonerContactId: Long, request: SyncUpdatePrisonerContactRequest) =
     syncPrisonerContactService.updatePrisonerContact(prisonerContactId, request)
       .also {
-        logger.info("TODO - Update prisoner contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_UPDATED,
+          identifier = it.id,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   fun deletePrisonerContact(prisonerContactId: Long) =
     syncPrisonerContactService.deletePrisonerContact(prisonerContactId)
       .also {
-        logger.info("TODO - Delete prisoner contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_DELETED,
+          identifier = it.id,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================
@@ -308,18 +356,36 @@ class SyncFacade(
   fun createPrisonerContactRestriction(request: SyncCreatePrisonerContactRestrictionRequest) =
     syncPrisonerContactRestrictionService.createPrisonerContactRestriction(request)
       .also {
-        logger.info("TODO - Create prisoner contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
+          identifier = it.prisonerContactRestrictionId,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   fun updatePrisonerContactRestriction(prisonerContactRestrictionId: Long, request: SyncUpdatePrisonerContactRestrictionRequest) =
     syncPrisonerContactRestrictionService.updatePrisonerContactRestriction(prisonerContactRestrictionId, request)
       .also {
-        logger.info("TODO - Update prisoner contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+          identifier = it.prisonerContactRestrictionId,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   fun deletePrisonerContactRestriction(prisonerContactRestrictionId: Long) =
     syncPrisonerContactRestrictionService.deletePrisonerContactRestriction(prisonerContactRestrictionId)
       .also {
-        logger.info("TODO - Delete prisoner contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_DELETED,
+          identifier = it.prisonerContactRestrictionId,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 }

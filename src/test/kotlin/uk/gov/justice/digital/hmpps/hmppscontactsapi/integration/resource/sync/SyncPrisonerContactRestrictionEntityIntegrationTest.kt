@@ -239,7 +239,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
 
     private fun updatePrisonerContactRestrictionRequest() =
       SyncUpdatePrisonerContactRestrictionRequest(
-        contactId = 1L,
         restrictionType = "PREINF",
         startDate = LocalDate.of(2024, 1, 1),
         expiryDate = LocalDate.of(2024, 12, 31),
@@ -251,7 +250,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
 
     private fun createPrisonerContactRestrictionRequest() =
       SyncCreatePrisonerContactRestrictionRequest(
-        contactId = 1L,
+        prisonerContactId = 1L,
         restrictionType = "PREINF",
         startDate = LocalDate.of(2024, 1, 1),
         expiryDate = LocalDate.of(2024, 12, 31),

@@ -6,10 +6,10 @@ orbs:
 parameters:
   alerts-slack-channel:
     type: string
-    default: dps_alerts_security
+    default: managing-contacts-internal-dev
   releases-slack-channel:
     type: string
-    default: dps-releases
+    default: managing-contacts-internal-dev
   java-version:
     type: string
     default: "21.0"

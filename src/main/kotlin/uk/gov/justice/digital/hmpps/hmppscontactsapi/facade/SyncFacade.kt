@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
@@ -10,6 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCrea
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
@@ -21,6 +22,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpda
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactAddressPhoneService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactAddressService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactEmailService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactIdentityService
@@ -41,17 +43,18 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncPrisonerCo
  *
  * All events generated as a result of a sync operation should generate domain events with the
  * additionalInformation.source = "NOMIS", which indicates that the actual source of the change
- * was in NOMIS.
+ * was NOMIS.
  *
  * This is important as the Syscon sync service will ignore domain events with
- * a source of NOMIS but will action those with a source of DPS (changes originating within
- * this service).
+ * a source of NOMIS, but will action those with a source of DPS for changes which
+ * originate within this service via the UI or local processes.
  */
 @Service
 class SyncFacade(
   private val syncContactService: SyncContactService,
   private val syncContactPhoneService: SyncContactPhoneService,
   private val syncContactAddressService: SyncContactAddressService,
+  private val syncContactAddressPhoneService: SyncContactAddressPhoneService,
   private val syncContactEmailService: SyncContactEmailService,
   private val syncContactIdentityService: SyncContactIdentityService,
   private val syncContactRestrictionService: SyncContactRestrictionService,
@@ -59,10 +62,6 @@ class SyncFacade(
   private val syncPrisonerContactRestrictionService: SyncPrisonerContactRestrictionService,
   private val outboundEventsService: OutboundEventsService,
 ) {
-  companion object {
-    private val logger = LoggerFactory.getLogger(this::class.java)
-  }
-
   // ================================================================
   //  Contact
   // ================================================================
@@ -298,6 +297,44 @@ class SyncFacade(
         outboundEventsService.send(
           outboundEvent = OutboundEvent.CONTACT_ADDRESS_DELETED,
           identifier = it.contactAddressId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
+      }
+
+  // ================================================================
+  //  Contact Address Phone  (address-specific phone numbers)
+  // ================================================================
+  fun getContactAddressPhoneById(contactAddressPhoneId: Long) =
+    syncContactAddressPhoneService.getContactAddressPhoneById(contactAddressPhoneId)
+  fun createContactAddressPhone(request: SyncCreateContactAddressPhoneRequest) =
+    syncContactAddressPhoneService.createContactAddressPhone(request)
+      .also {
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
+          identifier = it.contactAddressPhoneId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
+      }
+
+  fun updateContactAddressPhone(contactAddressPhoneId: Long, request: SyncUpdateContactAddressPhoneRequest) =
+    syncContactAddressPhoneService.updateContactAddressPhone(contactAddressPhoneId, request)
+      .also {
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
+          identifier = it.contactAddressPhoneId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
+      }
+
+  fun deleteContactAddressPhone(contactAddressPhoneId: Long) =
+    syncContactAddressPhoneService.deleteContactAddressPhone(contactAddressPhoneId)
+      .also {
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED,
+          identifier = it.contactAddressPhoneId,
           contactId = it.contactId,
           source = Source.NOMIS,
         )

@@ -61,6 +61,33 @@ enum class OutboundEvent(val eventType: String) {
         description = "A contact address has been deleted",
       )
   },
+  CONTACT_ADDRESS_PHONE_CREATED("contacts-api.contact-address-phone.created") {
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
+      OutboundHMPPSDomainEvent(
+        eventType = eventType,
+        additionalInformation = additionalInformation,
+        personReference = personReference,
+        description = "A contact address phone number has been created",
+      )
+  },
+  CONTACT_ADDRESS_PHONE_UPDATED("contacts-api.contact-address-phone.updated") {
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
+      OutboundHMPPSDomainEvent(
+        eventType = eventType,
+        additionalInformation = additionalInformation,
+        personReference = personReference,
+        description = "A contact address phone number has been updated",
+      )
+  },
+  CONTACT_ADDRESS_PHONE_DELETED("contacts-api.contact-address-phone.deleted") {
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
+      OutboundHMPPSDomainEvent(
+        eventType = eventType,
+        additionalInformation = additionalInformation,
+        personReference = personReference,
+        description = "A contact address phone number has been deleted",
+      )
+  },
   CONTACT_PHONE_CREATED("contacts-api.contact-phone.created") {
     override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
       OutboundHMPPSDomainEvent(
@@ -259,6 +286,7 @@ data class OutboundHMPPSDomainEvent(
 data class ContactInfo(val contactId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class ContactAddressInfo(val contactAddressId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class ContactPhoneInfo(val contactPhoneId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class ContactAddressPhoneInfo(val contactAddressPhoneId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class ContactEmailInfo(val contactEmailId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class ContactIdentityInfo(val contactIdentityId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class ContactRestrictionInfo(val contactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)

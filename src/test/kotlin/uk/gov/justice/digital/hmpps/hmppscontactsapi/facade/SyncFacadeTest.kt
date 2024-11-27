@@ -9,6 +9,7 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
@@ -17,6 +18,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCrea
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
@@ -27,6 +29,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpda
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddress
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddressPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
@@ -36,6 +39,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPri
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactAddressPhoneService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactAddressService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactEmailService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactIdentityService
@@ -51,6 +55,7 @@ class SyncFacadeTest {
   private val syncContactService: SyncContactService = mock()
   private val syncContactPhoneService: SyncContactPhoneService = mock()
   private val syncContactAddressService: SyncContactAddressService = mock()
+  private val syncContactAddressPhoneService: SyncContactAddressPhoneService = mock()
   private val syncContactEmailService: SyncContactEmailService = mock()
   private val syncContactIdentityService: SyncContactIdentityService = mock()
   private val syncContactRestrictionService: SyncContactRestrictionService = mock()
@@ -62,6 +67,7 @@ class SyncFacadeTest {
     syncContactService,
     syncContactPhoneService,
     syncContactAddressService,
+    syncContactAddressPhoneService,
     syncContactEmailService,
     syncContactIdentityService,
     syncContactRestrictionService,
@@ -671,6 +677,99 @@ class SyncFacadeTest {
         street = "Acacia Avenue",
         area = "Dunstan",
         comments = "Comment",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class ContactAddressPhoneSyncFacadeEvents {
+    @Test
+    fun `should send domain event on contact address phone create success`() {
+      val request = createContactAddressPhoneRequest()
+      val response = contactAddressPhoneResponse()
+
+      whenever(syncContactAddressPhoneService.createContactAddressPhone(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createContactAddressPhone(request)
+
+      verify(syncContactAddressPhoneService).createContactAddressPhone(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
+        identifier = result.contactAddressPhoneId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact address phone update success`() {
+      val request = updateContactAddressPhoneRequest()
+      val response = contactAddressPhoneResponse()
+
+      whenever(syncContactAddressPhoneService.updateContactAddressPhone(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updateContactAddressPhone(4L, request)
+
+      verify(syncContactAddressPhoneService).updateContactAddressPhone(4L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
+        identifier = result.contactAddressPhoneId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact address phone delete success`() {
+      val response = contactAddressPhoneResponse()
+
+      whenever(syncContactAddressPhoneService.deleteContactAddressPhone(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deleteContactAddressPhone(4L)
+
+      verify(syncContactAddressPhoneService).deleteContactAddressPhone(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED,
+        identifier = result.contactAddressPhoneId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createContactAddressPhoneRequest() =
+      SyncCreateContactAddressPhoneRequest(
+        contactAddressId = 3L,
+        phoneType = "MOB",
+        phoneNumber = "0909 111222",
+        extNumber = null,
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updateContactAddressPhoneRequest() =
+      SyncUpdateContactAddressPhoneRequest(
+        phoneType = "MOB",
+        phoneNumber = "0909 111222",
+        extNumber = null,
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun contactAddressPhoneResponse() =
+      SyncContactAddressPhone(
+        contactAddressPhoneId = 4L,
+        contactAddressId = 3L,
+        contactPhoneId = 2L,
+        contactId = 1L,
+        phoneType = "MOB",
+        phoneNumber = "0909 111222",
+        extNumber = null,
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
         updatedBy = null,

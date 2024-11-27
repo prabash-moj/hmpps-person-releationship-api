@@ -46,6 +46,13 @@ class OutboundEventsService(
           sendSafely(outboundEvent, ContactPhoneInfo(identifier, source), PersonReference(dpsContactId = contactId))
         }
 
+        OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
+        OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
+        OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED,
+        -> {
+          sendSafely(outboundEvent, ContactAddressPhoneInfo(identifier, source), PersonReference(dpsContactId = contactId))
+        }
+
         OutboundEvent.CONTACT_EMAIL_CREATED,
         OutboundEvent.CONTACT_EMAIL_UPDATED,
         OutboundEvent.CONTACT_EMAIL_DELETED,

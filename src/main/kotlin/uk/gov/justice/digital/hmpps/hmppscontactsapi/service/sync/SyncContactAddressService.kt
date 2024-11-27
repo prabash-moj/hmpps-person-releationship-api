@@ -14,21 +14,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
 
-/**
- * The SyncContactAddressService contains methods to manage the synchronisation of data to/from NOMIS.
- *
- * The UI services should not use these endpoints as they may have relaxed validation to cater
- * for incomplete or poor quality data from NOMIS, and the data may contain reference data which is
- * useful only for the purpose of synchronisation with NOMIS e.g. CITY code, COUNTY code.
- *
- * Entities here can be individually created, amended or deleted in NOMIS, and these endpoints
- * support the delivery of that operation to this service.
- *
- * Whenever these entities are inserted, updated or deleted in the contacts service, a sync event is
- * published on the hmpps-domain-events-topic, and the Syscon sync service will call the GET
- * endpoint on our sync controller to retrieve the data.
- */
-
 @Service
 @Transactional
 class SyncContactAddressService(
@@ -93,11 +78,12 @@ class SyncContactAddressService(
     return contactAddressRepository.saveAndFlush(changedContactAddress).toModel()
   }
 
-  // TODO: Should this delete the contact_phone rows that are specifically associated with this address?
   fun deleteContactAddress(contactAddressId: Long): SyncContactAddress {
     val rowToDelete = contactAddressRepository.findById(contactAddressId)
       .orElseThrow { EntityNotFoundException("Contact address with ID $contactAddressId not found") }
+
     contactAddressRepository.deleteById(contactAddressId)
+
     return rowToDelete.toModel()
   }
 }

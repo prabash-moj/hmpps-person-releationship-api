@@ -54,6 +54,23 @@ class GetPrisonerContactsIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
+  fun `should return only the social contacts`() {
+    stubPrisonSearchWithResponse("A4162DZ")
+
+    val contacts = webTestClient.get()
+      .uri("/prisoner/A4162DZ/contact")
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PrisonerContactSummaryResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(contacts.content).hasSize(5)
+  }
+
+  @Test
   fun `should return OK`() {
     stubPrisonSearchWithResponse("A4385DZ")
 

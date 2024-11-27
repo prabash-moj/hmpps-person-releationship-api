@@ -80,6 +80,7 @@ AS
   left join country_reference country_ref on country_ref.nomis_code = ca.country_code
   where pc.contact_id = c.contact_id
     and pc.current_term = true
+    and pc.contact_type = 'S'
   order by pc.created_time desc;
 
 -- End

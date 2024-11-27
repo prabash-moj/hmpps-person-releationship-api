@@ -254,10 +254,9 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       comments = "Restriction due to ongoing investigation",
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
-    ).also {
-      it.amendedBy = amendedBy
-      it.amendedTime = amendedTime
-    }
+      amendedBy = amendedBy,
+      amendedTime = amendedTime,
+    )
 
   private fun prisonerContactEntity() =
     PrisonerContactEntity(
@@ -289,9 +288,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       comments = "Restriction due to ongoing investigation",
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
-    ).also {
-      it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
-    }
+      amendedBy = updatedBy,
+      amendedTime = updatedTime,
+    )
   }
 }

@@ -407,10 +407,9 @@ class MigrationService(
               comments = restriction.comment,
               createdBy = restriction.createUsername ?: "MIGRATION",
               createdTime = restriction.createDateTime ?: LocalDateTime.now(),
-            ).also {
-              it.amendedBy = restriction.modifyUsername
-              it.amendedTime = restriction.modifyDateTime
-            },
+              amendedBy = restriction.modifyUsername,
+              amendedTime = restriction.modifyDateTime,
+            ),
           ),
         )
       },

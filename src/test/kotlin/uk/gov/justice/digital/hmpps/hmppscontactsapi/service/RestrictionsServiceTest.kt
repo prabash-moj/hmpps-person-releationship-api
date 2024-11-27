@@ -13,14 +13,18 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactRestrictionDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRestrictionDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionsResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -28,6 +32,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestricti
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestrictionRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionDetailsRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionRepository
 import java.time.LocalDate
 import java.time.LocalDateTime.now
 import java.util.*
@@ -70,6 +75,7 @@ class RestrictionsServiceTest {
   private val contactRepository: ContactRepository = mock()
   private val prisonerContactRepository: PrisonerContactRepository = mock()
   private val prisonerContactRestrictionDetailsRepository: PrisonerContactRestrictionDetailsRepository = mock()
+  private val prisonerContactRestrictionRepository: PrisonerContactRestrictionRepository = mock()
   private val referenceCodeService: ReferenceCodeService = mock()
   private val service = RestrictionsService(
     contactRestrictionDetailsRepository,
@@ -77,6 +83,7 @@ class RestrictionsServiceTest {
     contactRepository,
     prisonerContactRepository,
     prisonerContactRestrictionDetailsRepository,
+    prisonerContactRestrictionRepository,
     referenceCodeService,
   )
 
@@ -384,6 +391,220 @@ class RestrictionsServiceTest {
 
     private fun anUpdateEstateWideRestrictionRequest(): UpdateContactRestrictionRequest =
       UpdateContactRestrictionRequest(
+        restrictionType = "CCTV",
+        startDate = LocalDate.of(1990, 1, 1),
+        expiryDate = LocalDate.of(1992, 2, 2),
+        comments = "Updated comments",
+        updatedBy = "updated",
+      )
+  }
+
+  @Nested
+  inner class CreatePrisonerContactRestriction {
+    @Test
+    fun `blow up creating prisoner contact restriction if prisoner contact is missing`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.createPrisonerContactRestriction(prisonerContactId, aCreatePrisonerContactRestrictionRequest())
+      }
+      assertThat(exception.message).isEqualTo("Prisoner contact (66) could not be found")
+    }
+
+    @Test
+    fun `blow up creating prisoner contact restriction if type is not supported`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(null)
+
+      val exception = assertThrows<ValidationException> {
+        service.createPrisonerContactRestriction(prisonerContactId, aCreatePrisonerContactRestrictionRequest())
+      }
+      assertThat(exception.message).isEqualTo("Unsupported restriction type (BAN)")
+    }
+
+    @Test
+    fun `blow up creating prisoner contact restriction if type is no longer active`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
+        ReferenceCode(
+          referenceCodeId = 0,
+          "RESTRICTION",
+          "BAN",
+          "Banned",
+          99,
+          false,
+        ),
+      )
+
+      val exception = assertThrows<ValidationException> {
+        service.createPrisonerContactRestriction(prisonerContactId, aCreatePrisonerContactRestrictionRequest())
+      }
+      assertThat(exception.message).isEqualTo("Restriction type (BAN) is no longer supported for creating or updating restrictions")
+    }
+
+    @Test
+    fun `create prisoner contact restriction`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
+        ReferenceCode(
+          referenceCodeId = 0,
+          "RESTRICTION",
+          "BAN",
+          "Banned",
+          99,
+          true,
+        ),
+      )
+      whenever(prisonerContactRestrictionRepository.saveAndFlush(any())).thenAnswer { i ->
+        (i.arguments[0] as PrisonerContactRestrictionEntity).copy(
+          prisonerContactRestrictionId = 9999,
+        )
+      }
+
+      val created = service.createPrisonerContactRestriction(prisonerContactId, aCreatePrisonerContactRestrictionRequest())
+      assertThat(created).isEqualTo(
+        PrisonerContactRestrictionDetails(
+          prisonerContactRestrictionId = 9999,
+          contactId = contactId,
+          prisonerContactId = prisonerContactId,
+          prisonerNumber = aPrisonerContact.prisonerNumber,
+          restrictionType = "BAN",
+          restrictionTypeDescription = "Banned",
+          startDate = LocalDate.of(2020, 1, 1),
+          expiryDate = LocalDate.of(2022, 2, 2),
+          comments = "Some comments",
+          createdBy = "created",
+          createdTime = created.createdTime,
+          updatedBy = null,
+          updatedTime = null,
+        ),
+      )
+      verify(prisonerContactRestrictionRepository).saveAndFlush(any())
+    }
+
+    private fun aCreatePrisonerContactRestrictionRequest(): CreatePrisonerContactRestrictionRequest =
+      CreatePrisonerContactRestrictionRequest(
+        restrictionType = "BAN",
+        startDate = LocalDate.of(2020, 1, 1),
+        expiryDate = LocalDate.of(2022, 2, 2),
+        comments = "Some comments",
+        createdBy = "created",
+      )
+  }
+
+  @Nested
+  inner class UpdatePrisonerContactRestriction {
+    private val prisonerContactRestrictionId = 654L
+    private val existingEntity = PrisonerContactRestrictionEntity(
+      prisonerContactRestrictionId = prisonerContactRestrictionId,
+      prisonerContactId = prisonerContactId,
+      restrictionType = "BAN",
+      startDate = LocalDate.of(2020, 1, 1),
+      expiryDate = LocalDate.of(2022, 2, 2),
+      comments = "Some comments",
+      createdBy = "created",
+      createdTime = now(),
+      amendedBy = null,
+      amendedTime = null,
+    )
+
+    @Test
+    fun `blow up updating prisoner contact restriction if prisoner contact is missing`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, anUpdatePrisonerContactRestrictionRequest())
+      }
+      assertThat(exception.message).isEqualTo("Prisoner contact (66) could not be found")
+    }
+
+    @Test
+    fun `blow up updating prisoner contact restriction if prisoner contact restriction is missing`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
+      whenever(prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)).thenReturn(Optional.empty())
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, anUpdatePrisonerContactRestrictionRequest())
+      }
+      assertThat(exception.message).isEqualTo("Prisoner contact restriction (654) could not be found")
+    }
+
+    @Test
+    fun `blow up updating prisoner contact restriction if type is not supported`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
+      whenever(prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)).thenReturn(Optional.of(existingEntity))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(null)
+
+      val exception = assertThrows<ValidationException> {
+        service.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, anUpdatePrisonerContactRestrictionRequest())
+      }
+      assertThat(exception.message).isEqualTo("Unsupported restriction type (CCTV)")
+    }
+
+    @Test
+    fun `blow up updating prisoner contact restriction if type is no longer active`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
+      whenever(prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)).thenReturn(Optional.of(existingEntity))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
+        ReferenceCode(
+          referenceCodeId = 0,
+          "RESTRICTION",
+          "CCTV",
+          "CCTV",
+          99,
+          false,
+        ),
+      )
+
+      val exception = assertThrows<ValidationException> {
+        service.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, anUpdatePrisonerContactRestrictionRequest())
+      }
+      assertThat(exception.message).isEqualTo("Restriction type (CCTV) is no longer supported for creating or updating restrictions")
+    }
+
+    @Test
+    fun `updated prisoner contact restriction`() {
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
+      whenever(prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)).thenReturn(Optional.of(existingEntity))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
+        ReferenceCode(
+          referenceCodeId = 0,
+          "RESTRICTION",
+          "CCTV",
+          "CCTV",
+          99,
+          true,
+        ),
+      )
+      whenever(prisonerContactRestrictionRepository.saveAndFlush(any())).thenAnswer { i ->
+        (i.arguments[0] as PrisonerContactRestrictionEntity).copy(
+          prisonerContactRestrictionId = 9999,
+        )
+      }
+
+      val updated = service.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, anUpdatePrisonerContactRestrictionRequest())
+      assertThat(updated).isEqualTo(
+        PrisonerContactRestrictionDetails(
+          prisonerContactRestrictionId = 9999,
+          prisonerContactId = prisonerContactId,
+          contactId = contactId,
+          prisonerNumber = aPrisonerContact.prisonerNumber,
+          restrictionType = "CCTV",
+          restrictionTypeDescription = "CCTV",
+          startDate = LocalDate.of(1990, 1, 1),
+          expiryDate = LocalDate.of(1992, 2, 2),
+          comments = "Updated comments",
+          createdBy = "created",
+          createdTime = updated.createdTime,
+          updatedBy = "updated",
+          updatedTime = updated.updatedTime,
+        ),
+      )
+      verify(prisonerContactRestrictionRepository).saveAndFlush(any())
+    }
+
+    private fun anUpdatePrisonerContactRestrictionRequest(): UpdatePrisonerContactRestrictionRequest =
+      UpdatePrisonerContactRestrictionRequest(
         restrictionType = "CCTV",
         startDate = LocalDate.of(1990, 1, 1),
         expiryDate = LocalDate.of(1992, 2, 2),

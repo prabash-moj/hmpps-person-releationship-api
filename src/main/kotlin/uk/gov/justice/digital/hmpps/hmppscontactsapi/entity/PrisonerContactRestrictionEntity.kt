@@ -9,6 +9,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalDateTime.now
 
 @Entity
 @Table(name = "prisoner_contact_restriction")
@@ -32,9 +33,9 @@ data class PrisonerContactRestrictionEntity(
 
   @Column(updatable = false)
   @CreationTimestamp
-  val createdTime: LocalDateTime,
-) {
-  var amendedBy: String? = null
+  val createdTime: LocalDateTime = now(),
 
-  var amendedTime: LocalDateTime? = null
-}
+  val amendedBy: String? = null,
+
+  val amendedTime: LocalDateTime? = null,
+)

@@ -10,32 +10,45 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactRestrictionInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactRestrictionInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDate
 
-class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
+class CreatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() {
+  private var savedPrisonerContactId = 0L
   private var savedContactId = 0L
+  private val prisonerNumberCreatedAgainst = "A1234AA"
 
   @BeforeEach
   fun initialiseData() {
-    savedContactId = testAPIClient.createAContact(
+    stubPrisonSearchWithResponse(prisonerNumberCreatedAgainst)
+    val created = testAPIClient.createAContactWithARelationship(
       CreateContactRequest(
         lastName = "last",
         firstName = "first",
+        relationship = ContactRelationship(
+          prisonerNumber = prisonerNumberCreatedAgainst,
+          relationshipCode = "FRI",
+          isNextOfKin = true,
+          isEmergencyContact = true,
+          comments = "Some comments",
+        ),
         createdBy = "created",
       ),
-    ).id
+    )
+    savedPrisonerContactId = created.createdRelationship!!.prisonerContactId
+    savedContactId = created.createdContact.id
   }
 
   @Test
   fun `should return unauthorized if no token`() {
     webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/prisoner-contact/$savedPrisonerContactId/restrictions")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -47,7 +60,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if no role`() {
     webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/prisoner-contact/$savedPrisonerContactId/restrictions")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -60,7 +73,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if wrong role`() {
     webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/prisoner-contact/$savedPrisonerContactId/restrictions")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -84,7 +97,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   )
   fun `should return bad request if required fields are null`(expectedMessage: String, json: String) {
     val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/prisoner-contact/$savedPrisonerContactId/restrictions")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -101,9 +114,9 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
 
   @ParameterizedTest
   @MethodSource("allFieldConstraintViolations")
-  fun `should enforce field constraints`(expectedMessage: String, request: CreateContactRestrictionRequest) {
+  fun `should enforce field constraints`(expectedMessage: String, request: CreatePrisonerContactRestrictionRequest) {
     val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/prisoner-contact/$savedPrisonerContactId/restrictions")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -119,11 +132,11 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should not create the restriction if the contact is not found`() {
+  fun `should not create the restriction if the prisoner contact is not found`() {
     val request = aMinimalRequest()
 
     val errors = webTestClient.post()
-      .uri("/contact/-321/estate-wide-restrictions")
+      .uri("/prisoner-contact/-321/restrictions")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -135,7 +148,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
 
-    assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) could not be found")
+    assertThat(errors.userMessage).isEqualTo("Entity not found : Prisoner contact (-321) could not be found")
   }
 
   @Test
@@ -143,7 +156,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     val request = aMinimalRequest().copy(restrictionType = "FOO")
 
     val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/prisoner-contact/$savedPrisonerContactId/restrictions")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -160,13 +173,21 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should create the restriction with minimal fields`() {
-    val request = aMinimalRequest()
+    val request = CreatePrisonerContactRestrictionRequest(
+      restrictionType = "BAN",
+      startDate = LocalDate.of(2020, 1, 1),
+      expiryDate = null,
+      comments = null,
+      createdBy = "created",
+    )
 
-    val created = testAPIClient.createContactEstateWideRestriction(savedContactId, request)
+    val created = testAPIClient.createPrisonerContactRestriction(savedPrisonerContactId, request)
 
     with(created) {
-      assertThat(contactRestrictionId).isGreaterThan(0)
+      assertThat(prisonerContactRestrictionId).isGreaterThan(0)
+      assertThat(prisonerContactId).isEqualTo(savedPrisonerContactId)
       assertThat(contactId).isEqualTo(savedContactId)
+      assertThat(prisonerNumber).isEqualTo(prisonerNumberCreatedAgainst)
       assertThat(restrictionType).isEqualTo(request.restrictionType)
       assertThat(startDate).isEqualTo(request.startDate)
       assertThat(expiryDate).isNull()
@@ -176,15 +197,15 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     }
 
     stubEvents.assertHasEvent(
-      event = OutboundEvent.CONTACT_RESTRICTION_CREATED,
-      additionalInfo = ContactRestrictionInfo(created.contactRestrictionId, Source.DPS),
-      personReference = PersonReference(dpsContactId = created.contactId),
+      event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
+      additionalInfo = PrisonerContactRestrictionInfo(created.prisonerContactRestrictionId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId, nomsNumber = prisonerNumberCreatedAgainst),
     )
   }
 
   @Test
   fun `should create the restriction with all fields`() {
-    val request = CreateContactRestrictionRequest(
+    val request = CreatePrisonerContactRestrictionRequest(
       restrictionType = "BAN",
       startDate = LocalDate.of(2020, 1, 1),
       expiryDate = LocalDate.of(2021, 2, 2),
@@ -192,11 +213,13 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
     )
 
-    val created = testAPIClient.createContactEstateWideRestriction(savedContactId, request)
+    val created = testAPIClient.createPrisonerContactRestriction(savedPrisonerContactId, request)
 
     with(created) {
-      assertThat(contactRestrictionId).isGreaterThan(0)
+      assertThat(prisonerContactRestrictionId).isGreaterThan(0)
+      assertThat(prisonerContactId).isEqualTo(savedPrisonerContactId)
       assertThat(contactId).isEqualTo(savedContactId)
+      assertThat(prisonerNumber).isEqualTo(prisonerNumberCreatedAgainst)
       assertThat(restrictionType).isEqualTo(request.restrictionType)
       assertThat(startDate).isEqualTo(request.startDate)
       assertThat(expiryDate).isEqualTo(request.expiryDate)
@@ -206,9 +229,9 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     }
 
     stubEvents.assertHasEvent(
-      event = OutboundEvent.CONTACT_RESTRICTION_CREATED,
-      additionalInfo = ContactRestrictionInfo(created.contactRestrictionId, Source.DPS),
-      personReference = PersonReference(dpsContactId = created.contactId),
+      event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
+      additionalInfo = PrisonerContactRestrictionInfo(created.prisonerContactRestrictionId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId, nomsNumber = prisonerNumberCreatedAgainst),
     )
   }
 
@@ -224,7 +247,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       )
     }
 
-    private fun aMinimalRequest() = CreateContactRestrictionRequest(
+    private fun aMinimalRequest() = CreatePrisonerContactRestrictionRequest(
       restrictionType = "BAN",
       startDate = LocalDate.of(2020, 1, 1),
       expiryDate = null,

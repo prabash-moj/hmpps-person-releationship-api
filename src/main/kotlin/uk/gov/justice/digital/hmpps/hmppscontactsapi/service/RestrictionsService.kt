@@ -4,8 +4,12 @@ import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionsResponse
@@ -15,6 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestricti
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestrictionRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionDetailsRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionRepository
 import java.time.LocalDateTime
 
 @Service
@@ -24,6 +29,7 @@ class RestrictionsService(
   private val contactRepository: ContactRepository,
   private val prisonerContactRepository: PrisonerContactRepository,
   private val prisonerContactRestrictionDetailsRepository: PrisonerContactRestrictionDetailsRepository,
+  private val prisonerContactRestrictionRepository: PrisonerContactRestrictionRepository,
   private val referenceCodeService: ReferenceCodeService,
 ) {
 
@@ -121,6 +127,70 @@ class RestrictionsService(
   ) = ContactRestrictionDetails(
     contactRestrictionId = entity.contactRestrictionId,
     contactId = entity.contactId,
+    restrictionType = entity.restrictionType,
+    restrictionTypeDescription = type.description,
+    startDate = entity.startDate,
+    expiryDate = entity.expiryDate,
+    comments = entity.comments,
+    createdBy = entity.createdBy,
+    createdTime = entity.createdTime,
+    updatedBy = entity.amendedBy,
+    updatedTime = entity.amendedTime,
+  )
+
+  fun createPrisonerContactRestriction(
+    prisonerContactId: Long,
+    request: CreatePrisonerContactRestrictionRequest,
+  ): PrisonerContactRestrictionDetails {
+    val relationship = prisonerContactRepository.findById(prisonerContactId)
+      .orElseThrow { EntityNotFoundException("Prisoner contact ($prisonerContactId) could not be found") }
+    val type = validateType(request.restrictionType)
+    val created = prisonerContactRestrictionRepository.saveAndFlush(
+      PrisonerContactRestrictionEntity(
+        prisonerContactRestrictionId = 0,
+        prisonerContactId = prisonerContactId,
+        restrictionType = request.restrictionType,
+        startDate = request.startDate,
+        expiryDate = request.expiryDate,
+        comments = request.comments,
+        createdBy = request.createdBy,
+      ),
+    )
+    return prisonerContactRestrictionDetails(created, relationship, type)
+  }
+
+  fun updatePrisonerContactRestriction(
+    prisonerContactId: Long,
+    prisonerContactRestrictionId: Long,
+    request: UpdatePrisonerContactRestrictionRequest,
+  ): PrisonerContactRestrictionDetails {
+    val relationship = prisonerContactRepository.findById(prisonerContactId)
+      .orElseThrow { EntityNotFoundException("Prisoner contact ($prisonerContactId) could not be found") }
+    val prisonerContactRestriction = prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)
+      .orElseThrow { EntityNotFoundException("Prisoner contact restriction ($prisonerContactRestrictionId) could not be found") }
+    val type = validateType(request.restrictionType)
+    val updated = prisonerContactRestrictionRepository.saveAndFlush(
+      prisonerContactRestriction.copy(
+        restrictionType = request.restrictionType,
+        startDate = request.startDate,
+        expiryDate = request.expiryDate,
+        comments = request.comments,
+        amendedBy = request.updatedBy,
+        amendedTime = LocalDateTime.now(),
+      ),
+    )
+    return prisonerContactRestrictionDetails(updated, relationship, type)
+  }
+
+  private fun prisonerContactRestrictionDetails(
+    entity: PrisonerContactRestrictionEntity,
+    relationship: PrisonerContactEntity,
+    type: ReferenceCode,
+  ) = PrisonerContactRestrictionDetails(
+    prisonerContactRestrictionId = entity.prisonerContactRestrictionId,
+    prisonerContactId = entity.prisonerContactId,
+    contactId = relationship.contactId,
+    prisonerNumber = relationship.prisonerNumber,
     restrictionType = entity.restrictionType,
     restrictionTypeDescription = type.description,
     startDate = entity.startDate,

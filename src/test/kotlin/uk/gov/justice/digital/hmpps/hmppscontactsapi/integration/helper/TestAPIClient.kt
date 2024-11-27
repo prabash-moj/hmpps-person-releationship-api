@@ -10,10 +10,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
@@ -25,6 +27,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestr
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionsResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
@@ -345,7 +348,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBodyList(ContactRestrictionDetails::class.java)
     .returnResult().responseBody!!
 
-  fun createContactEstateWideRestrictions(
+  fun createContactEstateWideRestriction(
     contactId: Long,
     request: CreateContactRestrictionRequest,
   ): ContactRestrictionDetails = webTestClient.post()
@@ -361,7 +364,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBody(ContactRestrictionDetails::class.java)
     .returnResult().responseBody!!
 
-  fun updateContactEstateWideRestrictions(
+  fun updateContactEstateWideRestriction(
     contactId: Long,
     contactRestrictionId: Long,
     request: UpdateContactRestrictionRequest,
@@ -386,6 +389,39 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectStatus().isOk
     .expectHeader().contentType(MediaType.APPLICATION_JSON)
     .expectBody(PrisonerContactRestrictionsResponse::class.java)
+    .returnResult().responseBody!!
+
+  fun createPrisonerContactRestriction(
+    prisonerContactId: Long,
+    request: CreatePrisonerContactRestrictionRequest,
+  ): PrisonerContactRestrictionDetails = webTestClient.post()
+    .uri("/prisoner-contact/$prisonerContactId/restrictions")
+    .accept(MediaType.APPLICATION_JSON)
+    .contentType(MediaType.APPLICATION_JSON)
+    .headers(authorised())
+    .bodyValue(request)
+    .exchange()
+    .expectStatus()
+    .isCreated
+    .expectHeader().contentType(MediaType.APPLICATION_JSON)
+    .expectBody(PrisonerContactRestrictionDetails::class.java)
+    .returnResult().responseBody!!
+
+  fun updatePrisonerContactRestriction(
+    prisonerContactId: Long,
+    prisonerRestrictionContactId: Long,
+    request: UpdatePrisonerContactRestrictionRequest,
+  ): PrisonerContactRestrictionDetails = webTestClient.put()
+    .uri("/prisoner-contact/$prisonerContactId/restrictions/$prisonerRestrictionContactId")
+    .accept(MediaType.APPLICATION_JSON)
+    .contentType(MediaType.APPLICATION_JSON)
+    .headers(authorised())
+    .bodyValue(request)
+    .exchange()
+    .expectStatus()
+    .isOk
+    .expectHeader().contentType(MediaType.APPLICATION_JSON)
+    .expectBody(PrisonerContactRestrictionDetails::class.java)
     .returnResult().responseBody!!
 
   private fun authorised() = setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN"))

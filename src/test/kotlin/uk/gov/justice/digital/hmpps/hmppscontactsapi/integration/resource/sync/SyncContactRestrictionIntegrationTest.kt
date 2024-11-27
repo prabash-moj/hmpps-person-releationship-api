@@ -227,7 +227,6 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         startDate = LocalDate.of(1982, 6, 15),
         expiryDate = LocalDate.of(1928, 6, 15),
         comments = "N/A",
-        staffUsername = "UPDATE",
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
       )
@@ -239,7 +238,6 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         startDate = LocalDate.of(1982, 6, 15),
         expiryDate = LocalDate.of(2025, 6, 15),
         comments = "N/A",
-        staffUsername = "CREATE",
         createdBy = "CREATE",
       )
   }

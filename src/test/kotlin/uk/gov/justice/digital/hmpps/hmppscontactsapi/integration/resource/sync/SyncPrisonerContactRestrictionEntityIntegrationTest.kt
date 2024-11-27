@@ -243,7 +243,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         startDate = LocalDate.of(2024, 1, 1),
         expiryDate = LocalDate.of(2024, 12, 31),
         comments = "Restriction due to ongoing investigation",
-        staffUsername = "UpdatedUser",
         updatedBy = "UpdatedUser",
         updatedTime = LocalDateTime.now(),
       )
@@ -255,7 +254,6 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         startDate = LocalDate.of(2024, 1, 1),
         expiryDate = LocalDate.of(2024, 12, 31),
         comments = "Restriction due to ongoing investigation",
-        staffUsername = "admin",
         createdBy = "admin",
         createdTime = LocalDateTime.now(),
       )

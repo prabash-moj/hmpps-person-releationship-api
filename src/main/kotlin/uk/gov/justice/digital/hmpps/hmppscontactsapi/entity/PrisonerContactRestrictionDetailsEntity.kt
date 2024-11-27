@@ -24,8 +24,6 @@ data class PrisonerContactRestrictionDetailsEntity(
 
   val comments: String?,
 
-  val staffUsername: String?,
-
   val createdBy: String,
 
   val createdTime: LocalDateTime,

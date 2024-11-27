@@ -19,9 +19,6 @@ data class SyncUpdatePrisonerContactRestrictionRequest(
   @Schema(description = "Comments regarding the restriction", example = "Restriction applied due to safety concerns", nullable = true)
   val comments: String? = null,
 
-  @Schema(description = "The username who entered the restriction", example = "X999X")
-  val staffUsername: String,
-
   @Schema(description = "User who last updated the restriction record", example = "editor", nullable = true)
   val updatedBy: String? = null,
 

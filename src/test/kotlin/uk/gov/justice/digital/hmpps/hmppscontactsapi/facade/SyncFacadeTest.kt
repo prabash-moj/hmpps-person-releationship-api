@@ -549,7 +549,6 @@ class SyncFacadeTest {
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
         comments = "Comment",
-        staffUsername = "STAFF-USER",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
       )
@@ -561,7 +560,6 @@ class SyncFacadeTest {
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
         comments = "Comment",
-        staffUsername = "STAFF-USER",
         updatedBy = "UPDATER",
         updatedTime = LocalDateTime.now(),
       )
@@ -573,7 +571,6 @@ class SyncFacadeTest {
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
         comments = "Comment",
-        staffUsername = "STAFF-USER",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
         updatedBy = null,
@@ -877,7 +874,6 @@ class SyncFacadeTest {
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
         comments = "Not allowed to visit. Ever.",
-        staffUsername = "FRED",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
       )
@@ -888,7 +884,6 @@ class SyncFacadeTest {
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
         comments = "Not allowed to visit. Ever.",
-        staffUsername = "FRED",
         updatedBy = "UPDATER",
         updatedTime = LocalDateTime.now(),
       )
@@ -906,7 +901,6 @@ class SyncFacadeTest {
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
         comments = "Not allowed to visit. Ever.",
-        staffUsername = "FRED",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
         updatedBy = null,

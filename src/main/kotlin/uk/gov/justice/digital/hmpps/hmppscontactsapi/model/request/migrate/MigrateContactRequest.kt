@@ -212,9 +212,6 @@ data class MigrateRestriction(
   @Schema(description = "The date that this restriction expires and stops being enforced", nullable = true, example = "2024-03-01")
   val expiryDate: LocalDate? = null,
 
-  @Schema(description = "The username of the person who entered the restriction (may be different to the createdBy audit field)", example = "X998XX")
-  val staffUsername: String,
-
 ) : AbstractAuditable()
 
 data class MigrateEmployment(
@@ -299,8 +296,5 @@ data class MigratePrisonerContactRestriction(
 
   @Schema(description = "The date that this restriction expires", example = "2024-03-01")
   val expiryDate: LocalDate? = null,
-
-  @Schema(description = "The username of the person who entered the restriction (may be different to the createdBy audit field)", example = "X998XX")
-  val staffUsername: String,
 
 ) : AbstractAuditable()

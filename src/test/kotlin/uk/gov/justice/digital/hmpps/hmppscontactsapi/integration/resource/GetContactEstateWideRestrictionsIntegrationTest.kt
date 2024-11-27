@@ -58,7 +58,6 @@ class GetContactEstateWideRestrictionsIntegrationTest : H2IntegrationTestBase() 
       assertThat(restrictionTypeDescription).isEqualTo("CCTV")
       assertThat(startDate).isEqualTo(LocalDate.of(2000, 11, 21))
       assertThat(expiryDate).isEqualTo(LocalDate.of(2001, 11, 21))
-      assertThat(staffUsername).isEqualTo("STAFF1")
       assertThat(comments).isEqualTo("N/A")
     }
     with(restrictions[1]) {
@@ -68,7 +67,6 @@ class GetContactEstateWideRestrictionsIntegrationTest : H2IntegrationTestBase() 
       assertThat(restrictionTypeDescription).isEqualTo("Banned")
       assertThat(startDate).isNull()
       assertThat(expiryDate).isNull()
-      assertThat(staffUsername).isNull()
       assertThat(comments).isNull()
     }
   }

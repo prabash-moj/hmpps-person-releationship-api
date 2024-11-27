@@ -55,10 +55,9 @@ class SyncContactRestrictionService(
       startDate = request.startDate,
       expiryDate = request.expiryDate,
       comments = request.comments,
-    ).also {
-      it.amendedBy = request.updatedBy
-      it.amendedTime = request.updatedTime
-    }
+      amendedBy = request.updatedBy,
+      amendedTime = request.updatedTime,
+    )
 
     return contactRestrictionRepository.saveAndFlush(changedContactRestriction).toModel()
   }

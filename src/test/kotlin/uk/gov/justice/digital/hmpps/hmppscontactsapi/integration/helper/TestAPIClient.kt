@@ -6,9 +6,11 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
@@ -90,7 +92,11 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBody(PrisonerContactSummaryResponse::class.java)
     .returnResult().responseBody!!
 
-  fun getReferenceCodes(groupCode: String, sort: String? = null, activeOnly: Boolean? = null): MutableList<ReferenceCode>? {
+  fun getReferenceCodes(
+    groupCode: String,
+    sort: String? = null,
+    activeOnly: Boolean? = null,
+  ): MutableList<ReferenceCode>? {
     return webTestClient.get()
       .uri("/reference-codes/group/$groupCode?${sort?.let { "sort=$sort&" } ?: ""}${activeOnly?.let { "&activeOnly=$activeOnly" } ?: ""}")
       .accept(MediaType.APPLICATION_JSON)
@@ -208,7 +214,11 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody!!
   }
 
-  fun updateAContactIdentity(contactId: Long, contactIdentityId: Long, request: UpdateIdentityRequest): ContactIdentityDetails {
+  fun updateAContactIdentity(
+    contactId: Long,
+    contactIdentityId: Long,
+    request: UpdateIdentityRequest,
+  ): ContactIdentityDetails {
     return webTestClient.put()
       .uri("/contact/$contactId/identity/$contactIdentityId")
       .accept(MediaType.APPLICATION_JSON)
@@ -335,6 +345,39 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBodyList(ContactRestrictionDetails::class.java)
     .returnResult().responseBody!!
 
+  fun createContactEstateWideRestrictions(
+    contactId: Long,
+    request: CreateContactRestrictionRequest,
+  ): ContactRestrictionDetails = webTestClient.post()
+    .uri("/contact/$contactId/estate-wide-restrictions")
+    .accept(MediaType.APPLICATION_JSON)
+    .contentType(MediaType.APPLICATION_JSON)
+    .headers(authorised())
+    .bodyValue(request)
+    .exchange()
+    .expectStatus()
+    .isCreated
+    .expectHeader().contentType(MediaType.APPLICATION_JSON)
+    .expectBody(ContactRestrictionDetails::class.java)
+    .returnResult().responseBody!!
+
+  fun updateContactEstateWideRestrictions(
+    contactId: Long,
+    contactRestrictionId: Long,
+    request: UpdateContactRestrictionRequest,
+  ): ContactRestrictionDetails = webTestClient.put()
+    .uri("/contact/$contactId/estate-wide-restrictions/$contactRestrictionId")
+    .accept(MediaType.APPLICATION_JSON)
+    .contentType(MediaType.APPLICATION_JSON)
+    .headers(authorised())
+    .bodyValue(request)
+    .exchange()
+    .expectStatus()
+    .isOk
+    .expectHeader().contentType(MediaType.APPLICATION_JSON)
+    .expectBody(ContactRestrictionDetails::class.java)
+    .returnResult().responseBody!!
+
   fun getPrisonerContactRestrictions(prisonerContactId: Long): PrisonerContactRestrictionsResponse = webTestClient.get()
     .uri("/prisoner-contact/$prisonerContactId/restrictions")
     .accept(MediaType.APPLICATION_JSON)
@@ -360,6 +403,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     val numberOfElements: Int,
     val empty: Boolean,
   )
+
   data class PrisonerContactSummaryResponse(
     val content: List<PrisonerContactSummary>,
     val pageable: ReturnedPageable,

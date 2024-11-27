@@ -27,8 +27,6 @@ data class PrisonerContactRestrictionEntity(
 
   val comments: String? = null,
 
-  val staffUsername: String,
-
   @Column(updatable = false)
   val createdBy: String,
 

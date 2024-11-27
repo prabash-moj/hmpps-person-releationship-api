@@ -440,7 +440,6 @@ class MigrationServiceTest {
           startDate = request.restrictions[0].effectiveDate,
           expiryDate = request.restrictions[0].expiryDate,
           comments = request.restrictions[0].comment,
-          staffUsername = request.restrictions[0].staffUsername,
           createdBy = aUsername,
           createdTime = aDateTime,
         ),
@@ -451,7 +450,6 @@ class MigrationServiceTest {
           startDate = request.restrictions[1].effectiveDate,
           expiryDate = request.restrictions[1].expiryDate,
           comments = request.restrictions[1].comment,
-          staffUsername = request.restrictions[1].staffUsername,
           createdBy = aUsername,
           createdTime = aDateTime,
         ),
@@ -669,7 +667,6 @@ class MigrationServiceTest {
           startDate = request.contacts[0].restrictions[0].startDate,
           expiryDate = request.contacts[0].restrictions[0].expiryDate,
           comments = request.contacts[0].restrictions[0].comment,
-          staffUsername = request.contacts[0].restrictions[0].staffUsername,
           createdBy = request.contacts[0].restrictions[0].createUsername!!,
           createdTime = request.contacts[0].restrictions[0].createDateTime!!,
         ),
@@ -680,7 +677,6 @@ class MigrationServiceTest {
           startDate = request.contacts[0].restrictions[1].startDate,
           expiryDate = request.contacts[0].restrictions[1].expiryDate,
           comments = request.contacts[0].restrictions[1].comment,
-          staffUsername = request.contacts[0].restrictions[1].staffUsername,
           createdBy = request.contacts[0].restrictions[1].createUsername!!,
           createdTime = request.contacts[0].restrictions[1].createDateTime!!,
         ),
@@ -755,7 +751,6 @@ class MigrationServiceTest {
                 startDate = LocalDate.now(),
                 expiryDate = LocalDate.now().plusDays(10),
                 comments = "No contact",
-                staffUsername = "TEST",
                 createdBy = "TEST",
                 createdTime = LocalDateTime.now(),
               ),
@@ -769,7 +764,6 @@ class MigrationServiceTest {
                 startDate = LocalDate.now(),
                 expiryDate = LocalDate.now().plusDays(10),
                 comments = "Closed visit",
-                staffUsername = "TEST",
                 createdBy = "TEST",
                 createdTime = LocalDateTime.now(),
               ),
@@ -882,7 +876,6 @@ class MigrationServiceTest {
         comment = "Active",
         effectiveDate = LocalDate.now(),
         expiryDate = LocalDate.now().plusDays(30),
-        staffUsername = aUsername,
       ).also {
         it.createDateTime = aDateTime
         it.createUsername = aUsername
@@ -893,7 +886,6 @@ class MigrationServiceTest {
         comment = "Expired",
         effectiveDate = LocalDate.now().minusDays(30),
         expiryDate = LocalDate.now().minusDays(1),
-        staffUsername = aUsername,
       ).also {
         it.createDateTime = aDateTime
         it.createUsername = aUsername
@@ -973,7 +965,6 @@ class MigrationServiceTest {
             comment = "This person is not allowed to visit",
             startDate = LocalDate.now().minusDays(30),
             expiryDate = LocalDate.now().plusDays(10),
-            staffUsername = aUsername,
           ).also {
             it.createDateTime = aDateTime
             it.createUsername = aUsername
@@ -984,7 +975,6 @@ class MigrationServiceTest {
             comment = "This person must be accompanied during visits",
             startDate = LocalDate.now().minusDays(30),
             expiryDate = LocalDate.now().plusDays(10),
-            staffUsername = aUsername,
           ).also {
             it.createDateTime = aDateTime
             it.createUsername = aUsername

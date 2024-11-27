@@ -12,7 +12,6 @@ select
     cr.start_date,
     cr.expiry_date,
     cr.comments,
-    cr.staff_username,
     cr.created_by,
     cr.created_time,
     cr.amended_by,

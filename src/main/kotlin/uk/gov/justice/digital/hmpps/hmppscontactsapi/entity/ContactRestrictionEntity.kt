@@ -17,7 +17,7 @@ data class ContactRestrictionEntity(
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val contactRestrictionId: Long,
 
-  val contactId: Long? = null,
+  val contactId: Long,
 
   val restrictionType: String,
 
@@ -27,14 +27,12 @@ data class ContactRestrictionEntity(
 
   val comments: String? = null,
 
-  val staffUsername: String,
-
   val createdBy: String,
 
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
-) {
-  var amendedBy: String? = null
 
-  var amendedTime: LocalDateTime? = null
-}
+  val amendedBy: String? = null,
+
+  val amendedTime: LocalDateTime? = null,
+)

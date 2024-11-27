@@ -22,9 +22,6 @@ data class SyncCreatePrisonerContactRestrictionRequest(
   @Schema(description = "Comments regarding the restriction", example = "Restriction applied due to safety concerns", nullable = true)
   val comments: String? = null,
 
-  @Schema(description = "Staff username who entered the restriction", example = "X999X")
-  val staffUsername: String,
-
   @Schema(description = "User who created the restriction record", example = "admin")
   val createdBy: String,
 

@@ -226,7 +226,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       startDate = LocalDate.of(2024, 1, 1),
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
-      staffUsername = "editor",
       updatedBy = "editor",
       updatedTime = LocalDateTime.now(),
     )
@@ -238,7 +237,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       startDate = LocalDate.of(2024, 1, 1),
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
-      staffUsername = "admin",
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
     )
@@ -254,7 +252,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       startDate = LocalDate.of(2024, 1, 1),
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
-      staffUsername = "admin",
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
     ).also {
@@ -290,7 +287,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       startDate = LocalDate.of(2024, 1, 1),
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
-      staffUsername = "admin",
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
     ).also {

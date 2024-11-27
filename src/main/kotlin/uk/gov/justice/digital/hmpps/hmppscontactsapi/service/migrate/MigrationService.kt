@@ -292,13 +292,11 @@ class MigrationService(
             startDate = restriction.effectiveDate,
             expiryDate = restriction.expiryDate,
             comments = restriction.comment,
-            staffUsername = restriction.staffUsername,
             createdBy = restriction.createUsername ?: "MIGRATION",
             createdTime = restriction.createDateTime ?: LocalDateTime.now(),
-          ).also {
-            it.amendedBy = restriction.modifyUsername
-            it.amendedTime = restriction.modifyDateTime
-          },
+            amendedBy = restriction.modifyUsername,
+            amendedTime = restriction.modifyDateTime,
+          ),
         ),
       )
     }
@@ -407,7 +405,6 @@ class MigrationService(
               startDate = restriction.startDate,
               expiryDate = restriction.expiryDate,
               comments = restriction.comment,
-              staffUsername = restriction.staffUsername,
               createdBy = restriction.createUsername ?: "MIGRATION",
               createdTime = restriction.createDateTime ?: LocalDateTime.now(),
             ).also {

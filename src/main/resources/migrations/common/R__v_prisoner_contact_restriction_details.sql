@@ -12,7 +12,6 @@ select
     pcr.start_date,
     pcr.expiry_date,
     pcr.comments,
-    pcr.staff_username,
     pcr.created_by,
     pcr.created_time,
     pcr.amended_by,

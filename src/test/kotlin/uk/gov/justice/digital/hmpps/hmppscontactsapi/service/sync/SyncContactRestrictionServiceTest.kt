@@ -174,7 +174,6 @@ class SyncContactRestrictionServiceTest {
       startDate = LocalDate.of(1980, 2, 1),
       expiryDate = LocalDate.of(2025, 2, 1),
       comments = "N/A",
-      staffUsername = "TEST",
       updatedBy = "TEST",
       updatedTime = LocalDateTime.now(),
     )
@@ -186,7 +185,6 @@ class SyncContactRestrictionServiceTest {
       startDate = LocalDate.of(1980, 2, 1),
       expiryDate = LocalDate.of(2025, 2, 1),
       comments = "N/A",
-      staffUsername = "TEST",
       createdBy = "TEST",
     )
 
@@ -213,7 +211,6 @@ class SyncContactRestrictionServiceTest {
       startDate = LocalDate.of(1980, 2, 1),
       expiryDate = LocalDate.of(2025, 2, 1),
       comments = "N/A",
-      staffUsername = "TEST",
       createdBy = "TEST",
     )
 
@@ -228,11 +225,9 @@ class SyncContactRestrictionServiceTest {
       startDate = this.startDate,
       expiryDate = this.expiryDate,
       comments = this.comments,
-      staffUsername = this.staffUsername,
       createdBy = "TEST",
-    ).also {
-      it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
-    }
+      amendedBy = updatedBy,
+      amendedTime = updatedTime,
+    )
   }
 }

@@ -1,5 +1,5 @@
 --
--- Creates a view over the contact_restriction and reference data tables to return a list of estate wide restrictions by
+-- Creates a view over the contact_restriction and reference data tables to return a list of contact global restrictions by
 -- contact_id
 --
 CREATE OR REPLACE VIEW v_contact_restriction_details

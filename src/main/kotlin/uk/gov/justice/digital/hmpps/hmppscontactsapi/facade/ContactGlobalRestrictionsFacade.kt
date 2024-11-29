@@ -9,20 +9,20 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEven
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 
 @Service
-class EstateWideRestrictionsFacade(
+class ContactGlobalRestrictionsFacade(
   private val restrictionsService: RestrictionsService,
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun getEstateWideRestrictionsForContact(contactId: Long): List<ContactRestrictionDetails> {
-    return restrictionsService.getEstateWideRestrictionsForContact(contactId)
+  fun getGlobalRestrictionsForContact(contactId: Long): List<ContactRestrictionDetails> {
+    return restrictionsService.getGlobalRestrictionsForContact(contactId)
   }
 
-  fun createEstateWideRestriction(
+  fun createContactGlobalRestriction(
     contactId: Long,
     request: CreateContactRestrictionRequest,
   ): ContactRestrictionDetails {
-    return restrictionsService.createEstateWideRestriction(contactId, request).also {
+    return restrictionsService.createContactGlobalRestriction(contactId, request).also {
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_RESTRICTION_CREATED,
         identifier = it.contactRestrictionId,
@@ -31,12 +31,12 @@ class EstateWideRestrictionsFacade(
     }
   }
 
-  fun updateEstateWideRestriction(
+  fun updateContactGlobalRestriction(
     contactId: Long,
     contactRestrictionId: Long,
     request: UpdateContactRestrictionRequest,
   ): ContactRestrictionDetails {
-    return restrictionsService.updateEstateWideRestriction(contactId, contactRestrictionId, request).also {
+    return restrictionsService.updateContactGlobalRestriction(contactId, contactRestrictionId, request).also {
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
         identifier = contactRestrictionId,

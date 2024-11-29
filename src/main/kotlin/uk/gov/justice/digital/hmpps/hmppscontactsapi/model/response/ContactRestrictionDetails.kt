@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@Schema(description = "Restriction related to a contact, a.k.a estate-wide restrictions")
+@Schema(description = "Global restriction related to a contact, a.k.a estate-wide restrictions")
 data class ContactRestrictionDetails(
   @Schema(description = "Unique identifier for the contact restriction", example = "1")
   val contactRestrictionId: Long,

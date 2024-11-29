@@ -18,17 +18,17 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class EstateWideRestrictionsFacadeTest {
+class ContactGlobalRestrictionsFacadeTest {
 
   private val restrictionService: RestrictionsService = mock()
   private val outboundEventsService: OutboundEventsService = mock()
-  private val facade = EstateWideRestrictionsFacade(restrictionService, outboundEventsService)
+  private val facade = ContactGlobalRestrictionsFacade(restrictionService, outboundEventsService)
 
   private val contactId: Long = 99
   private val contactRestrictionId: Long = 66
 
   @Test
-  fun `should send created estate wide restriction event on success`() {
+  fun `should send created global restriction event on success`() {
     val request = CreateContactRestrictionRequest(
       restrictionType = "BAN",
       startDate = LocalDate.of(2020, 1, 1),
@@ -50,12 +50,12 @@ class EstateWideRestrictionsFacadeTest {
       updatedBy = null,
       updatedTime = null,
     )
-    whenever(restrictionService.createEstateWideRestriction(contactId, request)).thenReturn(expected)
+    whenever(restrictionService.createContactGlobalRestriction(contactId, request)).thenReturn(expected)
 
-    val result = facade.createEstateWideRestriction(contactId, request)
+    val result = facade.createContactGlobalRestriction(contactId, request)
 
     assertThat(result).isEqualTo(expected)
-    verify(restrictionService).createEstateWideRestriction(contactId, request)
+    verify(restrictionService).createContactGlobalRestriction(contactId, request)
     verify(outboundEventsService).send(
       outboundEvent = OutboundEvent.CONTACT_RESTRICTION_CREATED,
       identifier = contactRestrictionId,
@@ -66,7 +66,7 @@ class EstateWideRestrictionsFacadeTest {
   }
 
   @Test
-  fun `should not send created estate wide restriction event on failure`() {
+  fun `should not send created global restriction event on failure`() {
     val request = CreateContactRestrictionRequest(
       restrictionType = "BAN",
       startDate = LocalDate.of(2020, 1, 1),
@@ -76,19 +76,19 @@ class EstateWideRestrictionsFacadeTest {
     )
 
     val expected = RuntimeException("Bang!")
-    whenever(restrictionService.createEstateWideRestriction(contactId, request)).thenThrow(expected)
+    whenever(restrictionService.createContactGlobalRestriction(contactId, request)).thenThrow(expected)
 
     val result = assertThrows<RuntimeException> {
-      facade.createEstateWideRestriction(contactId, request)
+      facade.createContactGlobalRestriction(contactId, request)
     }
 
     assertThat(result).isEqualTo(expected)
-    verify(restrictionService).createEstateWideRestriction(contactId, request)
+    verify(restrictionService).createContactGlobalRestriction(contactId, request)
     verify(outboundEventsService, Mockito.never()).send(any(), any(), any(), any(), any())
   }
 
   @Test
-  fun `should send updated estate wide restriction event on success`() {
+  fun `should send updated global restriction event on success`() {
     val request = UpdateContactRestrictionRequest(
       restrictionType = "BAN",
       startDate = LocalDate.of(2020, 1, 1),
@@ -110,12 +110,12 @@ class EstateWideRestrictionsFacadeTest {
       updatedBy = "updated",
       updatedTime = LocalDateTime.now(),
     )
-    whenever(restrictionService.updateEstateWideRestriction(contactId, contactRestrictionId, request)).thenReturn(expected)
+    whenever(restrictionService.updateContactGlobalRestriction(contactId, contactRestrictionId, request)).thenReturn(expected)
 
-    val result = facade.updateEstateWideRestriction(contactId, contactRestrictionId, request)
+    val result = facade.updateContactGlobalRestriction(contactId, contactRestrictionId, request)
 
     assertThat(result).isEqualTo(expected)
-    verify(restrictionService).updateEstateWideRestriction(contactId, contactRestrictionId, request)
+    verify(restrictionService).updateContactGlobalRestriction(contactId, contactRestrictionId, request)
     verify(outboundEventsService).send(
       outboundEvent = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
       identifier = contactRestrictionId,
@@ -126,7 +126,7 @@ class EstateWideRestrictionsFacadeTest {
   }
 
   @Test
-  fun `should not send updated estate wide restriction event on failure`() {
+  fun `should not send updated global restriction event on failure`() {
     val request = UpdateContactRestrictionRequest(
       restrictionType = "BAN",
       startDate = LocalDate.of(2020, 1, 1),
@@ -136,14 +136,14 @@ class EstateWideRestrictionsFacadeTest {
     )
 
     val expected = RuntimeException("Bang!")
-    whenever(restrictionService.updateEstateWideRestriction(contactId, contactRestrictionId, request)).thenThrow(expected)
+    whenever(restrictionService.updateContactGlobalRestriction(contactId, contactRestrictionId, request)).thenThrow(expected)
 
     val result = assertThrows<RuntimeException> {
-      facade.updateEstateWideRestriction(contactId, contactRestrictionId, request)
+      facade.updateContactGlobalRestriction(contactId, contactRestrictionId, request)
     }
 
     assertThat(result).isEqualTo(expected)
-    verify(restrictionService).updateEstateWideRestriction(contactId, contactRestrictionId, request)
+    verify(restrictionService).updateContactGlobalRestriction(contactId, contactRestrictionId, request)
     verify(outboundEventsService, Mockito.never()).send(any(), any(), any(), any(), any())
   }
 }

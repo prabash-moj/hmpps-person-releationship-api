@@ -13,7 +13,7 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return unauthorized if no token`() {
     webTestClient.get()
-      .uri("/prisoner-contact/1/restrictions")
+      .uri("/prisoner-contact/1/restriction")
       .exchange()
       .expectStatus()
       .isUnauthorized
@@ -22,7 +22,7 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if no role`() {
     webTestClient.get()
-      .uri("/prisoner-contact/1/restrictions")
+      .uri("/prisoner-contact/1/restriction")
       .headers(setAuthorisation())
       .exchange()
       .expectStatus()
@@ -32,7 +32,7 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if wrong role`() {
     webTestClient.get()
-      .uri("/prisoner-contact/1/restrictions")
+      .uri("/prisoner-contact/1/restriction")
       .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
       .exchange()
       .expectStatus()
@@ -42,7 +42,7 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return not found if the prisoner contact relationship is not found`() {
     webTestClient.get()
-      .uri("/prisoner-contact/-1/restrictions")
+      .uri("/prisoner-contact/-1/restriction")
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
       .exchange()
       .expectStatus()
@@ -50,11 +50,11 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should return all relationship and estate wide restrictions for a contact`() {
+  fun `should return all relationship and global restrictions for a contact`() {
     val restrictions = testAPIClient.getPrisonerContactRestrictions(10)
 
-    assertThat(restrictions.contactEstateWideRestrictions).hasSize(2)
-    with(restrictions.contactEstateWideRestrictions[0]) {
+    assertThat(restrictions.contactGlobalRestrictions).hasSize(2)
+    with(restrictions.contactGlobalRestrictions[0]) {
       assertThat(contactRestrictionId).isNotNull()
       assertThat(contactId).isEqualTo(3)
       assertThat(restrictionType).isEqualTo("CCTV")
@@ -63,7 +63,7 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
       assertThat(expiryDate).isEqualTo(LocalDate.of(2001, 11, 21))
       assertThat(comments).isEqualTo("N/A")
     }
-    with(restrictions.contactEstateWideRestrictions[1]) {
+    with(restrictions.contactGlobalRestrictions[1]) {
       assertThat(contactRestrictionId).isNotNull()
       assertThat(contactId).isEqualTo(3)
       assertThat(restrictionType).isEqualTo("BAN")
@@ -124,6 +124,6 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
     )
     val restrictions = testAPIClient.getPrisonerContactRestrictions(created.createdRelationship!!.prisonerContactId)
     assertThat(restrictions.prisonerContactRestrictions).isEmpty()
-    assertThat(restrictions.contactEstateWideRestrictions).isEmpty()
+    assertThat(restrictions.contactGlobalRestrictions).isEmpty()
   }
 }

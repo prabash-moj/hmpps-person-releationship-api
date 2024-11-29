@@ -35,7 +35,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return unauthorized if no token`() {
     webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/contact/$savedContactId/restriction")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -47,7 +47,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if no role`() {
     webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/contact/$savedContactId/restriction")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -60,7 +60,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if wrong role`() {
     webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/contact/$savedContactId/restriction")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -84,7 +84,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   )
   fun `should return bad request if required fields are null`(expectedMessage: String, json: String) {
     val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/contact/$savedContactId/restriction")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -103,7 +103,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @MethodSource("allFieldConstraintViolations")
   fun `should enforce field constraints`(expectedMessage: String, request: CreateContactRestrictionRequest) {
     val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/contact/$savedContactId/restriction")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -123,7 +123,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     val request = aMinimalRequest()
 
     val errors = webTestClient.post()
-      .uri("/contact/-321/estate-wide-restrictions")
+      .uri("/contact/-321/restriction")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -143,7 +143,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     val request = aMinimalRequest().copy(restrictionType = "FOO")
 
     val errors = webTestClient.post()
-      .uri("/contact/$savedContactId/estate-wide-restrictions")
+      .uri("/contact/$savedContactId/restriction")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -162,7 +162,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   fun `should create the restriction with minimal fields`() {
     val request = aMinimalRequest()
 
-    val created = testAPIClient.createContactEstateWideRestriction(savedContactId, request)
+    val created = testAPIClient.createContactGlobalRestriction(savedContactId, request)
 
     with(created) {
       assertThat(contactRestrictionId).isGreaterThan(0)
@@ -192,7 +192,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
     )
 
-    val created = testAPIClient.createContactEstateWideRestriction(savedContactId, request)
+    val created = testAPIClient.createContactGlobalRestriction(savedContactId, request)
 
     with(created) {
       assertThat(contactRestrictionId).isGreaterThan(0)

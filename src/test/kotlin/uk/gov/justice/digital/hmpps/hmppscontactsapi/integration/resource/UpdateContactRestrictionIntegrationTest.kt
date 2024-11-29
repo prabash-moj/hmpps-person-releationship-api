@@ -32,7 +32,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         createdBy = "created",
       ),
     ).id
-    savedContactRestrictionId = testAPIClient.createContactEstateWideRestriction(
+    savedContactRestrictionId = testAPIClient.createContactGlobalRestriction(
       savedContactId,
       CreateContactRestrictionRequest(
         restrictionType = "BAN",
@@ -47,7 +47,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return unauthorized if no token`() {
     webTestClient.put()
-      .uri("/contact/$savedContactId/estate-wide-restrictions/$savedContactRestrictionId")
+      .uri("/contact/$savedContactId/restriction/$savedContactRestrictionId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -59,7 +59,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if no role`() {
     webTestClient.put()
-      .uri("/contact/$savedContactId/estate-wide-restrictions/$savedContactRestrictionId")
+      .uri("/contact/$savedContactId/restriction/$savedContactRestrictionId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -72,7 +72,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return forbidden if wrong role`() {
     webTestClient.put()
-      .uri("/contact/$savedContactId/estate-wide-restrictions/$savedContactRestrictionId")
+      .uri("/contact/$savedContactId/restriction/$savedContactRestrictionId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
@@ -96,7 +96,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   )
   fun `should return bad request if required fields are null`(expectedMessage: String, json: String) {
     val errors = webTestClient.put()
-      .uri("/contact/$savedContactId/estate-wide-restrictions/$savedContactRestrictionId")
+      .uri("/contact/$savedContactId/restriction/$savedContactRestrictionId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -115,7 +115,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   @MethodSource("allFieldConstraintViolations")
   fun `should enforce field constraints`(expectedMessage: String, request: UpdateContactRestrictionRequest) {
     val errors = webTestClient.put()
-      .uri("/contact/$savedContactId/estate-wide-restrictions/$savedContactRestrictionId")
+      .uri("/contact/$savedContactId/restriction/$savedContactRestrictionId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -135,7 +135,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     val request = aMinimalRequest()
 
     val errors = webTestClient.put()
-      .uri("/contact/-321/estate-wide-restrictions/$savedContactRestrictionId")
+      .uri("/contact/-321/restriction/$savedContactRestrictionId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -155,7 +155,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     val request = aMinimalRequest()
 
     val errors = webTestClient.put()
-      .uri("/contact/$savedContactId/estate-wide-restrictions/-321")
+      .uri("/contact/$savedContactId/restriction/-321")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -175,7 +175,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     val request = aMinimalRequest().copy(restrictionType = "FOO")
 
     val errors = webTestClient.put()
-      .uri("/contact/$savedContactId/estate-wide-restrictions/$savedContactRestrictionId")
+      .uri("/contact/$savedContactId/restriction/$savedContactRestrictionId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -200,7 +200,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateContactEstateWideRestriction(savedContactId, savedContactRestrictionId, request)
+    val updated = testAPIClient.updateContactGlobalRestriction(savedContactId, savedContactRestrictionId, request)
 
     with(updated) {
       assertThat(contactRestrictionId).isEqualTo(savedContactRestrictionId)
@@ -232,7 +232,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateContactEstateWideRestriction(savedContactId, savedContactRestrictionId, request)
+    val updated = testAPIClient.updateContactGlobalRestriction(savedContactId, savedContactRestrictionId, request)
 
     with(updated) {
       assertThat(contactRestrictionId).isEqualTo(savedContactRestrictionId)

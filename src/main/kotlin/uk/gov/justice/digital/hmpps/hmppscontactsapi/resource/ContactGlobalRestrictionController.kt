@@ -20,26 +20,26 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.EstateWideRestrictionsFacade
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactGlobalRestrictionsFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Estate Wide Restrictions", description = "Estate wide restrictions for a contact")
+@Tag(name = "Contact Global Restrictions", description = "Global restrictions for a contact, a.k.a. estate-wide restrictions or contact restrictions")
 @RestController
-@RequestMapping(value = ["contact/{contactId}/estate-wide-restrictions"], produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping(value = ["contact/{contactId}/restriction"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
-class EstateWideRestrictionController(
-  val restrictionsFacade: EstateWideRestrictionsFacade,
+class ContactGlobalRestrictionController(
+  val restrictionsFacade: ContactGlobalRestrictionsFacade,
 ) {
 
   @GetMapping
   @Operation(
-    summary = "Get a contacts estate-wide restrictions",
+    summary = "Get a contacts global restrictions",
     description = """
-      Get a contacts estate-wide restrictions only. Estate-wide restrictions apply to all of a contacts relationships.
+      Get a contacts global restrictions only. Global restrictions apply to all of a contacts relationships and are known as estate-wide restrictions in NOMIS.
 
       Additional restrictions between the contact and specific prisoners may also apply.
       """,
@@ -64,26 +64,26 @@ class EstateWideRestrictionController(
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun getEstateWideContactRestrictions(
+  fun getContactGlobalRestrictions(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
       description = "The id of the contact",
       example = "123456",
     ) contactId: Long,
   ): List<ContactRestrictionDetails> {
-    return restrictionsFacade.getEstateWideRestrictionsForContact(contactId)
+    return restrictionsFacade.getGlobalRestrictionsForContact(contactId)
   }
 
   @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
-    summary = "Create new estate-wide restriction",
-    description = "Creates a new estate-wide restriction for the specified contact",
+    summary = "Create new global restriction",
+    description = "Creates a new global (estate-wide) restriction for the specified contact",
   )
   @ApiResponses(
     value = [
       ApiResponse(
         responseCode = "201",
-        description = "Created the estate-wide restriction successfully",
+        description = "Created the global restriction successfully",
         content = [
           Content(
             mediaType = "application/json",
@@ -98,13 +98,13 @@ class EstateWideRestrictionController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Could not find the the contact this estate-wide restriction is for",
+        description = "Could not find the the contact this global restriction is for",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun createEstateWideRestriction(
+  fun createContactGlobalRestriction(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
       description = "The id of the contact",
@@ -112,7 +112,7 @@ class EstateWideRestrictionController(
     ) contactId: Long,
     @Valid @RequestBody request: CreateContactRestrictionRequest,
   ): ResponseEntity<Any> {
-    val created = restrictionsFacade.createEstateWideRestriction(contactId, request)
+    val created = restrictionsFacade.createContactGlobalRestriction(contactId, request)
     return ResponseEntity
       .status(HttpStatus.CREATED)
       .body(created)
@@ -120,14 +120,14 @@ class EstateWideRestrictionController(
 
   @PutMapping("/{contactRestrictionId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
-    summary = "Update estate-wide restriction",
-    description = "Updates an estate-wide restriction for the specified contact and restriction id",
+    summary = "Update global restriction for a contact",
+    description = "Updates a global (estate-wide) restriction for the specified contact and restriction id",
   )
   @ApiResponses(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "Updated the estate-wide restriction successfully",
+        description = "Updated the global restriction successfully",
         content = [
           Content(
             mediaType = "application/json",
@@ -142,13 +142,13 @@ class EstateWideRestrictionController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Could not find the the contact or estate-wide restriction",
+        description = "Could not find the the contact or global restriction",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun updateEstateWideRestriction(
+  fun updateContactGlobalRestriction(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
       description = "The id of the contact",
@@ -156,11 +156,11 @@ class EstateWideRestrictionController(
     ) contactId: Long,
     @PathVariable("contactRestrictionId") @Parameter(
       name = "contactRestrictionId",
-      description = "The id of the estate-wide restriction",
+      description = "The id of the global restriction",
       example = "123456",
     ) contactRestrictionId: Long,
     @Valid @RequestBody request: UpdateContactRestrictionRequest,
   ): ContactRestrictionDetails {
-    return restrictionsFacade.updateEstateWideRestriction(contactId, contactRestrictionId, request)
+    return restrictionsFacade.updateContactGlobalRestriction(contactId, contactRestrictionId, request)
   }
 }

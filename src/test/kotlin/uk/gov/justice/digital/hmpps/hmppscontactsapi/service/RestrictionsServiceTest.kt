@@ -88,9 +88,9 @@ class RestrictionsServiceTest {
   )
 
   @Nested
-  inner class GetEstateWide {
+  inner class GetGlobalRestrictions {
     @Test
-    fun `get estate wide restrictions successfully`() {
+    fun `get global restrictions successfully`() {
       val now = now()
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionDetailsRepository.findAllByContactId(contactId)).thenReturn(
@@ -100,7 +100,7 @@ class RestrictionsServiceTest {
         ),
       )
 
-      val restrictions = service.getEstateWideRestrictionsForContact(contactId)
+      val restrictions = service.getGlobalRestrictionsForContact(contactId)
 
       assertThat(restrictions).hasSize(2)
       assertThat(restrictions).isEqualTo(
@@ -112,11 +112,11 @@ class RestrictionsServiceTest {
     }
 
     @Test
-    fun `should blow up if contact is not found getting estate wide restrictions`() {
+    fun `should blow up if contact is not found getting global restrictions`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
 
       val exception = assertThrows<EntityNotFoundException> {
-        service.getEstateWideRestrictionsForContact(contactId)
+        service.getGlobalRestrictionsForContact(contactId)
       }
       assertThat(exception.message).isEqualTo("Contact (99) could not be found")
     }
@@ -170,7 +170,7 @@ class RestrictionsServiceTest {
               createdTime = now,
             ),
           ),
-          contactEstateWideRestrictions = listOf(
+          contactGlobalRestrictions = listOf(
             createContactRestrictionDetails(id = 123, createdTime = now),
             createContactRestrictionDetails(id = 321, createdTime = now),
           ),
@@ -190,30 +190,30 @@ class RestrictionsServiceTest {
   }
 
   @Nested
-  inner class CreateEstateWide {
+  inner class CreateGlobal {
     @Test
-    fun `blow up creating estate wide restriction if contact is missing`() {
+    fun `blow up creating global restriction if contact is missing`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
 
       val exception = assertThrows<EntityNotFoundException> {
-        service.createEstateWideRestriction(contactId, aCreateEstateWideRestrictionRequest())
+        service.createContactGlobalRestriction(contactId, aCreateGlobalRestrictionRequest())
       }
       assertThat(exception.message).isEqualTo("Contact (99) could not be found")
     }
 
     @Test
-    fun `blow up creating estate wide restriction if type is not supported`() {
+    fun `blow up creating global restriction if type is not supported`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
-        service.createEstateWideRestriction(contactId, aCreateEstateWideRestrictionRequest())
+        service.createContactGlobalRestriction(contactId, aCreateGlobalRestrictionRequest())
       }
       assertThat(exception.message).isEqualTo("Unsupported restriction type (BAN)")
     }
 
     @Test
-    fun `blow up creating estate wide restriction if type is no longer active`() {
+    fun `blow up creating global restriction if type is no longer active`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
         ReferenceCode(
@@ -227,13 +227,13 @@ class RestrictionsServiceTest {
       )
 
       val exception = assertThrows<ValidationException> {
-        service.createEstateWideRestriction(contactId, aCreateEstateWideRestrictionRequest())
+        service.createContactGlobalRestriction(contactId, aCreateGlobalRestrictionRequest())
       }
       assertThat(exception.message).isEqualTo("Restriction type (BAN) is no longer supported for creating or updating restrictions")
     }
 
     @Test
-    fun `create estate wide restriction`() {
+    fun `create global restriction`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
         ReferenceCode(
@@ -251,7 +251,7 @@ class RestrictionsServiceTest {
         )
       }
 
-      val created = service.createEstateWideRestriction(contactId, aCreateEstateWideRestrictionRequest())
+      val created = service.createContactGlobalRestriction(contactId, aCreateGlobalRestrictionRequest())
       assertThat(created).isEqualTo(
         ContactRestrictionDetails(
           contactRestrictionId = 9999,
@@ -270,7 +270,7 @@ class RestrictionsServiceTest {
       verify(contactRestrictionRepository).saveAndFlush(any())
     }
 
-    private fun aCreateEstateWideRestrictionRequest(): CreateContactRestrictionRequest =
+    private fun aCreateGlobalRestrictionRequest(): CreateContactRestrictionRequest =
       CreateContactRestrictionRequest(
         restrictionType = "BAN",
         startDate = LocalDate.of(2020, 1, 1),
@@ -281,7 +281,7 @@ class RestrictionsServiceTest {
   }
 
   @Nested
-  inner class UpdateEstateWide {
+  inner class UpdateGlobalRestriction {
     private val contactRestrictionId = 654L
     private val existingEntity = ContactRestrictionEntity(
       contactRestrictionId = contactRestrictionId,
@@ -297,40 +297,40 @@ class RestrictionsServiceTest {
     )
 
     @Test
-    fun `blow up updating estate wide restriction if contact is missing`() {
+    fun `blow up updating global restriction if contact is missing`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
 
       val exception = assertThrows<EntityNotFoundException> {
-        service.updateEstateWideRestriction(contactId, contactRestrictionId, anUpdateEstateWideRestrictionRequest())
+        service.updateContactGlobalRestriction(contactId, contactRestrictionId, anUpdateGlobalRestrictionRequest())
       }
       assertThat(exception.message).isEqualTo("Contact (99) could not be found")
     }
 
     @Test
-    fun `blow up updating estate wide restriction if contact restriction is missing`() {
+    fun `blow up updating global restriction if contact restriction is missing`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.empty())
 
       val exception = assertThrows<EntityNotFoundException> {
-        service.updateEstateWideRestriction(contactId, contactRestrictionId, anUpdateEstateWideRestrictionRequest())
+        service.updateContactGlobalRestriction(contactId, contactRestrictionId, anUpdateGlobalRestrictionRequest())
       }
       assertThat(exception.message).isEqualTo("Contact restriction (654) could not be found")
     }
 
     @Test
-    fun `blow up updating estate wide restriction if type is not supported`() {
+    fun `blow up updating global restriction if type is not supported`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
-        service.updateEstateWideRestriction(contactId, contactRestrictionId, anUpdateEstateWideRestrictionRequest())
+        service.updateContactGlobalRestriction(contactId, contactRestrictionId, anUpdateGlobalRestrictionRequest())
       }
       assertThat(exception.message).isEqualTo("Unsupported restriction type (CCTV)")
     }
 
     @Test
-    fun `blow up updating estate wide restriction if type is no longer active`() {
+    fun `blow up updating global restriction if type is no longer active`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
@@ -345,13 +345,13 @@ class RestrictionsServiceTest {
       )
 
       val exception = assertThrows<ValidationException> {
-        service.updateEstateWideRestriction(contactId, contactRestrictionId, anUpdateEstateWideRestrictionRequest())
+        service.updateContactGlobalRestriction(contactId, contactRestrictionId, anUpdateGlobalRestrictionRequest())
       }
       assertThat(exception.message).isEqualTo("Restriction type (CCTV) is no longer supported for creating or updating restrictions")
     }
 
     @Test
-    fun `updated estate wide restriction`() {
+    fun `updated global restriction`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
@@ -370,7 +370,7 @@ class RestrictionsServiceTest {
         )
       }
 
-      val updated = service.updateEstateWideRestriction(contactId, contactRestrictionId, anUpdateEstateWideRestrictionRequest())
+      val updated = service.updateContactGlobalRestriction(contactId, contactRestrictionId, anUpdateGlobalRestrictionRequest())
       assertThat(updated).isEqualTo(
         ContactRestrictionDetails(
           contactRestrictionId = 9999,
@@ -389,7 +389,7 @@ class RestrictionsServiceTest {
       verify(contactRestrictionRepository).saveAndFlush(any())
     }
 
-    private fun anUpdateEstateWideRestrictionRequest(): UpdateContactRestrictionRequest =
+    private fun anUpdateGlobalRestrictionRequest(): UpdateContactRestrictionRequest =
       UpdateContactRestrictionRequest(
         restrictionType = "CCTV",
         startDate = LocalDate.of(1990, 1, 1),

@@ -1,5 +1,5 @@
 --
--- Creates a view over the prisoner_contact_restriction and reference data tables to return a list of estate wide restrictions by
+-- Creates a view over the prisoner_contact_restriction and reference data tables to return a list of prisoner-contact restrictions by
 -- contact_id
 --
 CREATE OR REPLACE VIEW v_prisoner_contact_restriction_details

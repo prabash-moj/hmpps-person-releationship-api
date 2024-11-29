@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Size
 import java.time.LocalDate
 
-@Schema(description = "Request to create a new restriction on a contact, a.k.a an estate-wide restriction")
+@Schema(description = "Request to create a new global restriction on a contact, a.k.a an estate-wide restriction")
 data class CreateContactRestrictionRequest(
   @Schema(
     description =

@@ -33,7 +33,7 @@ class RestrictionsService(
   private val referenceCodeService: ReferenceCodeService,
 ) {
 
-  fun getEstateWideRestrictionsForContact(contactId: Long): List<ContactRestrictionDetails> {
+  fun getGlobalRestrictionsForContact(contactId: Long): List<ContactRestrictionDetails> {
     validateContactExists(contactId)
     return contactRestrictionDetailsRepository.findAllByContactId(contactId).map { entity ->
       ContactRestrictionDetails(
@@ -75,11 +75,11 @@ class RestrictionsService(
           updatedTime = entity.amendedTime,
         )
       },
-      contactEstateWideRestrictions = getEstateWideRestrictionsForContact(prisonerContact.contactId),
+      contactGlobalRestrictions = getGlobalRestrictionsForContact(prisonerContact.contactId),
     )
   }
 
-  fun createEstateWideRestriction(
+  fun createContactGlobalRestriction(
     contactId: Long,
     request: CreateContactRestrictionRequest,
   ): ContactRestrictionDetails {
@@ -99,7 +99,7 @@ class RestrictionsService(
     return contactRestrictionDetails(created, type)
   }
 
-  fun updateEstateWideRestriction(
+  fun updateContactGlobalRestriction(
     contactId: Long,
     contactRestrictionId: Long,
     request: UpdateContactRestrictionRequest,

@@ -158,7 +158,7 @@ class PrisonerContactController(
     description = """
       Get the restrictions that apply for this relationship.
       
-      This includes prisoner-contact restrictions for this specific relationship only and any estate-wide restrictions for the contact.
+      This includes prisoner-contact restrictions for this specific relationship only and any global (estate-wide) restrictions for the contact.
       
       If the prisoner and contact have multiple relationships, the prisoner-contact restrictions for the other relationships will not be returned. 
     """,
@@ -187,7 +187,7 @@ class PrisonerContactController(
       ),
     ],
   )
-  @GetMapping(value = ["/{prisonerContactId}/restrictions"], produces = [MediaType.APPLICATION_JSON_VALUE])
+  @GetMapping(value = ["/{prisonerContactId}/restriction"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
   fun getPrisonerContactRestrictionsByPrisonerContactId(
     @PathVariable("prisonerContactId") @Parameter(
@@ -197,7 +197,7 @@ class PrisonerContactController(
     ) prisonerContactId: Long,
   ): PrisonerContactRestrictionsResponse = prisonerContactRestrictionsFacade.getPrisonerContactRestrictions(prisonerContactId)
 
-  @PostMapping("/{prisonerContactId}/restrictions", consumes = [MediaType.APPLICATION_JSON_VALUE])
+  @PostMapping("/{prisonerContactId}/restriction", consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
     summary = "Create new prisoner contact restriction",
     description = "Creates a new prisoner contact restriction for the specified prisoner contact relationship",
@@ -241,7 +241,7 @@ class PrisonerContactController(
       .body(created)
   }
 
-  @PutMapping("/{prisonerContactId}/restrictions/{prisonerContactRestrictionId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
+  @PutMapping("/{prisonerContactId}/restriction/{prisonerContactRestrictionId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
     summary = "Update prisoner contact restriction",
     description = "Updates a prisoner contact restriction for the specified prisoner contact relationship and restriction ids",

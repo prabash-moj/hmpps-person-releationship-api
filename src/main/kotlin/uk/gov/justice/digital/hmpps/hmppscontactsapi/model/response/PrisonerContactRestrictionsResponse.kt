@@ -6,6 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class PrisonerContactRestrictionsResponse(
   @Schema(description = "Relationship specific restrictions")
   val prisonerContactRestrictions: List<PrisonerContactRestrictionDetails>,
-  @Schema(description = "Estate wide restrictions for the contact")
-  val contactEstateWideRestrictions: List<ContactRestrictionDetails>,
+  @Schema(description = "Global (estate-wide) restrictions for the contact")
+  val contactGlobalRestrictions: List<ContactRestrictionDetails>,
 )

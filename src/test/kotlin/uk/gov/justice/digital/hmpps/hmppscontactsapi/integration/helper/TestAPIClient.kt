@@ -338,8 +338,8 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
 
-  fun getContactEstateWideRestrictions(contactId: Long): List<ContactRestrictionDetails> = webTestClient.get()
-    .uri("/contact/$contactId/estate-wide-restrictions")
+  fun getContactGlobalRestrictions(contactId: Long): List<ContactRestrictionDetails> = webTestClient.get()
+    .uri("/contact/$contactId/restriction")
     .accept(MediaType.APPLICATION_JSON)
     .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
     .exchange()
@@ -348,11 +348,11 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBodyList(ContactRestrictionDetails::class.java)
     .returnResult().responseBody!!
 
-  fun createContactEstateWideRestriction(
+  fun createContactGlobalRestriction(
     contactId: Long,
     request: CreateContactRestrictionRequest,
   ): ContactRestrictionDetails = webTestClient.post()
-    .uri("/contact/$contactId/estate-wide-restrictions")
+    .uri("/contact/$contactId/restriction")
     .accept(MediaType.APPLICATION_JSON)
     .contentType(MediaType.APPLICATION_JSON)
     .headers(authorised())
@@ -364,12 +364,12 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBody(ContactRestrictionDetails::class.java)
     .returnResult().responseBody!!
 
-  fun updateContactEstateWideRestriction(
+  fun updateContactGlobalRestriction(
     contactId: Long,
     contactRestrictionId: Long,
     request: UpdateContactRestrictionRequest,
   ): ContactRestrictionDetails = webTestClient.put()
-    .uri("/contact/$contactId/estate-wide-restrictions/$contactRestrictionId")
+    .uri("/contact/$contactId/restriction/$contactRestrictionId")
     .accept(MediaType.APPLICATION_JSON)
     .contentType(MediaType.APPLICATION_JSON)
     .headers(authorised())
@@ -382,7 +382,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .returnResult().responseBody!!
 
   fun getPrisonerContactRestrictions(prisonerContactId: Long): PrisonerContactRestrictionsResponse = webTestClient.get()
-    .uri("/prisoner-contact/$prisonerContactId/restrictions")
+    .uri("/prisoner-contact/$prisonerContactId/restriction")
     .accept(MediaType.APPLICATION_JSON)
     .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
     .exchange()
@@ -395,7 +395,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     prisonerContactId: Long,
     request: CreatePrisonerContactRestrictionRequest,
   ): PrisonerContactRestrictionDetails = webTestClient.post()
-    .uri("/prisoner-contact/$prisonerContactId/restrictions")
+    .uri("/prisoner-contact/$prisonerContactId/restriction")
     .accept(MediaType.APPLICATION_JSON)
     .contentType(MediaType.APPLICATION_JSON)
     .headers(authorised())
@@ -412,7 +412,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     prisonerRestrictionContactId: Long,
     request: UpdatePrisonerContactRestrictionRequest,
   ): PrisonerContactRestrictionDetails = webTestClient.put()
-    .uri("/prisoner-contact/$prisonerContactId/restrictions/$prisonerRestrictionContactId")
+    .uri("/prisoner-contact/$prisonerContactId/restriction/$prisonerRestrictionContactId")
     .accept(MediaType.APPLICATION_JSON)
     .contentType(MediaType.APPLICATION_JSON)
     .headers(authorised())

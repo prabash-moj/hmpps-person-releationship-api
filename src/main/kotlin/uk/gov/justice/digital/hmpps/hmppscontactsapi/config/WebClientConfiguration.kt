@@ -14,6 +14,7 @@ class WebClientConfiguration(
   @Value("\${api.base.url.hmpps-auth}") val hmppsAuthBaseUri: String,
   @Value("\${api.health-timeout:2s}") val healthTimeout: Duration,
   @Value("\${api.base.url.prisoner-search}") val prisonerSearchBaseUri: String,
+  @Value("\${api.base.url.manage-users}") val manageUsersBaseUri: String,
   @Value("\${api.timeout:30s}") val timeout: Duration,
   private val builder: WebClient.Builder,
 ) {
@@ -26,4 +27,8 @@ class WebClientConfiguration(
   @Bean
   fun prisonerSearchApiWebClient(authorizedClientManager: OAuth2AuthorizedClientManager) =
     builder.authorisedWebClient(authorizedClientManager, "prisoner-search-api", prisonerSearchBaseUri, timeout)
+
+  @Bean
+  fun manageUsersApiWebClient(authorizedClientManager: OAuth2AuthorizedClientManager) =
+    builder.authorisedWebClient(authorizedClientManager, "manage-users-api", manageUsersBaseUri, timeout)
 }

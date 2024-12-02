@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
@@ -77,6 +79,7 @@ class RestrictionsServiceTest {
   private val prisonerContactRestrictionDetailsRepository: PrisonerContactRestrictionDetailsRepository = mock()
   private val prisonerContactRestrictionRepository: PrisonerContactRestrictionRepository = mock()
   private val referenceCodeService: ReferenceCodeService = mock()
+  private val manageUsersService: ManageUsersService = mock()
   private val service = RestrictionsService(
     contactRestrictionDetailsRepository,
     contactRestrictionRepository,
@@ -85,6 +88,7 @@ class RestrictionsServiceTest {
     prisonerContactRestrictionDetailsRepository,
     prisonerContactRestrictionRepository,
     referenceCodeService,
+    manageUsersService,
   )
 
   @Nested
@@ -93,10 +97,12 @@ class RestrictionsServiceTest {
     fun `get global restrictions successfully`() {
       val now = now()
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(manageUsersService.getUserByUsername("created")).thenReturn(User("created", "Created User"))
+      whenever(manageUsersService.getUserByUsername("updated")).thenReturn(User("updated", "Updated User"))
       whenever(contactRestrictionDetailsRepository.findAllByContactId(contactId)).thenReturn(
         listOf(
-          createContactRestrictionDetailsEntity(123, createdTime = now),
-          createContactRestrictionDetailsEntity(321, createdTime = now),
+          createContactRestrictionDetailsEntity(123, createdTime = now, createdBy = "created", updatedBy = null),
+          createContactRestrictionDetailsEntity(321, createdTime = now, createdBy = "created", updatedBy = "updated"),
         ),
       )
 
@@ -105,10 +111,58 @@ class RestrictionsServiceTest {
       assertThat(restrictions).hasSize(2)
       assertThat(restrictions).isEqualTo(
         listOf(
-          createContactRestrictionDetails(123, createdTime = now),
-          createContactRestrictionDetails(321, createdTime = now),
+          createContactRestrictionDetails(123, createdTime = now, createdBy = "created", updatedBy = null, enteredByUsername = "created", enteredByDisplayName = "Created User"),
+          createContactRestrictionDetails(321, createdTime = now, createdBy = "created", updatedBy = "updated", enteredByUsername = "updated", enteredByDisplayName = "Updated User"),
         ),
       )
+    }
+
+    @Test
+    fun `get default to username if entered by display name not found`() {
+      val now = now()
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(manageUsersService.getUserByUsername("created")).thenReturn(null)
+      whenever(manageUsersService.getUserByUsername("updated")).thenReturn(null)
+      whenever(contactRestrictionDetailsRepository.findAllByContactId(contactId)).thenReturn(
+        listOf(
+          createContactRestrictionDetailsEntity(123, createdTime = now, createdBy = "created", updatedBy = null),
+          createContactRestrictionDetailsEntity(321, createdTime = now, createdBy = "created", updatedBy = "updated"),
+        ),
+      )
+
+      val restrictions = service.getGlobalRestrictionsForContact(contactId)
+
+      assertThat(restrictions).hasSize(2)
+      assertThat(restrictions).isEqualTo(
+        listOf(
+          createContactRestrictionDetails(123, createdTime = now, createdBy = "created", updatedBy = null, enteredByUsername = "created", enteredByDisplayName = "created"),
+          createContactRestrictionDetails(321, createdTime = now, createdBy = "created", updatedBy = "updated", enteredByUsername = "updated", enteredByDisplayName = "updated"),
+        ),
+      )
+    }
+
+    @Test
+    fun `only lookup once if same username is required multiple times`() {
+      val now = now()
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(manageUsersService.getUserByUsername("created")).thenReturn(User("created", "Created User"))
+      whenever(contactRestrictionDetailsRepository.findAllByContactId(contactId)).thenReturn(
+        listOf(
+          createContactRestrictionDetailsEntity(123, createdTime = now, createdBy = "created", updatedBy = null),
+          createContactRestrictionDetailsEntity(321, createdTime = now, createdBy = "created", updatedBy = null),
+        ),
+      )
+
+      val restrictions = service.getGlobalRestrictionsForContact(contactId)
+
+      assertThat(restrictions).hasSize(2)
+      assertThat(restrictions).isEqualTo(
+        listOf(
+          createContactRestrictionDetails(123, createdTime = now, createdBy = "created", updatedBy = null, enteredByUsername = "created", enteredByDisplayName = "Created User"),
+          createContactRestrictionDetails(321, createdTime = now, createdBy = "created", updatedBy = null, enteredByUsername = "created", enteredByDisplayName = "Created User"),
+        ),
+      )
+      verify(manageUsersService, times(1)).getUserByUsername("created")
     }
 
     @Test
@@ -129,10 +183,12 @@ class RestrictionsServiceTest {
       val now = now()
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(manageUsersService.getUserByUsername("created_global")).thenReturn(User("created_global", "Created User Global"))
+      whenever(manageUsersService.getUserByUsername("updated_global")).thenReturn(User("updated_global", "Updated User Global"))
       whenever(contactRestrictionDetailsRepository.findAllByContactId(contactId)).thenReturn(
         listOf(
-          createContactRestrictionDetailsEntity(123, createdTime = now),
-          createContactRestrictionDetailsEntity(321, createdTime = now),
+          createContactRestrictionDetailsEntity(123, createdTime = now, createdBy = "created_global", updatedBy = null),
+          createContactRestrictionDetailsEntity(321, createdTime = now, createdBy = "created_global", updatedBy = "updated_global"),
         ),
       )
       whenever(prisonerContactRestrictionDetailsRepository.findAllByPrisonerContactId(prisonerContactId)).thenReturn(
@@ -171,8 +227,8 @@ class RestrictionsServiceTest {
             ),
           ),
           contactGlobalRestrictions = listOf(
-            createContactRestrictionDetails(id = 123, createdTime = now),
-            createContactRestrictionDetails(id = 321, createdTime = now),
+            createContactRestrictionDetails(id = 123, createdTime = now, createdBy = "created_global", updatedBy = null, enteredByUsername = "created_global", enteredByDisplayName = "Created User Global"),
+            createContactRestrictionDetails(id = 321, createdTime = now, createdBy = "created_global", updatedBy = "updated_global", enteredByUsername = "updated_global", enteredByDisplayName = "Updated User Global"),
           ),
         ),
       )
@@ -235,6 +291,7 @@ class RestrictionsServiceTest {
     @Test
     fun `create global restriction`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(manageUsersService.getUserByUsername("created")).thenReturn(User("created", "Created User"))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
@@ -261,6 +318,8 @@ class RestrictionsServiceTest {
           startDate = LocalDate.of(2020, 1, 1),
           expiryDate = LocalDate.of(2022, 2, 2),
           comments = "Some comments",
+          enteredByUsername = "created",
+          enteredByDisplayName = "Created User",
           createdBy = "created",
           createdTime = created.createdTime,
           updatedBy = null,
@@ -354,6 +413,7 @@ class RestrictionsServiceTest {
     fun `updated global restriction`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
+      whenever(manageUsersService.getUserByUsername("updated")).thenReturn(User("updated", "Updated User"))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
@@ -380,6 +440,8 @@ class RestrictionsServiceTest {
           startDate = LocalDate.of(1990, 1, 1),
           expiryDate = LocalDate.of(1992, 2, 2),
           comments = "Updated comments",
+          enteredByUsername = "updated",
+          enteredByDisplayName = "Updated User",
           createdBy = "created",
           createdTime = updated.createdTime,
           updatedBy = "updated",

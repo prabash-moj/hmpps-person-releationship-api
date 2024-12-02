@@ -17,9 +17,3 @@ class PrisonerSearchClient(private val prisonerSearchApiWebClient: WebClient) {
       .onErrorResume(WebClientResponseException.NotFound::class.java) { Mono.empty() }
       .block()
 }
-
-// TODO add additional fields as and when needed e.g. ACTIVE/NOT ACTIVE in prison
-data class Prisoner(
-  val prisonerNumber: String,
-  val prisonId: String?,
-)

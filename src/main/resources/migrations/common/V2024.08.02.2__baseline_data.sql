@@ -32,10 +32,10 @@ values (1, 1, 'DL', 'LAST-87736799M', 'DVLA', 'TIM'),
        (4, 4, 'NHS', 'NHS999', 'National Health Service', 'JAMES');
 
 insert into contact_restriction(contact_id, restriction_type, start_date, expiry_date, comments, created_by)
-values (1, 'ACC', '2000-11-21','2000-11-21','N/A', 'TIM'),
-       (2, 'BAN', '2000-11-21','2005-11-21','N/A',  'TIM'),
-       (3, 'CCTV', '2000-11-21','2001-11-21','N/A','TIM'),
-       (3, 'BAN', null, null, null, 'TIM');
+values (1, 'ACC', '2000-11-21','2000-11-21','N/A', 'JBAKER_GEN'),
+       (2, 'BAN', '2000-11-21','2005-11-21','N/A',  'JBAKER_GEN'),
+       (3, 'CCTV', '2000-11-21','2001-11-21','N/A','JBAKER_GEN'),
+       (3, 'BAN', null, null, null, 'FOO_USER');
 
 insert into contact_address(contact_address_id, contact_id, address_type, primary_address, flat, property, street, area, city_code, county_code, post_code, country_code, comments, created_by, verified, verified_by, verified_time, mail_flag, start_date, end_date, no_fixed_address)
 values (1,  1,  'HOME', true,  null, '24','Acacia Avenue', 'Bunting', '25343', 'S.YORKSHIRE', 'S2 3LK', 'ENG', 'Some comments', 'TIM', false, null, null, false, null, null, false),

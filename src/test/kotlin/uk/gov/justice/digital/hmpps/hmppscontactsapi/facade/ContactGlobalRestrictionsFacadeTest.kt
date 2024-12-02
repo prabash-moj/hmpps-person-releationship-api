@@ -47,6 +47,8 @@ class ContactGlobalRestrictionsFacadeTest {
       comments = "Some comments",
       createdBy = "created",
       createdTime = LocalDateTime.now(),
+      enteredByUsername = "created",
+      enteredByDisplayName = "John Created",
       updatedBy = null,
       updatedTime = null,
     )
@@ -105,6 +107,8 @@ class ContactGlobalRestrictionsFacadeTest {
       startDate = LocalDate.of(2020, 1, 1),
       expiryDate = LocalDate.of(2022, 2, 2),
       comments = "Some comments",
+      enteredByUsername = "updated",
+      enteredByDisplayName = "John Updated",
       createdBy = "created",
       createdTime = LocalDateTime.now(),
       updatedBy = "updated",

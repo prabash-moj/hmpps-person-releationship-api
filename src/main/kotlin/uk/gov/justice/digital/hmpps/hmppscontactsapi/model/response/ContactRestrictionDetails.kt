@@ -35,6 +35,12 @@ data class ContactRestrictionDetails(
   @Schema(description = "Comments for the restriction ", example = "N/A")
   val comments: String? = null,
 
+  @Schema(description = "The username of the either the person who created the restriction or the last person to update it if it has been modified.", example = "admin")
+  val enteredByUsername: String,
+
+  @Schema(description = "The display name of the either the person who created the restriction or the last person to update it if it has been modified.", example = "John Smith")
+  val enteredByDisplayName: String,
+
   @Schema(description = "User who created the entry", example = "admin")
   val createdBy: String,
 

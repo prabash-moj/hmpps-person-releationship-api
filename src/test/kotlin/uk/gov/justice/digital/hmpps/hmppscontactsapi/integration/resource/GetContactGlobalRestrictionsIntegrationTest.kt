@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import java.time.LocalDate
@@ -49,6 +50,7 @@ class GetContactGlobalRestrictionsIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should return all global restrictions for a contact`() {
+    stubGetUserByUsername(User("JBAKER_GEN", "James Baker"))
     val restrictions = testAPIClient.getContactGlobalRestrictions(3)
     assertThat(restrictions).hasSize(2)
     with(restrictions[0]) {
@@ -59,6 +61,8 @@ class GetContactGlobalRestrictionsIntegrationTest : H2IntegrationTestBase() {
       assertThat(startDate).isEqualTo(LocalDate.of(2000, 11, 21))
       assertThat(expiryDate).isEqualTo(LocalDate.of(2001, 11, 21))
       assertThat(comments).isEqualTo("N/A")
+      assertThat(enteredByUsername).isEqualTo("JBAKER_GEN")
+      assertThat(enteredByDisplayName).isEqualTo("James Baker")
     }
     with(restrictions[1]) {
       assertThat(contactRestrictionId).isNotNull()
@@ -68,6 +72,8 @@ class GetContactGlobalRestrictionsIntegrationTest : H2IntegrationTestBase() {
       assertThat(startDate).isNull()
       assertThat(expiryDate).isNull()
       assertThat(comments).isNull()
+      assertThat(enteredByUsername).isEqualTo("FOO_USER")
+      assertThat(enteredByDisplayName).isEqualTo("FOO_USER")
     }
   }
 

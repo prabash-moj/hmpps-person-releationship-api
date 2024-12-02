@@ -31,11 +31,17 @@ class RestrictionsService(
   private val prisonerContactRestrictionDetailsRepository: PrisonerContactRestrictionDetailsRepository,
   private val prisonerContactRestrictionRepository: PrisonerContactRestrictionRepository,
   private val referenceCodeService: ReferenceCodeService,
+  private val manageUsersService: ManageUsersService,
 ) {
 
   fun getGlobalRestrictionsForContact(contactId: Long): List<ContactRestrictionDetails> {
     validateContactExists(contactId)
-    return contactRestrictionDetailsRepository.findAllByContactId(contactId).map { entity ->
+    val restrictionsWithEnteredBy = contactRestrictionDetailsRepository.findAllByContactId(contactId)
+      .map { entity -> entity to (entity.amendedBy ?: entity.createdBy) }
+    val enteredByMap = restrictionsWithEnteredBy
+      .map { (_, enteredByUsername) -> enteredByUsername }
+      .toSet().associateWith { enteredByUsername -> manageUsersService.getUserByUsername(enteredByUsername)?.name ?: enteredByUsername }
+    return restrictionsWithEnteredBy.map { (entity, enteredByUsername) ->
       ContactRestrictionDetails(
         contactRestrictionId = entity.contactRestrictionId,
         contactId = entity.contactId,
@@ -44,6 +50,8 @@ class RestrictionsService(
         startDate = entity.startDate,
         expiryDate = entity.expiryDate,
         comments = entity.comments,
+        enteredByUsername = enteredByUsername,
+        enteredByDisplayName = enteredByMap[enteredByUsername] ?: enteredByUsername,
         createdBy = entity.createdBy,
         createdTime = entity.createdTime,
         updatedBy = entity.amendedBy,
@@ -124,19 +132,25 @@ class RestrictionsService(
   private fun contactRestrictionDetails(
     entity: ContactRestrictionEntity,
     type: ReferenceCode,
-  ) = ContactRestrictionDetails(
-    contactRestrictionId = entity.contactRestrictionId,
-    contactId = entity.contactId,
-    restrictionType = entity.restrictionType,
-    restrictionTypeDescription = type.description,
-    startDate = entity.startDate,
-    expiryDate = entity.expiryDate,
-    comments = entity.comments,
-    createdBy = entity.createdBy,
-    createdTime = entity.createdTime,
-    updatedBy = entity.amendedBy,
-    updatedTime = entity.amendedTime,
-  )
+  ): ContactRestrictionDetails {
+    val enteredByUsername = entity.amendedBy ?: entity.createdBy
+    val enteredByDisplayName = manageUsersService.getUserByUsername(enteredByUsername)?.name ?: enteredByUsername
+    return ContactRestrictionDetails(
+      contactRestrictionId = entity.contactRestrictionId,
+      contactId = entity.contactId,
+      restrictionType = entity.restrictionType,
+      restrictionTypeDescription = type.description,
+      startDate = entity.startDate,
+      expiryDate = entity.expiryDate,
+      comments = entity.comments,
+      enteredByUsername = enteredByUsername,
+      enteredByDisplayName = enteredByDisplayName,
+      createdBy = entity.createdBy,
+      createdTime = entity.createdTime,
+      updatedBy = entity.amendedBy,
+      updatedTime = entity.amendedTime,
+    )
+  }
 
   fun createPrisonerContactRestriction(
     prisonerContactId: Long,

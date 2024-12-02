@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.MediaType
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -42,6 +43,8 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         createdBy = "created",
       ),
     ).contactRestrictionId
+    stubGetUserByUsername(User("created", "Created User"))
+    stubGetUserByUsername(User("updated", "Updated User"))
   }
 
   @Test
@@ -209,6 +212,8 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       assertThat(startDate).isEqualTo(request.startDate)
       assertThat(expiryDate).isNull()
       assertThat(comments).isNull()
+      assertThat(enteredByUsername).isEqualTo("updated")
+      assertThat(enteredByDisplayName).isEqualTo("Updated User")
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
       assertThat(updatedBy).isEqualTo("updated")
@@ -241,6 +246,8 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       assertThat(startDate).isEqualTo(request.startDate)
       assertThat(expiryDate).isEqualTo(request.expiryDate)
       assertThat(comments).isEqualTo(request.comments)
+      assertThat(enteredByUsername).isEqualTo("updated")
+      assertThat(enteredByDisplayName).isEqualTo("Updated User")
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
       assertThat(updatedBy).isEqualTo("updated")

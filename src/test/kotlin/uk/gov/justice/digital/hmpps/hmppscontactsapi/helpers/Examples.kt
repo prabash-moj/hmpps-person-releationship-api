@@ -6,7 +6,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetai
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
@@ -406,4 +409,83 @@ fun createPrisonerContactRestrictionDetails(
   createdTime,
   updatedBy,
   updatedTime,
+)
+
+fun createContactAddressRequest(
+  addressType: String = "HOME",
+  flat: String = "1B",
+  property: String = "35",
+  street: String = "Acacia Avenue",
+  area: String = "Bulls Nose",
+  postcode: String = "EC1 2NJ",
+  createdBy: String = "CREATE_USER",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+) = CreateContactAddressRequest(
+  addressType = addressType,
+  flat = flat,
+  property = property,
+  street = street,
+  area = area,
+  postcode = postcode,
+  createdBy = createdBy,
+)
+
+fun updateContactAddressRequest(
+  primaryAddress: Boolean = true,
+  addressType: String = "HOME",
+  flat: String = "1B",
+  property: String = "35",
+  street: String = "Acacia Avenue",
+  area: String = "Bulls Nose",
+  postcode: String = "EC1 2NJ",
+  updatedBy: String = "AMEND_USER",
+  updatedTime: LocalDateTime = LocalDateTime.now(),
+) = UpdateContactAddressRequest(
+  primaryAddress = primaryAddress,
+  addressType = addressType,
+  flat = flat,
+  property = property,
+  street = street,
+  area = area,
+  postcode = postcode,
+  updatedBy = updatedBy,
+)
+
+fun contactAddressResponse(
+  contactAddressId: Long,
+  contactId: Long,
+  addressType: String? = "HOME",
+  primaryAddress: Boolean = true,
+  flat: String? = null,
+  property: String? = null,
+  street: String? = null,
+  area: String? = null,
+  postcode: String? = null,
+  createdBy: String = "CREATE_USER",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+) = ContactAddressResponse(
+  contactAddressId = contactAddressId,
+  contactId = contactId,
+  addressType = addressType,
+  primaryAddress = primaryAddress,
+  flat = flat,
+  property = property,
+  street = street,
+  area = area,
+  cityCode = null,
+  countyCode = null,
+  postcode = postcode,
+  countryCode = null,
+  verified = false,
+  verifiedBy = null,
+  verifiedTime = null,
+  mailFlag = true,
+  startDate = null,
+  endDate = null,
+  noFixedAddress = false,
+  comments = null,
+  createdBy = createdBy,
+  createdTime = createdTime,
+  updatedBy = null,
+  updatedTime = null,
 )

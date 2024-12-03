@@ -185,6 +185,8 @@ class RestrictionsServiceTest {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(manageUsersService.getUserByUsername("created_global")).thenReturn(User("created_global", "Created User Global"))
       whenever(manageUsersService.getUserByUsername("updated_global")).thenReturn(User("updated_global", "Updated User Global"))
+      whenever(manageUsersService.getUserByUsername("created_pc")).thenReturn(User("created_pc", "Created PC"))
+      whenever(manageUsersService.getUserByUsername("updated_pc")).thenReturn(User("updated_pc", "Updated PC"))
       whenever(contactRestrictionDetailsRepository.findAllByContactId(contactId)).thenReturn(
         listOf(
           createContactRestrictionDetailsEntity(123, createdTime = now, createdBy = "created_global", updatedBy = null),
@@ -197,11 +199,15 @@ class RestrictionsServiceTest {
             id = 789,
             prisonerContactId = prisonerContactId,
             createdTime = now,
+            createdBy = "created_pc",
+            updatedBy = null,
           ),
           createPrisonerContactRestrictionDetailsEntity(
             id = 987,
             prisonerContactId = prisonerContactId,
             createdTime = now,
+            createdBy = "created_pc",
+            updatedBy = "updated_pc",
           ),
         ),
       )
@@ -217,6 +223,10 @@ class RestrictionsServiceTest {
               contactId = contactId,
               prisonerNumber = aPrisonerContact.prisonerNumber,
               createdTime = now,
+              createdBy = "created_pc",
+              updatedBy = null,
+              enteredByUsername = "created_pc",
+              enteredByDisplayName = "Created PC",
             ),
             createPrisonerContactRestrictionDetails(
               id = 987,
@@ -224,6 +234,10 @@ class RestrictionsServiceTest {
               contactId = contactId,
               prisonerNumber = aPrisonerContact.prisonerNumber,
               createdTime = now,
+              createdBy = "created_pc",
+              updatedBy = "updated_pc",
+              enteredByUsername = "updated_pc",
+              enteredByDisplayName = "Updated PC",
             ),
           ),
           contactGlobalRestrictions = listOf(
@@ -232,6 +246,66 @@ class RestrictionsServiceTest {
           ),
         ),
       )
+    }
+
+    @Test
+    fun `only lookup usernames once`() {
+      val now = now()
+      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(manageUsersService.getUserByUsername("created_pc")).thenReturn(User("created_pc", "Created PC"))
+      whenever(contactRestrictionDetailsRepository.findAllByContactId(contactId)).thenReturn(emptyList())
+      whenever(prisonerContactRestrictionDetailsRepository.findAllByPrisonerContactId(prisonerContactId)).thenReturn(
+        listOf(
+          createPrisonerContactRestrictionDetailsEntity(
+            id = 789,
+            prisonerContactId = prisonerContactId,
+            createdTime = now,
+            createdBy = "created_pc",
+            updatedBy = null,
+          ),
+          createPrisonerContactRestrictionDetailsEntity(
+            id = 987,
+            prisonerContactId = prisonerContactId,
+            createdTime = now,
+            createdBy = "created_pc",
+            updatedBy = null,
+          ),
+        ),
+      )
+
+      val restrictions = service.getPrisonerContactRestrictions(prisonerContactId)
+
+      assertThat(restrictions).isEqualTo(
+        PrisonerContactRestrictionsResponse(
+          prisonerContactRestrictions = listOf(
+            createPrisonerContactRestrictionDetails(
+              id = 789,
+              prisonerContactId = prisonerContactId,
+              contactId = contactId,
+              prisonerNumber = aPrisonerContact.prisonerNumber,
+              createdTime = now,
+              createdBy = "created_pc",
+              updatedBy = null,
+              enteredByUsername = "created_pc",
+              enteredByDisplayName = "Created PC",
+            ),
+            createPrisonerContactRestrictionDetails(
+              id = 987,
+              prisonerContactId = prisonerContactId,
+              contactId = contactId,
+              prisonerNumber = aPrisonerContact.prisonerNumber,
+              createdTime = now,
+              createdBy = "created_pc",
+              updatedBy = null,
+              enteredByUsername = "created_pc",
+              enteredByDisplayName = "Created PC",
+            ),
+          ),
+          contactGlobalRestrictions = emptyList(),
+        ),
+      )
+      verify(manageUsersService, times(1)).getUserByUsername("created_pc")
     }
 
     @Test
@@ -506,6 +580,7 @@ class RestrictionsServiceTest {
 
     @Test
     fun `create prisoner contact restriction`() {
+      whenever(manageUsersService.getUserByUsername("created")).thenReturn(User("created", "Created User"))
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
         ReferenceCode(
@@ -535,6 +610,8 @@ class RestrictionsServiceTest {
           startDate = LocalDate.of(2020, 1, 1),
           expiryDate = LocalDate.of(2022, 2, 2),
           comments = "Some comments",
+          enteredByUsername = "created",
+          enteredByDisplayName = "Created User",
           createdBy = "created",
           createdTime = created.createdTime,
           updatedBy = null,
@@ -626,6 +703,7 @@ class RestrictionsServiceTest {
 
     @Test
     fun `updated prisoner contact restriction`() {
+      whenever(manageUsersService.getUserByUsername("updated")).thenReturn(User("updated", "Updated User"))
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
       whenever(prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)).thenReturn(Optional.of(existingEntity))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
@@ -656,6 +734,8 @@ class RestrictionsServiceTest {
           startDate = LocalDate.of(1990, 1, 1),
           expiryDate = LocalDate.of(1992, 2, 2),
           comments = "Updated comments",
+          enteredByUsername = "updated",
+          enteredByDisplayName = "Updated User",
           createdBy = "created",
           createdTime = updated.createdTime,
           updatedBy = "updated",

@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.MediaType
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
@@ -205,6 +206,7 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
 
   @Test
   fun `should update the restriction with minimal fields`() {
+    stubGetUserByUsername(User("updated", "Updated User"))
     val request = UpdatePrisonerContactRestrictionRequest(
       restrictionType = "CCTV",
       startDate = LocalDate.of(1990, 1, 1),
@@ -224,6 +226,8 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       assertThat(startDate).isEqualTo(request.startDate)
       assertThat(expiryDate).isNull()
       assertThat(comments).isNull()
+      assertThat(enteredByUsername).isEqualTo("updated")
+      assertThat(enteredByDisplayName).isEqualTo("Updated User")
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
       assertThat(updatedBy).isEqualTo("updated")
@@ -239,6 +243,7 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
 
   @Test
   fun `should update the restriction with all fields`() {
+    stubGetUserByUsername(User("updated", "Updated User"))
     val request = UpdatePrisonerContactRestrictionRequest(
       restrictionType = "CCTV",
       startDate = LocalDate.of(1990, 1, 1),
@@ -258,6 +263,8 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       assertThat(startDate).isEqualTo(request.startDate)
       assertThat(expiryDate).isEqualTo(request.expiryDate)
       assertThat(comments).isEqualTo(request.comments)
+      assertThat(enteredByUsername).isEqualTo("updated")
+      assertThat(enteredByDisplayName).isEqualTo("Updated User")
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
       assertThat(updatedBy).isEqualTo("updated")

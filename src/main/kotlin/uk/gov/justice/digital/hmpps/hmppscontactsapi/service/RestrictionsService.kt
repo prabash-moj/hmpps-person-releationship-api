@@ -63,10 +63,14 @@ class RestrictionsService(
   fun getPrisonerContactRestrictions(prisonerContactId: Long): PrisonerContactRestrictionsResponse {
     val prisonerContact = prisonerContactRepository.findById(prisonerContactId)
       .orElseThrow { EntityNotFoundException("Prisoner contact ($prisonerContactId) could not be found") }
+    val restrictionsWithEnteredBy = prisonerContactRestrictionDetailsRepository.findAllByPrisonerContactId(
+      prisonerContactId,
+    ).map { entity -> entity to (entity.amendedBy ?: entity.createdBy) }
+    val enteredByMap = restrictionsWithEnteredBy
+      .map { (_, enteredByUsername) -> enteredByUsername }
+      .toSet().associateWith { enteredByUsername -> manageUsersService.getUserByUsername(enteredByUsername)?.name ?: enteredByUsername }
     return PrisonerContactRestrictionsResponse(
-      prisonerContactRestrictions = prisonerContactRestrictionDetailsRepository.findAllByPrisonerContactId(
-        prisonerContactId,
-      ).map { entity ->
+      prisonerContactRestrictions = restrictionsWithEnteredBy.map { (entity, enteredByUsername) ->
         PrisonerContactRestrictionDetails(
           prisonerContactRestrictionId = entity.prisonerContactRestrictionId,
           prisonerContactId = prisonerContactId,
@@ -77,6 +81,8 @@ class RestrictionsService(
           startDate = entity.startDate,
           expiryDate = entity.expiryDate,
           comments = entity.comments,
+          enteredByUsername = enteredByUsername,
+          enteredByDisplayName = enteredByMap[enteredByUsername] ?: enteredByUsername,
           createdBy = entity.createdBy,
           createdTime = entity.createdTime,
           updatedBy = entity.amendedBy,
@@ -200,21 +206,27 @@ class RestrictionsService(
     entity: PrisonerContactRestrictionEntity,
     relationship: PrisonerContactEntity,
     type: ReferenceCode,
-  ) = PrisonerContactRestrictionDetails(
-    prisonerContactRestrictionId = entity.prisonerContactRestrictionId,
-    prisonerContactId = entity.prisonerContactId,
-    contactId = relationship.contactId,
-    prisonerNumber = relationship.prisonerNumber,
-    restrictionType = entity.restrictionType,
-    restrictionTypeDescription = type.description,
-    startDate = entity.startDate,
-    expiryDate = entity.expiryDate,
-    comments = entity.comments,
-    createdBy = entity.createdBy,
-    createdTime = entity.createdTime,
-    updatedBy = entity.amendedBy,
-    updatedTime = entity.amendedTime,
-  )
+  ): PrisonerContactRestrictionDetails {
+    val enteredByUsername = entity.amendedBy ?: entity.createdBy
+    val enteredByDisplayName = manageUsersService.getUserByUsername(enteredByUsername)?.name ?: enteredByUsername
+    return PrisonerContactRestrictionDetails(
+      prisonerContactRestrictionId = entity.prisonerContactRestrictionId,
+      prisonerContactId = entity.prisonerContactId,
+      contactId = relationship.contactId,
+      prisonerNumber = relationship.prisonerNumber,
+      restrictionType = entity.restrictionType,
+      restrictionTypeDescription = type.description,
+      startDate = entity.startDate,
+      expiryDate = entity.expiryDate,
+      comments = entity.comments,
+      enteredByUsername = enteredByUsername,
+      enteredByDisplayName = enteredByDisplayName,
+      createdBy = entity.createdBy,
+      createdTime = entity.createdTime,
+      updatedBy = entity.amendedBy,
+      updatedTime = entity.amendedTime,
+    )
+  }
 
   private fun validateContactExists(contactId: Long) {
     contactRepository.findById(contactId)

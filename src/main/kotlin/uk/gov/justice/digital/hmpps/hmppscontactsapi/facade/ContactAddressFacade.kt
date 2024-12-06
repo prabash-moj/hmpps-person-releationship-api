@@ -15,20 +15,35 @@ class ContactAddressFacade(
 ) {
 
   fun create(contactId: Long, request: CreateContactAddressRequest): ContactAddressResponse {
-    return contactAddressService.create(contactId, request).also {
+    return contactAddressService.create(contactId, request).also { (created, otherUpdatedAddressIds) ->
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_ADDRESS_CREATED,
-        identifier = it.contactAddressId,
+        identifier = created.contactAddressId,
         contactId = contactId,
       )
-    }
+      sendOtherUpdatedAddressEvents(otherUpdatedAddressIds, contactId)
+    }.created
   }
 
   fun update(contactId: Long, contactAddressId: Long, request: UpdateContactAddressRequest): ContactAddressResponse {
-    return contactAddressService.update(contactId, contactAddressId, request).also {
+    return contactAddressService.update(contactId, contactAddressId, request).also { (updated, otherUpdatedAddressIds) ->
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
-        identifier = it.contactAddressId,
+        identifier = updated.contactAddressId,
+        contactId = contactId,
+      )
+      sendOtherUpdatedAddressEvents(otherUpdatedAddressIds, contactId)
+    }.updated
+  }
+
+  private fun sendOtherUpdatedAddressEvents(
+    otherUpdatedAddressIds: Set<Long>,
+    contactId: Long,
+  ) {
+    otherUpdatedAddressIds.forEach {
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+        identifier = it,
         contactId = contactId,
       )
     }

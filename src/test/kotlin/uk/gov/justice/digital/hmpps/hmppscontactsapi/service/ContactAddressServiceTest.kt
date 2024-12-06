@@ -89,7 +89,7 @@ class ContactAddressServiceTest {
       whenever(contactAddressRepository.saveAndFlush(any()))
         .thenReturn(contactAddressEntity)
 
-      val contactAddress = contactAddressService.create(contactId, request)
+      val (contactAddress, _) = contactAddressService.create(contactId, request)
 
       val addressCaptor = argumentCaptor<ContactAddressEntity>()
 
@@ -124,6 +124,61 @@ class ContactAddressServiceTest {
       }
 
       verify(contactRepository).findById(contactId)
+    }
+
+    @Test
+    fun `should unset other primary addresses if this is now the primary contact address`() {
+      val request = createContactAddressRequest().copy(primaryAddress = true, mailFlag = false)
+      val contactAddressEntity = request.toEntity(contactId, contactAddressId)
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contactEntity()))
+      whenever(contactAddressRepository.saveAndFlush(any())).thenReturn(contactAddressEntity)
+      whenever(contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)).thenReturn(listOf(987564321L, 123456789L))
+
+      val (_, otherUpdatedAddressIds) = contactAddressService.create(contactId, request)
+
+      assertThat(otherUpdatedAddressIds).isEqualTo(setOf(123456789L, 987564321L))
+      verify(contactRepository).findById(contactId)
+      verify(contactAddressRepository).saveAndFlush(any())
+      verify(contactAddressRepository).resetPrimaryAddressFlagForContact(contactId)
+      verify(contactAddressRepository, never()).resetMailAddressFlagForContact(contactId)
+    }
+
+    @Test
+    fun `should unset other mail addresses if this is now the mail contact address`() {
+      val request = createContactAddressRequest().copy(primaryAddress = false, mailFlag = true)
+      val contactAddressEntity = request.toEntity(contactId, contactAddressId)
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contactEntity()))
+      whenever(contactAddressRepository.saveAndFlush(any())).thenReturn(contactAddressEntity)
+      whenever(contactAddressRepository.resetMailAddressFlagForContact(contactId)).thenReturn(listOf(987564321L, 123456789L))
+
+      val (_, otherUpdatedAddressIds) = contactAddressService.create(contactId, request)
+
+      assertThat(otherUpdatedAddressIds).isEqualTo(setOf(123456789L, 987564321L))
+      verify(contactRepository).findById(contactId)
+      verify(contactAddressRepository).saveAndFlush(any())
+      verify(contactAddressRepository, never()).resetPrimaryAddressFlagForContact(contactId)
+      verify(contactAddressRepository).resetMailAddressFlagForContact(contactId)
+    }
+
+    @Test
+    fun `should unset other primary and mail addresses if this is now the primary and mail contact address`() {
+      val request = createContactAddressRequest().copy(primaryAddress = true, mailFlag = true)
+      val contactAddressEntity = request.toEntity(contactId, contactAddressId)
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contactEntity()))
+      whenever(contactAddressRepository.saveAndFlush(any())).thenReturn(contactAddressEntity)
+      whenever(contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)).thenReturn(listOf(999L))
+      whenever(contactAddressRepository.resetMailAddressFlagForContact(contactId)).thenReturn(listOf(111L))
+
+      val (_, otherUpdatedAddressIds) = contactAddressService.create(contactId, request)
+
+      assertThat(otherUpdatedAddressIds).isEqualTo(setOf(111L, 999L))
+      verify(contactRepository).findById(contactId)
+      verify(contactAddressRepository).saveAndFlush(any())
+      verify(contactAddressRepository).resetPrimaryAddressFlagForContact(contactId)
+      verify(contactAddressRepository).resetMailAddressFlagForContact(contactId)
     }
 
     @Test
@@ -194,7 +249,7 @@ class ContactAddressServiceTest {
       whenever(contactAddressRepository.saveAndFlush(any()))
         .thenReturn(request.toEntity(contactId, contactAddressId))
 
-      val updated = contactAddressService.update(contactId, contactAddressId, request)
+      val (updated, _) = contactAddressService.update(contactId, contactAddressId, request)
 
       val addressCaptor = argumentCaptor<ContactAddressEntity>()
 
@@ -229,6 +284,73 @@ class ContactAddressServiceTest {
         assertThat(updatedBy).isEqualTo(request.updatedBy)
         assertThat(updatedTime).isAfterOrEqualTo(LocalDateTime.now().minusMinutes(1))
       }
+    }
+
+    @Test
+    fun `should unset other primary addresses if changing this to the primary contact address`() {
+      val request = updateContactAddressRequest().copy(primaryAddress = true, mailFlag = false)
+      val existAddress = request.toEntity(contactId, contactAddressId).copy(primaryAddress = false, mailFlag = false)
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contactEntity()))
+      whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(existAddress))
+      whenever(contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)).thenReturn(listOf(987654321L, 123456789L))
+
+      whenever(contactAddressRepository.saveAndFlush(any()))
+        .thenReturn(request.toEntity(contactId, contactAddressId))
+
+      val (_, otherUpdatedIds) = contactAddressService.update(contactId, contactAddressId, request)
+
+      val addressCaptor = argumentCaptor<ContactAddressEntity>()
+
+      assertThat(otherUpdatedIds).isEqualTo(setOf(123456789L, 987654321L))
+      verify(contactAddressRepository).saveAndFlush(addressCaptor.capture())
+      verify(contactAddressRepository).resetPrimaryAddressFlagForContact(contactId)
+      verify(contactAddressRepository, never()).resetMailAddressFlagForContact(contactId)
+    }
+
+    @Test
+    fun `should unset other mail addresses if changing this to the mail contact address`() {
+      val request = updateContactAddressRequest().copy(primaryAddress = false, mailFlag = true)
+      val existAddress = request.toEntity(contactId, contactAddressId).copy(primaryAddress = false, mailFlag = false)
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contactEntity()))
+      whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(existAddress))
+      whenever(contactAddressRepository.resetMailAddressFlagForContact(contactId)).thenReturn(listOf(987654321L, 123456789L))
+
+      whenever(contactAddressRepository.saveAndFlush(any()))
+        .thenReturn(request.toEntity(contactId, contactAddressId))
+
+      val (_, otherUpdatedIds) = contactAddressService.update(contactId, contactAddressId, request)
+
+      val addressCaptor = argumentCaptor<ContactAddressEntity>()
+
+      assertThat(otherUpdatedIds).isEqualTo(setOf(123456789L, 987654321L))
+      verify(contactAddressRepository).saveAndFlush(addressCaptor.capture())
+      verify(contactAddressRepository, never()).resetPrimaryAddressFlagForContact(contactId)
+      verify(contactAddressRepository).resetMailAddressFlagForContact(contactId)
+    }
+
+    @Test
+    fun `should unset other primary and mail addresses if changing this to the primary and mail contact address`() {
+      val request = updateContactAddressRequest().copy(primaryAddress = true, mailFlag = true)
+      val existAddress = request.toEntity(contactId, contactAddressId).copy(primaryAddress = false, mailFlag = false)
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contactEntity()))
+      whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(existAddress))
+      whenever(contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)).thenReturn(listOf(999L))
+      whenever(contactAddressRepository.resetMailAddressFlagForContact(contactId)).thenReturn(listOf(111L))
+
+      whenever(contactAddressRepository.saveAndFlush(any()))
+        .thenReturn(request.toEntity(contactId, contactAddressId))
+
+      val (_, otherUpdatedIds) = contactAddressService.update(contactId, contactAddressId, request)
+
+      val addressCaptor = argumentCaptor<ContactAddressEntity>()
+
+      assertThat(otherUpdatedIds).isEqualTo(setOf(111L, 999L))
+      verify(contactAddressRepository).saveAndFlush(addressCaptor.capture())
+      verify(contactAddressRepository).resetPrimaryAddressFlagForContact(contactId)
+      verify(contactAddressRepository).resetMailAddressFlagForContact(contactId)
     }
 
     @Test

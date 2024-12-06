@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
@@ -18,7 +18,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonRefere
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
+class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   private var savedContactId = 0L
   private var savedContactAddressId = 0L
 
@@ -35,7 +35,8 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
     savedContactAddressId = testAPIClient.createAContactAddress(
       savedContactId,
       CreateContactAddressRequest(
-        primaryAddress = true,
+        primaryAddress = false,
+        mailFlag = false,
         addressType = "HOME",
         flat = "1A",
         property = "27",
@@ -53,7 +54,7 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
       .uri("/contact/$savedContactId/address/$savedContactAddressId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
-      .bodyValue(aMinimalAddressRequest())
+      .bodyValue(aMinimalUpdateAddressRequest())
       .exchange()
       .expectStatus()
       .isUnauthorized
@@ -65,7 +66,7 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
       .uri("/contact/$savedContactId/address/$savedContactAddressId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
-      .bodyValue(aMinimalAddressRequest())
+      .bodyValue(aMinimalUpdateAddressRequest())
       .headers(setAuthorisation())
       .exchange()
       .expectStatus()
@@ -78,7 +79,7 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
       .uri("/contact/$savedContactId/address/$savedContactAddressId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
-      .bodyValue(aMinimalAddressRequest())
+      .bodyValue(aMinimalUpdateAddressRequest())
       .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
       .exchange()
       .expectStatus()
@@ -143,7 +144,7 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should not update the address if the contact is not found`() {
-    val request = aMinimalAddressRequest()
+    val request = aMinimalUpdateAddressRequest()
 
     val errors = webTestClient.put()
       .uri("/contact/-321/address/$savedContactAddressId")
@@ -168,7 +169,7 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should not update the address if the id is not found`() {
-    val request = aMinimalAddressRequest()
+    val request = aMinimalUpdateAddressRequest()
 
     val errors = webTestClient.put()
       .uri("/contact/$savedContactId/address/-99")
@@ -223,39 +224,201 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
+  @Test
+  fun `should remove primary flag from current primary addresses if setting primary`() {
+    val requestToCreatePrimary = aMinimalCreateAddressRequest().copy(primaryAddress = true)
+    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary)
+
+    val request = aMinimalUpdateAddressRequest().copy(primaryAddress = true)
+    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+
+    val addresses = testAPIClient.getContact(savedContactId).addresses
+    assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isFalse()
+    assertThat(addresses.find { it.contactAddressId == updated.contactAddressId }!!.primaryAddress).isTrue()
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(savedContactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(primary.contactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+  }
+
+  @Test
+  fun `should not remove primary flag from current primary addresses if not setting primary`() {
+    val requestToCreatePrimary = aMinimalCreateAddressRequest().copy(primaryAddress = true)
+    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary)
+
+    val request = aMinimalUpdateAddressRequest().copy(primaryAddress = false)
+    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+
+    val addresses = testAPIClient.getContact(savedContactId).addresses
+    assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isTrue()
+    assertThat(addresses.find { it.contactAddressId == updated.contactAddressId }!!.primaryAddress).isFalse()
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(savedContactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+  }
+
+  @Test
+  fun `should remove mail flag from current mail addresses if setting mail`() {
+    val requestToCreateMail = aMinimalCreateAddressRequest().copy(mailFlag = true)
+    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail)
+
+    val request = aMinimalUpdateAddressRequest().copy(mailFlag = true)
+    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+
+    val addresses = testAPIClient.getContact(savedContactId).addresses
+    assertThat(addresses.find { it.contactAddressId == mail.contactAddressId }!!.mailFlag).isFalse()
+    assertThat(addresses.find { it.contactAddressId == updated.contactAddressId }!!.mailFlag).isTrue()
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(savedContactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(mail.contactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+  }
+
+  @Test
+  fun `should not remove mail flag from current mail addresses if not setting mail`() {
+    val requestToCreateMail = aMinimalCreateAddressRequest().copy(mailFlag = true, primaryAddress = false)
+    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail)
+
+    val request = aMinimalUpdateAddressRequest().copy(mailFlag = false)
+    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+
+    val addresses = testAPIClient.getContact(savedContactId).addresses
+    assertThat(addresses.find { it.contactAddressId == mail.contactAddressId }!!.mailFlag).isTrue()
+    assertThat(addresses.find { it.contactAddressId == updated.contactAddressId }!!.mailFlag).isFalse()
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(savedContactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+  }
+
+  @Test
+  fun `should remove primary and mail flag from current primary and mail addresses if setting primary and mail`() {
+    val requestToCreatePrimary = aMinimalCreateAddressRequest().copy(primaryAddress = true, mailFlag = false)
+    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary)
+
+    val requestToCreateMail = aMinimalCreateAddressRequest().copy(primaryAddress = false, mailFlag = true)
+    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail)
+
+    val requestToCreateOtherAddress = aMinimalCreateAddressRequest().copy(primaryAddress = false, mailFlag = false)
+    val other = testAPIClient.createAContactAddress(savedContactId, requestToCreateOtherAddress)
+
+    val request = aMinimalUpdateAddressRequest().copy(primaryAddress = true, mailFlag = true)
+    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+
+    val addresses = testAPIClient.getContact(savedContactId).addresses
+    assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isFalse()
+    assertThat(addresses.find { it.contactAddressId == mail.contactAddressId }!!.mailFlag).isFalse()
+    assertThat(addresses.find { it.contactAddressId == updated.contactAddressId }!!.primaryAddress).isTrue()
+    assertThat(addresses.find { it.contactAddressId == updated.contactAddressId }!!.mailFlag).isTrue()
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(savedContactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(primary.contactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(mail.contactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(other.contactAddressId, Source.DPS),
+    )
+  }
+
+  @Test
+  fun `should remove primary and mail flag from current combined primary mail address if setting primary and mail`() {
+    val requestToCreatePrimaryAndMail = aMinimalCreateAddressRequest().copy(primaryAddress = true, mailFlag = true)
+    val primaryAndMail = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimaryAndMail)
+
+    val request = aMinimalUpdateAddressRequest().copy(primaryAddress = true, mailFlag = true)
+    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+
+    val addresses = testAPIClient.getContact(savedContactId).addresses
+    assertThat(addresses.find { it.contactAddressId == primaryAndMail.contactAddressId }!!.primaryAddress).isFalse()
+    assertThat(addresses.find { it.contactAddressId == primaryAndMail.contactAddressId }!!.mailFlag).isFalse()
+    assertThat(addresses.find { it.contactAddressId == updated.contactAddressId }!!.primaryAddress).isTrue()
+    assertThat(addresses.find { it.contactAddressId == updated.contactAddressId }!!.mailFlag).isTrue()
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(savedContactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(primaryAndMail.contactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = updated.contactId),
+    )
+  }
+
   companion object {
     @JvmStatic
     fun allFieldConstraintViolations(): List<Arguments> {
       return listOf(
         Arguments.of(
           "addressType must be <= 12 characters",
-          aMinimalAddressRequest().copy(addressType = "".padStart(13)),
+          aMinimalUpdateAddressRequest().copy(addressType = "".padStart(13)),
         ),
         Arguments.of(
           "cityCode must be <= 12 characters",
-          aMinimalAddressRequest().copy(cityCode = "".padStart(13)),
+          aMinimalUpdateAddressRequest().copy(cityCode = "".padStart(13)),
         ),
         Arguments.of(
           "countyCode must be <= 12 characters",
-          aMinimalAddressRequest().copy(countyCode = "".padStart(13)),
+          aMinimalUpdateAddressRequest().copy(countyCode = "".padStart(13)),
         ),
         Arguments.of(
           "countryCode must be <= 12 characters",
-          aMinimalAddressRequest().copy(countryCode = "".padStart(13)),
+          aMinimalUpdateAddressRequest().copy(countryCode = "".padStart(13)),
         ),
         Arguments.of(
           "updatedBy must be <= 100 characters",
-          aMinimalAddressRequest().copy(updatedBy = "".padStart(101)),
+          aMinimalUpdateAddressRequest().copy(updatedBy = "".padStart(101)),
         ),
       )
     }
 
-    private fun aMinimalAddressRequest() = UpdateContactAddressRequest(
+    private fun aMinimalUpdateAddressRequest() = UpdateContactAddressRequest(
       addressType = "HOME",
-      primaryAddress = true,
+      primaryAddress = false,
+      mailFlag = false,
       property = "27",
       street = "Hello Road",
       updatedBy = "amended",
+    )
+    private fun aMinimalCreateAddressRequest() = CreateContactAddressRequest(
+      addressType = "HOME",
+      primaryAddress = false,
+      mailFlag = false,
+      property = "27",
+      street = "Hello Road",
+      createdBy = "created",
     )
   }
 }

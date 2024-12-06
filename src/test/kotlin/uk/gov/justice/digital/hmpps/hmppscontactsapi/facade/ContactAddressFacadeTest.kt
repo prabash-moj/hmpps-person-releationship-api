@@ -12,6 +12,8 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.contactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.updateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.CreateAddressResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.UpdateAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactAddressService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
@@ -31,7 +33,7 @@ class ContactAddressFacadeTest {
     val request = createContactAddressRequest()
     val response = contactAddressResponse(contactAddressId, contactId)
 
-    whenever(addressService.create(any(), any())).thenReturn(response)
+    whenever(addressService.create(any(), any())).thenReturn(CreateAddressResponse(response, emptySet()))
     whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
 
     val result = facade.create(contactId, request)
@@ -69,7 +71,7 @@ class ContactAddressFacadeTest {
     val response = contactAddressResponse(contactAddressId, contactId)
     val request = updateContactAddressRequest()
 
-    whenever(addressService.update(any(), any(), any())).thenReturn(response)
+    whenever(addressService.update(any(), any(), any())).thenReturn(UpdateAddressResponse(response, emptySet()))
     whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
 
     val result = facade.update(

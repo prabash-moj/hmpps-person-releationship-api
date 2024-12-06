@@ -12,4 +12,30 @@ interface ContactAddressRepository : JpaRepository<ContactAddressEntity, Long> {
   @Modifying
   @Query("delete from ContactAddressEntity ca where ca.contactId = :contactId")
   fun deleteAllByContactId(contactId: Long): Int
+
+  @Modifying
+  @Query(
+    value = """
+      UPDATE contact_address 
+      SET primary_address = false 
+      WHERE primary_address = true
+      AND contact_id = :contactId 
+      RETURNING contact_address_id
+      """,
+    nativeQuery = true,
+  )
+  fun resetPrimaryAddressFlagForContact(contactId: Long): List<Long>
+
+  @Modifying
+  @Query(
+    value = """
+      UPDATE contact_address 
+      SET mail_flag = false 
+      WHERE mail_flag = true
+      AND contact_id = :contactId 
+      RETURNING contact_address_id
+      """,
+    nativeQuery = true,
+  )
+  fun resetMailAddressFlagForContact(contactId: Long): List<Long>
 }

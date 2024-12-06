@@ -10,6 +10,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.CreateAddressResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.UpdateAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
@@ -37,15 +39,28 @@ class ContactAddressService(
     return existing.toModel()
   }
 
-  fun create(contactId: Long, request: CreateContactAddressRequest): ContactAddressResponse {
+  fun create(contactId: Long, request: CreateContactAddressRequest): CreateAddressResponse {
     validateContactExists(contactId)
-    return contactAddressRepository.saveAndFlush(request.toEntity(contactId)).toModel()
+    val updatedAddressIds = mutableSetOf<Long>()
+    if (request.primaryAddress) {
+      updatedAddressIds += contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)
+    }
+    if (request.mailFlag != null && request.mailFlag) {
+      updatedAddressIds += contactAddressRepository.resetMailAddressFlagForContact(contactId)
+    }
+    return CreateAddressResponse(contactAddressRepository.saveAndFlush(request.toEntity(contactId)).toModel(), updatedAddressIds)
   }
 
-  fun update(contactId: Long, contactAddressId: Long, request: UpdateContactAddressRequest): ContactAddressResponse {
+  fun update(contactId: Long, contactAddressId: Long, request: UpdateContactAddressRequest): UpdateAddressResponse {
     val contact = validateContactExists(contactId)
     val existing = validateExistingAddress(contactAddressId)
-
+    val updatedAddressIds = mutableSetOf<Long>()
+    if (request.primaryAddress && !existing.primaryAddress) {
+      updatedAddressIds += contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)
+    }
+    if (request.mailFlag != null && request.mailFlag && !existing.mailFlag) {
+      updatedAddressIds += contactAddressRepository.resetMailAddressFlagForContact(contactId)
+    }
     if (contact.contactId != existing.contactId) {
       logger.error("Contact address update specified for a contact not linked to this address")
       throw ValidationException("Contact ID ${contact.contactId} is not linked to the address ${existing.contactAddressId}")
@@ -77,7 +92,7 @@ class ContactAddressService(
       }
     }
 
-    return contactAddressRepository.saveAndFlush(changedContactAddress).toModel()
+    return UpdateAddressResponse(contactAddressRepository.saveAndFlush(changedContactAddress).toModel(), updatedAddressIds)
   }
 
   fun delete(contactId: Long, contactAddressId: Long): ContactAddressResponse {

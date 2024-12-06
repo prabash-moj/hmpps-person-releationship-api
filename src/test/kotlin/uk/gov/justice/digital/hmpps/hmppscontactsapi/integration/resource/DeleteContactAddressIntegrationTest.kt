@@ -30,7 +30,7 @@ class DeleteContactAddressIntegrationTest : H2IntegrationTestBase() {
     savedContactAddressId = testAPIClient.createAContactAddress(
       savedContactId,
       CreateContactAddressRequest(
-        primaryAddress = true,
+        primaryAddress = false,
         addressType = "HOME",
         flat = "1A",
         property = "27",

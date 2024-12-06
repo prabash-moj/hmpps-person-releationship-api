@@ -1,13 +1,12 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
@@ -17,6 +16,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEven
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
@@ -26,8 +26,8 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   fun setUp() {
     contact = testAPIClient.createAContact(
       CreateContactRequest(
-        firstName = randomAlphabetic(10),
-        lastName = randomAlphabetic(10),
+        firstName = RandomStringUtils.secure().nextAlphabetic(10),
+        lastName = RandomStringUtils.secure().nextAlphabetic(10),
         createdBy = "USER",
       ),
     )

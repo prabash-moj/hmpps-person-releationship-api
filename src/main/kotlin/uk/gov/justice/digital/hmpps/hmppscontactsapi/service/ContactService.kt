@@ -58,7 +58,7 @@ class ContactService(
     }
     val newContact = request.toModel()
     val createdContact = contactRepository.saveAndFlush(newContact)
-    val newRelationship = request.relationship?.toEntity(createdContact.contactId, request.createdBy)
+    val newRelationship = request.relationship?.toEntity(createdContact.id(), request.createdBy)
       ?.let { prisonerContactRepository.saveAndFlush(it) }
 
     logger.info("Created new contact {}", createdContact)
@@ -89,9 +89,9 @@ class ContactService(
   }
 
   private fun enrichContact(contactEntity: ContactEntity): ContactDetails {
-    val phoneNumbers = contactPhoneDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
-    val addressPhoneNumbers = contactAddressPhoneRepository.findByContactId(contactEntity.contactId)
-    val addresses = contactAddressDetailsRepository.findByContactId(contactEntity.contactId)
+    val phoneNumbers = contactPhoneDetailsRepository.findByContactId(contactEntity.id()).map { it.toModel() }
+    val addressPhoneNumbers = contactAddressPhoneRepository.findByContactId(contactEntity.id())
+    val addresses = contactAddressDetailsRepository.findByContactId(contactEntity.id())
       .map { address ->
         address.toModel(
           getAddressPhoneNumbers(
@@ -101,13 +101,13 @@ class ContactService(
           ),
         )
       }
-    val emailAddresses = contactEmailRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
-    val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
+    val emailAddresses = contactEmailRepository.findByContactId(contactEntity.id()).map { it.toModel() }
+    val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.id()).map { it.toModel() }
     val languageDescription = contactEntity.languageCode?.let { languageService.getLanguageByNomisCode(it).nomisDescription }
     val domesticStatusDescription = contactEntity.domesticStatus?.let { referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", it)?.description }
     val genderDescription = contactEntity.gender?.let { referenceCodeService.getReferenceDataByGroupAndCode("GENDER", it)?.description }
     return ContactDetails(
-      id = contactEntity.contactId,
+      id = contactEntity.id(),
       title = contactEntity.title,
       lastName = contactEntity.lastName,
       firstName = contactEntity.firstName,

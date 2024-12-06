@@ -21,8 +21,8 @@ class MostRelevantAddressTest : PostgresIntegrationTestBase() {
   @Autowired
   private lateinit var addressRepository: ContactAddressRepository
 
-  private val prisonerNumber = RandomStringUtils.random(7, true, false)
-  private val contactName = RandomStringUtils.random(35, true, false)
+  private val prisonerNumber = RandomStringUtils.secure().next(7, true, false)
+  private val contactName = RandomStringUtils.secure().next(35, true, false)
   private var savedContactId = 0L
 
   @BeforeEach

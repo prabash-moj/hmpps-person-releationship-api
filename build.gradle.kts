@@ -1,11 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
-import org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask
-import org.jlleitschuh.gradle.ktlint.tasks.KtLintFormatTask
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "6.0.9"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "6.1.0"
   id("org.openapi.generator") version "7.10.0"
   kotlin("plugin.spring") version "2.0.21"
   kotlin("plugin.jpa") version "2.0.21"
@@ -41,7 +37,7 @@ dependencies {
   runtimeOnly("org.postgresql:postgresql:42.7.4")
 
   // OpenAPI
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
   implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.10.0")
 
@@ -68,54 +64,6 @@ kotlin {
 
 tasks {
   withType<KotlinCompile> {
-    dependsOn("buildPrisonerSearchApiModel")
     compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-  }
-  withType<KtLintCheckTask> {
-    // Under gradle 8 we must declare the dependency here, even if we're not going to be linting the model
-    mustRunAfter("buildPrisonerSearchApiModel")
-  }
-  withType<KtLintFormatTask> {
-    // Under gradle 8 we must declare the dependency here, even if we're not going to be linting the model
-    mustRunAfter("buildPrisonerSearchApiModel")
-  }
-}
-
-val configValues = mapOf(
-  "dateLibrary" to "java8-localdatetime",
-  "serializationLibrary" to "jackson",
-  "enumPropertyNaming" to "original",
-  "useSpringBoot3" to "true",
-)
-
-val buildDirectory: Directory = layout.buildDirectory.get()
-
-tasks.register("buildPrisonerSearchApiModel", GenerateTask::class) {
-  generatorName.set("kotlin")
-  inputSpec.set("openapi-specs/prisoner-search-api.json")
-  outputDir.set("$buildDirectory/generated/prisonersearchapi")
-  modelPackage.set("uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model")
-  configOptions.set(configValues)
-  globalProperties.set(mapOf("models" to ""))
-}
-
-val generatedProjectDirs =
-  listOf("prisonersearchapi")
-
-kotlin {
-  generatedProjectDirs.forEach { generatedProject ->
-    sourceSets["main"].apply {
-      kotlin.srcDir("$buildDirectory/generated/$generatedProject/src/main/kotlin")
-    }
-  }
-}
-
-configure<KtlintExtension> {
-  filter {
-    generatedProjectDirs.forEach { generatedProject ->
-      exclude { element ->
-        element.file.path.contains("build/generated/$generatedProject/src/main/")
-      }
-    }
   }
 }

@@ -11,19 +11,19 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithFixedIdEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapSyncRequestToEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactWithFixedIdRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Optional
+import java.util.*
 
 class SyncContactServiceTest {
-  private val contactRepository: ContactRepository = mock()
+  private val contactRepository: ContactWithFixedIdRepository = mock()
   private val syncService = SyncContactService(contactRepository)
 
   @Nested
@@ -67,7 +67,7 @@ class SyncContactServiceTest {
       whenever(contactRepository.saveAndFlush(request.mapSyncRequestToEntity())).thenReturn(request.mapSyncRequestToEntity())
 
       val contact = syncService.createContact(request)
-      val contactCaptor = argumentCaptor<ContactEntity>()
+      val contactCaptor = argumentCaptor<ContactWithFixedIdEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
 
@@ -125,7 +125,7 @@ class SyncContactServiceTest {
 
       val updated = syncService.updateContact(1L, request)
 
-      val contactCaptor = argumentCaptor<ContactEntity>()
+      val contactCaptor = argumentCaptor<ContactWithFixedIdEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
 
@@ -197,7 +197,7 @@ class SyncContactServiceTest {
     )
 
   private fun contactEntity() =
-    ContactEntity(
+    ContactWithFixedIdEntity(
       contactId = 1L,
       title = "Mr",
       firstName = "John",
@@ -216,11 +216,11 @@ class SyncContactServiceTest {
       interpreterRequired = false,
     )
 
-  private fun SyncUpdateContactRequest.toEntity(contactId: Long = 1L): ContactEntity {
+  private fun SyncUpdateContactRequest.toEntity(contactId: Long = 1L): ContactWithFixedIdEntity {
     val updatedBy = this.updatedBy
     val updatedTime = this.updatedTime
 
-    return ContactEntity(
+    return ContactWithFixedIdEntity(
       contactId = contactId,
       title = this.title,
       firstName = this.firstName,

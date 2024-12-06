@@ -79,3 +79,9 @@ If you have added it correctly, you will see the log on startup with the followi
 ```
 Gov Notify emails are enabled
 ```
+
+## contact_id and person_id sync
+To allow searching for a contact by the same id in both NOMIS and DPS we keeping contact_id in sync with NOMIS' person_id.
+To prevent an overlap of IDs we are starting the DPS contact_id sequence at 20000000. 
+When we receive a new contact from NOMIS we use the person_id as the contact_id, ignoring the sequence.
+When we create a new contact in DPS we will generate a new contact_id > 20000000 and NOMIS will use the contact_id as the person_id in their database. 

@@ -1,5 +1,3 @@
-alter table contact alter column contact_id restart with (select max(contact_id)+1 from contact);
-
 alter table contact_address alter column contact_address_id restart with (select max(contact_address_id)+1 from contact_address);
 
 alter table contact_address_phone alter column contact_address_phone_id restart with (select max(contact_address_phone_id)+1 from contact_address_phone);

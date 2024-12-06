@@ -78,7 +78,7 @@ private fun newContact(
   createdBy: String,
 ): ContactEntity {
   return ContactEntity(
-    contactId = 0,
+    contactId = null,
     title = title,
     firstName = firstName,
     lastName = lastName,

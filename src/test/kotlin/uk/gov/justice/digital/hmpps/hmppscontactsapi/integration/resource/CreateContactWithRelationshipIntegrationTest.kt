@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -18,6 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEven
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
 
@@ -58,7 +58,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     val prisonerNumber = "A1234AB"
     stubPrisonSearchWithNotFoundResponse(prisonerNumber)
     val request = CreateContactRequest(
-      lastName = RandomStringUtils.random(35),
+      lastName = RandomStringUtils.secure().next(35),
       firstName = "a new guy",
       createdBy = "created",
       relationship = ContactRelationship(
@@ -98,7 +98,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       comments = null,
     )
     val request = CreateContactRequest(
-      lastName = RandomStringUtils.random(35),
+      lastName = RandomStringUtils.secure().next(35),
       firstName = "a new guy",
       createdBy = "created",
       relationship = requestedRelationship,
@@ -138,7 +138,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       comments = null,
     )
     val request = CreateContactRequest(
-      lastName = RandomStringUtils.random(35),
+      lastName = RandomStringUtils.secure().next(35),
       firstName = "a new guy",
       createdBy = "created",
       relationship = requestedRelationship,
@@ -174,7 +174,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       comments = "Some comments",
     )
     val request = CreateContactRequest(
-      lastName = RandomStringUtils.random(35),
+      lastName = RandomStringUtils.secure().next(35),
       firstName = "a new guy",
       createdBy = "created",
       relationship = requestedRelationship,

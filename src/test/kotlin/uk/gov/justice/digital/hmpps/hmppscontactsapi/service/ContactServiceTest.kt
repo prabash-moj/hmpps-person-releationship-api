@@ -93,7 +93,7 @@ class ContactServiceTest {
         dateOfBirth = LocalDate.of(1982, 6, 15),
         createdBy = "created",
       )
-      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
       whenever(contactAddressDetailsRepository.findByContactId(any())).thenReturn(listOf(aContactAddressDetailsEntity))
 
       val result = service.createContact(request)
@@ -133,7 +133,7 @@ class ContactServiceTest {
         dateOfBirth = null,
         createdBy = "created",
       )
-      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
 
       val result = service.createContact(request)
 
@@ -173,7 +173,7 @@ class ContactServiceTest {
         dateOfBirth = null,
         createdBy = "created",
       )
-      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
 
       val result = service.createContact(request)
 
@@ -207,7 +207,7 @@ class ContactServiceTest {
           prisonId = "MDI",
         ),
       )
-      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", "FRI")).thenReturn(
         ReferenceCode(1, "RELATIONSHIP", "FRI", "Friend", 1, true),
@@ -256,7 +256,7 @@ class ContactServiceTest {
         ),
       )
       whenever(prisonerService.getPrisoner(any())).thenReturn(Prisoner("A1234BC", prisonId = "MDI"))
-      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenThrow(RuntimeException("Bang!"))
 
       assertThrows<RuntimeException>("Bang!") {

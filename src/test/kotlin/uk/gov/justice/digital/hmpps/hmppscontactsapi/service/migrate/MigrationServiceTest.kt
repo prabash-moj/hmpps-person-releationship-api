@@ -16,10 +16,10 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmploymentEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithFixedIdEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
@@ -41,15 +41,15 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmploymentRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestrictionRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactWithFixedIdRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class MigrationServiceTest {
-  private val contactRepository: ContactRepository = mock()
+  private val contactRepository: ContactWithFixedIdRepository = mock()
   private val contactAddressRepository: ContactAddressRepository = mock()
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
   private val contactPhoneRepository: ContactPhoneRepository = mock()
@@ -91,7 +91,7 @@ class MigrationServiceTest {
       whenever(contactRepository.existsById(1L)).thenReturn(false)
       whenever(contactRepository.save(any())).thenReturn(contact)
 
-      val contactCaptor = argumentCaptor<ContactEntity>()
+      val contactCaptor = argumentCaptor<ContactWithFixedIdEntity>()
 
       val result = migrationService.migrateContact(request)
 
@@ -118,7 +118,7 @@ class MigrationServiceTest {
 
     @Test
     fun `should identify duplicate requests for the same contact and replace them`() {
-      val contactCaptor = argumentCaptor<ContactEntity>()
+      val contactCaptor = argumentCaptor<ContactWithFixedIdEntity>()
       val contact = aContactEntity(1L)
 
       whenever(contactRepository.existsById(1L)).thenReturn(false)
@@ -178,7 +178,7 @@ class MigrationServiceTest {
 
       whenever(contactRepository.save(any())).thenReturn(contact)
 
-      val contactCaptor = argumentCaptor<ContactEntity>()
+      val contactCaptor = argumentCaptor<ContactWithFixedIdEntity>()
 
       val result = migrationService.extractAndSaveContact(request)
 
@@ -799,7 +799,7 @@ class MigrationServiceTest {
     }
 
   private fun aContactEntity(contactId: Long = 1L) =
-    ContactEntity(
+    ContactWithFixedIdEntity(
       contactId = contactId,
       title = "Mr",
       firstName = "John",

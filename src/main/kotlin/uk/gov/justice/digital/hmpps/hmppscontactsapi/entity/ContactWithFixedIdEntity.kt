@@ -1,8 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
 import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
@@ -11,19 +9,18 @@ import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 
 /**
- * If making changes to this class they should be reflected in BaseContactEntity and ContactWithFixedIdEntity as well.
+ * If making changes to this class they should be reflected in BaseContactEntity and ContactEntity as well.
  *
- * Generates a new id using the identity column. If syncing from NOMIS you should use ContactWithFixedIdEntity
- * instead which will not use the sequence and instead provide a specific value from NOMIS person_id.
+ * The id is manually specified using NOMIS person_id. If generating a new contact on DPS you should use ContactEntity
+ * instead which will generate a new id automatically.
  *
  * DPS contact_id is >= 20000000 and NOMIS person_id is < 20000000.
  */
 @Entity
 @Table(name = "contact")
-data class ContactEntity(
+data class ContactWithFixedIdEntity(
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val contactId: Long? = null,
+  val contactId: Long,
   override val title: String?,
   override val firstName: String,
   override val lastName: String,
@@ -62,5 +59,5 @@ data class ContactEntity(
   amendedBy = amendedBy,
   amendedTime = amendedTime,
 ) {
-  override fun id(): Long = requireNotNull(this.contactId) { "Contact id should be non-null once created" }
+  override fun id(): Long = contactId
 }

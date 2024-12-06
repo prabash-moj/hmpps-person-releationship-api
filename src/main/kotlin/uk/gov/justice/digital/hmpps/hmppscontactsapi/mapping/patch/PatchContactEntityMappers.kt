@@ -5,7 +5,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContact
 
 fun ContactEntity.mapToResponse(): PatchContactResponse {
   return PatchContactResponse(
-    id = this.contactId,
+    id = this.id(),
     title = this.title,
     firstName = this.firstName,
     lastName = this.lastName,

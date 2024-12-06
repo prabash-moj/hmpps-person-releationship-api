@@ -9,13 +9,13 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapSyncRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactWithFixedIdRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 
 @Service
 @Transactional
 class SyncContactService(
-  val contactRepository: ContactRepository,
+  val contactRepository: ContactWithFixedIdRepository,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)

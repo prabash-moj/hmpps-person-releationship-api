@@ -28,8 +28,8 @@ fun createContactPhoneDetailsEntity(
   extNumber: String? = "987654321",
   createdBy: String = "CREATOR",
   createdTime: LocalDateTime = LocalDateTime.of(2024, 2, 3, 4, 5, 6),
-  amendedBy: String? = "AM",
-  amendedTime: LocalDateTime? = LocalDateTime.of(2026, 5, 4, 3, 2, 1),
+  updatedBy: String? = "AM",
+  updatedTime: LocalDateTime? = LocalDateTime.of(2026, 5, 4, 3, 2, 1),
 ): ContactPhoneDetailsEntity = ContactPhoneDetailsEntity(
   id,
   contactId,
@@ -39,8 +39,8 @@ fun createContactPhoneDetailsEntity(
   extNumber,
   createdBy,
   createdTime,
-  amendedBy,
-  amendedTime,
+  updatedBy,
+  updatedTime,
 )
 
 fun createContactPhoneNumberDetails(
@@ -52,8 +52,8 @@ fun createContactPhoneNumberDetails(
   extNumber: String? = "987654321",
   createdBy: String = "CREATOR",
   createdTime: LocalDateTime = LocalDateTime.of(2024, 2, 3, 4, 5, 6),
-  amendedBy: String? = "AM",
-  amendedTime: LocalDateTime? = LocalDateTime.of(2026, 5, 4, 3, 2, 1),
+  updatedBy: String? = "AM",
+  updatedTime: LocalDateTime? = LocalDateTime.of(2026, 5, 4, 3, 2, 1),
 ): ContactPhoneDetails = ContactPhoneDetails(
   id,
   contactId,
@@ -63,8 +63,8 @@ fun createContactPhoneNumberDetails(
   extNumber,
   createdBy,
   createdTime,
-  amendedBy,
-  amendedTime,
+  updatedBy,
+  updatedTime,
 )
 
 fun createContactAddressDetailsEntity(
@@ -94,8 +94,8 @@ fun createContactAddressDetailsEntity(
   comments: String? = "Some comments",
   createdBy: String = "USER1",
   createdTime: LocalDateTime = LocalDateTime.of(2023, 2, 3, 11, 15, 15),
-  amendedBy: String? = "AMEND_USER",
-  amendedTime: LocalDateTime = LocalDateTime.of(2024, 5, 6, 12, 30, 30),
+  updatedBy: String? = "AMEND_USER",
+  updatedTime: LocalDateTime = LocalDateTime.of(2024, 5, 6, 12, 30, 30),
 ): ContactAddressDetailsEntity = ContactAddressDetailsEntity(
   id,
   contactId,
@@ -123,8 +123,8 @@ fun createContactAddressDetailsEntity(
   comments,
   createdBy,
   createdTime,
-  amendedBy,
-  amendedTime,
+  updatedBy,
+  updatedTime,
 )
 
 fun createContactAddressDetails(
@@ -155,8 +155,8 @@ fun createContactAddressDetails(
   phoneNumbers: List<ContactPhoneDetails> = emptyList(),
   createdBy: String = "USER1",
   createdTime: LocalDateTime = LocalDateTime.of(2023, 2, 3, 11, 15, 15),
-  amendedBy: String? = "AMEND_USER",
-  amendedTime: LocalDateTime = LocalDateTime.of(2024, 5, 6, 12, 30, 30),
+  updatedBy: String? = "AMEND_USER",
+  updatedTime: LocalDateTime = LocalDateTime.of(2024, 5, 6, 12, 30, 30),
 ): ContactAddressDetails = ContactAddressDetails(
   id,
   contactId,
@@ -185,8 +185,8 @@ fun createContactAddressDetails(
   phoneNumbers,
   createdBy,
   createdTime,
-  amendedBy,
-  amendedTime,
+  updatedBy,
+  updatedTime,
 )
 
 fun createContactEmailEntity(
@@ -195,16 +195,16 @@ fun createContactEmailEntity(
   emailAddress: String = "test@example.com",
   createdBy: String = "USER",
   createdTime: LocalDateTime = LocalDateTime.now(),
-  amendedBy: String? = "AMEND_USER",
-  amendedTime: LocalDateTime? = LocalDateTime.now(),
+  updatedBy: String? = "AMEND_USER",
+  updatedTime: LocalDateTime? = LocalDateTime.now(),
 ) = ContactEmailEntity(
   id,
   contactId,
   emailAddress,
   createdBy,
   createdTime,
-  amendedBy,
-  amendedTime,
+  updatedBy,
+  updatedTime,
 )
 
 fun createContactEmailDetails(
@@ -213,16 +213,16 @@ fun createContactEmailDetails(
   emailAddress: String = "test@example.com",
   createdBy: String = "USER",
   createdTime: LocalDateTime = LocalDateTime.now(),
-  amendedBy: String? = "AMEND_USER",
-  amendedTime: LocalDateTime? = LocalDateTime.now(),
+  updatedBy: String? = "AMEND_USER",
+  updatedTime: LocalDateTime? = LocalDateTime.now(),
 ) = ContactEmailDetails(
   id,
   contactId,
   emailAddress,
   createdBy,
   createdTime,
-  amendedBy,
-  amendedTime,
+  updatedBy,
+  updatedTime,
 )
 
 fun createContactIdentityDetailsEntity(
@@ -235,8 +235,8 @@ fun createContactIdentityDetailsEntity(
   issuingAuthority: String? = "UK",
   createdBy: String = "CRE",
   createdTime: LocalDateTime = LocalDateTime.of(2024, 2, 2, 2, 2, 2),
-  amendedBy: String? = "AMD",
-  amendedTime: LocalDateTime? = LocalDateTime.of(2024, 3, 3, 3, 3, 3),
+  updatedBy: String? = "AMD",
+  updatedTime: LocalDateTime? = LocalDateTime.of(2024, 3, 3, 3, 3, 3),
 ) = ContactIdentityDetailsEntity(
   id,
   contactId,
@@ -247,8 +247,8 @@ fun createContactIdentityDetailsEntity(
   issuingAuthority,
   createdBy,
   createdTime,
-  amendedBy,
-  amendedTime,
+  updatedBy,
+  updatedTime,
 )
 
 fun createContactIdentityDetails(
@@ -261,8 +261,8 @@ fun createContactIdentityDetails(
   issuingAuthority: String? = "UK",
   createdBy: String = "CRE",
   createdTime: LocalDateTime = LocalDateTime.of(2024, 2, 2, 2, 2, 2),
-  amendedBy: String? = "AMD",
-  amendedTime: LocalDateTime? = LocalDateTime.of(2024, 3, 3, 3, 3, 3),
+  updatedBy: String? = "AMD",
+  updatedTime: LocalDateTime? = LocalDateTime.of(2024, 3, 3, 3, 3, 3),
 ) = ContactIdentityDetails(
   id,
   contactId,
@@ -273,8 +273,8 @@ fun createContactIdentityDetails(
   issuingAuthority,
   createdBy,
   createdTime,
-  amendedBy,
-  amendedTime,
+  updatedBy,
+  updatedTime,
 )
 
 fun createPrisonerContactRelationshipDetails(

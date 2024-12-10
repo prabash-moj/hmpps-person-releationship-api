@@ -14,8 +14,8 @@ select
     pcr.comments,
     pcr.created_by,
     pcr.created_time,
-    pcr.amended_by,
-    pcr.amended_time
+    pcr.updated_by,
+    pcr.updated_time
   from prisoner_contact_restriction pcr
   left join reference_codes rc ON rc.group_code = 'RESTRICTION' and rc.code = pcr.restriction_type
 

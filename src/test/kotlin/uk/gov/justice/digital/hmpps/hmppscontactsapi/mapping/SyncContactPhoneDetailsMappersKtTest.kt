@@ -20,8 +20,8 @@ class SyncContactPhoneDetailsMappersKtTest {
         extNumber = "987654321",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.of(2024, 2, 3, 4, 5, 6),
-        amendedBy = "AM",
-        amendedTime = LocalDateTime.of(2026, 5, 4, 3, 2, 1),
+        updatedBy = "AM",
+        updatedTime = LocalDateTime.of(2026, 5, 4, 3, 2, 1),
       ).toModel(),
     ).isEqualTo(
       ContactPhoneDetails(

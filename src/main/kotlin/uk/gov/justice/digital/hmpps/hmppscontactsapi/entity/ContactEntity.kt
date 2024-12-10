@@ -40,8 +40,8 @@ data class ContactEntity(
   override val domesticStatus: String? = null,
   override val languageCode: String? = null,
   override val interpreterRequired: Boolean = false,
-  override val amendedBy: String? = null,
-  override val amendedTime: LocalDateTime? = null,
+  override val updatedBy: String? = null,
+  override val updatedTime: LocalDateTime? = null,
 ) : BaseContactEntity(
   title = title,
   firstName = firstName,
@@ -59,8 +59,8 @@ data class ContactEntity(
   domesticStatus = domesticStatus,
   languageCode = languageCode,
   interpreterRequired = interpreterRequired,
-  amendedBy = amendedBy,
-  amendedTime = amendedTime,
+  updatedBy = updatedBy,
+  updatedTime = updatedTime,
 ) {
   override fun id(): Long = requireNotNull(this.contactId) { "Contact id should be non-null once created" }
 }

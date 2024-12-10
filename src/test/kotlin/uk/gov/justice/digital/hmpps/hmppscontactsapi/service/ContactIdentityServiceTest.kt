@@ -143,7 +143,7 @@ class ContactIdentityServiceTest {
       "PASS",
       "P987654321",
       "Passport office",
-      "amended",
+      "updated",
     )
     private val contactIdentityId = 1234L
     private val existingIdentity = ContactIdentityEntity(
@@ -154,8 +154,8 @@ class ContactIdentityServiceTest {
       issuingAuthority = null,
       createdBy = "USER99",
       createdTime = now().minusDays(2),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test
@@ -245,7 +245,7 @@ class ContactIdentityServiceTest {
           issuingAuthority = "Passport office",
           createdBy = "USER99",
           createdTime = existingIdentity.createdTime,
-          updatedBy = "amended",
+          updatedBy = "updated",
           updatedTime = updated.updatedTime,
         ),
       )
@@ -265,8 +265,8 @@ class ContactIdentityServiceTest {
       issuingAuthority = "DVLA",
       createdBy = "USER1",
       createdTime = createdTime,
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test
@@ -310,8 +310,8 @@ class ContactIdentityServiceTest {
       identityValue = "DL123456789",
       createdBy = "USER99",
       createdTime = now().minusDays(2),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test

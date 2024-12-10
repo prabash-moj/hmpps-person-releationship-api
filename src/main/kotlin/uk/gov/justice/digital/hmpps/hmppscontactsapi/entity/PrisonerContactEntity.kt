@@ -52,7 +52,7 @@ data class PrisonerContactEntity(
 
   var createdAtPrison: String? = null
 
-  var amendedBy: String? = null
+  var updatedBy: String? = null
 
-  var amendedTime: LocalDateTime? = null
+  var updatedTime: LocalDateTime? = null
 }

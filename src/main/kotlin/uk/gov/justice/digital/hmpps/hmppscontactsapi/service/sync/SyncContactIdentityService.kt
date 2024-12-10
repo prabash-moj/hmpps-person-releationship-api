@@ -53,8 +53,8 @@ class SyncContactIdentityService(
       contactId = request.contactId,
       identityType = request.identityType,
       identityValue = request.identityValue,
-      amendedBy = request.updatedBy,
-      amendedTime = request.updatedTime,
+      updatedBy = request.updatedBy,
+      updatedTime = request.updatedTime,
     )
 
     return contactIdentityRepository.saveAndFlush(changedContactIdentity).toModel()

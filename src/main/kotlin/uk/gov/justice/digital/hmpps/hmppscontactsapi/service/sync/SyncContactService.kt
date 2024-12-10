@@ -67,8 +67,8 @@ class SyncContactService(
       domesticStatus = request.domesticStatus,
       languageCode = request.languageCode,
       interpreterRequired = request.interpreterRequired ?: false,
-      amendedBy = request.updatedBy,
-      amendedTime = request.updatedTime,
+      updatedBy = request.updatedBy,
+      updatedTime = request.updatedTime,
     )
 
     return contactRepository.saveAndFlush(changedContact).mapEntityToSyncResponse()

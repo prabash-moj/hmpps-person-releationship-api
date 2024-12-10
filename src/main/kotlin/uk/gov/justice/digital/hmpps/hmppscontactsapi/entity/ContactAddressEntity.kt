@@ -56,8 +56,8 @@ data class ContactAddressEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
 ) {
-  var amendedBy: String? = null
-  var amendedTime: LocalDateTime? = null
+  var updatedBy: String? = null
+  var updatedTime: LocalDateTime? = null
   var verifiedBy: String? = null
   var verifiedTime: LocalDateTime? = null
 

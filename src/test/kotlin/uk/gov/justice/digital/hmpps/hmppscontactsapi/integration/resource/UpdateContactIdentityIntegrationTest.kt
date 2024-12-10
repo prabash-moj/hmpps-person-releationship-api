@@ -135,7 +135,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     val request = UpdateIdentityRequest(
       identityType = "MACRO",
       identityValue = "DL123456789",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val errors = webTestClient.put()
@@ -160,7 +160,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     val request = UpdateIdentityRequest(
       identityType = "NHS",
       identityValue = "Is active is false",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val errors = webTestClient.put()
@@ -228,7 +228,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       identityType = "PASS",
       identityValue = "P978654312",
       issuingAuthority = null,
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
     val updated = testAPIClient.updateAContactIdentity(savedContactId, savedContactIdentityId, request)
 
@@ -238,7 +238,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       assertThat(issuingAuthority).isNull()
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
-      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedBy).isEqualTo("updated")
       assertThat(updatedTime).isNotNull()
     }
 
@@ -255,7 +255,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       identityType = "PASS",
       identityValue = "P978654312",
       issuingAuthority = "Passport office",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val updated = testAPIClient.updateAContactIdentity(savedContactId, savedContactIdentityId, request)
@@ -266,7 +266,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       assertThat(issuingAuthority).isEqualTo(request.issuingAuthority)
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
-      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedBy).isEqualTo("updated")
       assertThat(updatedTime).isNotNull()
     }
 
@@ -297,7 +297,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     private fun aMinimalRequest() = UpdateIdentityRequest(
       identityType = "DL",
       identityValue = "DL123456789",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
   }
 }

@@ -184,8 +184,8 @@ class ContactService(
     it.approvedTime = this.approvedTime
     it.expiryDate = this.expiryDate
     it.createdAtPrison = this.createdAtPrison
-    it.amendedBy = request.updatedBy
-    it.amendedTime = LocalDateTime.now()
+    it.updatedBy = request.updatedBy
+    it.updatedTime = LocalDateTime.now()
   }
 
   private fun validateRelationshipTypeCode(request: UpdateRelationshipRequest) {

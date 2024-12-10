@@ -425,8 +425,8 @@ class RestrictionsServiceTest {
       comments = "Some comments",
       createdBy = "created",
       createdTime = now(),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test
@@ -643,8 +643,8 @@ class RestrictionsServiceTest {
       comments = "Some comments",
       createdBy = "created",
       createdTime = now(),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test

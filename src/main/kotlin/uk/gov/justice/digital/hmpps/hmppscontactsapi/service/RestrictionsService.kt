@@ -37,7 +37,7 @@ class RestrictionsService(
   fun getGlobalRestrictionsForContact(contactId: Long): List<ContactRestrictionDetails> {
     validateContactExists(contactId)
     val restrictionsWithEnteredBy = contactRestrictionDetailsRepository.findAllByContactId(contactId)
-      .map { entity -> entity to (entity.amendedBy ?: entity.createdBy) }
+      .map { entity -> entity to (entity.updatedBy ?: entity.createdBy) }
     val enteredByMap = restrictionsWithEnteredBy
       .map { (_, enteredByUsername) -> enteredByUsername }
       .toSet().associateWith { enteredByUsername -> manageUsersService.getUserByUsername(enteredByUsername)?.name ?: enteredByUsername }
@@ -54,8 +54,8 @@ class RestrictionsService(
         enteredByDisplayName = enteredByMap[enteredByUsername] ?: enteredByUsername,
         createdBy = entity.createdBy,
         createdTime = entity.createdTime,
-        updatedBy = entity.amendedBy,
-        updatedTime = entity.amendedTime,
+        updatedBy = entity.updatedBy,
+        updatedTime = entity.updatedTime,
       )
     }
   }
@@ -65,7 +65,7 @@ class RestrictionsService(
       .orElseThrow { EntityNotFoundException("Prisoner contact ($prisonerContactId) could not be found") }
     val restrictionsWithEnteredBy = prisonerContactRestrictionDetailsRepository.findAllByPrisonerContactId(
       prisonerContactId,
-    ).map { entity -> entity to (entity.amendedBy ?: entity.createdBy) }
+    ).map { entity -> entity to (entity.updatedBy ?: entity.createdBy) }
     val enteredByMap = restrictionsWithEnteredBy
       .map { (_, enteredByUsername) -> enteredByUsername }
       .toSet().associateWith { enteredByUsername -> manageUsersService.getUserByUsername(enteredByUsername)?.name ?: enteredByUsername }
@@ -85,8 +85,8 @@ class RestrictionsService(
           enteredByDisplayName = enteredByMap[enteredByUsername] ?: enteredByUsername,
           createdBy = entity.createdBy,
           createdTime = entity.createdTime,
-          updatedBy = entity.amendedBy,
-          updatedTime = entity.amendedTime,
+          updatedBy = entity.updatedBy,
+          updatedTime = entity.updatedTime,
         )
       },
       contactGlobalRestrictions = getGlobalRestrictionsForContact(prisonerContact.contactId),
@@ -128,8 +128,8 @@ class RestrictionsService(
         startDate = request.startDate,
         expiryDate = request.expiryDate,
         comments = request.comments,
-        amendedBy = request.updatedBy,
-        amendedTime = LocalDateTime.now(),
+        updatedBy = request.updatedBy,
+        updatedTime = LocalDateTime.now(),
       ),
     )
     return contactRestrictionDetails(updated, type)
@@ -139,7 +139,7 @@ class RestrictionsService(
     entity: ContactRestrictionEntity,
     type: ReferenceCode,
   ): ContactRestrictionDetails {
-    val enteredByUsername = entity.amendedBy ?: entity.createdBy
+    val enteredByUsername = entity.updatedBy ?: entity.createdBy
     val enteredByDisplayName = manageUsersService.getUserByUsername(enteredByUsername)?.name ?: enteredByUsername
     return ContactRestrictionDetails(
       contactRestrictionId = entity.contactRestrictionId,
@@ -153,8 +153,8 @@ class RestrictionsService(
       enteredByDisplayName = enteredByDisplayName,
       createdBy = entity.createdBy,
       createdTime = entity.createdTime,
-      updatedBy = entity.amendedBy,
-      updatedTime = entity.amendedTime,
+      updatedBy = entity.updatedBy,
+      updatedTime = entity.updatedTime,
     )
   }
 
@@ -195,8 +195,8 @@ class RestrictionsService(
         startDate = request.startDate,
         expiryDate = request.expiryDate,
         comments = request.comments,
-        amendedBy = request.updatedBy,
-        amendedTime = LocalDateTime.now(),
+        updatedBy = request.updatedBy,
+        updatedTime = LocalDateTime.now(),
       ),
     )
     return prisonerContactRestrictionDetails(updated, relationship, type)
@@ -207,7 +207,7 @@ class RestrictionsService(
     relationship: PrisonerContactEntity,
     type: ReferenceCode,
   ): PrisonerContactRestrictionDetails {
-    val enteredByUsername = entity.amendedBy ?: entity.createdBy
+    val enteredByUsername = entity.updatedBy ?: entity.createdBy
     val enteredByDisplayName = manageUsersService.getUserByUsername(enteredByUsername)?.name ?: enteredByUsername
     return PrisonerContactRestrictionDetails(
       prisonerContactRestrictionId = entity.prisonerContactRestrictionId,
@@ -223,8 +223,8 @@ class RestrictionsService(
       enteredByDisplayName = enteredByDisplayName,
       createdBy = entity.createdBy,
       createdTime = entity.createdTime,
-      updatedBy = entity.amendedBy,
-      updatedTime = entity.amendedTime,
+      updatedBy = entity.updatedBy,
+      updatedTime = entity.updatedTime,
     )
   }
 

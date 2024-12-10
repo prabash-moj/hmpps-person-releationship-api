@@ -28,6 +28,6 @@ data class ContactEmploymentEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = LocalDateTime.now(),
 ) {
-  var amendedBy: String? = null
-  var amendedTime: LocalDateTime? = null
+  var updatedBy: String? = null
+  var updatedTime: LocalDateTime? = null
 }

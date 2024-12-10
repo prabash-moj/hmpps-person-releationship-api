@@ -23,8 +23,8 @@ fun ContactWithFixedIdEntity.mapEntityToSyncResponse(): SyncContact {
     domesticStatus = this.domesticStatus,
     languageCode = this.languageCode,
     interpreterRequired = this.interpreterRequired,
-    updatedBy = this.amendedBy,
-    updatedTime = this.amendedTime,
+    updatedBy = this.updatedBy,
+    updatedTime = this.updatedTime,
   )
 }
 
@@ -46,6 +46,6 @@ fun SyncCreateContactRequest.mapSyncRequestToEntity() = ContactWithFixedIdEntity
   domesticStatus = this.domesticStatus,
   languageCode = this.languageCode,
   interpreterRequired = this.interpreterRequired ?: false,
-  amendedBy = null,
-  amendedTime = null,
+  updatedBy = null,
+  updatedTime = null,
 )

@@ -118,8 +118,8 @@ class SyncContactIdentityServiceTest {
       // Checks the entity saved
       with(identityCaptor.firstValue) {
         assertThat(identityType).isEqualTo(request.identityType)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
 
       // Checks the model returned
@@ -206,8 +206,8 @@ class SyncContactIdentityServiceTest {
       identityValue = this.identityValue,
       issuingAuthority = this.issuingAuthority,
       createdBy = "TEST",
-      amendedBy = this.updatedBy,
-      amendedTime = this.updatedTime,
+      updatedBy = this.updatedBy,
+      updatedTime = this.updatedTime,
     )
   }
 }

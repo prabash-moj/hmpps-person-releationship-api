@@ -67,8 +67,8 @@ class SyncContactAddressService(
       noFixedAddress = request.noFixedAddress ?: false,
       comments = request.comments,
     ).also {
-      it.amendedBy = request.updatedBy
-      it.amendedTime = request.updatedTime
+      it.updatedBy = request.updatedBy
+      it.updatedTime = request.updatedTime
       if (!contactAddress.verified && request.verified) {
         it.verifiedBy = request.updatedBy
         it.verifiedTime = LocalDateTime.now()

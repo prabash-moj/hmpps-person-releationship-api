@@ -14,8 +14,8 @@ select
     cr.comments,
     cr.created_by,
     cr.created_time,
-    cr.amended_by,
-    cr.amended_time
+    cr.updated_by,
+    cr.updated_time
   from contact_restriction cr
   left join reference_codes rc ON rc.group_code = 'RESTRICTION' and rc.code = cr.restriction_type
 

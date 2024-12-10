@@ -16,8 +16,8 @@ fun ContactAddressPhoneEntity.toModel(phoneEntity: ContactPhoneEntity) =
     extNumber = phoneEntity.extNumber,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
-    updatedBy = this.amendedBy,
-    updatedTime = this.amendedTime,
+    updatedBy = this.updatedBy,
+    updatedTime = this.updatedTime,
   )
 
 fun SyncCreateContactAddressPhoneRequest.toEntity(phoneEntity: ContactPhoneEntity) =

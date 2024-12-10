@@ -2526,7 +2526,7 @@ values (1, 1, 'A1234BB', 'S', true, 'FA', 'Comment', 'MDI', 'TIM', current_times
        (28, 10, 'A4385DZ', 'S', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
        (29, 18, 'A4385DZ', 'S', true, 'FRI', null, 'MDI', 'TIM', current_timestamp);
 
-insert into prisoner_contact_restriction (prisoner_contact_id, restriction_type, start_date, expiry_date, comments, created_by, created_time, amended_by, amended_time )
+insert into prisoner_contact_restriction (prisoner_contact_id, restriction_type, start_date, expiry_date, comments, created_by, created_time, updated_by, updated_time )
 values
     (12, 'PREINF', '2024-01-01', '2024-12-31', 'Restriction due to ongoing investigation', 'admin', '2024-10-01 12:00:00', 'editor', '2024-10-02 15:30:00'),
     (12, 'CHILD', '2023-06-01', '2024-01-01', 'Limited contact allowed', 'supervisor', '2023-05-31 09:00:00', 'manager', '2023-07-01 10:00:00'),

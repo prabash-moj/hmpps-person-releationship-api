@@ -74,8 +74,8 @@ class SyncContactAddressPhoneService(
         phoneType = request.phoneType,
         phoneNumber = request.phoneNumber,
         extNumber = request.extNumber,
-        amendedBy = request.updatedBy,
-        amendedTime = request.updatedTime,
+        updatedBy = request.updatedBy,
+        updatedTime = request.updatedTime,
       ),
     )
 

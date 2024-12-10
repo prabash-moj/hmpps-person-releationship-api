@@ -82,10 +82,10 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "phoneType must not be null;{\"phoneType\": null, \"phoneNumber\": \"0123456789\", \"updatedBy\": \"amended\"}",
-      "phoneType must not be null;{\"phoneNumber\": \"0123456789\", \"updatedBy\": \"amended\"}",
-      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": null, \"updatedBy\": \"amended\"}",
-      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"updatedBy\": \"amended\"}",
+      "phoneType must not be null;{\"phoneType\": null, \"phoneNumber\": \"0123456789\", \"updatedBy\": \"updated\"}",
+      "phoneType must not be null;{\"phoneNumber\": \"0123456789\", \"updatedBy\": \"updated\"}",
+      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": null, \"updatedBy\": \"updated\"}",
+      "phoneNumber must not be null;{\"phoneType\": \"MOB\", \"updatedBy\": \"updated\"}",
       "updatedBy must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": \"0123456789\", \"updatedBy\": null}",
       "updatedBy must not be null;{\"phoneType\": \"MOB\", \"phoneNumber\": \"0123456789\"}",
     ],
@@ -138,7 +138,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     val request = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = phoneNumber,
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val errors = webTestClient.put()
@@ -163,7 +163,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     val request = UpdatePhoneRequest(
       phoneType = "SATELLITE",
       phoneNumber = "+44777777777 (0123)",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val errors = webTestClient.put()
@@ -231,7 +231,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
       extNumber = null,
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val updated = testAPIClient.updateAContactPhone(savedContactId, savedContactPhoneId, request)
@@ -242,7 +242,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       assertThat(extNumber).isNull()
       assertThat(createdBy).isEqualTo("USER1")
       assertThat(createdTime).isNotNull()
-      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedBy).isEqualTo("updated")
       assertThat(updatedTime).isNotNull()
     }
 
@@ -259,7 +259,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
       extNumber = "9999",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val updated = testAPIClient.updateAContactPhone(savedContactId, savedContactPhoneId, request)
@@ -270,7 +270,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       assertThat(extNumber).isEqualTo(request.extNumber)
       assertThat(createdBy).isEqualTo("USER1")
       assertThat(createdTime).isNotNull()
-      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedBy).isEqualTo("updated")
       assertThat(updatedTime).isNotNull()
     }
 
@@ -301,7 +301,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     private fun aMinimalRequest() = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
   }
 }

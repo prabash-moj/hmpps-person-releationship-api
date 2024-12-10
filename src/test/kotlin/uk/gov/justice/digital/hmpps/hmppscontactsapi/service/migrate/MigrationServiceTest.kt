@@ -103,7 +103,7 @@ class MigrationServiceTest {
 
       with(contactCaptor.firstValue) {
         assertThat(this)
-          .extracting("contactId", "lastName", "firstName", "createdBy", "createdTime", "amendedBy", "amendedTime")
+          .extracting("contactId", "lastName", "firstName", "createdBy", "createdTime", "updatedBy", "updatedTime")
           .contains(
             request.personId,
             request.lastName,
@@ -191,7 +191,7 @@ class MigrationServiceTest {
 
       with(contactCaptor.firstValue) {
         assertThat(this)
-          .extracting("contactId", "lastName", "firstName", "createdBy", "createdTime", "amendedBy", "amendedTime")
+          .extracting("contactId", "lastName", "firstName", "createdBy", "createdTime", "updatedBy", "updatedTime")
           .contains(
             1L,
             request.lastName,
@@ -811,8 +811,8 @@ class MigrationServiceTest {
       deceasedDate = null,
       createdBy = aUsername,
       createdTime = aDateTime,
-      amendedTime = aDateTime,
-      amendedBy = aUsername,
+      updatedTime = aDateTime,
+      updatedBy = aUsername,
     )
 
   private fun phoneNumbers() =

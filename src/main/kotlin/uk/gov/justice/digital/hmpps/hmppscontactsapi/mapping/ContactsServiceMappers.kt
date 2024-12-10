@@ -95,8 +95,8 @@ private fun newContact(
     domesticStatus = null,
     languageCode = null,
     interpreterRequired = false,
-    amendedBy = null,
-    amendedTime = null,
+    updatedBy = null,
+    updatedTime = null,
   )
 }
 

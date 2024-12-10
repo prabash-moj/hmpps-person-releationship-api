@@ -21,7 +21,7 @@ fun ContactEntity.mapToResponse(): PatchContactResponse {
     domesticStatus = this.domesticStatus,
     languageCode = this.languageCode,
     interpreterRequired = this.interpreterRequired,
-    updatedBy = this.amendedBy,
-    updatedTime = this.amendedTime,
+    updatedBy = this.updatedBy,
+    updatedTime = this.updatedTime,
   )
 }

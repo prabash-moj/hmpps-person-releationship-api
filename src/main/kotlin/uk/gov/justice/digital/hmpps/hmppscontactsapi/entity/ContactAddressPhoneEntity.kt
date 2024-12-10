@@ -26,7 +26,7 @@ data class ContactAddressPhoneEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = LocalDateTime.now(),
 
-  val amendedBy: String? = null,
+  val updatedBy: String? = null,
 
-  val amendedTime: LocalDateTime? = null,
+  val updatedTime: LocalDateTime? = null,
 )

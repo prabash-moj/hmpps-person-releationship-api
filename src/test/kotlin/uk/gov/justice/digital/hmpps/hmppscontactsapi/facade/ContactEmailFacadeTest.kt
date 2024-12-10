@@ -73,7 +73,7 @@ class ContactEmailFacadeTest {
     whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
     val request = UpdateEmailRequest(
       emailAddress = "test@example.com",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val result = facade.update(contactId, contactEmailId, request)
@@ -95,7 +95,7 @@ class ContactEmailFacadeTest {
     whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
     val request = UpdateEmailRequest(
       emailAddress = "test@example.com",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val exception = assertThrows<RuntimeException> {

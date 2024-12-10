@@ -14,8 +14,8 @@ select
     ci.issuing_authority,
     ci.created_by,
     ci.created_time,
-    ci.amended_by,
-    ci.amended_time
+    ci.updated_by,
+    ci.updated_time
   from contact_identity ci
   left join reference_codes rc ON rc.group_code = 'ID_TYPE' and rc.code = ci.identity_type
 

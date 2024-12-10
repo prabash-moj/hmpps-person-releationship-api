@@ -58,8 +58,8 @@ class ContactPhoneService(
       phoneType = request.phoneType,
       phoneNumber = request.phoneNumber,
       extNumber = request.extNumber,
-      amendedBy = request.updatedBy,
-      amendedTime = LocalDateTime.now(),
+      updatedBy = request.updatedBy,
+      updatedTime = LocalDateTime.now(),
     )
 
     val updated = contactPhoneRepository.saveAndFlush(updating)
@@ -109,7 +109,7 @@ class ContactPhoneService(
     this.extNumber,
     this.createdBy,
     this.createdTime,
-    this.amendedBy,
-    this.amendedTime,
+    this.updatedBy,
+    this.updatedTime,
   )
 }

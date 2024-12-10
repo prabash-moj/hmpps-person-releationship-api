@@ -45,8 +45,8 @@ fun PrisonerContactEntity.toResponse(): SyncPrisonerContact {
     approvedBy = this.approvedBy,
     approvedTime = this.approvedTime,
     expiryDate = this.expiryDate,
-    updatedTime = this.amendedTime,
-    updatedBy = this.amendedBy,
+    updatedTime = this.updatedTime,
+    updatedBy = this.updatedBy,
     createdAtPrison = this.createdAtPrison,
   )
 }

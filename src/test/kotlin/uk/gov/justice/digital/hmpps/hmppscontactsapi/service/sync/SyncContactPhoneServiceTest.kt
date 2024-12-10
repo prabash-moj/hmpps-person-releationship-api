@@ -126,8 +126,8 @@ class SyncContactPhoneServiceTest {
         assertThat(phoneType).isEqualTo(request.phoneType)
         assertThat(phoneNumber).isEqualTo(request.phoneNumber)
         assertThat(extNumber).isEqualTo(request.extNumber)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
 
       // Checks the model returned
@@ -218,8 +218,8 @@ class SyncContactPhoneServiceTest {
       phoneNumber = this.phoneNumber,
       extNumber = this.extNumber,
       createdBy = "TEST",
-      amendedBy = updatedBy,
-      amendedTime = updatedTime,
+      updatedBy = updatedBy,
+      updatedTime = updatedTime,
     )
   }
 }

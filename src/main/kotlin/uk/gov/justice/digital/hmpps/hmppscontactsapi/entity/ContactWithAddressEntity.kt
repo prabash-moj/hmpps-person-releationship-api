@@ -78,7 +78,7 @@ data class ContactWithAddressEntity(
 
   val comments: String? = null,
 
-  val amendedBy: String? = null,
+  val updatedBy: String? = null,
 
-  val amendedTime: Instant? = null,
+  val updatedTime: Instant? = null,
 )

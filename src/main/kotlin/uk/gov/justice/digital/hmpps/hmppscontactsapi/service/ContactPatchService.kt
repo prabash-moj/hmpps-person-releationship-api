@@ -49,8 +49,8 @@ class ContactPatchService(
       title = request.title.orElse(this.title),
       middleNames = request.middleNames.orElse(this.middleNames),
       gender = request.gender.orElse(this.gender),
-      amendedBy = request.updatedBy,
-      amendedTime = LocalDateTime.now(),
+      updatedBy = request.updatedBy,
+      updatedTime = LocalDateTime.now(),
     )
 
     return changedContact

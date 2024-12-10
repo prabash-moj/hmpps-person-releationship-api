@@ -18,6 +18,6 @@ data class ContactIdentityDetailsEntity(
   val issuingAuthority: String?,
   val createdBy: String,
   val createdTime: LocalDateTime,
-  val amendedBy: String?,
-  val amendedTime: LocalDateTime?,
+  val updatedBy: String?,
+  val updatedTime: LocalDateTime?,
 )

@@ -145,8 +145,8 @@ class SyncContactAddressServiceTest {
         assertThat(countyCode).isEqualTo(request.countyCode)
         assertThat(countryCode).isEqualTo(request.countryCode)
         assertThat(postCode).isEqualTo(request.postcode)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
 
       // Checks the model returned
@@ -287,8 +287,8 @@ class SyncContactAddressServiceTest {
       countryCode = this.countryCode,
       createdBy = "TEST",
     ).also {
-      it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
+      it.updatedBy = updatedBy
+      it.updatedTime = updatedTime
     }
   }
 }

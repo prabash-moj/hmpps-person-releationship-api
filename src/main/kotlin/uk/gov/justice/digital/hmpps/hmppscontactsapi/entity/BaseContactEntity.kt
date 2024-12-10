@@ -50,9 +50,9 @@ abstract class BaseContactEntity(
 
   open val interpreterRequired: Boolean = false,
 
-  open val amendedBy: String? = null,
+  open val updatedBy: String? = null,
 
-  open val amendedTime: LocalDateTime? = null,
+  open val updatedTime: LocalDateTime? = null,
 ) {
   abstract fun id(): Long
 }

@@ -76,7 +76,7 @@ class ContactIdentityFacadeTest {
     val request = UpdateIdentityRequest(
       identityType = "PASS",
       identityValue = "P978654312",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val result = facade.update(contactId, contactIdentityId, request)
@@ -99,7 +99,7 @@ class ContactIdentityFacadeTest {
     val request = UpdateIdentityRequest(
       identityType = "PASS",
       identityValue = "P978654312",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val exception = assertThrows<RuntimeException> {

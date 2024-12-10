@@ -9,6 +9,6 @@ fun ContactEmailEntity.toModel(): ContactEmailDetails = ContactEmailDetails(
   this.emailAddress,
   this.createdBy,
   this.createdTime,
-  this.amendedBy,
-  this.amendedTime,
+  this.updatedBy,
+  this.updatedTime,
 )

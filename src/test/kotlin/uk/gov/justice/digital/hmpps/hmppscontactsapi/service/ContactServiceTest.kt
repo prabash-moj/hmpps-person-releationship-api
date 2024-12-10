@@ -702,8 +702,8 @@ class ContactServiceTest {
         with(prisonerContactCaptor.firstValue) {
           // assert changed
           assertThat(relationshipType).isEqualTo("FRI")
-          assertThat(amendedBy).isEqualTo("Admin")
-          assertThat(amendedTime).isInThePast()
+          assertThat(updatedBy).isEqualTo("Admin")
+          assertThat(updatedTime).isInThePast()
           // assert unchanged
           assertThat(nextOfKin).isTrue()
           assertThat(emergencyContact).isTrue()
@@ -767,8 +767,8 @@ class ContactServiceTest {
         with(prisonerContactCaptor.firstValue) {
           // assert changed
           assertThat(nextOfKin).isFalse()
-          assertThat(amendedBy).isEqualTo("Admin")
-          assertThat(amendedTime).isInThePast()
+          assertThat(updatedBy).isEqualTo("Admin")
+          assertThat(updatedTime).isInThePast()
           // assert unchanged
           assertThat(relationshipType).isEqualTo("BRO")
           assertThat(emergencyContact).isTrue()
@@ -816,8 +816,8 @@ class ContactServiceTest {
         with(prisonerContactCaptor.firstValue) {
           // assert changed
           assertThat(emergencyContact).isFalse()
-          assertThat(amendedBy).isEqualTo("Admin")
-          assertThat(amendedTime).isInThePast()
+          assertThat(updatedBy).isEqualTo("Admin")
+          assertThat(updatedTime).isInThePast()
           // assert unchanged
           assertThat(relationshipType).isEqualTo("BRO")
           assertThat(nextOfKin).isTrue()
@@ -865,8 +865,8 @@ class ContactServiceTest {
         with(prisonerContactCaptor.firstValue) {
           // assert changed
           assertThat(active).isFalse()
-          assertThat(amendedBy).isEqualTo("Admin")
-          assertThat(amendedTime).isInThePast()
+          assertThat(updatedBy).isEqualTo("Admin")
+          assertThat(updatedTime).isInThePast()
           // assert unchanged
           assertThat(relationshipType).isEqualTo("BRO")
           assertThat(nextOfKin).isTrue()
@@ -919,8 +919,8 @@ class ContactServiceTest {
         with(prisonerContactCaptor.firstValue) {
           // assert changed
           assertThat(comments).isEqualTo("a comment")
-          assertThat(amendedBy).isEqualTo("Admin")
-          assertThat(amendedTime).isInThePast()
+          assertThat(updatedBy).isEqualTo("Admin")
+          assertThat(updatedTime).isInThePast()
           // assert unchanged
           assertThat(relationshipType).isEqualTo("BRO")
           assertThat(nextOfKin).isTrue()
@@ -965,8 +965,8 @@ class ContactServiceTest {
       with(prisonerContactCaptor.firstValue) {
         // assert changed
 
-        assertThat(amendedBy).isEqualTo("Admin")
-        assertThat(amendedTime).isInThePast()
+        assertThat(updatedBy).isEqualTo("Admin")
+        assertThat(updatedTime).isInThePast()
         // assert unchanged
         assertThat(nextOfKin).isTrue()
         assertThat(relationshipType).isEqualTo("BRO")
@@ -1020,8 +1020,8 @@ class ContactServiceTest {
         approvedTime = LocalDateTime.now()
         expiryDate = LocalDate.of(2025, 12, 31)
         createdAtPrison = "LONDON"
-        amendedBy = "adminUser"
-        amendedTime = LocalDateTime.now()
+        updatedBy = "adminUser"
+        updatedTime = LocalDateTime.now()
       }
     }
 

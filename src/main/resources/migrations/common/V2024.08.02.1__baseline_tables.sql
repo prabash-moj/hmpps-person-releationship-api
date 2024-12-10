@@ -26,8 +26,8 @@ CREATE TABLE contact
     interpreter_required boolean NOT NULL DEFAULT false,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_contact_last_name ON contact(last_name);
@@ -51,8 +51,8 @@ CREATE TABLE contact_identity
     issuing_authority varchar(40), -- e.g. UK passport agency, DVLA
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_contact_identity_contact_id ON contact_identity(contact_id);
@@ -88,8 +88,8 @@ CREATE TABLE contact_address
     comments varchar(240),
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_contact_address_contact_id ON contact_address(contact_id);
@@ -109,8 +109,8 @@ CREATE TABLE contact_email
     email_address varchar(240) NOT NULL,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_contact_email_contact_id ON contact_email(contact_id);
@@ -130,8 +130,8 @@ CREATE TABLE contact_phone
     ext_number varchar(7),
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_contact_phone_contact_id ON contact_phone(contact_id);
@@ -152,8 +152,8 @@ CREATE TABLE contact_address_phone
     contact_phone_id bigint NOT NULL REFERENCES contact_phone(contact_phone_id),
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_contact_address_phone_contact_id ON contact_address_phone(contact_id);
@@ -176,8 +176,8 @@ CREATE TABLE contact_restriction
     comments          varchar(240),
     created_by        varchar(100) NOT NULL,
     created_time      timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by        varchar(100),
-    amended_time      timestamp
+    updated_by        varchar(100),
+    updated_time      timestamp
 );
 
 CREATE INDEX idx_contact_restriction_contact_id ON contact_restriction(contact_id);
@@ -209,8 +209,8 @@ CREATE TABLE prisoner_contact
     created_at_prison varchar(5), -- prison code where this contact was created (for info)
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_prisoner_contact_contact_id ON prisoner_contact(contact_id);
@@ -234,8 +234,8 @@ CREATE TABLE prisoner_contact_restriction
     comments varchar(255),
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_prisoner_contact_restriction_contact_id ON prisoner_contact_restriction(prisoner_contact_id);
@@ -258,8 +258,8 @@ CREATE TABLE contact_employment
     active boolean NOT NULL DEFAULT true,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by varchar(100),
-    amended_time timestamp
+    updated_by varchar(100),
+    updated_time timestamp
 );
 
 CREATE INDEX idx_contact_employment_contact_id ON contact_employment(contact_id);
@@ -283,8 +283,8 @@ CREATE TABLE reference_codes
     is_active           boolean NOT NULL,
     created_by          varchar(100) NOT NULL,
     created_time        timestamp NOT NULL DEFAULT current_timestamp,
-    amended_by          varchar(100),
-    amended_time        timestamp
+    updated_by          varchar(100),
+    updated_time        timestamp
 );
 
 CREATE UNIQUE INDEX idx_reference_code_group ON reference_codes(group_code, code);

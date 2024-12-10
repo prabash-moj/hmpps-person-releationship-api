@@ -170,7 +170,7 @@ class ContactPatchServiceTest {
       val updatingEntity = contactCaptor.firstValue
 
       assertThat(updatingEntity.languageCode).isEqualTo(patchRequest.languageCode.get())
-      assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatingEntity.updatedBy).isEqualTo(patchRequest.updatedBy)
 
       assertThat(response.languageCode).isEqualTo(patchRequest.languageCode.get())
       assertThat(response.updatedBy).isEqualTo(patchRequest.updatedBy)
@@ -199,7 +199,7 @@ class ContactPatchServiceTest {
       val updatingEntity = contactCaptor.firstValue
 
       assertThat(updatingEntity.interpreterRequired).isEqualTo(patchRequest.interpreterRequired.get())
-      assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatingEntity.updatedBy).isEqualTo(patchRequest.updatedBy)
 
       assertThat(response.interpreterRequired).isEqualTo(patchRequest.interpreterRequired.get())
       assertThat(response.updatedBy).isEqualTo(patchRequest.updatedBy)
@@ -327,7 +327,7 @@ class ContactPatchServiceTest {
       val updatingEntity = contactCaptor.firstValue
 
       assertThat(updatingEntity.domesticStatus).isEqualTo(patchRequest.domesticStatus.get())
-      assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatingEntity.updatedBy).isEqualTo(patchRequest.updatedBy)
 
       assertThat(response.domesticStatus).isEqualTo(patchRequest.domesticStatus.get())
       assertThat(response.updatedBy).isEqualTo(patchRequest.updatedBy)
@@ -356,7 +356,7 @@ class ContactPatchServiceTest {
       val updatingEntity = contactCaptor.firstValue
 
       assertThat(updatingEntity.staffFlag).isEqualTo(patchRequest.isStaff.get())
-      assertThat(updatingEntity.amendedBy).isEqualTo(patchRequest.updatedBy)
+      assertThat(updatingEntity.updatedBy).isEqualTo(patchRequest.updatedBy)
 
       assertThat(response.isStaff).isEqualTo(patchRequest.isStaff.get())
       assertThat(response.updatedBy).isEqualTo(patchRequest.updatedBy)
@@ -426,7 +426,7 @@ class ContactPatchServiceTest {
       val updatingEntity = contactCaptor.firstValue
 
       assertThat(updatingEntity.title).isEqualTo("MRS")
-      assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
+      assertThat(updatingEntity.updatedBy).isEqualTo("Modifier")
 
       assertThat(response.title).isEqualTo("MRS")
       assertThat(response.updatedBy).isEqualTo("Modifier")
@@ -451,7 +451,7 @@ class ContactPatchServiceTest {
       val updatingEntity = contactCaptor.firstValue
 
       assertThat(updatingEntity.title).isNull()
-      assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
+      assertThat(updatingEntity.updatedBy).isEqualTo("Modifier")
 
       assertThat(response.title).isNull()
       assertThat(response.updatedBy).isEqualTo("Modifier")
@@ -500,7 +500,7 @@ class ContactPatchServiceTest {
       val updatingEntity = contactCaptor.firstValue
 
       assertThat(updatingEntity.middleNames).isEqualTo("Some Middle Names Updated")
-      assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
+      assertThat(updatingEntity.updatedBy).isEqualTo("Modifier")
 
       assertThat(response.middleNames).isEqualTo("Some Middle Names Updated")
       assertThat(response.updatedBy).isEqualTo("Modifier")
@@ -525,7 +525,7 @@ class ContactPatchServiceTest {
       val updatingEntity = contactCaptor.firstValue
 
       assertThat(updatingEntity.middleNames).isNull()
-      assertThat(updatingEntity.amendedBy).isEqualTo("Modifier")
+      assertThat(updatingEntity.updatedBy).isEqualTo("Modifier")
 
       assertThat(response.middleNames).isNull()
       assertThat(response.updatedBy).isEqualTo("Modifier")
@@ -645,8 +645,8 @@ class ContactPatchServiceTest {
     domesticStatus = domesticStatus,
     languageCode = languageCode,
     interpreterRequired = false,
-    amendedBy = "admin",
-    amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+    updatedBy = "admin",
+    updatedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
   )
 
   private fun assertUnchangedFields(updatedContact: PatchContactResponse) {
@@ -659,7 +659,7 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
     assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
     assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
-    assertThat(updatedContact.updatedTime).isAfter(originalContact.amendedTime)
+    assertThat(updatedContact.updatedTime).isAfter(originalContact.updatedTime)
     assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
   }
 

@@ -34,7 +34,7 @@ data class ContactRestrictionDetailsEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
 
-  val amendedBy: String?,
+  val updatedBy: String?,
 
-  val amendedTime: LocalDateTime?,
+  val updatedTime: LocalDateTime?,
 )

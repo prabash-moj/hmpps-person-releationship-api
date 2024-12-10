@@ -133,8 +133,8 @@ class SyncContactServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
 
       // Checks the model returned
@@ -236,8 +236,8 @@ class SyncContactServiceTest {
       domesticStatus = this.domesticStatus,
       languageCode = this.languageCode,
       interpreterRequired = this.interpreterRequired ?: false,
-      amendedBy = updatedBy,
-      amendedTime = updatedTime,
+      updatedBy = updatedBy,
+      updatedTime = updatedTime,
     )
   }
 }

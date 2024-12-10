@@ -28,8 +28,8 @@ fun ContactAddressEntity.toModel(): SyncContactAddress {
     comments = this.comments,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
-    updatedBy = this.amendedBy,
-    updatedTime = this.amendedTime,
+    updatedBy = this.updatedBy,
+    updatedTime = this.updatedTime,
   )
 }
 

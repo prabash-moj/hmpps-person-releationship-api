@@ -188,7 +188,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
   fun `should not update the email if the email address is invalid`() {
     val request = UpdateEmailRequest(
       emailAddress = "@example.com",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val errors = webTestClient.put()
@@ -216,7 +216,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
   fun `should update the email`() {
     val request = UpdateEmailRequest(
       emailAddress = "updated@example.com",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
     val updated = testAPIClient.updateAContactEmail(savedContactId, savedContactEmailId, request)
 
@@ -224,7 +224,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
       assertThat(emailAddress).isEqualTo("updated@example.com")
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
-      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedBy).isEqualTo("updated")
       assertThat(updatedTime).isNotNull()
     }
 
@@ -249,7 +249,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
 
     private fun aMinimalRequest() = UpdateEmailRequest(
       emailAddress = "updated@example.com",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
   }
 }

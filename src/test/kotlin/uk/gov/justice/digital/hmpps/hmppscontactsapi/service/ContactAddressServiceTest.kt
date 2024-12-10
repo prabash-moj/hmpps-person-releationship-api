@@ -266,8 +266,8 @@ class ContactAddressServiceTest {
         assertThat(countyCode).isEqualTo(request.countyCode)
         assertThat(countryCode).isEqualTo(request.countryCode)
         assertThat(postCode).isEqualTo(request.postcode)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isAfterOrEqualTo(LocalDateTime.now().minusMinutes(1))
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isAfterOrEqualTo(LocalDateTime.now().minusMinutes(1))
       }
 
       // Checks the model returned
@@ -477,8 +477,8 @@ class ContactAddressServiceTest {
       countryCode = this.countryCode,
       createdBy = "TEST",
     ).also {
-      it.amendedBy = updatedBy
-      it.amendedTime = LocalDateTime.now()
+      it.updatedBy = updatedBy
+      it.updatedTime = LocalDateTime.now()
     }
   }
 }

@@ -103,7 +103,7 @@ class ContactEmailServiceTest {
   inner class UpdateEmail {
     private val request = UpdateEmailRequest(
       emailAddress = "updated@example.com",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
     private val contactEmailId = 1234L
     private val existingEmail = ContactEmailEntity(
@@ -112,8 +112,8 @@ class ContactEmailServiceTest {
       emailAddress = "test@example.com",
       createdBy = "USER99",
       createdTime = now().minusDays(2),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test
@@ -169,7 +169,7 @@ class ContactEmailServiceTest {
           emailAddress = "updated@example.com",
           createdBy = "USER99",
           createdTime = existingEmail.createdTime,
-          updatedBy = "amended",
+          updatedBy = "updated",
           updatedTime = updated.updatedTime,
         ),
       )
@@ -185,8 +185,8 @@ class ContactEmailServiceTest {
       emailAddress = "test@example.com",
       createdBy = "USER1",
       createdTime = createdTime,
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test
@@ -225,8 +225,8 @@ class ContactEmailServiceTest {
       emailAddress = "test@example.com",
       createdBy = "USER99",
       createdTime = now().minusDays(2),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test

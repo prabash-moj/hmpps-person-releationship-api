@@ -35,7 +35,7 @@ data class PrisonerContactRestrictionEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
 
-  val amendedBy: String? = null,
+  val updatedBy: String? = null,
 
-  val amendedTime: LocalDateTime? = null,
+  val updatedTime: LocalDateTime? = null,
 )

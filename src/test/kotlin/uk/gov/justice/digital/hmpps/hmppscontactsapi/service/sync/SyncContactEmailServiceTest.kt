@@ -115,8 +115,8 @@ class SyncContactEmailServiceTest {
       // Checks the entity saved
       with(emailCaptor.firstValue) {
         assertThat(emailAddress).isEqualTo(request.emailAddress)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
 
       // Checks the model returned
@@ -197,8 +197,8 @@ class SyncContactEmailServiceTest {
       contactId = this.contactId,
       emailAddress = this.emailAddress,
       createdBy = "TEST",
-      amendedBy = updatedBy,
-      amendedTime = updatedTime,
+      updatedBy = updatedBy,
+      updatedTime = updatedTime,
     )
   }
 }

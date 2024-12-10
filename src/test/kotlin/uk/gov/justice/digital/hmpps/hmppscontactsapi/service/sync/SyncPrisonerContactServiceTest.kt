@@ -89,8 +89,8 @@ class SyncPrisonerContactServiceTest {
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(createdBy).isEqualTo("adminUser")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
       }
 
       // Checks the model response
@@ -164,8 +164,8 @@ class SyncPrisonerContactServiceTest {
         assertThat(createdAtPrison).isEqualTo("HMP Wales")
         assertThat(createdBy).isEqualTo("TEST")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isEqualTo("adminUser")
-        assertThat(amendedTime).isNotNull
+        assertThat(updatedBy).isEqualTo("adminUser")
+        assertThat(updatedTime).isNotNull
       }
 
       // Checks the model returned
@@ -262,8 +262,8 @@ class SyncPrisonerContactServiceTest {
       it.approvedTime = LocalDateTime.now()
       it.expiryDate = LocalDate.of(2025, 12, 31)
       it.createdAtPrison = "LONDN"
-      it.amendedBy = "adminUser"
-      it.amendedTime = LocalDateTime.now()
+      it.updatedBy = "adminUser"
+      it.updatedTime = LocalDateTime.now()
     }
 
   private fun SyncUpdatePrisonerContactRequest.toEntity(): PrisonerContactEntity {
@@ -289,8 +289,8 @@ class SyncPrisonerContactServiceTest {
       it.approvedTime = LocalDateTime.now()
       it.expiryDate = LocalDate.of(2025, 12, 31)
       it.createdAtPrison = "HMP Wales"
-      it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
+      it.updatedBy = updatedBy
+      it.updatedTime = updatedTime
     }
   }
 }

@@ -13,8 +13,8 @@ select
     cp.ext_number,
     cp.created_by,
     cp.created_time,
-    cp.amended_by,
-    cp.amended_time
+    cp.updated_by,
+    cp.updated_time
   from contact_phone cp
   left join reference_codes rc ON rc.group_code = 'PHONE_TYPE' and rc.code = cp.phone_type
 

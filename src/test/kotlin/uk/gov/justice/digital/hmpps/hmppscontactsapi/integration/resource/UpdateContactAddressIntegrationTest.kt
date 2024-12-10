@@ -201,7 +201,7 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       street = "Acacia Avenue",
       area = "Hoggs Bottom",
       postcode = "HB10 1DJ",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
 
     val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
@@ -213,7 +213,7 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(postcode).isEqualTo("HB10 1DJ")
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isNotNull()
-      assertThat(updatedBy).isEqualTo("amended")
+      assertThat(updatedBy).isEqualTo("updated")
       assertThat(updatedTime).isNotNull()
     }
 
@@ -410,7 +410,7 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       mailFlag = false,
       property = "27",
       street = "Hello Road",
-      updatedBy = "amended",
+      updatedBy = "updated",
     )
     private fun aMinimalCreateAddressRequest() = CreateContactAddressRequest(
       addressType = "HOME",

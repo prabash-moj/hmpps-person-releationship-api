@@ -52,8 +52,8 @@ class SyncContactEmailService(
     val changedContactEmail = emailEntity.copy(
       contactId = request.contactId,
       emailAddress = request.emailAddress,
-      amendedBy = request.updatedBy,
-      amendedTime = request.updatedTime,
+      updatedBy = request.updatedBy,
+      updatedTime = request.updatedTime,
     )
 
     return contactEmailRepository.saveAndFlush(changedContactEmail).toModel()

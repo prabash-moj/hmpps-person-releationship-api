@@ -129,8 +129,8 @@ class SyncContactRestrictionServiceTest {
         assertThat(startDate).isEqualTo(request.startDate)
         assertThat(expiryDate).isEqualTo(request.expiryDate)
         assertThat(comments).isEqualTo(request.comments)
-        assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
 
       // Checks the model returned
@@ -226,8 +226,8 @@ class SyncContactRestrictionServiceTest {
       expiryDate = this.expiryDate,
       comments = this.comments,
       createdBy = "TEST",
-      amendedBy = updatedBy,
-      amendedTime = updatedTime,
+      updatedBy = updatedBy,
+      updatedTime = updatedTime,
     )
   }
 }

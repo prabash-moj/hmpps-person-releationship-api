@@ -47,8 +47,8 @@ class SyncPrisonerContactService(
       it.approvedTime = request.approvedTime
       it.expiryDate = request.expiryDate
       it.createdAtPrison = request.createdAtPrison
-      it.amendedBy = request.updatedBy
-      it.amendedTime = request.updatedTime
+      it.updatedBy = request.updatedBy
+      it.updatedTime = request.updatedTime
     }
 
     return prisonerContactRepository.saveAndFlush(changedPrisonerContact).toResponse()

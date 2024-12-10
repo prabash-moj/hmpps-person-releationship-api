@@ -132,8 +132,8 @@ class MigrationService(
           languageCode = req.language?.code,
           domesticStatus = req.domesticStatus?.code,
           interpreterRequired = req.interpreterRequired,
-          amendedBy = req.modifyUsername,
-          amendedTime = req.modifyDateTime,
+          updatedBy = req.modifyUsername,
+          updatedTime = req.modifyDateTime,
         ),
       ),
     )
@@ -152,8 +152,8 @@ class MigrationService(
             extNumber = requestPhone.extension,
             createdBy = requestPhone.createUsername ?: "MIGRATION",
             createdTime = requestPhone.createDateTime ?: LocalDateTime.now(),
-            amendedBy = requestPhone.modifyUsername,
-            amendedTime = requestPhone.modifyDateTime,
+            updatedBy = requestPhone.modifyUsername,
+            updatedTime = requestPhone.modifyDateTime,
           ),
         ),
       )
@@ -186,8 +186,8 @@ class MigrationService(
             createdBy = addr.createUsername ?: "MIGRATION",
             createdTime = addr.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = addr.modifyUsername
-            it.amendedTime = addr.modifyDateTime
+            it.updatedBy = addr.modifyUsername
+            it.updatedTime = addr.modifyDateTime
           },
         ),
       )
@@ -213,8 +213,8 @@ class MigrationService(
               extNumber = phone.extension,
               createdBy = phone.createUsername ?: "MIGRATION",
               createdTime = phone.createDateTime ?: LocalDateTime.now(),
-              amendedBy = phone.modifyUsername,
-              amendedTime = phone.modifyDateTime,
+              updatedBy = phone.modifyUsername,
+              updatedTime = phone.modifyDateTime,
             ),
           )
 
@@ -228,8 +228,8 @@ class MigrationService(
                 contactPhoneId = contactPhone.contactPhoneId,
                 createdBy = phone.createUsername ?: "MIGRATION",
                 createdTime = phone.createDateTime ?: LocalDateTime.now(),
-                amendedBy = phone.modifyUsername,
-                amendedTime = phone.modifyDateTime,
+                updatedBy = phone.modifyUsername,
+                updatedTime = phone.modifyDateTime,
               ),
             ),
           )
@@ -250,8 +250,8 @@ class MigrationService(
             emailAddress = requestEmail.email,
             createdBy = requestEmail.createUsername ?: "MIGRATION",
             createdTime = requestEmail.createDateTime ?: LocalDateTime.now(),
-            amendedBy = requestEmail.modifyUsername,
-            amendedTime = requestEmail.modifyDateTime,
+            updatedBy = requestEmail.modifyUsername,
+            updatedTime = requestEmail.modifyDateTime,
           ),
         ),
       )
@@ -270,8 +270,8 @@ class MigrationService(
             issuingAuthority = requestIdentifier.issuedAuthority,
             createdBy = requestIdentifier.createUsername ?: "MIGRATION",
             createdTime = requestIdentifier.createDateTime ?: LocalDateTime.now(),
-            amendedBy = requestIdentifier.modifyUsername,
-            amendedTime = requestIdentifier.modifyDateTime,
+            updatedBy = requestIdentifier.modifyUsername,
+            updatedTime = requestIdentifier.modifyDateTime,
           ),
         ),
       )
@@ -294,8 +294,8 @@ class MigrationService(
             comments = restriction.comment,
             createdBy = restriction.createUsername ?: "MIGRATION",
             createdTime = restriction.createDateTime ?: LocalDateTime.now(),
-            amendedBy = restriction.modifyUsername,
-            amendedTime = restriction.modifyDateTime,
+            updatedBy = restriction.modifyUsername,
+            updatedTime = restriction.modifyDateTime,
           ),
         ),
       )
@@ -318,8 +318,8 @@ class MigrationService(
             createdBy = employment.createUsername ?: "MIGRATION",
             createdTime = employment.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = employment.modifyUsername
-            it.amendedTime = employment.modifyDateTime
+            it.updatedBy = employment.modifyUsername
+            it.updatedTime = employment.modifyDateTime
           },
         ),
       )
@@ -375,8 +375,8 @@ class MigrationService(
             createdBy = relationship.createUsername ?: "MIGRATION",
             createdTime = relationship.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = relationship.modifyUsername
-            it.amendedTime = relationship.modifyDateTime
+            it.updatedBy = relationship.modifyUsername
+            it.updatedTime = relationship.modifyDateTime
             it.expiryDate = relationship.expiryDate
           },
         ),
@@ -407,8 +407,8 @@ class MigrationService(
               comments = restriction.comment,
               createdBy = restriction.createUsername ?: "MIGRATION",
               createdTime = restriction.createDateTime ?: LocalDateTime.now(),
-              amendedBy = restriction.modifyUsername,
-              amendedTime = restriction.modifyDateTime,
+              updatedBy = restriction.modifyUsername,
+              updatedTime = restriction.modifyDateTime,
             ),
           ),
         )

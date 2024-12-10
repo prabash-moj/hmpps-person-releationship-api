@@ -25,7 +25,7 @@ data class ContactPhoneDetailsEntity(
 
   val createdTime: LocalDateTime,
 
-  val amendedBy: String?,
+  val updatedBy: String?,
 
-  val amendedTime: LocalDateTime?,
+  val updatedTime: LocalDateTime?,
 )

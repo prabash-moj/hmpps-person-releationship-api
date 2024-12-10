@@ -37,8 +37,8 @@ data class ContactWithFixedIdEntity(
   override val domesticStatus: String? = null,
   override val languageCode: String? = null,
   override val interpreterRequired: Boolean = false,
-  override val amendedBy: String? = null,
-  override val amendedTime: LocalDateTime? = null,
+  override val updatedBy: String? = null,
+  override val updatedTime: LocalDateTime? = null,
 ) : BaseContactEntity(
   title = title,
   firstName = firstName,
@@ -56,8 +56,8 @@ data class ContactWithFixedIdEntity(
   domesticStatus = domesticStatus,
   languageCode = languageCode,
   interpreterRequired = interpreterRequired,
-  amendedBy = amendedBy,
-  amendedTime = amendedTime,
+  updatedBy = updatedBy,
+  updatedTime = updatedTime,
 ) {
   override fun id(): Long = contactId
 }

@@ -180,8 +180,8 @@ class ContactPhoneServiceTest {
       extNumber = null,
       createdBy = "USER1",
       createdTime = createdTime,
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test
@@ -220,7 +220,7 @@ class ContactPhoneServiceTest {
       "MOB",
       "+447777777777",
       "0123",
-      "amended",
+      "updated",
     )
     private val contactPhoneId = 1234L
     private val existingPhone = ContactPhoneEntity(
@@ -231,8 +231,8 @@ class ContactPhoneServiceTest {
       extNumber = null,
       createdBy = "USER99",
       createdTime = now().minusDays(2),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test
@@ -349,7 +349,7 @@ class ContactPhoneServiceTest {
           extNumber = "0123",
           createdBy = "USER99",
           createdTime = existingPhone.createdTime,
-          updatedBy = "amended",
+          updatedBy = "updated",
           updatedTime = updated.updatedTime,
         ),
       )
@@ -367,8 +367,8 @@ class ContactPhoneServiceTest {
       extNumber = null,
       createdBy = "USER99",
       createdTime = now().minusDays(2),
-      amendedBy = null,
-      amendedTime = null,
+      updatedBy = null,
+      updatedTime = null,
     )
 
     @Test

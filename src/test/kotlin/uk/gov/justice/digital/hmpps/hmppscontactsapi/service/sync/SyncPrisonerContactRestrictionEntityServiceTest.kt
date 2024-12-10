@@ -102,8 +102,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isNull()
-        assertThat(amendedTime).isNull()
+        assertThat(updatedBy).isNull()
+        assertThat(updatedTime).isNull()
       }
 
       with(contact) {
@@ -182,8 +182,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(amendedBy).isEqualTo("editor")
-        assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
+        assertThat(updatedBy).isEqualTo("editor")
+        assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
 
       with(updated) {
@@ -242,8 +242,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
     )
 
   private fun prisonerContactRestrictionEntity(
-    amendedBy: String? = "editor",
-    amendedTime: LocalDateTime? = LocalDateTime.now(),
+    updatedBy: String? = "editor",
+    updatedTime: LocalDateTime? = LocalDateTime.now(),
   ) =
     PrisonerContactRestrictionEntity(
       prisonerContactRestrictionId = 3L,
@@ -254,8 +254,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       comments = "Restriction due to ongoing investigation",
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
-      amendedBy = amendedBy,
-      amendedTime = amendedTime,
+      updatedBy = updatedBy,
+      updatedTime = updatedTime,
     )
 
   private fun prisonerContactEntity() =
@@ -288,8 +288,8 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       comments = "Restriction due to ongoing investigation",
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
-      amendedBy = updatedBy,
-      amendedTime = updatedTime,
+      updatedBy = updatedBy,
+      updatedTime = updatedTime,
     )
   }
 }

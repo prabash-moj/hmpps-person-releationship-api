@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
@@ -11,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
@@ -19,6 +21,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -202,6 +205,41 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectBody(ContactPhoneDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun createAContactAddressPhone(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneResponse {
+    return webTestClient.post()
+      .uri("/contact/$contactId/address/$contactAddressId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactAddressPhoneResponse::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun updateAContactAddressPhone(
+    contactId: Long,
+    contactAddressId: Long,
+    contactAddressPhoneId: Long,
+    request: UpdateContactAddressPhoneRequest,
+  ): ContactAddressPhoneResponse {
+    return webTestClient.put()
+      .uri("/contact/$contactId/address/$contactAddressId/phone/$contactAddressPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactAddressPhoneResponse::class.java)
       .returnResult().responseBody!!
   }
 

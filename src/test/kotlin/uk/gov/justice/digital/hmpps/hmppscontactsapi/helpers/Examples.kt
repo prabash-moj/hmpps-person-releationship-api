@@ -6,9 +6,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetai
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
@@ -492,4 +495,58 @@ fun contactAddressResponse(
   createdTime = createdTime,
   updatedBy = null,
   updatedTime = null,
+)
+
+fun createContactAddressPhoneRequest(
+  contactAddressId: Long,
+  phoneType: String = "HOME",
+  phoneNumber: String = "0876 878787",
+  extNumber: String? = null,
+  createdBy: String = "CREATE_USER",
+) = CreateContactAddressPhoneRequest(
+  contactAddressId = contactAddressId,
+  phoneType = phoneType,
+  phoneNumber = phoneNumber,
+  extNumber = extNumber,
+  createdBy = createdBy,
+)
+
+fun updateContactAddressPhoneRequest(
+  phoneType: String = "HOME",
+  phoneNumber: String = "0878 7666565",
+  extNumber: String? = null,
+  updatedBy: String = "AMEND_USER",
+) = UpdateContactAddressPhoneRequest(
+  phoneType = phoneType,
+  phoneNumber = phoneNumber,
+  extNumber = extNumber,
+  updatedBy = updatedBy,
+)
+
+fun contactAddressPhoneResponse(
+  contactAddressPhoneId: Long,
+  contactAddressId: Long,
+  contactPhoneId: Long,
+  contactId: Long,
+  phoneType: String = "HOME",
+  phoneTypeDescription: String = "Home",
+  phoneNumber: String = "0878 7666565",
+  extNumber: String? = null,
+  createdBy: String = "CREATE_USER",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+  updatedBy: String = "AMEND_USER",
+  updatedTime: LocalDateTime = LocalDateTime.now(),
+) = ContactAddressPhoneResponse(
+  contactAddressPhoneId = contactAddressPhoneId,
+  contactAddressId = contactAddressId,
+  contactPhoneId = contactPhoneId,
+  contactId = contactId,
+  phoneType = phoneType,
+  phoneTypeDescription = phoneTypeDescription,
+  phoneNumber = phoneNumber,
+  extNumber = null,
+  createdBy = createdBy,
+  createdTime = createdTime,
+  updatedBy = updatedBy,
+  updatedTime = updatedTime,
 )

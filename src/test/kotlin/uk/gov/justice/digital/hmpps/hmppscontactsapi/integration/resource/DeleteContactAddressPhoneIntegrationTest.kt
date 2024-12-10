@@ -1,0 +1,144 @@
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
+
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.springframework.http.MediaType
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactAddressPhoneInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
+
+class DeleteContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
+  private var savedContactId = 0L
+  private var savedAddressId = 0L
+  private var savedAddressPhoneId = 0L
+
+  @BeforeEach
+  fun initialiseData() {
+    savedContactId = testAPIClient.createAContact(
+      CreateContactRequest(
+        lastName = "address-phone",
+        firstName = "has",
+        createdBy = "created",
+      ),
+    ).id
+
+    savedAddressId = testAPIClient.createAContactAddress(
+      savedContactId,
+      CreateContactAddressRequest(
+        addressType = "HOME",
+        primaryAddress = true,
+        property = "27",
+        street = "Hello Road",
+        createdBy = "created",
+      ),
+    ).contactAddressId
+
+    savedAddressPhoneId = testAPIClient.createAContactAddressPhone(
+      savedContactId,
+      savedAddressId,
+      CreateContactAddressPhoneRequest(
+        contactAddressId = savedAddressId,
+        phoneType = "HOME",
+        phoneNumber = "123456",
+        extNumber = "2",
+        createdBy = "CREATED",
+      ),
+    ).contactAddressPhoneId
+  }
+
+  @Test
+  fun `should return unauthorized if no token`() {
+    webTestClient.delete()
+      .uri("/contact/$savedContactId/address/$savedAddressId/phone/$savedAddressPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .exchange()
+      .expectStatus()
+      .isUnauthorized
+  }
+
+  @Test
+  fun `should return forbidden if no role`() {
+    webTestClient.delete()
+      .uri("/contact/$savedContactId/address/$savedAddressId/phone/$savedAddressPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation())
+      .exchange()
+      .expectStatus()
+      .isForbidden
+  }
+
+  @Test
+  fun `should return forbidden if wrong role`() {
+    webTestClient.delete()
+      .uri("/contact/$savedContactId/address/$savedAddressId/phone/$savedAddressPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+      .exchange()
+      .expectStatus()
+      .isForbidden
+  }
+
+  @Test
+  fun `should not delete if the contact is not found`() {
+    val errors = webTestClient.delete()
+      .uri("/contact/-321/address/$savedAddressId/phone/$savedAddressPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isNotFound
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
+  }
+
+  @Test
+  fun `should not delete if the address-specific phone is not found`() {
+    val errors = webTestClient.delete()
+      .uri("/contact/$savedContactId/address/$savedAddressId/phone/-400")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isNotFound
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Entity not found : Contact address phone (-400) not found")
+  }
+
+  @Test
+  fun `should delete the address-specific phone number`() {
+    webTestClient.delete()
+      .uri("/contact/$savedContactId/address/$savedAddressId/phone/$savedAddressPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isNoContent
+
+    webTestClient.get()
+      .uri("/contact/$savedContactId/address/$savedAddressId/phone/$savedAddressPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isNotFound
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED,
+      additionalInfo = ContactAddressPhoneInfo(savedAddressPhoneId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
+  }
+}

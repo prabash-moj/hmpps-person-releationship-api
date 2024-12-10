@@ -36,6 +36,10 @@ feature:
         created: true
         updated: true
         deleted: true
+      contact-address-phone:
+        created: true
+        updated: true
+        deleted: true
       contact:
         created: true
         updated: true

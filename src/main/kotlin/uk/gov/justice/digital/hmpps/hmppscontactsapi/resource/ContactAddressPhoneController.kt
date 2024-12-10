@@ -20,30 +20,35 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactAddressFacade
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactAddressPhoneFacade
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Contact Address")
+@Tag(name = "Contact Address Phone - address-specific phone numbers")
 @RestController
-@RequestMapping(value = ["contact/{contactId}/address"], produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping(
+  value = ["/contact/{contactId}/address/{contactAddressId}/phone"],
+  produces = [MediaType.APPLICATION_JSON_VALUE],
+)
 @AuthApiResponses
-class ContactAddressController(private val contactAddressFacade: ContactAddressFacade) {
+class ContactAddressPhoneController(
+  private val contactAddressPhoneFacade: ContactAddressPhoneFacade,
+) {
 
   @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
-  @Operation(summary = "Create new contact address", description = "Creates a new address for the specified contact")
+  @Operation(summary = "Create new address-specific phone number", description = "Creates a new address-specific phone number")
   @ApiResponses(
     value = [
       ApiResponse(
         responseCode = "201",
-        description = "Created the contact address successfully",
+        description = "Created the address-specific phone number successfully",
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactAddressResponse::class),
+            schema = Schema(implementation = ContactAddressPhoneResponse::class),
           ),
         ],
       ),
@@ -54,36 +59,39 @@ class ContactAddressController(private val contactAddressFacade: ContactAddressF
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Could not find the the address",
+        description = "Could not find the the contact or address provided",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun createContactAddress(
+  fun createContactAddressPhone(
     @PathVariable("contactId")
-    @Parameter(name = "contactId", description = "The id of the contact", example = "123456")
+    @Parameter(name = "contactId", description = "The id of the contact", example = "111")
     contactId: Long,
+    @PathVariable("contactAddressId")
+    @Parameter(name = "contactAddressId", description = "The id of the address", example = "222")
+    contactAddressId: Long,
     @Valid @RequestBody
-    request: CreateContactAddressRequest,
+    request: CreateContactAddressPhoneRequest,
   ): ResponseEntity<Any> {
-    val created = contactAddressFacade.create(contactId, request)
+    val created = contactAddressPhoneFacade.create(contactId, contactAddressId, request)
     return ResponseEntity
       .status(HttpStatus.CREATED)
       .body(created)
   }
 
-  @PutMapping("/{contactAddressId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
-  @Operation(summary = "Update a contact address", description = "Updates an existing contact address by its ID")
+  @PutMapping("/{contactAddressPhoneId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
+  @Operation(summary = "Update an address-specific phone number", description = "Updates an address-specific phone number by its ID")
   @ApiResponses(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "Updated the contact address successfully",
+        description = "Updated the address-specific phone number successfully",
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactAddressResponse::class),
+            schema = Schema(implementation = ContactAddressPhoneResponse::class),
           ),
         ],
       ),
@@ -94,71 +102,77 @@ class ContactAddressController(private val contactAddressFacade: ContactAddressF
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Could not find the the contact or address by ID",
+        description = "Could not find the the contact, address or phone number by ID",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun updateContactAddress(
+  fun updateContactAddressPhone(
     @PathVariable("contactId")
-    @Parameter(name = "contactId", description = "The contact ID", example = "123456")
+    @Parameter(name = "contactId", description = "The contact ID", example = "123")
     contactId: Long,
     @PathVariable("contactAddressId")
-    @Parameter(name = "contactAddressId", description = "The contact address ID", example = "1233")
+    @Parameter(name = "contactAddressId", description = "The contact address ID", example = "878")
     contactAddressId: Long,
+    @PathVariable("contactAddressPhoneId")
+    @Parameter(name = "contactAddressPhoneId", description = "The address-specific phone ID", example = "979")
+    contactAddressPhoneId: Long,
     @Valid @RequestBody
-    request: UpdateContactAddressRequest,
-  ) = contactAddressFacade.update(contactId, contactAddressId, request)
+    request: UpdateContactAddressPhoneRequest,
+  ) = contactAddressPhoneFacade.update(contactId, contactAddressPhoneId, request)
 
-  @GetMapping("/{contactAddressId}")
-  @Operation(summary = "Get a contact address", description = "Get a contact address by its ID")
+  @GetMapping("/{contactAddressPhoneId}")
+  @Operation(summary = "Get an address-specific phone number", description = "Get an address-specific phone number by its ID")
   @ApiResponses(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "Found the address successfully",
+        description = "Found the address-specific phone number successfully",
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactAddressResponse::class),
+            schema = Schema(implementation = ContactAddressPhoneResponse::class),
           ),
         ],
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Could not find the the contact or address by their IDs",
+        description = "Could not find the the contact, address or phone number by ID",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun getContactAddress(
+  fun getContactAddressPhone(
     @PathVariable("contactId")
     @Parameter(name = "contactId", description = "The contact ID", example = "123456")
     contactId: Long,
     @PathVariable("contactAddressId")
     @Parameter(name = "contactAddressId", description = "The contact address ID", example = "122")
     contactAddressId: Long,
-  ) = contactAddressFacade.get(contactId, contactAddressId)
+    @PathVariable("contactAddressPhoneId")
+    @Parameter(name = "contactAddressPhoneId", description = "The address-specific phone ID", example = "979")
+    contactAddressPhoneId: Long,
+  ) = contactAddressPhoneFacade.get(contactId, contactAddressPhoneId)
 
-  @DeleteMapping("/{contactAddressId}")
-  @Operation(summary = "Delete contact address", description = "Deletes a contact address by its ID")
+  @DeleteMapping("/{contactAddressPhoneId}")
+  @Operation(summary = "Delete an address-specific phone number", description = "Deletes an address-specific phone number by its ID")
   @ApiResponses(
     value = [
       ApiResponse(
         responseCode = "204",
-        description = "Deleted the contact address successfully",
+        description = "Deleted the address-specific phone number",
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactAddressResponse::class),
+            schema = Schema(implementation = ContactAddressPhoneResponse::class),
           ),
         ],
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Could not find the the contact or address by the provided IDs",
+        description = "Could not find the the contact, address or address specific phone number by ID",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -171,8 +185,11 @@ class ContactAddressController(private val contactAddressFacade: ContactAddressF
     @PathVariable("contactAddressId")
     @Parameter(name = "contactAddressId", description = "The contact address ID", example = "456")
     contactAddressId: Long,
+    @PathVariable("contactAddressPhoneId")
+    @Parameter(name = "contactAddressPhoneId", description = "The address-specific phone ID", example = "979")
+    contactAddressPhoneId: Long,
   ): ResponseEntity<Any> {
-    contactAddressFacade.delete(contactId, contactAddressId)
+    contactAddressPhoneFacade.delete(contactId, contactAddressPhoneId)
     return ResponseEntity.noContent().build()
   }
 }

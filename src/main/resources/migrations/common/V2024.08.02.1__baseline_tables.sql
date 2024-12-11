@@ -46,8 +46,8 @@ CREATE TABLE contact_identity
 (
     contact_identity_id bigserial NOT NULL CONSTRAINT contact_identity_id_pk PRIMARY KEY,
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
-    identity_type varchar(12), -- Reference codes - ID_TYPE
-    identity_value varchar(100), -- driving licence number, NI number, passport number
+    identity_type varchar(12) NOT NULL, -- Reference codes - ID_TYPE
+    identity_value varchar(100) NOT NULL, -- driving licence number, NI number, passport number
     issuing_authority varchar(40), -- e.g. UK passport agency, DVLA
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,

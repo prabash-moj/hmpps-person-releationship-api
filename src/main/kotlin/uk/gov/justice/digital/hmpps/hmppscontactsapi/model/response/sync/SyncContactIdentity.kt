@@ -15,7 +15,7 @@ data class SyncContactIdentity(
   val identityType: String,
 
   @Schema(description = "Identity ", example = "DL090 0909 909")
-  val identityValue: String?,
+  val identityValue: String,
 
   @Schema(description = "Issuing authority", example = "DVLA")
   val issuingAuthority: String?,

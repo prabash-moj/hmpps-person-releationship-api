@@ -12,7 +12,7 @@ data class SyncCreateContactIdentityRequest(
   val identityType: String,
 
   @Schema(description = "Identity number or reference", example = "HP9909SM1883")
-  val identityValue: String?,
+  val identityValue: String,
 
   @Schema(description = "Issuing authority ", example = "DVLA")
   val issuingAuthority: String?,

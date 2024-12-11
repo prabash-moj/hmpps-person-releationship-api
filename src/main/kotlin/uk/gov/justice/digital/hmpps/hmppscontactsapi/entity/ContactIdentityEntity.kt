@@ -20,7 +20,7 @@ data class ContactIdentityEntity(
 
   val identityType: String,
 
-  val identityValue: String? = null,
+  val identityValue: String,
 
   val issuingAuthority: String? = null,
 

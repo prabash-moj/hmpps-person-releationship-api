@@ -89,10 +89,8 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "addressType must not be null;{\"addressType\": null, \"updatedBy\": \"updater\"}",
-      "addressType must not be null;{\"updatedBy\": \"updater\"}",
-      "updatedBy must not be null;{\"addressType\": \"HOME\", \"updatedBy\": null}",
-      "updatedBy must not be null;{\"addressType\": \"HOME\"}",
+      "updatedBy must not be null;{\"updatedBy\": null}",
+      "updatedBy must not be null;{}",
     ],
     delimiter = ';',
   )
@@ -216,6 +214,24 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(updatedBy).isEqualTo("updated")
       assertThat(updatedTime).isNotNull()
     }
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(savedContactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = savedContactId),
+    )
+  }
+
+  @Test
+  fun `should allow null on address type`() {
+    val request = UpdateContactAddressRequest(
+      addressType = null,
+      primaryAddress = false,
+      updatedBy = "updated",
+    )
+
+    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    assertThat(updated.addressType).isNull()
 
     stubEvents.assertHasEvent(
       event = OutboundEvent.CONTACT_ADDRESS_UPDATED,

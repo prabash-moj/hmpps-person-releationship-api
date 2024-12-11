@@ -71,10 +71,8 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "addressType must not be null;{\"addressType\": null, \"createdBy\": \"ME\"}",
-      "addressType must not be null;{\"createdBy\": \"ME\"}",
-      "createdBy must not be null;{\"addressType\": \"HOME\", \"createdBy\": null}",
-      "createdBy must not be null;{\"addressType\": \"HOME\"}",
+      "createdBy must not be null;{\"createdBy\": null}",
+      "createdBy must not be null;{}",
     ],
     delimiter = ';',
   )
@@ -122,6 +120,22 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     val created = testAPIClient.createAContactAddress(savedContactId, request)
 
     assertEqualsExcludingTimestamps(created, request)
+
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.CONTACT_ADDRESS_CREATED,
+      additionalInfo = ContactAddressInfo(created.contactAddressId, Source.DPS),
+      personReference = PersonReference(dpsContactId = created.contactId),
+    )
+  }
+
+  @Test
+  fun `should be able to create the contact address with no address type`() {
+    val request = aMinimalAddressRequest().copy(addressType = null)
+
+    val created = testAPIClient.createAContactAddress(savedContactId, request)
+    assertThat(created.addressType).isNull()
+
+    assertThat(testAPIClient.getContact(savedContactId).addresses.find { it.contactAddressId == created.contactAddressId }).isNotNull
 
     stubEvents.assertHasEvent(
       event = OutboundEvent.CONTACT_ADDRESS_CREATED,

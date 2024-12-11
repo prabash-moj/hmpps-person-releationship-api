@@ -17,8 +17,9 @@ data class SyncCreateContactAddressRequest(
       The known values are HOME, WORK or BUS (business address).
     """,
     example = "HOME",
+    nullable = true,
   )
-  val addressType: String,
+  val addressType: String? = null,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")
   val primaryAddress: Boolean = false,

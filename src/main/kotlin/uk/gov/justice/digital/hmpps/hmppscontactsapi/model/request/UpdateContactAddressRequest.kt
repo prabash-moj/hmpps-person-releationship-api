@@ -13,9 +13,10 @@ data class UpdateContactAddressRequest(
     The known values are HOME, WORK or BUS (business address).
     """,
     example = "HOME",
+    nullable = true,
   )
   @field:Size(max = 12, message = "addressType must be <= 12 characters")
-  val addressType: String,
+  val addressType: String? = null,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")
   val primaryAddress: Boolean,

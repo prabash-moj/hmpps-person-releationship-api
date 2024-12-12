@@ -14,6 +14,10 @@ data class UpdateRelationshipRequest(
   @JsonProperty(required = true)
   val isEmergencyContact: JsonNullable<Boolean> = JsonNullable.undefined(),
 
+  @Schema(description = "Whether they are approved to visit the prisoner", example = "true", nullable = false, type = "boolean", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty(required = true)
+  val isApprovedVisitor: JsonNullable<Boolean> = JsonNullable.undefined(),
+
   @Schema(description = "Whether they are the next of kin for the prisoner", example = "true", nullable = false, type = "boolean", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty(required = true)
   val isNextOfKin: JsonNullable<Boolean> = JsonNullable.undefined(),

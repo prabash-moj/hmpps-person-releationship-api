@@ -69,6 +69,7 @@ class PrisonerContactControllerTest {
       nextOfKin = false,
       emergencyContact = true,
       isRelationshipActive = true,
+      isApprovedVisitor = true,
       comments = "Close family friend",
     )
   }

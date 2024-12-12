@@ -748,6 +748,48 @@ class ContactServiceTest {
     }
 
     @Nested
+    inner class ApprovedVisitor {
+
+      @Test
+      fun `should update the approved visitor`() {
+        val request = UpdateRelationshipRequest(
+          isApprovedVisitor = JsonNullable.of(false),
+          updatedBy = "Admin",
+        )
+        mockBrotherRelationshipReferenceCode()
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        service.updateContactRelationship(prisonerContactId, request)
+
+        val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
+        verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+        with(prisonerContactCaptor.firstValue) {
+          // assert changed
+          assertThat(approvedVisitor).isFalse()
+          assertThat(updatedBy).isEqualTo("Admin")
+          assertThat(updatedTime).isInThePast()
+        }
+      }
+
+      @Test
+      fun `should not update approved visitor with null`() {
+        val request = UpdateRelationshipRequest(
+          isApprovedVisitor = JsonNullable.of(null),
+          updatedBy = "Admin",
+        )
+
+        whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
+        whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+        val exception = assertThrows<ValidationException> {
+          service.updateContactRelationship(prisonerContactId, request)
+        }
+        assertThat(exception.message).isEqualTo("Unsupported approved visitor value null.")
+      }
+    }
+
+    @Nested
     inner class NextOfKin {
 
       @Test

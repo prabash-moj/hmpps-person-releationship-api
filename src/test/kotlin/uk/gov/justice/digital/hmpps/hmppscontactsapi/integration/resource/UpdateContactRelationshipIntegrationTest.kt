@@ -20,6 +20,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   @CsvSource(
     value = [
       "Unsupported relationship type null.;{\"relationshipCode\": null,  \"updatedBy\": \"Admin\"}",
+      "Unsupported approved visitor value null.;{\"isApprovedVisitor\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported emergency contact null.;{\"isEmergencyContact\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported next of kin null.;{\"isNextOfKin\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported relationship status null.;{\"isRelationshipActive\": null,  \"updatedBy\": \"Admin\"}",
@@ -87,6 +88,26 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertThat(updatedPrisonerContacts[0].nextOfKin).isTrue
+  }
+
+  @Test
+  fun `should update the contact relationship with approved visitor`() {
+    val prisonerNumber = getRandomPrisonerCode()
+    stubPrisonSearchWithResponse(prisonerNumber)
+    val prisonerContact = cretePrisonerContact(prisonerNumber)
+
+    val updateRequest = UpdateRelationshipRequest(
+      isApprovedVisitor = JsonNullable.of(true),
+      updatedBy = "Admin",
+    )
+
+    val prisonerContactId = prisonerContact.prisonerContactId
+
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
+
+    val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
+    assertThat(updatedPrisonerContacts).hasSize(1)
+    assertThat(updatedPrisonerContacts[0].approvedVisitor).isTrue
   }
 
   @Test
@@ -176,6 +197,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updateRequest = UpdateRelationshipRequest(
       relationshipCode = JsonNullable.of("FRI"),
       isNextOfKin = JsonNullable.of(true),
+      isApprovedVisitor = JsonNullable.of(true),
       isEmergencyContact = JsonNullable.of(true),
       isRelationshipActive = JsonNullable.of(true),
       comments = JsonNullable.of("comments added"),
@@ -196,6 +218,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     with(prisonerContact) {
       assertThat(relationshipCode).isEqualTo(relationship.relationshipCode.get())
       assertThat(nextOfKin).isEqualTo(relationship.isNextOfKin.get())
+      assertThat(approvedVisitor).isEqualTo(relationship.isApprovedVisitor.get())
       assertThat(emergencyContact).isEqualTo(relationship.isEmergencyContact.get())
       assertThat(comments).isEqualTo(relationship.comments.get())
     }

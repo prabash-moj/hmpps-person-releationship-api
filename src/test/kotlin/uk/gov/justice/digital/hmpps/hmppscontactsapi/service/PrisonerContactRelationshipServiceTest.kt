@@ -49,6 +49,7 @@ class PrisonerContactRelationshipServiceTest {
       nextOfKin = false,
       emergencyContact = false,
       isRelationshipActive = true,
+      isApprovedVisitor = true,
       comments = "No comments",
     )
 

@@ -155,6 +155,7 @@ class ContactService(
 
   private fun validateRequest(request: UpdateRelationshipRequest) {
     unsupportedRelationshipType(request)
+    unsupportedApprovedToVisitFlag(request)
     unsupportedEmergencyContact(request)
     unsupportedNextOfKin(request)
     unsupportedRelationshipActive(request)
@@ -172,7 +173,7 @@ class ContactService(
     contactId = this.contactId,
     prisonerNumber = this.prisonerNumber,
     contactType = this.contactType,
-    approvedVisitor = this.approvedVisitor,
+    approvedVisitor = request.isApprovedVisitor.orElse(this.approvedVisitor),
     currentTerm = this.currentTerm,
     nextOfKin = request.isNextOfKin.orElse(this.nextOfKin),
     emergencyContact = request.isEmergencyContact.orElse(this.emergencyContact),
@@ -205,6 +206,12 @@ class ContactService(
     }
   }
 
+  private fun unsupportedApprovedToVisitFlag(request: UpdateRelationshipRequest) {
+    if (request.isApprovedVisitor.isPresent && request.isApprovedVisitor.get() == null) {
+      throw ValidationException("Unsupported approved visitor value null.")
+    }
+  }
+
   private fun unsupportedEmergencyContact(request: UpdateRelationshipRequest) {
     if (request.isEmergencyContact.isPresent && request.isEmergencyContact.get() == null) {
       throw ValidationException("Unsupported emergency contact null.")
@@ -233,6 +240,7 @@ class ContactService(
       emergencyContact = relationship.emergencyContact,
       nextOfKin = relationship.nextOfKin,
       isRelationshipActive = relationship.active,
+      isApprovedVisitor = relationship.approvedVisitor,
       comments = relationship.comments,
     )
   }

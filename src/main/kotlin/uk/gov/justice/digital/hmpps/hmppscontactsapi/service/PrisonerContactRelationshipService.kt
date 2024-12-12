@@ -26,6 +26,7 @@ class PrisonerContactRelationshipService(
       nextOfKin = this.nextOfKin,
       emergencyContact = this.emergencyContact,
       isRelationshipActive = this.active,
+      isApprovedVisitor = this.approvedVisitor,
       comments = this.comments,
     )
   }

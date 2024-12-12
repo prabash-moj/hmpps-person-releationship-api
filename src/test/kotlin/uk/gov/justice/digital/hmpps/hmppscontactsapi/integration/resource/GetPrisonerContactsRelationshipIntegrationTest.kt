@@ -63,6 +63,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
       nextOfKin = false,
       emergencyContact = false,
       isRelationshipActive = true,
+      isApprovedVisitor = false,
       comments = "Comment",
     )
 

@@ -289,6 +289,7 @@ fun createPrisonerContactRelationshipDetails(
   emergencyContact: Boolean = false,
   nextOfKin: Boolean = false,
   isRelationshipActive: Boolean = true,
+  isApprovedVisitor: Boolean = true,
   comments: String? = null,
 ) = PrisonerContactRelationshipDetails(
   id,
@@ -299,6 +300,7 @@ fun createPrisonerContactRelationshipDetails(
   emergencyContact,
   nextOfKin,
   isRelationshipActive,
+  isApprovedVisitor,
   comments,
 )
 

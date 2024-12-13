@@ -3,6 +3,9 @@ spring:
   jpa:
     show-sql: true
 
+  flyway:
+    locations: classpath:/migrations/common,classpath:/migrations/test
+
 server:
   shutdown: immediate
 

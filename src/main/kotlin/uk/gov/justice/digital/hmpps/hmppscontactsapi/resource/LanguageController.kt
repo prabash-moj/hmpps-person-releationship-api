@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,15 +16,11 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.LanguageService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 
-@Tag(name = "language-reference")
+@Tag(name = "Reference Data")
 @RestController
 @RequestMapping(value = ["language-reference"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
 class LanguageController(private val languageService: LanguageService) {
-
-  companion object {
-    private val logger = LoggerFactory.getLogger(this::class.java)
-  }
 
   @GetMapping("/{id}")
   @Operation(

@@ -21,7 +21,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCod
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ReferenceCodeService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Reference Codes Controller")
+@Tag(name = "Reference Data")
 @RestController
 @RequestMapping(value = ["reference-codes"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ReferenceCodeController(private val referenceCodeService: ReferenceCodeService) {

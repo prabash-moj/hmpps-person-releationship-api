@@ -27,7 +27,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestr
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Contact Global Restrictions", description = "Global restrictions for a contact, a.k.a. estate-wide restrictions or contact restrictions")
+@Tag(name = "Restrictions")
 @RestController
 @RequestMapping(value = ["contact/{contactId}/restriction"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses

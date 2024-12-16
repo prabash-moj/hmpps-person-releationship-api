@@ -16,44 +16,18 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummaryPage
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerContactService
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.PrisonNumberDoc
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Prisoner")
+@Tag(name = "Prisoner Contact Relationship")
 @RestController
 @RequestMapping(value = ["prisoner"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
-class PrisonerController(
-  private val prisonerService: PrisonerService,
-  private val prisonerContactService: PrisonerContactService,
-) {
-
-  @Operation(summary = "Endpoint to get a specific prisoner by prison number")
-  @ApiResponses(
-    value = [
-      ApiResponse(
-        responseCode = "200",
-        description = "List of all contacts for the prisoner",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = PrisonerContactSummary::class),
-          ),
-        ],
-      ),
-    ],
-  )
-  @GetMapping(value = ["/{prisonNumber}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-  @PreAuthorize("hasAnyRole('PRISONER_SEARCH')")
-  fun getPrisoner(
-    @PathVariable("prisonNumber") @PrisonNumberDoc prisonerNumber: String,
-  ): Prisoner? = prisonerService.getPrisoner(prisonerNumber)
+class PrisonerController(private val prisonerContactService: PrisonerContactService) {
 
   @Operation(summary = "Endpoint to fetch all contacts for a specific prisoner by prisoner number and active status")
   @ApiResponses(

@@ -34,7 +34,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerContactRela
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Prisoner contact")
 @RestController
 @RequestMapping(value = ["prisoner-contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
@@ -45,6 +44,7 @@ class PrisonerContactController(
 ) {
 
   @Operation(summary = "Endpoint to get a prisoner contact relationship by relationship id")
+  @Tag(name = "Prisoner Contact Relationship")
   @ApiResponses(
     value = [
       ApiResponse(
@@ -84,6 +84,7 @@ class PrisonerContactController(
     summary = "Update prisoner contact relationship",
     description = "Update the relationship between the contact and a prisoner.",
   )
+  @Tag(name = "Prisoner Contact Relationship")
   @ApiResponses(
     value = [
       ApiResponse(
@@ -121,6 +122,7 @@ class PrisonerContactController(
     summary = "Add a new prisoner contact relationship",
     description = "Creates a new relationship between the contact and a prisoner.",
   )
+  @Tag(name = "Prisoner Contact Relationship")
   @ApiResponses(
     value = [
       ApiResponse(
@@ -163,6 +165,7 @@ class PrisonerContactController(
       If the prisoner and contact have multiple relationships, the prisoner-contact restrictions for the other relationships will not be returned. 
     """,
   )
+  @Tag(name = "Restrictions")
   @ApiResponses(
     value = [
       ApiResponse(
@@ -202,6 +205,7 @@ class PrisonerContactController(
     summary = "Create new prisoner contact restriction",
     description = "Creates a new prisoner contact restriction for the specified prisoner contact relationship",
   )
+  @Tag(name = "Restrictions")
   @ApiResponses(
     value = [
       ApiResponse(
@@ -246,6 +250,7 @@ class PrisonerContactController(
     summary = "Update prisoner contact restriction",
     description = "Updates a prisoner contact restriction for the specified prisoner contact relationship and restriction ids",
   )
+  @Tag(name = "Restrictions")
   @ApiResponses(
     value = [
       ApiResponse(

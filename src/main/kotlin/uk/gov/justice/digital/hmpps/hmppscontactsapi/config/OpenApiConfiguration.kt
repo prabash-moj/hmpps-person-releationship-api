@@ -8,6 +8,8 @@ import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
+import io.swagger.v3.oas.models.servers.Server
+import io.swagger.v3.oas.models.tags.Tag
 import jakarta.annotation.PostConstruct
 import org.openapitools.jackson.nullable.JsonNullableModule
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
@@ -38,14 +40,67 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
       Info()
         .title("Contacts API")
         .version(version)
-        .description("API for management of contacts")
+        .description("API for management of contacts and their relationships to prisoners including restrictions that apply to the contact or relationship specifically.")
         .contact(
           Contact()
             .name("HMPPS Digital Studio")
             .email("feedback@digital.justice.gov.uk"),
         ),
     )
+    .tags(
+      listOf(
+        Tag().apply {
+          name("Contacts")
+          description("APIs relating to creating and managing a contact")
+        },
+        Tag().apply {
+          name("Prisoner Contact Relationship")
+          description("APIs relating to creating and managing relationships between contacts and prisoners")
+        },
+        Tag().apply {
+          name("Restrictions")
+          description(
+            """
+            APIs relating to creating and managing restrictions. Two kinds of restrictions are supported in this API
+            
+             - Estate wide restrictions, a.k.a global and contact restrictions. These apply to all of a contacts relationships.
+             - Prisoner-contact restrictions. These apply to a relationship between a specific prisoner and contact. 
+             
+            There are also restrictions that can apply to a prisoner and all of their relationships but those are not supported by this API.
+            """.trimIndent(),
+          )
+        },
+        Tag().apply {
+          name("Reference Data")
+          description("APIs relating to reference data used in the service")
+        },
+        Tag().apply {
+          name("Sync & Migrate")
+          description("APIs relating to data sync and migration with NOMIS")
+        },
+      ),
+    )
     .addSecurityItem(SecurityRequirement().addList("bearer-jwt", listOf("read", "write")))
+    .servers(
+      listOf(
+        Server().apply {
+          url("/")
+          description("Default - This environment")
+        },
+        Server().apply {
+          url("https://contacts-api-dev.hmpps.service.justice.gov.uk")
+          description("Development")
+        },
+        Server().apply {
+          url("https://contacts-api-preprod.hmpps.service.justice.gov.uk")
+          description("Pre-production")
+        },
+        Server().apply {
+          url("https://contacts-api.hmpps.service.justice.gov.uk")
+          description("Production")
+        },
+      ),
+    )
 
   @PostConstruct
   fun enableLocalTimePrimitiveType() {

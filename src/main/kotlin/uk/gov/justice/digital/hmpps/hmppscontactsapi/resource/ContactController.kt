@@ -36,7 +36,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
 
-@Tag(name = "Contact")
+@Tag(name = "Contacts")
 @RestController
 @RequestMapping(value = ["contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses

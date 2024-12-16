@@ -27,7 +27,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-@Tag(name = "Contact Identity")
+@Tag(name = "Contacts")
 @RestController
 @RequestMapping(value = ["contact/{contactId}/identity"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses

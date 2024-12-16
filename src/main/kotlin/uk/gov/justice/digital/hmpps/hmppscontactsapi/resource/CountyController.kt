@@ -16,7 +16,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.County
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.CountyService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 
-@Tag(name = "county-reference")
+@Tag(name = "Reference Data")
 @RestController
 @RequestMapping(value = ["county-reference"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses

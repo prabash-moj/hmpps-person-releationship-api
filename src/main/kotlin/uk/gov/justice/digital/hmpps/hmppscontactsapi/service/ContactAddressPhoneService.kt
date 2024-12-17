@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
@@ -28,7 +28,7 @@ class ContactAddressPhoneService(
   private val referenceCodeService: ReferenceCodeService,
 ) {
 
-  fun create(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneResponse {
+  fun create(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneDetails {
     // Validate the request
     validateContactExists(contactId)
     validateContactAddressExists(contactAddressId)
@@ -62,14 +62,14 @@ class ContactAddressPhoneService(
   }
 
   @Transactional(readOnly = true)
-  fun get(contactId: Long, contactAddressPhoneId: Long): ContactAddressPhoneResponse {
+  fun get(contactId: Long, contactAddressPhoneId: Long): ContactAddressPhoneDetails {
     val addressPhone = validateContactAddressPhoneExists(contactAddressPhoneId)
     val phone = validatePhoneExists(addressPhone.contactPhoneId)
     val phoneTypeReference = validatePhoneType(phone.phoneType)
     return addressPhone.toModel(phone, phoneTypeReference)
   }
 
-  fun update(contactId: Long, contactAddressPhoneId: Long, request: UpdateContactAddressPhoneRequest): ContactAddressPhoneResponse {
+  fun update(contactId: Long, contactAddressPhoneId: Long, request: UpdateContactAddressPhoneRequest): ContactAddressPhoneDetails {
     validateContactExists(contactId)
     val existing = validateContactAddressPhoneExists(contactAddressPhoneId)
     val phone = validatePhoneExists(existing.contactPhoneId)
@@ -97,7 +97,7 @@ class ContactAddressPhoneService(
     return updatedContactAddressPhone.toModel(updatedPhone, newPhoneType)
   }
 
-  fun delete(contactId: Long, contactAddressPhoneId: Long): ContactAddressPhoneResponse {
+  fun delete(contactId: Long, contactAddressPhoneId: Long): ContactAddressPhoneDetails {
     validateContactExists(contactId)
     val existingContactAddressPhone = validateContactAddressPhoneExists(contactAddressPhoneId)
     val existingPhone = validatePhoneExists(existingContactAddressPhone.contactPhoneId)
@@ -135,7 +135,7 @@ class ContactAddressPhoneService(
       .orElseThrow { EntityNotFoundException("Contact address phone ($contactAddressPhoneId) not found") }
 
   private fun ContactAddressPhoneEntity.toModel(phone: ContactPhoneEntity, type: ReferenceCode) =
-    ContactAddressPhoneResponse(
+    ContactAddressPhoneDetails(
       contactAddressPhoneId = this.contactAddressPhoneId,
       contactPhoneId = this.contactPhoneId,
       contactAddressId = this.contactAddressId,

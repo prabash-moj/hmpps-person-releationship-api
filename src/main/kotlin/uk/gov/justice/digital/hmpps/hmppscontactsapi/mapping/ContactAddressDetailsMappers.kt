@@ -4,10 +4,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 
-fun ContactAddressDetailsEntity.toModel(phoneNumbers: List<ContactPhoneDetails>): ContactAddressDetails {
+fun ContactAddressDetailsEntity.toModel(phoneNumbers: List<ContactAddressPhoneDetails>): ContactAddressDetails {
   return ContactAddressDetails(
     contactAddressId = this.contactAddressId,
     contactId = this.contactId,

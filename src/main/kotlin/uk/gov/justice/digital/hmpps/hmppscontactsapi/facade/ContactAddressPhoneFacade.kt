@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactAddressPhoneService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
@@ -14,7 +14,7 @@ class ContactAddressPhoneFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun create(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneResponse {
+  fun create(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneDetails {
     return contactAddressPhoneService.create(contactId, contactAddressId, request).also {
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
@@ -24,7 +24,7 @@ class ContactAddressPhoneFacade(
     }
   }
 
-  fun update(contactId: Long, contactAddressPhoneId: Long, request: UpdateContactAddressPhoneRequest): ContactAddressPhoneResponse {
+  fun update(contactId: Long, contactAddressPhoneId: Long, request: UpdateContactAddressPhoneRequest): ContactAddressPhoneDetails {
     return contactAddressPhoneService.update(contactId, contactAddressPhoneId, request).also {
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,

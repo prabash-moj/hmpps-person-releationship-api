@@ -11,7 +11,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
@@ -155,7 +155,7 @@ fun createContactAddressDetails(
   endDate: LocalDate? = LocalDate.of(2050, 4, 5),
   noFixedAddress: Boolean = true,
   comments: String? = "Some comments",
-  phoneNumbers: List<ContactPhoneDetails> = emptyList(),
+  phoneNumbers: List<ContactAddressPhoneDetails> = emptyList(),
   createdBy: String = "USER1",
   createdTime: LocalDateTime = LocalDateTime.of(2023, 2, 3, 11, 15, 15),
   updatedBy: String? = "AMEND_USER",
@@ -538,7 +538,7 @@ fun contactAddressPhoneResponse(
   createdTime: LocalDateTime = LocalDateTime.now(),
   updatedBy: String = "AMEND_USER",
   updatedTime: LocalDateTime = LocalDateTime.now(),
-) = ContactAddressPhoneResponse(
+) = ContactAddressPhoneDetails(
   contactAddressPhoneId = contactAddressPhoneId,
   contactAddressId = contactAddressId,
   contactPhoneId = contactPhoneId,

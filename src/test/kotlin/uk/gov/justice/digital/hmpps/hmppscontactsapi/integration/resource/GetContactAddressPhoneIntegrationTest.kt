@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegra
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.time.LocalDateTime
 
@@ -114,7 +114,7 @@ class GetContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
       .exchange()
       .expectStatus()
       .isOk()
-      .expectBody(ContactAddressPhoneResponse::class.java)
+      .expectBody(ContactAddressPhoneDetails::class.java)
       .returnResult().responseBody!!
 
     with(result) {

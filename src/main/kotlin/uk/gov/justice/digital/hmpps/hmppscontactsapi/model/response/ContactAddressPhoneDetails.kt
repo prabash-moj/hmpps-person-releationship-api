@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 
 @Schema(description = "An address-specific phone number")
-data class ContactAddressPhoneResponse(
+data class ContactAddressPhoneDetails(
   @Schema(description = "Unique identifier for the address-specific phone number", example = "1")
   val contactAddressPhoneId: Long,
 

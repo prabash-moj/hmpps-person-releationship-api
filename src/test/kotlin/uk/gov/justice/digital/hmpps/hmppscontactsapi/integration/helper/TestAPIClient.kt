@@ -21,7 +21,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -214,7 +214,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     contactAddressId: Long,
     request: CreateContactAddressPhoneRequest,
     role: String = "ROLE_CONTACTS_ADMIN",
-  ): ContactAddressPhoneResponse {
+  ): ContactAddressPhoneDetails {
     return webTestClient.post()
       .uri("/contact/$contactId/address/$contactAddressId/phone")
       .accept(MediaType.APPLICATION_JSON)
@@ -225,7 +225,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectStatus()
       .isCreated
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(ContactAddressPhoneResponse::class.java)
+      .expectBody(ContactAddressPhoneDetails::class.java)
       .returnResult().responseBody!!
   }
 
@@ -235,7 +235,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     contactAddressPhoneId: Long,
     request: UpdateContactAddressPhoneRequest,
     role: String = "ROLE_CONTACTS_ADMIN",
-  ): ContactAddressPhoneResponse {
+  ): ContactAddressPhoneDetails {
     return webTestClient.put()
       .uri("/contact/$contactId/address/$contactAddressId/phone/$contactAddressPhoneId")
       .accept(MediaType.APPLICATION_JSON)
@@ -246,7 +246,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectStatus()
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(ContactAddressPhoneResponse::class.java)
+      .expectBody(ContactAddressPhoneDetails::class.java)
       .returnResult().responseBody!!
   }
 

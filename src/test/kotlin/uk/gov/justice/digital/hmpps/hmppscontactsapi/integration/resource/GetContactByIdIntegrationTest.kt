@@ -154,6 +154,8 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
       assertThat(contact.addresses).hasSize(2)
       assertThat(contact.addresses[0].phoneNumbers).hasSize(1)
       assertThat(contact.addresses[0].phoneNumbers[0].contactPhoneId).isEqualTo(2)
+      assertThat(contact.addresses[0].phoneNumbers[0].contactAddressPhoneId).isEqualTo(1)
+      assertThat(contact.addresses[0].phoneNumbers[0].contactAddressId).isEqualTo(1)
       assertThat(contact.addresses[1].phoneNumbers).isEmpty()
     }
   }

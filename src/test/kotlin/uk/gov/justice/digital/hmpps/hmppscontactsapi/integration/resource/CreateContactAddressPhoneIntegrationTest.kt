@@ -13,7 +13,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegra
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactAddressPhoneInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
@@ -191,7 +191,7 @@ class CreateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
     )
   }
 
-  private fun assertEqualsExcludingTimestamps(response: ContactAddressPhoneResponse, request: CreateContactAddressPhoneRequest) {
+  private fun assertEqualsExcludingTimestamps(response: ContactAddressPhoneDetails, request: CreateContactAddressPhoneRequest) {
     with(response) {
       assertThat(contactId).isEqualTo(savedContactId)
       assertThat(contactAddressId).isEqualTo(savedAddressId)

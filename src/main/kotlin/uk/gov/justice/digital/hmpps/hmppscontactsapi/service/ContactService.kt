@@ -17,6 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
@@ -63,7 +64,10 @@ class ContactService(
 
     logger.info("Created new contact {}", createdContact)
     newRelationship?.let { logger.info("Created new relationship {}", newRelationship) }
-    return ContactCreationResult(enrichContact(createdContact), newRelationship?.let { enrichRelationship(newRelationship) })
+    return ContactCreationResult(
+      enrichContact(createdContact),
+      newRelationship?.let { enrichRelationship(newRelationship) },
+    )
   }
 
   fun getContact(id: Long): ContactDetails? {
@@ -103,9 +107,16 @@ class ContactService(
       }
     val emailAddresses = contactEmailRepository.findByContactId(contactEntity.id()).map { it.toModel() }
     val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.id()).map { it.toModel() }
-    val languageDescription = contactEntity.languageCode?.let { languageService.getLanguageByNomisCode(it).nomisDescription }
-    val domesticStatusDescription = contactEntity.domesticStatus?.let { referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", it)?.description }
-    val genderDescription = contactEntity.gender?.let { referenceCodeService.getReferenceDataByGroupAndCode("GENDER", it)?.description }
+    val languageDescription =
+      contactEntity.languageCode?.let { languageService.getLanguageByNomisCode(it).nomisDescription }
+    val domesticStatusDescription = contactEntity.domesticStatus?.let {
+      referenceCodeService.getReferenceDataByGroupAndCode(
+        "DOMESTIC_STS",
+        it,
+      )?.description
+    }
+    val genderDescription =
+      contactEntity.gender?.let { referenceCodeService.getReferenceDataByGroupAndCode("GENDER", it)?.description }
     return ContactDetails(
       id = contactEntity.id(),
       title = contactEntity.title,
@@ -137,11 +148,31 @@ class ContactService(
     contactAddressId: Long,
     addressPhoneNumbers: List<ContactAddressPhoneEntity>,
     phoneNumbers: List<ContactPhoneDetails>,
-  ) = addressPhoneNumbers.filter { it.contactAddressId == contactAddressId }
-    .mapNotNull { addressPhone -> phoneNumbers.find { it.contactPhoneId == addressPhone.contactPhoneId } }
+  ): List<ContactAddressPhoneDetails> = addressPhoneNumbers.filter { it.contactAddressId == contactAddressId }
+    .mapNotNull { addressPhone ->
+      phoneNumbers.find { it.contactPhoneId == addressPhone.contactPhoneId }?.let { phoneNumber ->
+        ContactAddressPhoneDetails(
+          contactAddressPhoneId = addressPhone.contactAddressPhoneId,
+          contactPhoneId = addressPhone.contactPhoneId,
+          contactAddressId = addressPhone.contactAddressId,
+          contactId = addressPhone.contactId,
+          phoneType = phoneNumber.phoneType,
+          phoneTypeDescription = phoneNumber.phoneTypeDescription,
+          phoneNumber = phoneNumber.phoneNumber,
+          extNumber = phoneNumber.extNumber,
+          createdBy = phoneNumber.createdBy,
+          createdTime = phoneNumber.createdTime,
+          updatedBy = phoneNumber.updatedBy,
+          updatedTime = phoneNumber.updatedTime,
+        )
+      }
+    }
 
   @Transactional
-  fun updateContactRelationship(prisonerContactId: Long, request: UpdateRelationshipRequest): PrisonerContactRelationshipDetails {
+  fun updateContactRelationship(
+    prisonerContactId: Long,
+    request: UpdateRelationshipRequest,
+  ): PrisonerContactRelationshipDetails {
     val prisonerContactEntity = getPrisonerContactEntity(prisonerContactId)
 
     validateRequest(request)
@@ -197,7 +228,8 @@ class ContactService(
   }
 
   private fun getRelationshipDescriptionIfValid(code: String): String {
-    return referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", code)?.description ?: throw ValidationException("Reference code with groupCode RELATIONSHIP and code '$code' not found.")
+    return referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", code)?.description
+      ?: throw ValidationException("Reference code with groupCode RELATIONSHIP and code '$code' not found.")
   }
 
   private fun unsupportedRelationshipType(request: UpdateRelationshipRequest) {

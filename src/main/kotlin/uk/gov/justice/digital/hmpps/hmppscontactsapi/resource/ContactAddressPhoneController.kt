@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactAddressPhoneFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
@@ -48,7 +48,7 @@ class ContactAddressPhoneController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactAddressPhoneResponse::class),
+            schema = Schema(implementation = ContactAddressPhoneDetails::class),
           ),
         ],
       ),
@@ -91,7 +91,7 @@ class ContactAddressPhoneController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactAddressPhoneResponse::class),
+            schema = Schema(implementation = ContactAddressPhoneDetails::class),
           ),
         ],
       ),
@@ -132,7 +132,7 @@ class ContactAddressPhoneController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactAddressPhoneResponse::class),
+            schema = Schema(implementation = ContactAddressPhoneDetails::class),
           ),
         ],
       ),
@@ -166,7 +166,7 @@ class ContactAddressPhoneController(
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ContactAddressPhoneResponse::class),
+            schema = Schema(implementation = ContactAddressPhoneDetails::class),
           ),
         ],
       ),

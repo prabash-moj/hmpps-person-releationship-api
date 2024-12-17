@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -25,6 +27,7 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+
     ).id
     savedContactIdentityId = testAPIClient.createAContactIdentity(
       savedContactId,
@@ -33,6 +36,7 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
         identityValue = "DL123456789",
         createdBy = "created",
       ),
+
     ).contactIdentityId
   }
 
@@ -110,12 +114,13 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should delete the contacts identity number`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should delete the contacts identity number`(role: String) {
     webTestClient.delete()
       .uri("/contact/$savedContactId/identity/$savedContactIdentityId")
       .accept(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .headers(setAuthorisation(roles = listOf(role)))
       .exchange()
       .expectStatus()
       .isNoContent

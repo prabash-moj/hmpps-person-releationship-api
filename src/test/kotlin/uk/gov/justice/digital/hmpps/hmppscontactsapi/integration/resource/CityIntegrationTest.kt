@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -46,11 +48,12 @@ class CityIntegrationTest : H2IntegrationTestBase() {
         .isForbidden
     }
 
-    @Test
-    fun `should return not found if no city found`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return not found if no city found`(role: String) {
       webTestClient.get()
         .uri("$GET_CITY_REFERENCE_DATA/9999")
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isNotFound

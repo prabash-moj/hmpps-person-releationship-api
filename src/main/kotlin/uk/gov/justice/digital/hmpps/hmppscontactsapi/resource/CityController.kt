@@ -45,7 +45,7 @@ class CityController(private val cityService: CityService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getCityById(@PathVariable id: Long): City = cityService.getCityById(id)
 
   @GetMapping
@@ -67,7 +67,7 @@ class CityController(private val cityService: CityService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getAllCities() = cityService.getAllCities()
 
   @GetMapping("/nomis-code/{code}")
@@ -93,6 +93,6 @@ class CityController(private val cityService: CityService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getCityByNomisCode(@PathVariable code: String) = cityService.getCityByNomisCode(code)
 }

@@ -65,7 +65,7 @@ class ReferenceCodeController(private val referenceCodeService: ReferenceCodeSer
     ],
   )
   @GetMapping(value = ["/group/{groupCode}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getReferenceDataByGroup(
     @Parameter(description = "The group code of the reference codes to load", required = true, example = "PHONE_TYPE")
     @PathVariable("groupCode", required = true)

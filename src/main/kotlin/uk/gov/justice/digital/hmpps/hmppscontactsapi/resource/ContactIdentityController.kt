@@ -62,7 +62,7 @@ class ContactIdentityController(private val contactIdentityFacade: ContactIdenti
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun createIdentityNumber(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -106,7 +106,7 @@ class ContactIdentityController(private val contactIdentityFacade: ContactIdenti
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun updateIdentityNumber(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -147,7 +147,7 @@ class ContactIdentityController(private val contactIdentityFacade: ContactIdenti
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getIdentityNumber(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -187,7 +187,7 @@ class ContactIdentityController(private val contactIdentityFacade: ContactIdenti
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun deleteIdentityNumber(
     @PathVariable("contactId") @Parameter(
       name = "contactId",

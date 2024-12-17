@@ -5,6 +5,8 @@ import org.assertj.core.groups.Tuple
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -52,14 +54,15 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         .isUnauthorized
     }
 
-    @Test
-    fun `should return forbidden without an authorised role on the token`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return forbidden without an authorised role on the token`(authRole: String) {
       webTestClient.post()
         .uri("/migrate/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(basicMigrationRequest(personId = 500L))
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+        .headers(setAuthorisation(roles = listOf(authRole)))
         .exchange()
         .expectStatus()
         .isForbidden

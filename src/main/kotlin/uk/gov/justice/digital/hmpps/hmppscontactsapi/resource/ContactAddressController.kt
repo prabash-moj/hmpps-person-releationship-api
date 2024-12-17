@@ -59,7 +59,7 @@ class ContactAddressController(private val contactAddressFacade: ContactAddressF
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun createContactAddress(
     @PathVariable("contactId")
     @Parameter(name = "contactId", description = "The id of the contact", example = "123456")
@@ -99,7 +99,7 @@ class ContactAddressController(private val contactAddressFacade: ContactAddressF
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun updateContactAddress(
     @PathVariable("contactId")
     @Parameter(name = "contactId", description = "The contact ID", example = "123456")
@@ -132,7 +132,7 @@ class ContactAddressController(private val contactAddressFacade: ContactAddressF
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getContactAddress(
     @PathVariable("contactId")
     @Parameter(name = "contactId", description = "The contact ID", example = "123456")
@@ -163,7 +163,7 @@ class ContactAddressController(private val contactAddressFacade: ContactAddressF
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun deleteContactAddress(
     @PathVariable("contactId")
     @Parameter(name = "contactId", description = "The contact ID", example = "123")

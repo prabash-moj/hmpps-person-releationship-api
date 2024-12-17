@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
@@ -113,11 +114,12 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
   }
 
-  @Test
-  fun `should create the contact address`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the contact address`(role: String) {
     val request = aMinimalAddressRequest()
 
-    val created = testAPIClient.createAContactAddress(savedContactId, request)
+    val created = testAPIClient.createAContactAddress(savedContactId, request, role)
 
     assertEqualsExcludingTimestamps(created, request)
 
@@ -276,7 +278,10 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @Test
   fun `should remove primary and mail flag from current combined primary mail address if setting primary and mail`() {
     val requestToCreatePrimaryAndMail = aMinimalAddressRequest().copy(primaryAddress = true, mailFlag = true)
-    val primaryAndMail = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimaryAndMail)
+    val primaryAndMail = testAPIClient.createAContactAddress(
+      savedContactId,
+      requestToCreatePrimaryAndMail,
+    )
 
     val request = aMinimalAddressRequest().copy(primaryAddress = true, mailFlag = true)
     val created = testAPIClient.createAContactAddress(savedContactId, request)

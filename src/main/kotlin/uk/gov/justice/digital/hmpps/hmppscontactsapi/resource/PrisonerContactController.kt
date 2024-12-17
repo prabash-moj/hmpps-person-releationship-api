@@ -70,7 +70,7 @@ class PrisonerContactController(
     ],
   )
   @GetMapping(value = ["/{prisonerContactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getPrisonerContactById(
     @PathVariable("prisonerContactId") @Parameter(
       name = "prisonerContactId",
@@ -103,7 +103,7 @@ class PrisonerContactController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   @ResponseStatus(HttpStatus.CREATED)
   fun patchContactRelationship(
     @PathVariable("prisonerContactId") @Parameter(
@@ -147,7 +147,7 @@ class PrisonerContactController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   @ResponseStatus(HttpStatus.CREATED)
   fun addContactRelationship(
     @Valid @RequestBody relationshipRequest: AddContactRelationshipRequest,
@@ -191,7 +191,7 @@ class PrisonerContactController(
     ],
   )
   @GetMapping(value = ["/{prisonerContactId}/restriction"], produces = [MediaType.APPLICATION_JSON_VALUE])
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getPrisonerContactRestrictionsByPrisonerContactId(
     @PathVariable("prisonerContactId") @Parameter(
       name = "prisonerContactId",
@@ -230,7 +230,7 @@ class PrisonerContactController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun createPrisonerContactRestriction(
     @PathVariable("prisonerContactId") @Parameter(
       name = "prisonerContactId",
@@ -275,7 +275,7 @@ class PrisonerContactController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun updatePrisonerContactRestriction(
     @PathVariable("prisonerContactId") @Parameter(
       name = "prisonerContactId",

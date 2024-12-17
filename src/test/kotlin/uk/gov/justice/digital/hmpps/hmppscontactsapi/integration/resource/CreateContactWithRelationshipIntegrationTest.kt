@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -162,8 +163,9 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should create the contact relationship with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the contact relationship with all fields`(role: String) {
     val prisonerNumber = "A1234AA"
     stubPrisonSearchWithResponse(prisonerNumber)
     val requestedRelationship = ContactRelationship(
@@ -180,7 +182,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       relationship = requestedRelationship,
     )
 
-    val created = testAPIClient.createAContactWithARelationship(request)
+    val created = testAPIClient.createAContactWithARelationship(request, role)
 
     assertThat(created.createdContact.lastName).isEqualTo(request.lastName)
     asserPrisonerContactEquals(created.createdRelationship!!, requestedRelationship)

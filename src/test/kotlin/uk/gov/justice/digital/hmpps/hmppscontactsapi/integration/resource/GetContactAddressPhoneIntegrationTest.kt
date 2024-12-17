@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
@@ -25,6 +27,7 @@ class GetContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+
     ).id
 
     savedAddressId = testAPIClient.createAContactAddress(
@@ -36,6 +39,7 @@ class GetContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         street = "Hello Road",
         createdBy = "created",
       ),
+
     ).contactAddressId
 
     savedAddressPhoneId = testAPIClient.createAContactAddressPhone(
@@ -48,6 +52,7 @@ class GetContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         extNumber = "2",
         createdBy = "CREATED",
       ),
+
     ).contactAddressPhoneId
   }
 
@@ -99,12 +104,13 @@ class GetContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact address phone (-100) not found")
   }
 
-  @Test
-  fun `should return the details of the address-specific phone number`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+  fun `should return the details of the address-specific phone number`(role: String) {
     val result = webTestClient.get()
       .uri("/contact/$savedContactId/address/$savedAddressId/phone/$savedAddressPhoneId")
       .accept(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .headers(setAuthorisation(roles = listOf(role)))
       .exchange()
       .expectStatus()
       .isOk()

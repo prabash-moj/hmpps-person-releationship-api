@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
@@ -30,6 +31,7 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+
     ).id
 
     savedContactAddressId = testAPIClient.createAContactAddress(
@@ -45,6 +47,7 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
         postcode = "HB10 2NB",
         createdBy = "created",
       ),
+
     ).contactAddressId
   }
 
@@ -190,8 +193,9 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should update the address`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should update the address`(role: String) {
     val request = UpdateContactAddressRequest(
       addressType = "HOME",
       primaryAddress = true,
@@ -202,7 +206,12 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    val updated = testAPIClient.updateAContactAddress(
+      savedContactId,
+      savedContactAddressId,
+      request,
+      role,
+    )
 
     with(updated) {
       assertThat(property).isEqualTo("28")
@@ -230,7 +239,12 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    val updated = testAPIClient.updateAContactAddress(
+      savedContactId,
+      savedContactAddressId,
+      request,
+
+    )
     assertThat(updated.addressType).isNull()
 
     stubEvents.assertHasEvent(
@@ -246,7 +260,12 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary)
 
     val request = aMinimalUpdateAddressRequest().copy(primaryAddress = true)
-    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    val updated = testAPIClient.updateAContactAddress(
+      savedContactId,
+      savedContactAddressId,
+      request,
+
+    )
 
     val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isFalse()
@@ -270,7 +289,12 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary)
 
     val request = aMinimalUpdateAddressRequest().copy(primaryAddress = false)
-    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    val updated = testAPIClient.updateAContactAddress(
+      savedContactId,
+      savedContactAddressId,
+      request,
+
+    )
 
     val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isTrue()
@@ -289,7 +313,12 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail)
 
     val request = aMinimalUpdateAddressRequest().copy(mailFlag = true)
-    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    val updated = testAPIClient.updateAContactAddress(
+      savedContactId,
+      savedContactAddressId,
+      request,
+
+    )
 
     val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == mail.contactAddressId }!!.mailFlag).isFalse()
@@ -313,7 +342,12 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail)
 
     val request = aMinimalUpdateAddressRequest().copy(mailFlag = false)
-    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    val updated = testAPIClient.updateAContactAddress(
+      savedContactId,
+      savedContactAddressId,
+      request,
+
+    )
 
     val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == mail.contactAddressId }!!.mailFlag).isTrue()
@@ -338,7 +372,12 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     val other = testAPIClient.createAContactAddress(savedContactId, requestToCreateOtherAddress)
 
     val request = aMinimalUpdateAddressRequest().copy(primaryAddress = true, mailFlag = true)
-    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    val updated = testAPIClient.updateAContactAddress(
+      savedContactId,
+      savedContactAddressId,
+      request,
+
+    )
 
     val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isFalse()
@@ -370,10 +409,19 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @Test
   fun `should remove primary and mail flag from current combined primary mail address if setting primary and mail`() {
     val requestToCreatePrimaryAndMail = aMinimalCreateAddressRequest().copy(primaryAddress = true, mailFlag = true)
-    val primaryAndMail = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimaryAndMail)
+    val primaryAndMail = testAPIClient.createAContactAddress(
+      savedContactId,
+      requestToCreatePrimaryAndMail,
+
+    )
 
     val request = aMinimalUpdateAddressRequest().copy(primaryAddress = true, mailFlag = true)
-    val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
+    val updated = testAPIClient.updateAContactAddress(
+      savedContactId,
+      savedContactAddressId,
+      request,
+
+    )
 
     val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == primaryAndMail.contactAddressId }!!.primaryAddress).isFalse()

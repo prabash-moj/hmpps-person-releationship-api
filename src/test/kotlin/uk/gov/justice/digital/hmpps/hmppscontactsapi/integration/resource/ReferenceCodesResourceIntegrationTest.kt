@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -43,15 +45,16 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should return empty list if no matching code found`() {
-    assertThat(testAPIClient.getReferenceCodes("FOO")).isEmpty()
+    assertThat(testAPIClient.getReferenceCodes("FOO", role = "ROLE_CONTACTS_ADMIN")).isEmpty()
   }
 
-  @Test
-  fun `should return a list of relationship type reference codes`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+  fun `should return a list of relationship type reference codes`(role: String) {
     val groupCode = "RELATIONSHIP"
     referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted()) hasSize 36
 
-    val listOfCodes = testAPIClient.getReferenceCodes(groupCode)
+    val listOfCodes = testAPIClient.getReferenceCodes(groupCode, role = role)
 
     assertThat(listOfCodes).hasSize(36)
     assertThat(listOfCodes)
@@ -65,7 +68,7 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
     val groupCode = "PHONE_TYPE"
     referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted()) hasSize 7
 
-    val listOfCodes = testAPIClient.getReferenceCodes(groupCode)
+    val listOfCodes = testAPIClient.getReferenceCodes(groupCode, role = "ROLE_CONTACTS_ADMIN")
 
     assertThat(listOfCodes).extracting("code").containsExactlyInAnyOrder(
       "HOME",
@@ -83,7 +86,7 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
     val groupCode = "DOMESTIC_STS"
     referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted()) hasSize 7
 
-    val listOfCodes = testAPIClient.getReferenceCodes(groupCode)
+    val listOfCodes = testAPIClient.getReferenceCodes(groupCode, role = "ROLE_CONTACTS_ADMIN")
 
     assertThat(listOfCodes).hasSize(7)
     assertThat(listOfCodes)
@@ -94,12 +97,16 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should be able to sort reference codes`() {
     val groupCode = "DOMESTIC_STS"
-    val listOfCodesInDisplayOrder = testAPIClient.getReferenceCodes(groupCode, "displayOrder")
+    val listOfCodesInDisplayOrder = testAPIClient.getReferenceCodes(
+      groupCode,
+      "displayOrder",
+      role = "ROLE_CONTACTS_ADMIN",
+    )
     assertThat(listOfCodesInDisplayOrder)
       .extracting("code")
       .isEqualTo(listOf("S", "C", "M", "D", "P", "W", "N"))
 
-    val listOfCodesInCodeOrder = testAPIClient.getReferenceCodes(groupCode, "code")
+    val listOfCodesInCodeOrder = testAPIClient.getReferenceCodes(groupCode, "code", role = "ROLE_CONTACTS_ADMIN")
     assertThat(listOfCodesInCodeOrder)
       .extracting("code")
       .isEqualTo(listOf("C", "D", "M", "N", "P", "S", "W"))
@@ -108,7 +115,7 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should not return inactive codes by default`() {
     val groupCode = "TEST_TYPE"
-    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = null))
+    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = null, role = "ROLE_CONTACTS_ADMIN"))
       .extracting("code")
       .isEqualTo(listOf("ACTIVE"))
   }
@@ -116,7 +123,7 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should not return inactive codes if specifically request not to`() {
     val groupCode = "TEST_TYPE"
-    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = true))
+    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = true, role = "ROLE_CONTACTS_ADMIN"))
       .extracting("code")
       .isEqualTo(listOf("ACTIVE"))
   }
@@ -124,7 +131,7 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
   @Test
   fun `should return inactive codes if requested`() {
     val groupCode = "TEST_TYPE"
-    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = false))
+    assertThat(testAPIClient.getReferenceCodes(groupCode, activeOnly = false, role = "ROLE_CONTACTS_ADMIN"))
       .extracting("code")
       .isEqualTo(listOf("ACTIVE", "INACTIVE"))
   }

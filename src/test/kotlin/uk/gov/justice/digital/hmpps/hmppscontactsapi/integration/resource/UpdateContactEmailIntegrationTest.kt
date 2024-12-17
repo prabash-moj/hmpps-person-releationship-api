@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -30,6 +31,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+
     ).id
     savedContactEmailId = testAPIClient.createAContactEmail(
       savedContactId,
@@ -37,6 +39,7 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
         emailAddress = "test@example.com",
         createdBy = "created",
       ),
+
     ).contactEmailId
   }
 
@@ -212,13 +215,14 @@ class UpdateContactEmailIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should update the email`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should update the email`(role: String) {
     val request = UpdateEmailRequest(
       emailAddress = "updated@example.com",
       updatedBy = "updated",
     )
-    val updated = testAPIClient.updateAContactEmail(savedContactId, savedContactEmailId, request)
+    val updated = testAPIClient.updateAContactEmail(savedContactId, savedContactEmailId, request, role)
 
     with(updated) {
       assertThat(emailAddress).isEqualTo("updated@example.com")

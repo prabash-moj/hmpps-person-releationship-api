@@ -45,7 +45,7 @@ class LanguageController(private val languageService: LanguageService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getLanguageById(@PathVariable id: Long) = languageService.getLanguageById(id)
 
   @GetMapping
@@ -67,7 +67,7 @@ class LanguageController(private val languageService: LanguageService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getAllLanguages() = languageService.getAllLanguages()
 
   @GetMapping("/nomis-code/{code}")
@@ -93,7 +93,7 @@ class LanguageController(private val languageService: LanguageService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getLanguageByNomisCode(@PathVariable code: String) = languageService.getLanguageByNomisCode(code)
 
   @GetMapping("/iso-alpha2/{code}")
@@ -119,7 +119,7 @@ class LanguageController(private val languageService: LanguageService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getLanguageByIsoAlpha2(@PathVariable code: String) = languageService.getLanguageByIsoAlpha2(code)
 
   @GetMapping("/iso-alpha3/{code}")
@@ -145,6 +145,6 @@ class LanguageController(private val languageService: LanguageService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getLanguageByIsoAlpha3(@PathVariable code: String) = languageService.getLanguageByIsoAlpha3(code)
 }

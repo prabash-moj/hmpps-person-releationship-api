@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -59,12 +61,13 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .isUnauthorized
     }
 
-    @Test
-    fun `Sync endpoints should return forbidden without an authorised role on the token`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `Sync endpoints should return forbidden without an authorised role on the token`(role: String) {
       webTestClient.get()
         .uri("/sync/contact-restriction/1")
         .accept(MediaType.APPLICATION_JSON)
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isForbidden
@@ -74,7 +77,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(createContactRestrictionRequest(savedContactId))
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isForbidden
@@ -84,7 +87,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(updateContactRestrictionRequest(savedContactId))
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isForbidden
@@ -92,7 +95,7 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       webTestClient.delete()
         .uri("/sync/contact-restriction/1")
         .accept(MediaType.APPLICATION_JSON)
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isForbidden

@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
@@ -36,6 +38,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+
     ).id
     savedContactPhoneId = testAPIClient.createAContactPhone(
       savedContactId,
@@ -45,6 +48,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
         extNumber = "123456",
         createdBy = "USER1",
       ),
+
     ).contactPhoneId
   }
 
@@ -139,8 +143,9 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should delete the contacts phone number even if associated with an address`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should delete the contacts phone number even if associated with an address`(role: String) {
     val address = addressRepository.saveAndFlush(
       ContactAddressEntity(
         contactAddressId = 0L,
@@ -171,7 +176,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
     webTestClient.delete()
       .uri("/contact/$savedContactId/phone/$savedContactPhoneId")
       .accept(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .headers(setAuthorisation(roles = listOf(role)))
       .exchange()
       .expectStatus()
       .isNoContent

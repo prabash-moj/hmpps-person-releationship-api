@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -252,9 +253,10 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
     }
   }
 
-  @Test
-  fun `should get contacts with staff flag`() {
-    val contact = testAPIClient.getContact(1)
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+  fun `should get contacts with staff flag`(role: String) {
+    val contact = testAPIClient.getContact(1, role)
 
     with(contact) {
       assertThat(id).isEqualTo(1)
@@ -273,6 +275,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
         estimatedIsOverEighteen = estimatedIsOverEighteen,
         createdBy = "USER1",
       ),
+
     ).id
     val contact = testAPIClient.getContact(createdContactId)
     assertThat(contact.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)

@@ -62,7 +62,7 @@ class ContactEmailController(private val contactEmailFacade: ContactEmailFacade)
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN','ROLE_CONTACTS__RW')")
   fun createEmailAddress(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -106,7 +106,7 @@ class ContactEmailController(private val contactEmailFacade: ContactEmailFacade)
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun updateEmailAddress(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -147,7 +147,7 @@ class ContactEmailController(private val contactEmailFacade: ContactEmailFacade)
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getEmailAddress(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -187,7 +187,7 @@ class ContactEmailController(private val contactEmailFacade: ContactEmailFacade)
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN','ROLE_CONTACTS__RW')")
   fun deleteEmailAddress(
     @PathVariable("contactId") @Parameter(
       name = "contactId",

@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -30,6 +31,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+
     ).id
     savedContactIdentityId = testAPIClient.createAContactIdentity(
       savedContactId,
@@ -39,6 +41,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
         issuingAuthority = "DVLA",
         createdBy = "created",
       ),
+
     ).contactIdentityId
   }
 
@@ -230,7 +233,11 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       issuingAuthority = null,
       updatedBy = "updated",
     )
-    val updated = testAPIClient.updateAContactIdentity(savedContactId, savedContactIdentityId, request)
+    val updated = testAPIClient.updateAContactIdentity(
+      savedContactId,
+      savedContactIdentityId,
+      request,
+    )
 
     with(updated) {
       assertThat(identityType).isEqualTo(request.identityType)
@@ -249,8 +256,9 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should update the identity with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should update the identity with all fields`(role: String) {
     val request = UpdateIdentityRequest(
       identityType = "PASS",
       identityValue = "P978654312",
@@ -258,7 +266,12 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateAContactIdentity(savedContactId, savedContactIdentityId, request)
+    val updated = testAPIClient.updateAContactIdentity(
+      savedContactId,
+      savedContactIdentityId,
+      request,
+      role,
+    )
 
     with(updated) {
       assertThat(identityType).isEqualTo(request.identityType)

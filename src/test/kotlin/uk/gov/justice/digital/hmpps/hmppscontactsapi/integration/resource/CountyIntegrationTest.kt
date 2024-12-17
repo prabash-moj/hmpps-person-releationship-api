@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -56,19 +58,23 @@ class CountyIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return county reference data when using the id`() {
-      val countyReferences = webTestClient.getCountyReferenceData("$GET_COUNTY_REFERENCE_DATA/145")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return county reference data when using the id`(role: String) {
+      val countyReferences = webTestClient.getCountyReferenceData(
+        "$GET_COUNTY_REFERENCE_DATA/145",
+        role,
+      )
 
       assertThat(countyReferences).extracting("nomisDescription").contains("Middlesbrough")
       assertThat(countyReferences).extracting("nomisCode").contains("MIDDLESBOR")
       assertThat(countyReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountyReferenceData(url: String): MutableList<County> =
+    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -119,19 +125,23 @@ class CountyIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return county reference data when using the nomis code`() {
-      val countyReferences = webTestClient.getCountyReferenceData("$GET_COUNTY_REFERENCE_DATA/nomis-code/MIDDLESBOR")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return county reference data when using the nomis code`(role: String) {
+      val countyReferences = webTestClient.getCountyReferenceData(
+        "$GET_COUNTY_REFERENCE_DATA/nomis-code/MIDDLESBOR",
+        role,
+      )
 
       assertThat(countyReferences).extracting("nomisDescription").contains("Middlesbrough")
       assertThat(countyReferences).extracting("nomisCode").contains("MIDDLESBOR")
       assertThat(countyReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountyReferenceData(url: String): MutableList<County> =
+    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -182,9 +192,10 @@ class CountyIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return county reference data when get all counties`() {
-      val countyReferences = webTestClient.getCountyReferenceData(GET_COUNTY_REFERENCE_DATA)
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return county reference data when get all counties`(role: String) {
+      val countyReferences = webTestClient.getCountyReferenceData(GET_COUNTY_REFERENCE_DATA, role)
 
       val county = County(
         countyId = 1L,
@@ -196,10 +207,10 @@ class CountyIntegrationTest : H2IntegrationTestBase() {
       assertThat(countyReferences).hasSizeGreaterThan(10)
     }
 
-    private fun WebTestClient.getCountyReferenceData(url: String): MutableList<County> =
+    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk

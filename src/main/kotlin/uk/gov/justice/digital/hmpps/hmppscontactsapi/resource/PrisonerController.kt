@@ -55,7 +55,7 @@ class PrisonerController(private val prisonerContactService: PrisonerContactServ
     ],
   )
   @GetMapping(value = ["/{prisonNumber}/contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getAllContacts(
     @PathVariable("prisonNumber") @PrisonNumberDoc prisonerNumber: String,
     @RequestParam(name = "active", defaultValue = "true") @Parameter(

@@ -83,7 +83,7 @@ class ContactController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun createContact(@Valid @RequestBody createContactRequest: CreateContactRequest): ResponseEntity<Any> {
     val created = contactFacade.createContact(createContactRequest)
     return ResponseEntity
@@ -115,7 +115,7 @@ class ContactController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getContact(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -156,7 +156,7 @@ class ContactController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun searchContacts(
     @Parameter(description = "Pageable configurations", required = false)
     @PageableDefault(sort = ["lastName", "firstName", "middleNames", "createdTime"], direction = Direction.ASC)
@@ -195,7 +195,7 @@ class ContactController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun patchContact(
     @PathVariable("contactId") @Parameter(
       name = "contactId",

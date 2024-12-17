@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
@@ -169,11 +170,17 @@ class CreateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact address (-400) not found")
   }
 
-  @Test
-  fun `should create the address-specific phone number`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the address-specific phone number`(role: String) {
     val request = aMinimalRequest().copy(contactAddressId = savedAddressId)
 
-    val created = testAPIClient.createAContactAddressPhone(savedContactId, savedAddressId, request)
+    val created = testAPIClient.createAContactAddressPhone(
+      savedContactId,
+      savedAddressId,
+      request,
+      role,
+    )
 
     assertEqualsExcludingTimestamps(created, request)
 

@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -56,19 +58,23 @@ class CountryIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return country reference data when using the id`() {
-      val countryReferences = webTestClient.getCountryReferenceData("$GET_COUNTRY_REFERENCE_DATA/264")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return country reference data when using the id`(role: String) {
+      val countryReferences = webTestClient.getCountryReferenceData(
+        "$GET_COUNTRY_REFERENCE_DATA/264",
+        role,
+      )
 
       assertThat(countryReferences).extracting("nomisDescription").contains("Yugoslavia")
       assertThat(countryReferences).extracting("nomisCode").contains("YU")
       assertThat(countryReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String): MutableList<Country> =
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -119,19 +125,23 @@ class CountryIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return country reference data when using the nomis code`() {
-      val countryReferences = webTestClient.getCountryReferenceData("$GET_COUNTRY_REFERENCE_DATA/nomis-code/YU")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return country reference data when using the nomis code`(role: String) {
+      val countryReferences = webTestClient.getCountryReferenceData(
+        "$GET_COUNTRY_REFERENCE_DATA/nomis-code/YU",
+        role,
+      )
 
       assertThat(countryReferences).extracting("nomisDescription").contains("Yugoslavia")
       assertThat(countryReferences).extracting("nomisCode").contains("YU")
       assertThat(countryReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String): MutableList<Country> =
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -182,19 +192,23 @@ class CountryIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return country reference data when using the iso alpha code 2`() {
-      val countryReferences = webTestClient.getCountryReferenceData("$GET_COUNTRY_REFERENCE_DATA/iso-alpha2/b6")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return country reference data when using the iso alpha code 2`(role: String) {
+      val countryReferences = webTestClient.getCountryReferenceData(
+        "$GET_COUNTRY_REFERENCE_DATA/iso-alpha2/b6",
+        role,
+      )
 
       assertThat(countryReferences).extracting("nomisDescription").contains("Yugoslavia")
       assertThat(countryReferences).extracting("nomisCode").contains("YU")
       assertThat(countryReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String): MutableList<Country> =
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -245,19 +259,23 @@ class CountryIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return country reference data when using the iso alpha code 3`() {
-      val countryReferences = webTestClient.getCountryReferenceData("$GET_COUNTRY_REFERENCE_DATA/iso-alpha3/bn6")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return country reference data when using the iso alpha code 3`(role: String) {
+      val countryReferences = webTestClient.getCountryReferenceData(
+        "$GET_COUNTRY_REFERENCE_DATA/iso-alpha3/bn6",
+        role,
+      )
 
       assertThat(countryReferences).extracting("nomisDescription").contains("Yugoslavia")
       assertThat(countryReferences).extracting("nomisCode").contains("YU")
       assertThat(countryReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String): MutableList<Country> =
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -308,9 +326,10 @@ class CountryIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return country reference data when get all countries`() {
-      val countryReferences = webTestClient.getCountryReferenceData(GET_COUNTRY_REFERENCE_DATA)
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return country reference data when get all countries`(role: String) {
+      val countryReferences = webTestClient.getCountryReferenceData(GET_COUNTRY_REFERENCE_DATA, role)
 
       val country = Country(
         countryId = 1L,
@@ -326,10 +345,10 @@ class CountryIntegrationTest : H2IntegrationTestBase() {
       assertThat(countryReferences).hasSizeGreaterThan(10)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String): MutableList<Country> =
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk

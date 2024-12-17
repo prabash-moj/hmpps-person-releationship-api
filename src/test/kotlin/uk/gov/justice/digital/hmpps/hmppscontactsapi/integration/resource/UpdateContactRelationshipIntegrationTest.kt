@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -188,8 +189,9 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     assertThat(updatedPrisonerContacts).hasSize(1)
   }
 
-  @Test
-  fun `should update the contact relationship with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should update the contact relationship with all fields`(role: String) {
     val prisonerNumber = getRandomPrisonerCode()
     stubPrisonSearchWithResponse(prisonerNumber)
     val prisonerContact = cretePrisonerContact(prisonerNumber)
@@ -206,7 +208,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val prisonerContactId = prisonerContact.prisonerContactId
 
-    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest, role)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -159,11 +160,12 @@ class CreateContactEmailIntegrationTest : H2IntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Validation failure: Email address is invalid")
   }
 
-  @Test
-  fun `should create the email`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the email`(role: String) {
     val request = aMinimalRequest()
 
-    val created = testAPIClient.createAContactEmail(savedContactId, request)
+    val created = testAPIClient.createAContactEmail(savedContactId, request, role)
 
     assertEqualsExcludingTimestamps(created, request)
 

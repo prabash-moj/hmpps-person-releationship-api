@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -29,6 +30,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+
     ).id
     savedContactPhoneId = testAPIClient.createAContactPhone(
       savedContactId,
@@ -38,6 +40,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
         extNumber = "123456",
         createdBy = "USER1",
       ),
+
     ).contactPhoneId
   }
 
@@ -253,8 +256,9 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should update the phone with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should update the phone with all fields`(role: String) {
     val request = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
@@ -262,7 +266,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateAContactPhone(savedContactId, savedContactPhoneId, request)
+    val updated = testAPIClient.updateAContactPhone(savedContactId, savedContactPhoneId, request, role)
 
     with(updated) {
       assertThat(phoneType).isEqualTo(request.phoneType)

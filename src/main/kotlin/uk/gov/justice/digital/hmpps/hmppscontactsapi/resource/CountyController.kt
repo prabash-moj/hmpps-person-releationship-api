@@ -45,7 +45,7 @@ class CountyController(private val countyService: CountyService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getCountyById(@PathVariable id: Long) = countyService.getCountyById(id)
 
   @GetMapping
@@ -67,7 +67,7 @@ class CountyController(private val countyService: CountyService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getAllCounties() = countyService.getAllCounties()
 
   @GetMapping("/nomis-code/{code}")
@@ -93,6 +93,6 @@ class CountyController(private val countyService: CountyService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getCountyByNomisCode(@PathVariable code: String) = countyService.getCountyByNomisCode(code)
 }

@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
@@ -50,13 +52,14 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
       .isNotFound
   }
 
-  @Test
-  fun `should return all relationship and global restrictions for a contact`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+  fun `should return all relationship and global restrictions for a contact`(role: String) {
     stubGetUserByUsername(User("officer", "The Officer"))
     stubGetUserByUsername(User("editor", "The Editor"))
     stubGetUserByUsername(User("JBAKER_GEN", "James Test"))
 
-    val restrictions = testAPIClient.getPrisonerContactRestrictions(10)
+    val restrictions = testAPIClient.getPrisonerContactRestrictions(10, role)
 
     assertThat(restrictions.contactGlobalRestrictions).hasSize(2)
     with(restrictions.contactGlobalRestrictions[0]) {
@@ -134,8 +137,12 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
           comments = null,
         ),
       ),
+
     )
-    val restrictions = testAPIClient.getPrisonerContactRestrictions(created.createdRelationship!!.prisonerContactId)
+    val restrictions = testAPIClient.getPrisonerContactRestrictions(
+      created.createdRelationship!!.prisonerContactId,
+
+    )
     assertThat(restrictions.prisonerContactRestrictions).isEmpty()
     assertThat(restrictions.contactGlobalRestrictions).isEmpty()
   }

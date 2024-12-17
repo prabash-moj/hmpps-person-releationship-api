@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -201,8 +202,9 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should create the identity with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the identity with all fields`(role: String) {
     val request = CreateIdentityRequest(
       identityType = "DL",
       identityValue = "DL123456789",
@@ -210,7 +212,7 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
     )
 
-    val created = testAPIClient.createAContactIdentity(savedContactId, request)
+    val created = testAPIClient.createAContactIdentity(savedContactId, request, role)
 
     assertEqualsExcludingTimestamps(created, request)
 

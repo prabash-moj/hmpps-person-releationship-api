@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 
@@ -39,9 +41,10 @@ class GetContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .isForbidden
   }
 
-  @Test
-  fun `should get identity details where the type is active`() {
-    val identity = testAPIClient.getContactIdentity(1, 1)
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+  fun `should get identity details where the type is active`(role: String) {
+    val identity = testAPIClient.getContactIdentity(1, 1, role)
 
     with(identity) {
       assertThat(contactIdentityId).isEqualTo(1)

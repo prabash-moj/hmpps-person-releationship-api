@@ -45,7 +45,7 @@ class CountryController(private val countryService: CountryService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getCountryById(@PathVariable id: Long) = countryService.getCountryById(id)
 
   @GetMapping
@@ -67,7 +67,7 @@ class CountryController(private val countryService: CountryService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getAllCountries() = countryService.getAllCountries()
 
   @GetMapping("/nomis-code/{code}")
@@ -93,7 +93,7 @@ class CountryController(private val countryService: CountryService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getCountryByNomisCode(@PathVariable code: String) = countryService.getCountryByNomisCode(code)
 
   @GetMapping("/iso-alpha2/{code}")
@@ -119,7 +119,7 @@ class CountryController(private val countryService: CountryService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getCountryByIsoAlpha2(@PathVariable code: String) = countryService.getCountryByIsoAlpha2(code)
 
   @GetMapping("/iso-alpha3/{code}")
@@ -145,6 +145,6 @@ class CountryController(private val countryService: CountryService) {
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getCountryByIsoAlpha3(@PathVariable code: String) = countryService.getCountryByIsoAlpha3(code)
 }

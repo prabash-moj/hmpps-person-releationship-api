@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
@@ -31,6 +32,7 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+
     ).id
 
     savedAddressId = testAPIClient.createAContactAddress(
@@ -42,6 +44,7 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         street = "Hello Road",
         createdBy = "created",
       ),
+
     ).contactAddressId
 
     savedAddressPhoneId = testAPIClient.createAContactAddressPhone(
@@ -54,6 +57,7 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         extNumber = "2",
         createdBy = "CREATED",
       ),
+
     ).contactAddressPhoneId
   }
 
@@ -245,11 +249,18 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
     stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId))
   }
 
-  @Test
-  fun `should update the address-specific phone number`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should update the address-specific phone number`(role: String) {
     val request = aMinimalRequest()
 
-    val updated = testAPIClient.updateAContactAddressPhone(savedContactId, savedAddressId, savedAddressPhoneId, request)
+    val updated = testAPIClient.updateAContactAddressPhone(
+      savedContactId,
+      savedAddressId,
+      savedAddressPhoneId,
+      request,
+      role,
+    )
 
     with(updated) {
       assertThat(phoneType).isEqualTo(request.phoneType)

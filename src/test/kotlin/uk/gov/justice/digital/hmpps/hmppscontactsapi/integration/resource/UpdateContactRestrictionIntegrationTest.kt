@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -32,6 +33,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         firstName = "first",
         createdBy = "created",
       ),
+
     ).id
     savedContactRestrictionId = testAPIClient.createContactGlobalRestriction(
       savedContactId,
@@ -42,6 +44,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         comments = "Some comments",
         createdBy = "created",
       ),
+
     ).contactRestrictionId
     stubGetUserByUsername(User("created", "Created User"))
     stubGetUserByUsername(User("updated", "Updated User"))
@@ -203,7 +206,12 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateContactGlobalRestriction(savedContactId, savedContactRestrictionId, request)
+    val updated = testAPIClient.updateContactGlobalRestriction(
+      savedContactId,
+      savedContactRestrictionId,
+      request,
+
+    )
 
     with(updated) {
       assertThat(contactRestrictionId).isEqualTo(savedContactRestrictionId)
@@ -227,8 +235,9 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should update the restriction with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should update the restriction with all fields`(role: String) {
     val request = UpdateContactRestrictionRequest(
       restrictionType = "CCTV",
       startDate = LocalDate.of(1990, 1, 1),
@@ -237,7 +246,12 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateContactGlobalRestriction(savedContactId, savedContactRestrictionId, request)
+    val updated = testAPIClient.updateContactGlobalRestriction(
+      savedContactId,
+      savedContactRestrictionId,
+      request,
+      role,
+    )
 
     with(updated) {
       assertThat(contactRestrictionId).isEqualTo(savedContactRestrictionId)

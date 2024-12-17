@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -56,19 +58,23 @@ class LanguageIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return language reference data when using the id`() {
-      val languageReferences = webTestClient.getLanguageReferenceData("$GET_LANGUAGE_REFERENCE_DATA/226")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return language reference data when using the id`(role: String) {
+      val languageReferences = webTestClient.getLanguageReferenceData(
+        "$GET_LANGUAGE_REFERENCE_DATA/226",
+        role,
+      )
 
       assertThat(languageReferences).extracting("nomisDescription").contains("Zhuang; Chuang")
       assertThat(languageReferences).extracting("nomisCode").contains("ZHA")
       assertThat(languageReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String): MutableList<Language> =
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -119,19 +125,23 @@ class LanguageIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return language reference data when using the nomis code`() {
-      val languageReferences = webTestClient.getLanguageReferenceData("$GET_LANGUAGE_REFERENCE_DATA/nomis-code/CHU")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return language reference data when using the nomis code`(role: String) {
+      val languageReferences = webTestClient.getLanguageReferenceData(
+        "$GET_LANGUAGE_REFERENCE_DATA/nomis-code/CHU",
+        role,
+      )
 
       assertThat(languageReferences).extracting("nomisDescription").contains("Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic")
       assertThat(languageReferences).extracting("nomisCode").contains("CHU")
       assertThat(languageReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String): MutableList<Language> =
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -182,19 +192,23 @@ class LanguageIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return language reference data when using the iso alpha code 2`() {
-      val languageReferences = webTestClient.getLanguageReferenceData("$GET_LANGUAGE_REFERENCE_DATA/iso-alpha2/za")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return language reference data when using the iso alpha code 2`(role: String) {
+      val languageReferences = webTestClient.getLanguageReferenceData(
+        "$GET_LANGUAGE_REFERENCE_DATA/iso-alpha2/za",
+        role,
+      )
 
       assertThat(languageReferences).extracting("nomisDescription").contains("Zhuang; Chuang")
       assertThat(languageReferences).extracting("nomisCode").contains("ZHA")
       assertThat(languageReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String): MutableList<Language> =
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -245,19 +259,23 @@ class LanguageIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return language reference data when using the iso alpha code 3`() {
-      val languageReferences = webTestClient.getLanguageReferenceData("$GET_LANGUAGE_REFERENCE_DATA/iso-alpha3/zha")
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return language reference data when using the iso alpha code 3`(role: String) {
+      val languageReferences = webTestClient.getLanguageReferenceData(
+        "$GET_LANGUAGE_REFERENCE_DATA/iso-alpha3/zha",
+        role,
+      )
 
       assertThat(languageReferences).extracting("nomisDescription").contains("Zhuang; Chuang")
       assertThat(languageReferences).extracting("nomisCode").contains("ZHA")
       assertThat(languageReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String): MutableList<Language> =
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk
@@ -308,9 +326,10 @@ class LanguageIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    @Test
-    fun `should return language reference data when get all countries`() {
-      val languageReferences = webTestClient.getLanguageReferenceData(GET_LANGUAGE_REFERENCE_DATA)
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return language reference data when get all countries`(role: String) {
+      val languageReferences = webTestClient.getLanguageReferenceData(GET_LANGUAGE_REFERENCE_DATA, role)
       val language = Language(
         languageId = 226,
         nomisCode = "ZHA",
@@ -324,10 +343,10 @@ class LanguageIntegrationTest : H2IntegrationTestBase() {
       assertThat(languageReferences).hasSizeGreaterThan(10)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String): MutableList<Language> =
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
       get()
         .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .headers(setAuthorisation(roles = listOf(role)))
         .exchange()
         .expectStatus()
         .isOk

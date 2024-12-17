@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -98,15 +100,16 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
   @Nested
   inner class LanguageCode {
 
-    @Test
-    fun `should not patch the language code when not provided`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+    fun `should not patch the language code when not provided`(role: String) {
       resetLanguageCode()
 
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId", role)
 
       assertThat(res.languageCode).isEqualTo("ENG")
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -422,6 +425,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
           dateOfBirth = LocalDate.of(1982, 6, 15),
           createdBy = "created",
         ),
+
       ).id
     }
 
@@ -496,6 +500,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
           estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
           createdBy = "created",
         ),
+
       ).id
     }
 
@@ -567,6 +572,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
           title = "MR",
           createdBy = "created",
         ),
+
       ).id
     }
 
@@ -717,6 +723,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
           firstName = "First",
           createdBy = "created",
         ),
+
       ).id
       val entity = contactRepository.findById(contactWithAGender).get()
       contactRepository.saveAndFlush(entity.copy(gender = "NS"))

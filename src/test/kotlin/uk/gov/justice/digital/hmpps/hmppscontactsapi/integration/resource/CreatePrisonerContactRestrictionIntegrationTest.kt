@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -207,8 +208,9 @@ class CreatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
     )
   }
 
-  @Test
-  fun `should create the restriction with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the restriction with all fields`(role: String) {
     stubGetUserByUsername(User("created", "Created User"))
     val request = CreatePrisonerContactRestrictionRequest(
       restrictionType = "BAN",
@@ -218,7 +220,7 @@ class CreatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       createdBy = "created",
     )
 
-    val created = testAPIClient.createPrisonerContactRestriction(savedPrisonerContactId, request)
+    val created = testAPIClient.createPrisonerContactRestriction(savedPrisonerContactId, request, role)
 
     with(created) {
       assertThat(prisonerContactRestrictionId).isGreaterThan(0)

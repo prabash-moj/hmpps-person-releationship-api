@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 
@@ -39,9 +41,10 @@ class GetContactEmailIntegrationTest : H2IntegrationTestBase() {
       .isForbidden
   }
 
-  @Test
-  fun `should get email details`() {
-    val email = testAPIClient.getContactEmail(1, 1)
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+  fun `should get email details`(role: String) {
+    val email = testAPIClient.getContactEmail(1, 1, role)
 
     with(email) {
       assertThat(contactEmailId).isEqualTo(1)

@@ -63,7 +63,7 @@ class ContactGlobalRestrictionController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getContactGlobalRestrictions(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -103,7 +103,7 @@ class ContactGlobalRestrictionController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN','ROLE_CONTACTS__RW')")
   fun createContactGlobalRestriction(
     @PathVariable("contactId") @Parameter(
       name = "contactId",
@@ -147,7 +147,7 @@ class ContactGlobalRestrictionController(
       ),
     ],
   )
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__RW')")
   fun updateContactGlobalRestriction(
     @PathVariable("contactId") @Parameter(
       name = "contactId",

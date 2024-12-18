@@ -7,5 +7,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSumma
 
 @Repository
 interface PrisonerContactSummaryRepository : ReadOnlyRepository<PrisonerContactSummaryEntity, Long> {
-  fun findByPrisonerNumberAndActive(prisonerNumber: String, active: Boolean = true, pageable: Pageable): Page<PrisonerContactSummaryEntity>
+  fun findByPrisonerNumberAndActiveAndContactType(prisonerNumber: String, active: Boolean, contactType: String, pageable: Pageable): Page<PrisonerContactSummaryEntity>
+  fun findByContactIdAndActive(contactId: Long, active: Boolean = true): List<PrisonerContactSummaryEntity>
 }

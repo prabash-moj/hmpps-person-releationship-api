@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.TestAPIClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
@@ -55,6 +56,10 @@ abstract class IntegrationTestBase {
 
   protected fun stubPrisonSearchWithResponse(prisonerNumber: String) {
     prisonerSearchApiServer.stubGetPrisoner(prisonerNumber)
+  }
+
+  protected fun stubPrisonerSearch(prisoner: Prisoner) {
+    prisonerSearchApiServer.stubGetPrisoner(prisoner)
   }
 
   protected fun stubPrisonSearchWithNotFoundResponse(prisonerNumber: String) {

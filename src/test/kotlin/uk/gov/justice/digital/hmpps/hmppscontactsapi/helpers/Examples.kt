@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers
 
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetailsEntity
@@ -551,4 +552,18 @@ fun contactAddressPhoneResponse(
   createdTime = createdTime,
   updatedBy = updatedBy,
   updatedTime = updatedTime,
+)
+
+fun prisoner(
+  prisonerNumber: String = "A1324BC",
+  prisonId: String? = "",
+  lastName: String = "Last",
+  firstName: String = "First",
+  middleNames: String? = null,
+) = Prisoner(
+  prisonerNumber,
+  prisonId,
+  lastName,
+  firstName,
+  middleNames,
 )

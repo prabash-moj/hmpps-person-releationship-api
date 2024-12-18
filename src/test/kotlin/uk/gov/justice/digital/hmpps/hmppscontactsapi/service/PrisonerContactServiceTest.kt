@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
@@ -40,7 +41,7 @@ class PrisonerContactServiceTest {
 
   @BeforeEach
   fun before() {
-    prisoner = Prisoner(prisonerNumber, prisonId = "MDI")
+    prisoner = prisoner(prisonerNumber, prisonId = "MDI")
   }
 
   private val pageable = Pageable.ofSize(10)
@@ -69,9 +70,10 @@ class PrisonerContactServiceTest {
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
     whenever(
-      prisonerContactSummaryRepository.findByPrisonerNumberAndActive(
+      prisonerContactSummaryRepository.findByPrisonerNumberAndActiveAndContactType(
         prisonerNumber,
         true,
+        "S",
         pageable,
       ),
     ).thenReturn(page)
@@ -81,7 +83,7 @@ class PrisonerContactServiceTest {
     result.content hasSize 2
     assertThat(result).containsAll(listOf(c1.toModel(), c2.toModel()))
 
-    verify(prisonerContactSummaryRepository).findByPrisonerNumberAndActive(prisonerNumber, true, pageable)
+    verify(prisonerContactSummaryRepository).findByPrisonerNumberAndActiveAndContactType(prisonerNumber, true, "S", pageable)
   }
 
   @Test
@@ -141,5 +143,7 @@ class PrisonerContactServiceTest {
       emergencyContact = false,
       currentTerm = true,
       comments = "No comments",
+      contactType = "S",
+      contactTypeDescription = "Social/Family",
     )
 }

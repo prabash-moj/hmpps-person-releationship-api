@@ -90,4 +90,8 @@ data class PrisonerContactSummaryEntity(
   val currentTerm: Boolean,
 
   val comments: String?,
+
+  val contactType: String,
+
+  val contactTypeDescription: String,
 )

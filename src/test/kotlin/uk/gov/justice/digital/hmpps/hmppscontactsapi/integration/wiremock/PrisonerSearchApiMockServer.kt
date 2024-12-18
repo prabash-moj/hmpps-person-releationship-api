@@ -7,29 +7,29 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.prisoner
 
 class PrisonerSearchApiMockServer : MockServer(8092) {
 
-  fun stubGetPrisoner(prisonNumber: String, prisonId: String = "MDI") {
+  fun stubGetPrisoner(prisonerNumber: String, prisonId: String = "MDI") {
+    stubGetPrisoner(prisoner(prisonerNumber, prisonId))
+  }
+
+  fun stubGetPrisoner(prisoner: Prisoner) {
     stubFor(
-      get("/prisoner/$prisonNumber")
+      get("/prisoner/${prisoner.prisonerNumber}")
         .willReturn(
           aResponse()
             .withHeader("Content-Type", "application/json")
             .withBody(
-              mapper.writeValueAsString(
-                Prisoner(
-                  prisonerNumber = prisonNumber,
-                  prisonId = prisonId,
-                ),
-              ),
+              mapper.writeValueAsString(prisoner),
             )
             .withStatus(200),
         ),
     )
   }
 
-  fun stubGetPrisonerReturnNoResults(prisonNumber: String, prisonId: String = "MDI") {
+  fun stubGetPrisonerReturnNoResults(prisonNumber: String) {
     stubFor(
       get("/prisoner/$prisonNumber")
         .willReturn(

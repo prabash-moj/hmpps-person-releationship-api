@@ -13,6 +13,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactSummaryRepository
@@ -34,7 +35,7 @@ class PrisonerContactRelationshipServiceTest {
 
   @BeforeEach
   fun before() {
-    prisoner = Prisoner(prisonerNumber, prisonId = "MDI")
+    prisoner = prisoner(prisonerNumber, prisonId = "MDI")
   }
 
   @Test
@@ -131,5 +132,7 @@ class PrisonerContactRelationshipServiceTest {
       emergencyContact = false,
       currentTerm = true,
       comments = "No comments",
+      contactType = "S",
+      contactTypeDescription = "Social/Family",
     )
 }

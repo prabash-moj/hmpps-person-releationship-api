@@ -21,7 +21,6 @@ import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
@@ -30,6 +29,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddres
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
@@ -202,7 +202,7 @@ class ContactServiceTest {
         relationship = relationshipRequest,
       )
       whenever(prisonerService.getPrisoner(any())).thenReturn(
-        Prisoner(
+        prisoner(
           relationshipRequest.prisonerNumber,
           prisonId = "MDI",
         ),
@@ -255,7 +255,7 @@ class ContactServiceTest {
           comments = "some comments",
         ),
       )
-      whenever(prisonerService.getPrisoner(any())).thenReturn(Prisoner("A1234BC", prisonId = "MDI"))
+      whenever(prisonerService.getPrisoner(any())).thenReturn(prisoner("A1234BC", prisonId = "MDI"))
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenThrow(RuntimeException("Bang!"))
 
@@ -546,7 +546,7 @@ class ContactServiceTest {
     @Test
     fun `should save the contact relationship`() {
       whenever(prisonerService.getPrisoner(any())).thenReturn(
-        Prisoner(
+        prisoner(
           request.relationship.prisonerNumber,
           prisonId = "MDI",
         ),
@@ -592,7 +592,7 @@ class ContactServiceTest {
     @Test
     fun `should propagate exceptions adding a relationship`() {
       whenever(prisonerService.getPrisoner(any())).thenReturn(
-        Prisoner(
+        prisoner(
           request.relationship.prisonerNumber,
           prisonId = "MDI",
         ),

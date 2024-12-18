@@ -14,13 +14,19 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.CreateAddres
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.UpdateAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ReferenceCodeRepository
 import java.time.LocalDateTime
+
+private const val COUNTRY = "COUNTRY"
+private const val COUNTY = "COUNTY"
+private const val CITY = "CITY"
 
 @Service
 @Transactional
 class ContactAddressService(
   private val contactRepository: ContactRepository,
   private val contactAddressRepository: ContactAddressRepository,
+  private val referenceCodeRepository: ReferenceCodeRepository,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -41,6 +47,10 @@ class ContactAddressService(
 
   fun create(contactId: Long, request: CreateContactAddressRequest): CreateAddressResponse {
     validateContactExists(contactId)
+    validateCityCode(request.cityCode)
+    validateCountyCode(request.countyCode)
+    validateCountryCode(request.countryCode)
+
     val updatedAddressIds = mutableSetOf<Long>()
     if (request.primaryAddress) {
       updatedAddressIds += contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)
@@ -54,6 +64,9 @@ class ContactAddressService(
   fun update(contactId: Long, contactAddressId: Long, request: UpdateContactAddressRequest): UpdateAddressResponse {
     val contact = validateContactExists(contactId)
     val existing = validateExistingAddress(contactAddressId)
+    validateCityCode(request.cityCode)
+    validateCountyCode(request.countyCode)
+    validateCountryCode(request.countryCode)
     val updatedAddressIds = mutableSetOf<Long>()
     if (request.primaryAddress && !existing.primaryAddress) {
       updatedAddressIds += contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)
@@ -113,6 +126,23 @@ class ContactAddressService(
     contactRepository
       .findById(contactId)
       .orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
+
+  private fun validateCountryCode(countryCode: String?) {
+    countryCode?.let { validateReferenceDataExists(it, COUNTRY) }
+  }
+
+  private fun validateCountyCode(countyCode: String?) {
+    countyCode?.let { validateReferenceDataExists(it, COUNTY) }
+  }
+
+  private fun validateCityCode(cityCode: String?) {
+    cityCode?.let { validateReferenceDataExists(it, CITY) }
+  }
+
+  private fun validateReferenceDataExists(code: String, groupCode: String) =
+    referenceCodeRepository
+      .findByGroupCodeAndCode(groupCode, code)
+      ?: throw EntityNotFoundException("No reference data found for groupCode: $groupCode and code: $code")
 
   private fun validateExistingAddress(contactAddressId: Long) =
     contactAddressRepository

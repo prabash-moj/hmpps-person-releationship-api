@@ -4,7 +4,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
@@ -92,6 +94,30 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+  }
+
+  @ParameterizedTest
+  @MethodSource("referenceTypeNotFound")
+  fun `should enforce reference type value validation`(expectedMessage: String, request: CreateContactAddressRequest) {
+    val errors = webTestClient.post()
+      .uri("/contact/$savedContactId/address")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isNotFound
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Entity not found : $expectedMessage")
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_ADDRESS_CREATED,
+      additionalInfo = ContactAddressInfo(savedContactId, Source.DPS),
+    )
   }
 
   @Test
@@ -303,24 +329,43 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       personReference = PersonReference(dpsContactId = created.contactId),
     )
   }
-
-  private fun assertEqualsExcludingTimestamps(address: ContactAddressResponse, request: CreateContactAddressRequest) {
-    with(address) {
-      assertThat(addressType).isEqualTo(request.addressType)
-      assertThat(primaryAddress).isEqualTo(request.primaryAddress)
-      assertThat(property).isEqualTo(request.property)
-      assertThat(street).isEqualTo(request.street)
-      assertThat(postcode).isEqualTo(request.postcode)
-      assertThat(createdBy).isEqualTo(request.createdBy)
-      assertThat(createdTime).isNotNull()
+  companion object {
+    @JvmStatic
+    fun referenceTypeNotFound(): List<Arguments> {
+      return listOf(
+        Arguments.of(
+          "No reference data found for groupCode: CITY and code: INVALID",
+          aMinimalAddressRequest().copy(cityCode = "INVALID"),
+        ),
+        Arguments.of(
+          "No reference data found for groupCode: COUNTY and code: INVALID",
+          aMinimalAddressRequest().copy(countyCode = "INVALID"),
+        ),
+        Arguments.of(
+          "No reference data found for groupCode: COUNTRY and code: INVALID",
+          aMinimalAddressRequest().copy(countryCode = "INVALID"),
+        ),
+      )
     }
-  }
 
-  private fun aMinimalAddressRequest() = CreateContactAddressRequest(
-    addressType = "HOME",
-    primaryAddress = true,
-    property = "27",
-    street = "Hello Road",
-    createdBy = "created",
-  )
+    private fun assertEqualsExcludingTimestamps(address: ContactAddressResponse, request: CreateContactAddressRequest) {
+      with(address) {
+        assertThat(addressType).isEqualTo(request.addressType)
+        assertThat(primaryAddress).isEqualTo(request.primaryAddress)
+        assertThat(property).isEqualTo(request.property)
+        assertThat(street).isEqualTo(request.street)
+        assertThat(postcode).isEqualTo(request.postcode)
+        assertThat(createdBy).isEqualTo(request.createdBy)
+        assertThat(createdTime).isNotNull()
+      }
+    }
+
+    private fun aMinimalAddressRequest() = CreateContactAddressRequest(
+      addressType = "HOME",
+      primaryAddress = true,
+      property = "27",
+      street = "Hello Road",
+      createdBy = "created",
+    )
+  }
 }

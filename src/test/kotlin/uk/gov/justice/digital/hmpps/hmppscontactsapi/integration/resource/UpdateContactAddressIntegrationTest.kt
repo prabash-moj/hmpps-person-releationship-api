@@ -143,6 +143,30 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     )
   }
 
+  @ParameterizedTest
+  @MethodSource("referenceTypeNotFound")
+  fun `should enforce reference type value validation`(expectedMessage: String, request: UpdateContactAddressRequest) {
+    val errors = webTestClient.put()
+      .uri("/contact/$savedContactId/address/$savedContactAddressId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isNotFound
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Entity not found : $expectedMessage")
+
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      additionalInfo = ContactAddressInfo(savedContactAddressId, Source.DPS),
+    )
+  }
+
   @Test
   fun `should not update the address if the contact is not found`() {
     val request = aMinimalUpdateAddressRequest()
@@ -464,6 +488,24 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
         Arguments.of(
           "updatedBy must be <= 100 characters",
           aMinimalUpdateAddressRequest().copy(updatedBy = "".padStart(101)),
+        ),
+      )
+    }
+
+    @JvmStatic
+    fun referenceTypeNotFound(): List<Arguments> {
+      return listOf(
+        Arguments.of(
+          "No reference data found for groupCode: CITY and code: INVALID",
+          aMinimalUpdateAddressRequest().copy(cityCode = "INVALID"),
+        ),
+        Arguments.of(
+          "No reference data found for groupCode: COUNTY and code: INVALID",
+          aMinimalUpdateAddressRequest().copy(countyCode = "INVALID"),
+        ),
+        Arguments.of(
+          "No reference data found for groupCode: COUNTRY and code: INVALID",
+          aMinimalUpdateAddressRequest().copy(countryCode = "INVALID"),
         ),
       )
     }

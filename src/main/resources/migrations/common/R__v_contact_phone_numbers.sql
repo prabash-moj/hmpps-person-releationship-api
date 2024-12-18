@@ -1,8 +1,10 @@
 --
 -- Creates a view over the contact_phone and reference_codes tables to return a list of all phone numbers with descriptions
 -- for all codes.
+-- Note: the view is only dropped if the checksum of this migration changes
 --
-CREATE OR REPLACE VIEW v_contact_phone_numbers
+DROP VIEW IF EXISTS v_contact_phone_numbers;
+CREATE VIEW v_contact_phone_numbers
 AS
 select
     cp.contact_phone_id,
@@ -16,6 +18,6 @@ select
     cp.updated_by,
     cp.updated_time
   from contact_phone cp
-  left join reference_codes rc ON rc.group_code = 'PHONE_TYPE' and rc.code = cp.phone_type
+  left join reference_codes rc ON rc.group_code = 'PHONE_TYPE' and rc.code = cp.phone_type;
 
 -- End

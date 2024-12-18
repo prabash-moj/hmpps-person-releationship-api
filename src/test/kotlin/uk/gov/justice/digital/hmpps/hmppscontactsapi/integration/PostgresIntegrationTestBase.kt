@@ -8,7 +8,7 @@ import org.springframework.test.context.DynamicPropertySource
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.container.PostgresContainer
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@ActiveProfiles("test", "local-postgres", "auto-db-clean")
+@ActiveProfiles("test", "local-postgres")
 abstract class PostgresIntegrationTestBase : IntegrationTestBase() {
 
   companion object {

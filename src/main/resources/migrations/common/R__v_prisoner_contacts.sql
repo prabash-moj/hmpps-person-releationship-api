@@ -2,8 +2,10 @@
 -- Creates a view over the contact, contact_address and prisoner_contact tables
 -- to return a list of active or inactive contacts, and their primary addresses,
 -- for a prisoner, where the current_term is true (latest booking only).
+-- Note: the view is only dropped if the checksum of this migration changes
 --
-CREATE OR REPLACE VIEW v_prisoner_contacts
+DROP VIEW IF EXISTS v_prisoner_contacts;
+CREATE VIEW v_prisoner_contacts
 AS
   select
       c.contact_id,

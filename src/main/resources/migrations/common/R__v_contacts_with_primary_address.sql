@@ -2,8 +2,10 @@
 -- Creates a view over the contact, contact_address and prisoner_contact tables
 -- to return a list of active or inactive contacts, and their primary addresses,
 -- for a prisoner.
+-- Note: the view is only dropped if the checksum of this migration changes
 --
-CREATE OR REPLACE VIEW v_contacts_with_primary_address
+DROP VIEW IF EXISTS v_contacts_with_primary_address;
+CREATE VIEW v_contacts_with_primary_address
 AS
 select
     c.contact_id,
@@ -49,6 +51,6 @@ select
   )
   left join city_reference city_ref on city_ref.nomis_code = ca.city_code
   left join county_reference county_ref on county_ref.nomis_code = ca.county_code
-  left join country_reference country_ref on country_ref.nomis_code = ca.country_code
+  left join country_reference country_ref on country_ref.nomis_code = ca.country_code;
 
 -- End

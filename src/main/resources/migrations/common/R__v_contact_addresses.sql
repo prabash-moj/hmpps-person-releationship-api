@@ -1,8 +1,10 @@
 --
 -- Creates a view over the contact_address and reference data tables to return a list of all addresses with descriptions
 -- for all codes.
+-- Note: the view is only dropped if the checksum of this migration changes
 --
-CREATE OR REPLACE VIEW v_contact_addresses
+DROP VIEW IF EXISTS v_contact_addresses;
+CREATE VIEW v_contact_addresses
 AS
 select
     ca.contact_address_id,
@@ -37,6 +39,6 @@ select
   left join city_reference city_ref on city_ref.nomis_code = ca.city_code
   left join county_reference county_ref on county_ref.nomis_code = ca.county_code
   left join country_reference country_ref on country_ref.nomis_code = ca.country_code
-  left join reference_codes rc ON rc.group_code = 'ADDRESS_TYPE' and rc.code = ca.address_type
+  left join reference_codes rc ON rc.group_code = 'ADDRESS_TYPE' and rc.code = ca.address_type;
 
 -- End

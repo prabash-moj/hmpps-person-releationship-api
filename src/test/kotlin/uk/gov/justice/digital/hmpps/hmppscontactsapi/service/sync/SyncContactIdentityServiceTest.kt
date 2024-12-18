@@ -118,6 +118,7 @@ class SyncContactIdentityServiceTest {
       // Checks the entity saved
       with(identityCaptor.firstValue) {
         assertThat(identityType).isEqualTo(request.identityType)
+        assertThat(issuingAuthority).isEqualTo(request.issuingAuthority)
         assertThat(updatedBy).isEqualTo(request.updatedBy)
         assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
@@ -126,6 +127,37 @@ class SyncContactIdentityServiceTest {
       with(updated) {
         assertThat(identityType).isEqualTo(request.identityType)
         assertThat(issuingAuthority).isEqualTo(request.issuingAuthority)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
+      }
+    }
+
+    @Test
+    fun `should update a contact identity by ID when issuing authority is not provided then retain the existing value`() {
+      val request = updateContactIdentityRequest(issuingAuthority = null)
+      val existingIssuingAuthority = "UKBORDER"
+      whenever(contactRepository.findById(1L)).thenReturn(Optional.of(contactEntity()))
+      whenever(contactIdentityRepository.findById(1L)).thenReturn(Optional.of(request.toEntity()))
+      whenever(contactIdentityRepository.saveAndFlush(any())).thenReturn(request.toEntity())
+
+      val updated = syncService.updateContactIdentity(1L, request)
+
+      val identityCaptor = argumentCaptor<ContactIdentityEntity>()
+
+      verify(contactIdentityRepository).saveAndFlush(identityCaptor.capture())
+
+      // Checks the entity saved
+      with(identityCaptor.firstValue) {
+        assertThat(identityType).isEqualTo(request.identityType)
+        assertThat(issuingAuthority).isEqualTo(existingIssuingAuthority)
+        assertThat(updatedBy).isEqualTo(request.updatedBy)
+        assertThat(updatedTime).isEqualTo(request.updatedTime)
+      }
+
+      // Checks the model returned
+      with(updated) {
+        assertThat(identityType).isEqualTo(request.identityType)
+        assertThat(issuingAuthority).isEqualTo(existingIssuingAuthority)
         assertThat(updatedBy).isEqualTo(request.updatedBy)
         assertThat(updatedTime).isEqualTo(request.updatedTime)
       }
@@ -154,12 +186,12 @@ class SyncContactIdentityServiceTest {
     }
   }
 
-  private fun updateContactIdentityRequest(contactId: Long = 1L) =
+  private fun updateContactIdentityRequest(contactId: Long = 1L, issuingAuthority: String? = "UKBORDER") =
     SyncUpdateContactIdentityRequest(
       contactId = contactId,
       identityType = "PASS",
       identityValue = "PP87878787878",
-      issuingAuthority = "UKBORDER",
+      issuingAuthority = issuingAuthority,
       updatedBy = "TEST",
       updatedTime = LocalDateTime.now(),
     )
@@ -198,13 +230,13 @@ class SyncContactIdentityServiceTest {
       createdBy = "TEST",
     )
 
-  private fun SyncUpdateContactIdentityRequest.toEntity(contactIdentityId: Long = 1L): ContactIdentityEntity {
+  private fun SyncUpdateContactIdentityRequest.toEntity(contactIdentityId: Long = 1L, issuingAuthority: String? = "UKBORDER"): ContactIdentityEntity {
     return ContactIdentityEntity(
       contactIdentityId = contactIdentityId,
       contactId = this.contactId,
       identityType = this.identityType,
       identityValue = this.identityValue,
-      issuingAuthority = this.issuingAuthority,
+      issuingAuthority = issuingAuthority,
       createdBy = "TEST",
       updatedBy = this.updatedBy,
       updatedTime = this.updatedTime,

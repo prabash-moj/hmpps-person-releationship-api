@@ -53,6 +53,7 @@ class SyncContactIdentityService(
       contactId = request.contactId,
       identityType = request.identityType,
       identityValue = request.identityValue,
+      issuingAuthority = request.issuingAuthority ?: identityEntity.issuingAuthority,
       updatedBy = request.updatedBy,
       updatedTime = request.updatedTime,
     )

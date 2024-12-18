@@ -14,8 +14,8 @@ data class SyncUpdateContactIdentityRequest(
   @Schema(description = "Identity ", example = "S99PH898989L")
   val identityValue: String,
 
-  @Schema(description = "Issuing authority", example = "DVLA")
-  val issuingAuthority: String,
+  @Schema(description = "Issuing authority", example = "DVLA", nullable = true, maxLength = 40)
+  val issuingAuthority: String?,
 
   @Schema(description = "The id of the user who updated the contact identity", example = "JD000001")
   val updatedBy: String,

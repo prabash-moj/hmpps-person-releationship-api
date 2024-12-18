@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -146,8 +147,17 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
       }
     }
 
-    @Test
-    fun `should create and then update a contact identity`() {
+    @ParameterizedTest
+    @CsvSource(
+      value = [
+        "UKBORDER;UKBORDER",
+        "null;UKBORDER",
+      ],
+      delimiter = ';',
+    )
+    fun `should create and then update a contact identity`(givenIssuingAuthority: String, expectedIssuingAuthority: String) {
+      val actualGivenIssuingAuthority = if (givenIssuingAuthority == "null") null else givenIssuingAuthority
+
       val contactIdentity = webTestClient.post()
         .uri("/sync/contact-identity")
         .accept(MediaType.APPLICATION_JSON)
@@ -172,7 +182,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
-        .bodyValue(updateContactIdentityRequest(savedContactId))
+        .bodyValue(updateContactIdentityRequest(savedContactId, actualGivenIssuingAuthority))
         .exchange()
         .expectStatus()
         .isOk
@@ -185,7 +195,7 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         assertThat(contactIdentityId).isGreaterThan(4)
         assertThat(contactId).isEqualTo(savedContactId)
         assertThat(identityType).isEqualTo("PASS")
-        assertThat(issuingAuthority).isEqualTo("UKBORDER")
+        assertThat(issuingAuthority).isEqualTo(expectedIssuingAuthority)
         assertThat(updatedBy).isEqualTo("UPDATE")
         assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
@@ -214,22 +224,22 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .isNotFound
     }
 
-    private fun updateContactIdentityRequest(contactId: Long) =
+    private fun updateContactIdentityRequest(contactId: Long, issuingAuthority: String? = "UKBORDER") =
       SyncUpdateContactIdentityRequest(
         contactId = contactId,
         identityType = "PASS",
         identityValue = "PP87878787878",
-        issuingAuthority = "UKBORDER",
+        issuingAuthority = issuingAuthority,
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
       )
 
-    private fun createContactIdentityRequest(contactId: Long) =
+    private fun createContactIdentityRequest(contactId: Long, issuingAuthority: String? = "UKBORDER") =
       SyncCreateContactIdentityRequest(
         contactId = contactId,
         identityType = "PASS",
         identityValue = "PP87878787878",
-        issuingAuthority = "UKBORDER",
+        issuingAuthority = issuingAuthority,
         createdBy = "CREATE",
       )
   }

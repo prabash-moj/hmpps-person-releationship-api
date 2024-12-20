@@ -130,7 +130,7 @@ class ContactFacadeTest {
 
     assertThat(contactFacade.searchContacts(pageable, request)).isEqualTo(result)
 
-    verify(outboundEventsService, never()).send(any(), any(), any(), any(), any())
+    verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 
   @Test
@@ -141,7 +141,7 @@ class ContactFacadeTest {
 
     assertThat(contactFacade.getContact(99L)).isEqualTo(expectedContact)
 
-    verify(outboundEventsService, never()).send(any(), any(), any(), any(), any())
+    verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 
   @Test

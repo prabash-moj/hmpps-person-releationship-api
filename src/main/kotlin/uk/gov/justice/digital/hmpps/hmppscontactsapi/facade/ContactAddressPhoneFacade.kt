@@ -19,6 +19,7 @@ class ContactAddressPhoneFacade(
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
         identifier = it.contactAddressPhoneId,
+        secondIdentifier = it.contactAddressId,
         contactId = contactId,
       )
     }
@@ -29,6 +30,7 @@ class ContactAddressPhoneFacade(
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
         identifier = it.contactAddressPhoneId,
+        secondIdentifier = it.contactAddressId,
         contactId = contactId,
       )
     }
@@ -39,6 +41,7 @@ class ContactAddressPhoneFacade(
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED,
         identifier = it.contactAddressPhoneId,
+        secondIdentifier = it.contactAddressId,
         contactId = contactId,
       )
     }

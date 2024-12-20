@@ -20,6 +20,7 @@ class OutboundEventsService(
     contactId: Long,
     noms: String = "",
     source: Source = Source.DPS,
+    secondIdentifier: Long? = 0,
   ) {
     if (featureSwitches.isEnabled(outboundEvent)) {
       log.info("Sending outbound event $outboundEvent with source $source for identifier $identifier  (contactId $contactId, noms $noms)")
@@ -50,7 +51,7 @@ class OutboundEventsService(
         OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
         OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactAddressPhoneInfo(identifier, source), PersonReference(dpsContactId = contactId))
+          sendSafely(outboundEvent, ContactAddressPhoneInfo(identifier, secondIdentifier!!, source), PersonReference(dpsContactId = contactId))
         }
 
         OutboundEvent.CONTACT_EMAIL_CREATED,

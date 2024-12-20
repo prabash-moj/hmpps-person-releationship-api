@@ -29,7 +29,7 @@ class ContactPhoneFacadeTest {
   @Test
   fun `should send event if create success`() {
     whenever(phoneService.create(any(), any())).thenReturn(contactPhoneDetails)
-    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any(), any())).then {}
     val request = CreatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "0777777777",
@@ -52,7 +52,7 @@ class ContactPhoneFacadeTest {
   fun `should not send event if create throws exception and propagate the exception`() {
     val expectedException = RuntimeException("Bang!")
     whenever(phoneService.create(any(), any())).thenThrow(expectedException)
-    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any(), any())).then {}
     val request = CreatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "0777777777",
@@ -65,13 +65,13 @@ class ContactPhoneFacadeTest {
 
     assertThat(exception).isEqualTo(exception)
     verify(phoneService).create(contactId, request)
-    verify(eventsService, never()).send(any(), any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 
   @Test
   fun `should send event if update success`() {
     whenever(phoneService.update(any(), any(), any())).thenReturn(contactPhoneDetails)
-    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any(), any())).then {}
     val request = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "0777777777",
@@ -94,7 +94,7 @@ class ContactPhoneFacadeTest {
   fun `should not send event if update throws exception and propagate the exception`() {
     val expectedException = RuntimeException("Bang!")
     whenever(phoneService.update(any(), any(), any())).thenThrow(expectedException)
-    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any(), any())).then {}
     val request = UpdatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "0777777777",
@@ -107,13 +107,13 @@ class ContactPhoneFacadeTest {
 
     assertThat(exception).isEqualTo(exception)
     verify(phoneService).update(contactId, contactPhoneId, request)
-    verify(eventsService, never()).send(any(), any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 
   @Test
   fun `should send event if delete success`() {
     whenever(phoneService.delete(any(), any())).then {}
-    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
     facade.delete(contactId, contactPhoneId)
 
@@ -130,7 +130,7 @@ class ContactPhoneFacadeTest {
   fun `should not send event if delete throws exception and propagate the exception`() {
     val expectedException = RuntimeException("Bang!")
     whenever(phoneService.delete(any(), any())).thenThrow(expectedException)
-    whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
+    whenever(eventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
     val exception = assertThrows<RuntimeException> {
       facade.delete(contactId, contactPhoneId)
@@ -138,7 +138,7 @@ class ContactPhoneFacadeTest {
 
     assertThat(exception).isEqualTo(exception)
     verify(phoneService).delete(contactId, contactPhoneId)
-    verify(eventsService, never()).send(any(), any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 
   @Test
@@ -149,6 +149,6 @@ class ContactPhoneFacadeTest {
 
     assertThat(result).isEqualTo(contactPhoneDetails)
     verify(phoneService).get(contactId, contactPhoneId)
-    verify(eventsService, never()).send(any(), any(), any(), any(), any())
+    verify(eventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 }

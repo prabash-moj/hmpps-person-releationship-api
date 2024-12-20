@@ -3,8 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
@@ -86,7 +86,7 @@ class ContactGlobalRestrictionsFacadeTest {
 
     assertThat(result).isEqualTo(expected)
     verify(restrictionService).createContactGlobalRestriction(contactId, request)
-    verify(outboundEventsService, Mockito.never()).send(any(), any(), any(), any(), any())
+    verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 
   @Test
@@ -148,6 +148,6 @@ class ContactGlobalRestrictionsFacadeTest {
 
     assertThat(result).isEqualTo(expected)
     verify(restrictionService).updateContactGlobalRestriction(contactId, contactRestrictionId, request)
-    verify(outboundEventsService, Mockito.never()).send(any(), any(), any(), any(), any())
+    verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 }

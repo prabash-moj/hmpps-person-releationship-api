@@ -3,8 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
@@ -90,7 +90,7 @@ class PrisonerContactRestrictionsFacadeTest {
 
     assertThat(result).isEqualTo(expected)
     verify(restrictionService).createPrisonerContactRestriction(prisonerContactId, request)
-    verify(outboundEventsService, Mockito.never()).send(any(), any(), any(), any(), any())
+    verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 
   @Test
@@ -154,6 +154,6 @@ class PrisonerContactRestrictionsFacadeTest {
 
     assertThat(result).isEqualTo(expected)
     verify(restrictionService).updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, request)
-    verify(outboundEventsService, Mockito.never()).send(any(), any(), any(), any(), any())
+    verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 }

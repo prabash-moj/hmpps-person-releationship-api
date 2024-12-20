@@ -307,6 +307,7 @@ class SyncFacade(
   // ================================================================
   fun getContactAddressPhoneById(contactAddressPhoneId: Long) =
     syncContactAddressPhoneService.getContactAddressPhoneById(contactAddressPhoneId)
+
   fun createContactAddressPhone(request: SyncCreateContactAddressPhoneRequest) =
     syncContactAddressPhoneService.createContactAddressPhone(request)
       .also {
@@ -315,6 +316,7 @@ class SyncFacade(
           identifier = it.contactAddressPhoneId,
           contactId = it.contactId,
           source = Source.NOMIS,
+          secondIdentifier = it.contactAddressId,
         )
       }
 
@@ -326,6 +328,7 @@ class SyncFacade(
           identifier = it.contactAddressPhoneId,
           contactId = it.contactId,
           source = Source.NOMIS,
+          secondIdentifier = it.contactAddressId,
         )
       }
 
@@ -337,6 +340,7 @@ class SyncFacade(
           identifier = it.contactAddressPhoneId,
           contactId = it.contactId,
           source = Source.NOMIS,
+          secondIdentifier = it.contactAddressId,
         )
       }
 

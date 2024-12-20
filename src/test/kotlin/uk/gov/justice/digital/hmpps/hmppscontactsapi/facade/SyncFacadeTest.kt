@@ -84,7 +84,7 @@ class SyncFacadeTest {
       val response = contactResponse(1L)
 
       whenever(syncContactService.createContact(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createContact(request)
 
@@ -105,7 +105,7 @@ class SyncFacadeTest {
       val expectedException = RuntimeException("Bang!")
 
       whenever(syncContactService.createContact(any())).thenThrow(expectedException)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val exception = assertThrows<RuntimeException> {
         facade.createContact(request)
@@ -114,7 +114,7 @@ class SyncFacadeTest {
       assertThat(exception.message).isEqualTo(expectedException.message)
 
       verify(syncContactService).createContact(request)
-      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any())
+      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
     }
 
     @Test
@@ -123,7 +123,7 @@ class SyncFacadeTest {
       val response = contactResponse(3L)
 
       whenever(syncContactService.updateContact(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updateContact(3L, request)
 
@@ -145,7 +145,7 @@ class SyncFacadeTest {
       val expectedException = RuntimeException("Bang!")
 
       whenever(syncContactService.updateContact(any(), any())).thenThrow(expectedException)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val exception = assertThrows<RuntimeException> {
         facade.updateContact(4L, request)
@@ -154,13 +154,13 @@ class SyncFacadeTest {
       assertThat(exception.message).isEqualTo(expectedException.message)
 
       verify(syncContactService).updateContact(4L, request)
-      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any())
+      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
     }
 
     @Test
     fun `should send domain event on contact delete success`() {
       whenever(syncContactService.deleteContact(any())).then {}
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       facade.deleteContact(1L)
 
@@ -179,7 +179,7 @@ class SyncFacadeTest {
       val expectedException = RuntimeException("Bang!")
 
       whenever(syncContactService.deleteContact(any())).thenThrow(expectedException)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val exception = assertThrows<RuntimeException> {
         facade.deleteContact(1L)
@@ -187,7 +187,7 @@ class SyncFacadeTest {
 
       assertThat(exception.message).isEqualTo(expectedException.message)
       verify(syncContactService).deleteContact(1L)
-      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any())
+      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
     }
 
     private fun createSyncContactRequest(personId: Long) =
@@ -229,7 +229,7 @@ class SyncFacadeTest {
       val response = contactPhoneResponse(contactId = 1L, contactPhoneId = 1L)
 
       whenever(syncContactPhoneService.createContactPhone(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createContactPhone(request)
 
@@ -248,7 +248,7 @@ class SyncFacadeTest {
       val response = contactPhoneResponse(contactId = 2L, contactPhoneId = 3L)
 
       whenever(syncContactPhoneService.updateContactPhone(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updateContactPhone(3L, request)
 
@@ -266,7 +266,7 @@ class SyncFacadeTest {
       val response = contactPhoneResponse(contactId = 3L, contactPhoneId = 4L)
 
       whenever(syncContactPhoneService.deleteContactPhone(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.deleteContactPhone(4L)
 
@@ -319,7 +319,7 @@ class SyncFacadeTest {
       val response = contactEmailResponse(contactId = 1L, contactEmailId = 1L)
 
       whenever(syncContactEmailService.createContactEmail(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createContactEmail(request)
 
@@ -338,7 +338,7 @@ class SyncFacadeTest {
       val response = contactEmailResponse(contactId = 2L, contactEmailId = 3L)
 
       whenever(syncContactEmailService.updateContactEmail(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updateContactEmail(3L, request)
 
@@ -356,7 +356,7 @@ class SyncFacadeTest {
       val response = contactEmailResponse(contactId = 3L, contactEmailId = 4L)
 
       whenever(syncContactEmailService.deleteContactEmail(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.deleteContactEmail(4L)
 
@@ -405,7 +405,7 @@ class SyncFacadeTest {
       val response = contactIdentityResponse(contactId = 1L, contactIdentityId = 1L)
 
       whenever(syncContactIdentityService.createContactIdentity(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createContactIdentity(request)
 
@@ -424,7 +424,7 @@ class SyncFacadeTest {
       val response = contactIdentityResponse(contactId = 2L, contactIdentityId = 3L)
 
       whenever(syncContactIdentityService.updateContactIdentity(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updateContactIdentity(3L, request)
 
@@ -442,7 +442,7 @@ class SyncFacadeTest {
       val response = contactIdentityResponse(contactId = 3L, contactIdentityId = 4L)
 
       whenever(syncContactIdentityService.deleteContactIdentity(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.deleteContactIdentity(4L)
 
@@ -497,7 +497,7 @@ class SyncFacadeTest {
       val response = contactRestrictionResponse(contactId = 1L, contactRestrictionId = 1L)
 
       whenever(syncContactRestrictionService.createContactRestriction(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createContactRestriction(request)
 
@@ -516,7 +516,7 @@ class SyncFacadeTest {
       val response = contactRestrictionResponse(contactId = 2L, contactRestrictionId = 3L)
 
       whenever(syncContactRestrictionService.updateContactRestriction(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updateContactRestriction(3L, request)
 
@@ -534,7 +534,7 @@ class SyncFacadeTest {
       val response = contactRestrictionResponse(contactId = 3L, contactRestrictionId = 4L)
 
       whenever(syncContactRestrictionService.deleteContactRestriction(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.deleteContactRestriction(4L)
 
@@ -592,7 +592,7 @@ class SyncFacadeTest {
       val response = contactAddressResponse(contactId = 1L, contactAddressId = 1L)
 
       whenever(syncContactAddressService.createContactAddress(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createContactAddress(request)
 
@@ -611,7 +611,7 @@ class SyncFacadeTest {
       val response = contactAddressResponse(contactId = 2L, contactAddressId = 3L)
 
       whenever(syncContactAddressService.updateContactAddress(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updateContactAddress(3L, request)
 
@@ -629,7 +629,7 @@ class SyncFacadeTest {
       val response = contactAddressResponse(contactId = 3L, contactAddressId = 4L)
 
       whenever(syncContactAddressService.deleteContactAddress(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.deleteContactAddress(4L)
 
@@ -692,7 +692,7 @@ class SyncFacadeTest {
       val response = contactAddressPhoneResponse()
 
       whenever(syncContactAddressPhoneService.createContactAddressPhone(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createContactAddressPhone(request)
 
@@ -702,6 +702,7 @@ class SyncFacadeTest {
         identifier = result.contactAddressPhoneId,
         contactId = result.contactId,
         source = Source.NOMIS,
+        secondIdentifier = result.contactAddressId,
       )
     }
 
@@ -711,7 +712,7 @@ class SyncFacadeTest {
       val response = contactAddressPhoneResponse()
 
       whenever(syncContactAddressPhoneService.updateContactAddressPhone(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updateContactAddressPhone(4L, request)
 
@@ -721,6 +722,7 @@ class SyncFacadeTest {
         identifier = result.contactAddressPhoneId,
         contactId = result.contactId,
         source = Source.NOMIS,
+        secondIdentifier = result.contactAddressId,
       )
     }
 
@@ -729,7 +731,7 @@ class SyncFacadeTest {
       val response = contactAddressPhoneResponse()
 
       whenever(syncContactAddressPhoneService.deleteContactAddressPhone(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.deleteContactAddressPhone(4L)
 
@@ -740,6 +742,7 @@ class SyncFacadeTest {
         identifier = result.contactAddressPhoneId,
         contactId = result.contactId,
         source = Source.NOMIS,
+        secondIdentifier = result.contactAddressId,
       )
     }
 
@@ -785,7 +788,7 @@ class SyncFacadeTest {
       val response = prisonerContactResponse(contactId = 1L, prisonerContactId = 1L)
 
       whenever(syncPrisonerContactService.createPrisonerContact(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createPrisonerContact(request)
 
@@ -805,7 +808,7 @@ class SyncFacadeTest {
       val response = prisonerContactResponse(contactId = 2L, prisonerContactId = 3L)
 
       whenever(syncPrisonerContactService.updatePrisonerContact(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updatePrisonerContact(3L, request)
 
@@ -824,7 +827,7 @@ class SyncFacadeTest {
       val response = prisonerContactResponse(contactId = 3L, prisonerContactId = 4L)
 
       whenever(syncPrisonerContactService.deletePrisonerContact(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.deletePrisonerContact(4L)
 
@@ -904,7 +907,7 @@ class SyncFacadeTest {
       )
 
       whenever(syncPrisonerContactRestrictionService.createPrisonerContactRestriction(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.createPrisonerContactRestriction(request)
 
@@ -928,7 +931,7 @@ class SyncFacadeTest {
       )
 
       whenever(syncPrisonerContactRestrictionService.updatePrisonerContactRestriction(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.updatePrisonerContactRestriction(3L, request)
 
@@ -951,7 +954,7 @@ class SyncFacadeTest {
       )
 
       whenever(syncPrisonerContactRestrictionService.deletePrisonerContactRestriction(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
 
       val result = facade.deletePrisonerContactRestriction(3L)
 

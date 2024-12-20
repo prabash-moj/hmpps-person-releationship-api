@@ -186,7 +186,7 @@ class CreateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
 
     stubEvents.assertHasEvent(
       event = OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
-      additionalInfo = ContactAddressPhoneInfo(created.contactAddressPhoneId, Source.DPS),
+      additionalInfo = ContactAddressPhoneInfo(created.contactAddressPhoneId, created.contactAddressId, Source.DPS),
       personReference = PersonReference(dpsContactId = created.contactId),
     )
   }

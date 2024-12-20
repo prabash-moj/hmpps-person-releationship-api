@@ -172,7 +172,7 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId, savedAddressId))
   }
 
   @ParameterizedTest
@@ -192,7 +192,7 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId, savedAddressId))
   }
 
   @ParameterizedTest
@@ -221,7 +221,7 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Phone number invalid, it can only contain numbers, () and whitespace with an optional + at the start")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId, savedAddressId))
   }
 
   @Test
@@ -246,7 +246,7 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported phone type (SATELLITE)")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId))
+    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED, ContactAddressPhoneInfo(savedAddressPhoneId, savedAddressId))
   }
 
   @ParameterizedTest
@@ -274,7 +274,7 @@ class UpdateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
 
     stubEvents.assertHasEvent(
       event = OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
-      additionalInfo = ContactAddressPhoneInfo(savedAddressPhoneId),
+      additionalInfo = ContactAddressPhoneInfo(savedAddressPhoneId, savedAddressId),
       personReference = PersonReference(savedContactId),
     )
   }

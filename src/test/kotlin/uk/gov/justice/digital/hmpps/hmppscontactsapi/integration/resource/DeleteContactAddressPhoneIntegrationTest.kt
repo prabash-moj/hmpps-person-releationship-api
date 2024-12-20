@@ -140,7 +140,7 @@ class DeleteContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
 
     stubEvents.assertHasEvent(
       event = OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED,
-      additionalInfo = ContactAddressPhoneInfo(savedAddressPhoneId, Source.DPS),
+      additionalInfo = ContactAddressPhoneInfo(savedAddressPhoneId, savedAddressId, Source.DPS),
       personReference = PersonReference(dpsContactId = savedContactId),
     )
   }

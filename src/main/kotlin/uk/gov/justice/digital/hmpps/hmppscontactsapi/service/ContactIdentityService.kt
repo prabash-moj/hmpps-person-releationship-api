@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCod
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.util.PNCValidator
 import java.time.LocalDateTime
 
 @Service
@@ -26,6 +27,7 @@ class ContactIdentityService(
   @Transactional
   fun create(contactId: Long, request: CreateIdentityRequest): ContactIdentityDetails {
     validateContactExists(contactId)
+    validatePNC(request.identityType, request.identityValue)
     val type = validateIdentityType(request.identityType)
     val created = contactIdentityRepository.saveAndFlush(
       ContactIdentityEntity(
@@ -45,6 +47,7 @@ class ContactIdentityService(
     validateContactExists(contactId)
     val existing = validateExistingIdentity(contactIdentityId)
     val type = validateIdentityType(request.identityType)
+    validatePNC(request.identityType, request.identityValue)
 
     val updating = existing.copy(
       identityType = request.identityType,
@@ -83,6 +86,12 @@ class ContactIdentityService(
       throw ValidationException("Identity type ($identityType) is no longer supported for creating or updating identities")
     }
     return type
+  }
+
+  private fun validatePNC(identityType: String, identityValue: String) {
+    if (identityType == "PNC" && !PNCValidator.isValid(identityValue)) {
+      throw ValidationException("Identity value ($identityValue) is not a valid PNC Number")
+    }
   }
 
   private fun validateContactExists(contactId: Long) {

@@ -120,6 +120,26 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
+  fun `should validate PNC number`() {
+    val expectedMessage = "Identity value (1923/1Z34567A) is not a valid PNC Number"
+    val request = aMinimalRequest().copy(identityType = "PNC", identityValue = "1923/1Z34567A")
+    val errors = webTestClient.post()
+      .uri("/contact/$savedContactId/identity")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+  }
+
+  @Test
   fun `should not create the identity if the type is unknown`() {
     val request = CreateIdentityRequest(
       identityType = "MACRO CARD",

@@ -99,6 +99,26 @@ class ContactIdentityServiceTest {
     }
 
     @Test
+    fun `should throw ValidationException if identity type is PNC but identity is not a valid PNC`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "PNC")).thenReturn(
+        ReferenceCode(
+          0,
+          "ID_TYPE",
+          "PNC",
+          "PNC Number",
+          0,
+          true,
+        ),
+      )
+
+      val exception = assertThrows<ValidationException> {
+        service.create(contactId, request.copy(identityValue = "1923/1Z34567A", identityType = "PNC"))
+      }
+      assertThat(exception.message).isEqualTo("Identity value (1923/1Z34567A) is not a valid PNC Number")
+    }
+
+    @Test
     fun `should return identity details including the reference data after creating successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "DL")).thenReturn(
@@ -210,6 +230,27 @@ class ContactIdentityServiceTest {
         service.update(contactId, contactIdentityId, request.copy(identityType = "NHS"))
       }
       assertThat(exception.message).isEqualTo("Identity type (NHS) is no longer supported for creating or updating identities")
+    }
+
+    @Test
+    fun `should throw ValidationException if identity type is PNC but identity is not a valid PNC`() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
+      whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "PNC")).thenReturn(
+        ReferenceCode(
+          0,
+          "ID_TYPE",
+          "PNC",
+          "PNC Number",
+          0,
+          true,
+        ),
+      )
+
+      val exception = assertThrows<ValidationException> {
+        service.update(contactId, contactIdentityId, request.copy(identityValue = "1923/1Z34567A", identityType = "PNC"))
+      }
+      assertThat(exception.message).isEqualTo("Identity value (1923/1Z34567A) is not a valid PNC Number")
     }
 
     @Test

@@ -91,8 +91,8 @@ class SyncContactAddressPhoneService(
       .orElseThrow { EntityNotFoundException("Contact phone with ID ${addressPhoneToDelete.contactPhoneId} was not found") }
 
     // Delete the phone number and join table row (leave the address)
-    contactPhoneRepository.deleteById(phoneToDelete.contactPhoneId)
     contactAddressPhoneRepository.deleteById(addressPhoneToDelete.contactAddressPhoneId)
+    contactPhoneRepository.deleteById(phoneToDelete.contactPhoneId)
 
     // Build the response from the deleted row data
     return addressPhoneToDelete.toModel(phoneToDelete)

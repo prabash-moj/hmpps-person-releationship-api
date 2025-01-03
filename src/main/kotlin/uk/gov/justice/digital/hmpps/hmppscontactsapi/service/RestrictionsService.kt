@@ -20,6 +20,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestricti
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionRepository
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Service
@@ -98,6 +99,8 @@ class RestrictionsService(
     request: CreateContactRestrictionRequest,
   ): ContactRestrictionDetails {
     validateContactExists(contactId)
+    validateExpiryDateBeforeStartDate(request.startDate, request.expiryDate)
+
     val type = validateType(request.restrictionType)
     val created = contactRestrictionRepository.saveAndFlush(
       ContactRestrictionEntity(
@@ -113,12 +116,19 @@ class RestrictionsService(
     return contactRestrictionDetails(created, type)
   }
 
+  private fun validateExpiryDateBeforeStartDate(startDate: LocalDate, expiryDate: LocalDate?) {
+    if (expiryDate != null && startDate.isAfter(expiryDate)) {
+      throw ValidationException("Restriction start date should be before the restriction end date")
+    }
+  }
+
   fun updateContactGlobalRestriction(
     contactId: Long,
     contactRestrictionId: Long,
     request: UpdateContactRestrictionRequest,
   ): ContactRestrictionDetails {
     validateContactExists(contactId)
+    validateExpiryDateBeforeStartDate(request.startDate, request.expiryDate)
     val contactRestriction = contactRestrictionRepository.findById(contactRestrictionId)
       .orElseThrow { EntityNotFoundException("Contact restriction ($contactRestrictionId) could not be found") }
     val type = validateType(request.restrictionType)

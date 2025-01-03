@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync
 
 import jakarta.persistence.EntityNotFoundException
+import jakarta.validation.ValidationException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -13,6 +14,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
@@ -85,6 +87,19 @@ class SyncContactRestrictionServiceTest {
     }
 
     @Test
+    fun `should error when creating a contact restriction with expiry date is before start date`() {
+      val request = createContactRestrictionRequest(
+        startDate = LocalDate.of(2025, 2, 1),
+        expiryDate = LocalDate.of(1980, 2, 1),
+      )
+      whenever(contactRepository.findById(1L)).thenReturn(Optional.of(contactEntity()))
+      val error = assertThrows<ValidationException> {
+        syncService.createContactRestriction(request)
+      }
+      error.message isEqualTo "Restriction start date should be before the restriction end date"
+    }
+
+    @Test
     fun `should fail to create a contact restriction when the contact ID is not present`() {
       val request = createContactRestrictionRequest()
       whenever(contactRepository.findById(1L)).thenReturn(Optional.empty())
@@ -145,6 +160,21 @@ class SyncContactRestrictionServiceTest {
     }
 
     @Test
+    fun `should error when updating a contact restriction with expiry date is before start date`() {
+      val updateRequest = updateContactRestrictionRequest(
+        startDate = LocalDate.of(2025, 2, 1),
+        expiryDate = LocalDate.of(1980, 2, 1),
+      )
+      whenever(contactRepository.findById(1L)).thenReturn(Optional.of(contactEntity()))
+      whenever(contactRestrictionRepository.findById(1L)).thenReturn(Optional.of(updateRequest.toEntity()))
+      whenever(contactRestrictionRepository.saveAndFlush(any())).thenReturn(updateRequest.toEntity())
+      val error = assertThrows<ValidationException> {
+        syncService.updateContactRestriction(1L, updateRequest)
+      }
+      error.message isEqualTo "Restriction start date should be before the restriction end date"
+    }
+
+    @Test
     fun `should fail to update a contact restriction by ID when contact is not found`() {
       val updateRequest = updateContactRestrictionRequest()
       whenever(contactRepository.findById(1L)).thenReturn(Optional.empty())
@@ -167,23 +197,30 @@ class SyncContactRestrictionServiceTest {
     }
   }
 
-  private fun updateContactRestrictionRequest(contactId: Long = 1L) =
+  private fun updateContactRestrictionRequest(
+    contactId: Long = 1L,
+    startDate: LocalDate? = LocalDate.of(1980, 2, 1),
+    expiryDate: LocalDate? = LocalDate.of(2025, 2, 1),
+  ) =
     SyncUpdateContactRestrictionRequest(
       contactId = contactId,
       restrictionType = "DRIVING",
-      startDate = LocalDate.of(1980, 2, 1),
-      expiryDate = LocalDate.of(2025, 2, 1),
+      startDate = startDate,
+      expiryDate = expiryDate,
       comments = "N/A",
       updatedBy = "TEST",
       updatedTime = LocalDateTime.now(),
     )
 
-  private fun createContactRestrictionRequest() =
+  private fun createContactRestrictionRequest(
+    startDate: LocalDate? = LocalDate.of(1980, 2, 1),
+    expiryDate: LocalDate? = LocalDate.of(2025, 2, 1),
+  ) =
     SyncCreateContactRestrictionRequest(
       contactId = 1L,
       restrictionType = "DRIVING",
-      startDate = LocalDate.of(1980, 2, 1),
-      expiryDate = LocalDate.of(2025, 2, 1),
+      startDate = startDate,
+      expiryDate = expiryDate,
       comments = "N/A",
       createdBy = "TEST",
     )

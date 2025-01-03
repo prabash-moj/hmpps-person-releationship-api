@@ -83,8 +83,8 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       "relationship.prisonerNumber must not be null;{\"relationship\": {\"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
       "relationship.relationshipCode must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": null, \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
       "relationship.relationshipCode must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.isNextOfKin is invalid;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.isEmergencyContact is invalid;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isNextOfKin\": false}, \"createdBy\": \"USER\"}",
+      "relationship.isNextOfKin must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.isEmergencyContact must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isNextOfKin\": false}, \"createdBy\": \"USER\"}",
     ],
     delimiter = ';',
   )

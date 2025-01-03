@@ -30,8 +30,8 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     value = [
       "relationship.prisonerNumber must not be null;{ \"relationshipCode\": \"FRI\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
       "relationship.relationshipCode must not be null;{ \"prisonerNumber\": \"A1234BC\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
-      "relationship.isNextOfKin is invalid;{ \"prisonerNumber\": \"A1234BC\", \"relationshipCode\": \"FRI\", \"isEmergencyContact\": false }",
-      "relationship.isEmergencyContact is invalid;{ \"prisonerNumber\": \"A1234BC\", \"relationshipCode\": \"FRI\", \"isNextOfKin\": false }",
+      "relationship.isNextOfKin must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipCode\": \"FRI\", \"isEmergencyContact\": false }",
+      "relationship.isEmergencyContact must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipCode\": \"FRI\", \"isNextOfKin\": false }",
     ],
     delimiter = ';',
   )

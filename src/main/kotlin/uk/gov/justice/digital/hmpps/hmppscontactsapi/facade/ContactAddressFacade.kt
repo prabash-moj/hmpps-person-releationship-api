@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactAddressService
@@ -27,6 +28,17 @@ class ContactAddressFacade(
 
   fun update(contactId: Long, contactAddressId: Long, request: UpdateContactAddressRequest): ContactAddressResponse {
     return contactAddressService.update(contactId, contactAddressId, request).also { (updated, otherUpdatedAddressIds) ->
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+        identifier = updated.contactAddressId,
+        contactId = contactId,
+      )
+      sendOtherUpdatedAddressEvents(otherUpdatedAddressIds, contactId)
+    }.updated
+  }
+
+  fun patch(contactId: Long, contactAddressId: Long, request: PatchContactAddressRequest): ContactAddressResponse {
+    return contactAddressService.patch(contactId, contactAddressId, request).also { (updated, otherUpdatedAddressIds) ->
       outboundEventsService.send(
         outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
         identifier = updated.contactAddressId,

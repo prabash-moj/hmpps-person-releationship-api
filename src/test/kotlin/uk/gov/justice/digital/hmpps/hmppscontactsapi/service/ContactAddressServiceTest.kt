@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
+import jakarta.validation.ValidationException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -15,15 +16,19 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
+import org.openapitools.jackson.nullable.JsonNullable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ReferenceCodeEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ReferenceCodeRepository
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
@@ -50,7 +55,6 @@ class ContactAddressServiceTest {
     val contactAddress = contactAddressService.get(contactId, contactAddressId)
 
     with(contactAddress) {
-      assertThat(addressType).isEqualTo("HOME")
       assertThat(primaryAddress).isTrue()
       assertThat(flat).isEqualTo("1B")
       assertThat(property).isEqualTo("Mason House")
@@ -468,6 +472,472 @@ class ContactAddressServiceTest {
       verify(contactAddressRepository, never()).saveAndFlush(any())
     }
   }
+
+  @Nested
+  inner class PatchContactAddress {
+
+    val request = patchContactAddressRequest()
+
+    @BeforeEach
+    fun setUp() {
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contactEntity()))
+
+      whenever(contactAddressRepository.findById(contactAddressId))
+        .thenReturn(Optional.of(request.toEntity(contactId, contactAddressId)))
+
+      whenever(contactAddressRepository.saveAndFlush(any()))
+        .thenReturn(request.toEntity(contactId, contactAddressId))
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when contact does not exist`() {
+      val request = PatchContactAddressRequest(
+        updatedBy = "system",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
+
+      assertThrows<EntityNotFoundException> {
+        contactAddressService.patch(contactId, contactAddressId, request)
+      }
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when contact address does not exist`() {
+      val request = PatchContactAddressRequest(
+        updatedBy = "system",
+      )
+
+      whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.empty())
+
+      assertThrows<EntityNotFoundException> {
+        contactAddressService.patch(contactId, contactAddressId, request)
+      }
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when contact address city code does not exist`() {
+      val groupCode = "CITY"
+      val cityCode = "BHAM"
+      val request = PatchContactAddressRequest(
+        cityCode = JsonNullable.of(cityCode),
+        updatedBy = "system",
+      )
+
+      whenever(referenceCodeRepository.findByGroupCodeAndCode(groupCode, cityCode)).thenReturn(null)
+
+      val exception = assertThrows<EntityNotFoundException> {
+        contactAddressService.patch(contactId, contactAddressId, request)
+      }
+
+      exception.message isEqualTo "No reference data found for groupCode: $groupCode and code: $cityCode"
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when contact address county code does not exist`() {
+      val groupCode = "COUNTY"
+      val countyCode = "WM"
+      val request = PatchContactAddressRequest(
+        countyCode = JsonNullable.of(countyCode),
+        updatedBy = "system",
+      )
+
+      whenever(referenceCodeRepository.findByGroupCodeAndCode(groupCode, countyCode)).thenReturn(null)
+
+      val exception = assertThrows<EntityNotFoundException> {
+        contactAddressService.patch(contactId, contactAddressId, request)
+      }
+
+      exception.message isEqualTo "No reference data found for groupCode: $groupCode and code: $countyCode"
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when contact address country code does not exist`() {
+      val groupCode = "COUNTRY"
+      val countryCode = "WM"
+      val request = PatchContactAddressRequest(
+        countryCode = JsonNullable.of(countryCode),
+        updatedBy = "system",
+      )
+
+      whenever(referenceCodeRepository.findByGroupCodeAndCode(groupCode, countryCode)).thenReturn(null)
+
+      val exception = assertThrows<EntityNotFoundException> {
+        contactAddressService.patch(contactId, contactAddressId, request)
+      }
+
+      exception.message isEqualTo "No reference data found for groupCode: $groupCode and code: $countryCode"
+    }
+
+    @Test
+    fun `should patch primary address when primary address flag is set and not primary address already`() {
+      val request = PatchContactAddressRequest(
+        primaryAddress = JsonNullable.of(true),
+        updatedBy = "system",
+      )
+
+      whenever(contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)).thenReturn(listOf(987564321L, 123456789L))
+
+      val (_, otherUpdatedIds) = contactAddressService.patch(contactId, contactAddressId, request)
+
+      assertThat(otherUpdatedIds).isEqualTo(setOf(987564321L, 123456789L))
+    }
+
+    @Test
+    fun `should patch mail address flag when mail flag is set and not mail address already`() {
+      val request = PatchContactAddressRequest(
+        mailFlag = JsonNullable.of(true),
+        updatedBy = "system",
+      )
+
+      whenever(contactAddressRepository.resetMailAddressFlagForContact(contactId)).thenReturn(listOf(987564321L, 123456789L))
+
+      val (_, otherUpdatedIds) = contactAddressService.patch(contactId, contactAddressId, request)
+
+      assertThat(otherUpdatedIds).isEqualTo(setOf(987564321L, 123456789L))
+    }
+
+    @Test
+    fun `should throw ValidationException when contact address not linked to this address`() {
+      val request = PatchContactAddressRequest(
+        updatedBy = "system",
+      )
+
+      whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(
+        Optional.of(
+          contactAddressEntity(
+            contactId = 5L,
+            contactAddressId = contactAddressId,
+          ),
+        ),
+      )
+
+      val exception = assertThrows<ValidationException> {
+        contactAddressService.patch(contactId, contactAddressId, request)
+      }
+
+      exception.message isEqualTo "Contact ID $contactId is not linked to the address $contactAddressId"
+    }
+
+    @Test
+    fun `should patch when only the updated by field is provided`() {
+      val request = PatchContactAddressRequest(
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.updatedBy).isEqualTo(request.updatedBy)
+    }
+
+    @Test
+    fun `should patch when only the primaryAddress field is provided and is set to false when existing address is primary address`() {
+      val request = PatchContactAddressRequest(
+        primaryAddress = JsonNullable.of(false),
+        updatedBy = "Modifier",
+      )
+
+      whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(contactAddressEntity(primaryAddress = true)))
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.primaryAddress).isEqualTo(request.primaryAddress.get())
+    }
+
+    @Test
+    fun `should patch when only the address type field is provided`() {
+      val request = PatchContactAddressRequest(
+        addressType = JsonNullable.of("HOME"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.addressType).isEqualTo(request.addressType.get())
+    }
+
+    @Test
+    fun `should patch when only the flat field is provided`() {
+      val request = PatchContactAddressRequest(
+        flat = JsonNullable.of("1 A"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.flat).isEqualTo(request.flat.get())
+    }
+
+    @Test
+    fun `should patch when only the property field is provided`() {
+      val request = PatchContactAddressRequest(
+        property = JsonNullable.of("No 20"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.property).isEqualTo(request.property.get())
+    }
+
+    @Test
+    fun `should patch when only the street field is provided`() {
+      val request = PatchContactAddressRequest(
+        street = JsonNullable.of("Bluebell Cress"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.street).isEqualTo(request.street.get())
+    }
+
+    @Test
+    fun `should patch when only the area field is provided`() {
+      val request = PatchContactAddressRequest(
+        area = JsonNullable.of("West midlands"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.area).isEqualTo(request.area.get())
+    }
+
+    @Test
+    fun `should patch when only the cityCode field is provided`() {
+      val request = PatchContactAddressRequest(
+        cityCode = JsonNullable.of("Birmingham"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.cityCode).isEqualTo(request.cityCode.get())
+    }
+
+    @Test
+    fun `should patch when only the countyCode field is provided`() {
+      val request = PatchContactAddressRequest(
+        countyCode = JsonNullable.of("WM"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.countyCode).isEqualTo(request.countyCode.get())
+    }
+
+    @Test
+    fun `should patch when only the countryCode field is provided`() {
+      val request = PatchContactAddressRequest(
+        countryCode = JsonNullable.of("UK"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.countryCode).isEqualTo(request.countryCode.get())
+    }
+
+    @Test
+    fun `should patch when only the postcode field is provided`() {
+      val request = PatchContactAddressRequest(
+        postcode = JsonNullable.of("B42 2FS"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.postCode).isEqualTo(request.postcode.get())
+    }
+
+    @Test
+    fun `should patch when only the verified field is provided`() {
+      val request = PatchContactAddressRequest(
+        verified = JsonNullable.of(true),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.verified).isEqualTo(request.verified.get())
+    }
+
+    @Test
+    fun `should patch when only the mailFlag field is provided`() {
+      val request = PatchContactAddressRequest(
+        mailFlag = JsonNullable.of(true),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.mailFlag).isEqualTo(request.mailFlag.get())
+    }
+
+    @Test
+    fun `should patch when only the startDate field is provided`() {
+      val request = PatchContactAddressRequest(
+        startDate = JsonNullable.of(LocalDate.of(2020, 4, 5)),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.startDate).isEqualTo(request.startDate.get())
+    }
+
+    @Test
+    fun `should patch when only the endDate field is provided`() {
+      val request = PatchContactAddressRequest(
+        endDate = JsonNullable.of(LocalDate.of(2020, 4, 5)),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.endDate).isEqualTo(request.endDate.get())
+    }
+
+    @Test
+    fun `should patch when only the noFixedAddress field is provided`() {
+      val request = PatchContactAddressRequest(
+        noFixedAddress = JsonNullable.of(true),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.noFixedAddress).isEqualTo(request.noFixedAddress.get())
+    }
+
+    @Test
+    fun `should patch when only the comments field is provided`() {
+      val request = PatchContactAddressRequest(
+        comments = JsonNullable.of("comments"),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.comments).isEqualTo(request.comments.get())
+    }
+
+    @Test
+    fun `should patch updatedTime when only the updatedBy field is provided`() {
+      val request = PatchContactAddressRequest(
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.updatedTime).isInThePast()
+    }
+
+    @Test
+    fun `should patch verifiedBy when only the verified field is provided`() {
+      val request = PatchContactAddressRequest(
+        verified = JsonNullable.of(true),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.verifiedBy).isEqualTo(request.updatedBy)
+    }
+
+    @Test
+    fun `should patch verifiedTime when only the verified field is provided`() {
+      val request = PatchContactAddressRequest(
+        verified = JsonNullable.of(true),
+        updatedBy = "Modifier",
+      )
+
+      contactAddressService.patch(contactId, contactAddressId, request)
+
+      val contactCaptor = argumentCaptor<ContactAddressEntity>()
+
+      verify(contactAddressRepository).saveAndFlush(contactCaptor.capture())
+      val updatingEntity = contactCaptor.firstValue
+      assertThat(updatingEntity.verifiedTime).isInThePast()
+    }
+  }
 }
 
 private fun updateContactAddressRequest() =
@@ -482,6 +952,27 @@ private fun updateContactAddressRequest() =
     postcode = "CV4 9NJ",
     countryCode = "UK",
     updatedBy = "TEST",
+  )
+
+private fun patchContactAddressRequest() =
+  PatchContactAddressRequest(
+    addressType = JsonNullable.of("HOME"),
+    primaryAddress = JsonNullable.of(false),
+    flat = JsonNullable.of("13"),
+    property = JsonNullable.of("13"),
+    street = JsonNullable.of("Main Street"),
+    area = JsonNullable.of("Dodworth"),
+    cityCode = JsonNullable.of("CVNTRY"),
+    countyCode = JsonNullable.of("WARWKS"),
+    postcode = JsonNullable.of("CV4 9NJ"),
+    countryCode = JsonNullable.of("UK"),
+    verified = JsonNullable.of(false),
+    mailFlag = JsonNullable.of(false),
+    startDate = JsonNullable.of(LocalDate.of(2000, 12, 25)),
+    endDate = JsonNullable.of(LocalDate.of(2001, 12, 25)),
+    noFixedAddress = JsonNullable.of(false),
+    comments = JsonNullable.of("UK"),
+    updatedBy = "System",
   )
 
 private fun createContactAddressRequest() =
@@ -512,12 +1003,12 @@ private fun contactEntity(contactId: Long = 1L) =
     createdBy = "TEST",
   )
 
-private fun contactAddressEntity() =
+private fun contactAddressEntity(contactId: Long = 1L, contactAddressId: Long = 1L, primaryAddress: Boolean = true) =
   ContactAddressEntity(
-    contactAddressId = 1L,
-    contactId = 1L,
+    contactAddressId = contactAddressId,
+    contactId = contactId,
     addressType = "HOME",
-    primaryAddress = true,
+    primaryAddress = primaryAddress,
     flat = "1B",
     property = "Mason House",
     street = "Main Street",
@@ -562,6 +1053,29 @@ private fun UpdateContactAddressRequest.toEntity(contactId: Long, contactAddress
     countyCode = this.countyCode,
     postCode = this.postcode,
     countryCode = this.countryCode,
+    createdBy = "TEST",
+  ).also {
+    it.updatedBy = updatedBy
+    it.updatedTime = LocalDateTime.now()
+  }
+}
+
+private fun PatchContactAddressRequest.toEntity(contactId: Long, contactAddressId: Long = 1L): ContactAddressEntity {
+  val updatedBy = this.updatedBy
+
+  return ContactAddressEntity(
+    contactAddressId = contactAddressId,
+    contactId = contactId,
+    addressType = this.addressType.orElse(""),
+    primaryAddress = this.primaryAddress.orElse(true),
+    flat = this.flat.orElse(""),
+    property = this.property.orElse(""),
+    street = this.street.orElse(""),
+    area = this.area.orElse(""),
+    cityCode = this.cityCode.orElse(""),
+    countyCode = this.countyCode.orElse(""),
+    postCode = this.postcode.orElse(""),
+    countryCode = this.countryCode.orElse(""),
     createdBy = "TEST",
   ).also {
     it.updatedBy = updatedBy

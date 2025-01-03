@@ -5,9 +5,11 @@ import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.CreateAddressResponse
@@ -106,6 +108,68 @@ class ContactAddressService(
     }
 
     return UpdateAddressResponse(contactAddressRepository.saveAndFlush(changedContactAddress).toModel(), updatedAddressIds)
+  }
+
+  fun patch(contactId: Long, contactAddressId: Long, request: PatchContactAddressRequest): UpdateAddressResponse {
+    val contact = validateContactExists(contactId)
+    val existing = validateExistingAddress(contactAddressId)
+    if (contact.contactId != existing.contactId) {
+      logger.error("Contact address update specified for a contact not linked to this address")
+      throw ValidationException("Contact ID ${contact.contactId} is not linked to the address ${existing.contactAddressId}")
+    }
+    request.cityCode.ifPresent { validateCityCode(it) }
+    request.countyCode.ifPresent { validateCountyCode(it) }
+    request.countryCode.ifPresent { validateCountryCode(it) }
+    val updatedAddressIds = mutableSetOf<Long>()
+
+    request.primaryAddress.ifPresent {
+      if (it && !existing.primaryAddress) {
+        updatedAddressIds += contactAddressRepository.resetPrimaryAddressFlagForContact(contactId)
+      }
+    }
+
+    request.mailFlag.ifPresent {
+      if (it && !existing.mailFlag) {
+        updatedAddressIds += contactAddressRepository.resetMailAddressFlagForContact(contactId)
+      }
+    }
+
+    val changedContactAddress = existing.patchRequest(request)
+
+    return UpdateAddressResponse(contactAddressRepository.saveAndFlush(changedContactAddress).toModel(), updatedAddressIds)
+  }
+
+  private fun ContactAddressEntity.patchRequest(
+    request: PatchContactAddressRequest,
+  ): ContactAddressEntity {
+    val changedContactAddress = this.copy(
+      primaryAddress = request.primaryAddress.orElse(this.primaryAddress),
+      addressType = request.addressType.orElse(this.addressType),
+      flat = request.flat.orElse(this.flat),
+      property = request.property.orElse(this.property),
+      street = request.street.orElse(this.street),
+      area = request.area.orElse(this.area),
+      cityCode = request.cityCode.orElse(this.cityCode),
+      countyCode = request.countyCode.orElse(this.countyCode),
+      countryCode = request.countryCode.orElse(this.countryCode),
+      postCode = request.postcode.orElse(this.postCode),
+      verified = request.verified.orElse(this.verified),
+      mailFlag = request.mailFlag.orElse(this.mailFlag),
+      startDate = request.startDate.orElse(this.startDate),
+      endDate = request.endDate.orElse(this.endDate),
+      noFixedAddress = request.noFixedAddress.orElse(this.noFixedAddress),
+      comments = request.comments.orElse(this.comments),
+    ).also { entity ->
+      entity.updatedBy = request.updatedBy
+      entity.updatedTime = LocalDateTime.now()
+      request.verified.ifPresent {
+        if (it && !this.verified) {
+          entity.verifiedBy = request.updatedBy
+          entity.verifiedTime = LocalDateTime.now()
+        }
+      }
+    }
+    return changedContactAddress
   }
 
   fun delete(contactId: Long, contactAddressId: Long): ContactAddressResponse {

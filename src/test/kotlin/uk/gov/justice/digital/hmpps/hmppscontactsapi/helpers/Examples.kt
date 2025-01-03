@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers
 
+import org.openapitools.jackson.nullable.JsonNullable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
@@ -9,6 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionDe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
@@ -459,6 +461,17 @@ fun updateContactAddressRequest(
   area = area,
   postcode = postcode,
   updatedBy = updatedBy,
+)
+
+fun patchContactAddressRequest() = PatchContactAddressRequest(
+  primaryAddress = JsonNullable.of(true),
+  addressType = JsonNullable.of("HOME"),
+  flat = JsonNullable.of("1B"),
+  property = JsonNullable.of("35"),
+  street = JsonNullable.of("Acacia Avenue"),
+  area = JsonNullable.of("Bulls Nose"),
+  postcode = JsonNullable.of("EC1 2NJ"),
+  updatedBy = "AMEND_USER",
 )
 
 fun contactAddressResponse(

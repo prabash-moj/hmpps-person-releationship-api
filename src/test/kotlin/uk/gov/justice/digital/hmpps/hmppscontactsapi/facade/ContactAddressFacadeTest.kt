@@ -11,6 +11,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.contactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.patchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.updateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.CreateAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.UpdateAddressResponse
@@ -104,6 +105,47 @@ class ContactAddressFacadeTest {
 
     assertThat(exception).isEqualTo(exception)
     verify(addressService).update(contactId, contactAddressId, request)
+    verify(eventsService, never()).send(any(), any(), any(), any(), any(), any())
+  }
+
+  @Test
+  fun `should send event if patch success`() {
+    val response = contactAddressResponse(contactAddressId, contactId)
+    val request = patchContactAddressRequest()
+
+    whenever(addressService.patch(any(), any(), any())).thenReturn(UpdateAddressResponse(response, emptySet()))
+    whenever(eventsService.send(any(), any(), any(), any(), any(), any())).then {}
+
+    val result = facade.patch(
+      contactId = contactId,
+      contactAddressId = contactAddressId,
+      request = request,
+    )
+
+    assertThat(result).isEqualTo(response)
+    verify(addressService).patch(contactId, contactAddressId, request)
+    verify(eventsService).send(
+      outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+      identifier = contactAddressId,
+      contactId = contactId,
+      source = Source.DPS,
+    )
+  }
+
+  @Test
+  fun `should not send event if patch address throws exception`() {
+    val expectedException = RuntimeException("Bang!")
+    val request = patchContactAddressRequest()
+
+    whenever(addressService.patch(any(), any(), any())).thenThrow(expectedException)
+    whenever(eventsService.send(any(), any(), any(), any(), any(), any())).then {}
+
+    val exception = assertThrows<RuntimeException> {
+      facade.patch(contactId, contactAddressId, request)
+    }
+
+    assertThat(exception).isEqualTo(exception)
+    verify(addressService).patch(contactId, contactAddressId, request)
     verify(eventsService, never()).send(any(), any(), any(), any(), any(), any())
   }
 

@@ -12,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
@@ -481,6 +482,21 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
 
   fun updateAContactAddress(contactId: Long, contactAddressId: Long, request: UpdateContactAddressRequest, role: String = "ROLE_CONTACTS_ADMIN"): ContactAddressResponse {
     return webTestClient.put()
+      .uri("/contact/$contactId/address/$contactAddressId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised(role))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactAddressResponse::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun patchAContactAddress(contactId: Long, contactAddressId: Long, request: PatchContactAddressRequest, role: String = "ROLE_CONTACTS_ADMIN"): ContactAddressResponse {
+    return webTestClient.patch()
       .uri("/contact/$contactId/address/$contactAddressId")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)

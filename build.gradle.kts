@@ -55,7 +55,7 @@ dependencies {
   testImplementation("org.testcontainers:postgresql:1.20.4")
   testImplementation("org.testcontainers:localstack:1.20.4")
   testImplementation("org.wiremock:wiremock-standalone:3.10.0")
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.1.0")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.1.1")
 }
 
 kotlin {

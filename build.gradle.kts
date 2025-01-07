@@ -37,7 +37,7 @@ dependencies {
   runtimeOnly("org.postgresql:postgresql:42.7.4")
 
   // OpenAPI
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1")
 
   implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.11.0")
 

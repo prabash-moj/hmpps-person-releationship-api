@@ -184,7 +184,7 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
 
-    assertThat(errors.userMessage).isEqualTo("Validation failure: Identity type (NHS) is no longer supported for creating or updating identities")
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported identity type (NHS). This code is no longer active.")
   }
 
   @Test

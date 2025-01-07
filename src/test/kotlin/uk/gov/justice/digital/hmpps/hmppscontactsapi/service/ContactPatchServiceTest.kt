@@ -18,7 +18,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -32,13 +31,12 @@ class ContactPatchServiceTest {
   private val contactId = 1L
   private val domesticStatusCode = "P"
   private var originalContact = createDummyContactEntity()
-  private val countryCode = "FRE-FRA"
+  private val languageCode = "FRE-FRA"
 
-  private val languageService: LanguageService = mock()
   private val contactRepository: ContactRepository = mock()
   private val referenceCodeService: ReferenceCodeService = mock()
 
-  private val service = ContactPatchService(contactRepository, languageService, referenceCodeService)
+  private val service = ContactPatchService(contactRepository, referenceCodeService)
 
   @Test
   fun `should throw EntityNotFoundException when contact does not exist`() {
@@ -68,7 +66,7 @@ class ContactPatchServiceTest {
     val contactCaptor = argumentCaptor<ContactEntity>()
 
     verify(contactRepository).saveAndFlush(contactCaptor.capture())
-    verify(languageService, never()).getLanguageByNomisCode(any())
+    verify(referenceCodeService, never()).validateReferenceCode(any(), any(), any())
 
     assertUnchangedFields(updatedContact)
 
@@ -106,7 +104,7 @@ class ContactPatchServiceTest {
 
       service.patch(contactId, patchRequest)
 
-      verify(languageService, never()).getLanguageByNomisCode(any())
+      verify(referenceCodeService, never()).validateReferenceCode(any(), any(), any())
       verify(contactRepository, times(1)).saveAndFlush(any())
     }
 
@@ -121,7 +119,7 @@ class ContactPatchServiceTest {
 
       service.patch(contactId, patchRequest)
 
-      verify(languageService, never()).getLanguageByNomisCode(any())
+      verify(referenceCodeService, never()).validateReferenceCode(any(), any(), any())
       verify(contactRepository, times(1)).saveAndFlush(any())
     }
 
@@ -130,14 +128,14 @@ class ContactPatchServiceTest {
       originalContact = createDummyContactEntity(languageCode = null)
 
       val patchRequest = PatchContactRequest(
-        languageCode = JsonNullable.of(countryCode),
+        languageCode = JsonNullable.of(languageCode),
         updatedBy = "Modifier",
       )
 
       whenContactExists()
       whenUpdateIsSuccessful()
-      whenever(languageService.getLanguageByNomisCode(any())).thenReturn(
-        Language(1, countryCode, "French", "Foo", "Bar", "X", 99),
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.LANGUAGE, languageCode, allowInactive = true)).thenReturn(
+        ReferenceCode(1, ReferenceCodeGroup.LANGUAGE, languageCode, "French", 1, true),
       )
 
       val updatedContact = service.patch(contactId, patchRequest)
@@ -145,9 +143,9 @@ class ContactPatchServiceTest {
       val contactCaptor = argumentCaptor<ContactEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
-      verify(languageService, times(1)).getLanguageByNomisCode(countryCode)
+      verify(referenceCodeService, times(1)).validateReferenceCode(ReferenceCodeGroup.LANGUAGE, languageCode, allowInactive = true)
 
-      assertThat(updatedContact.languageCode).isEqualTo(countryCode)
+      assertThat(updatedContact.languageCode).isEqualTo(languageCode)
       assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
@@ -166,7 +164,7 @@ class ContactPatchServiceTest {
       val contactCaptor = argumentCaptor<ContactEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
-      verify(languageService).getLanguageByNomisCode("FR")
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.LANGUAGE, "FR", allowInactive = true)
 
       val updatingEntity = contactCaptor.firstValue
 
@@ -253,7 +251,7 @@ class ContactPatchServiceTest {
 
       service.patch(contactId, patchRequest)
 
-      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+      verify(referenceCodeService, never()).validateReferenceCode(any(), any(), any())
       verify(contactRepository, times(1)).saveAndFlush(any())
     }
 
@@ -268,7 +266,7 @@ class ContactPatchServiceTest {
 
       service.patch(contactId, patchRequest)
 
-      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+      verify(referenceCodeService, never()).validateReferenceCode(any(), any(), any())
       verify(contactRepository, times(1)).saveAndFlush(any())
     }
 
@@ -283,7 +281,7 @@ class ContactPatchServiceTest {
 
       whenContactExists()
       whenUpdateIsSuccessful()
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(any(), any())).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.DOMESTIC_STS, domesticStatusCode, allowInactive = true)).thenReturn(
         ReferenceCode(
           0,
           ReferenceCodeGroup.PHONE_TYPE,
@@ -299,7 +297,7 @@ class ContactPatchServiceTest {
       val contactCaptor = argumentCaptor<ContactEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
-      verify(referenceCodeService, times(1)).getReferenceDataByGroupAndCode(ReferenceCodeGroup.DOMESTIC_STS, domesticStatusCode)
+      verify(referenceCodeService, times(1)).validateReferenceCode(ReferenceCodeGroup.DOMESTIC_STS, domesticStatusCode, allowInactive = true)
 
       assertThat(updatedContact.domesticStatus).isEqualTo(domesticStatusCode)
       assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
@@ -314,7 +312,7 @@ class ContactPatchServiceTest {
 
       whenContactExists()
       whenUpdateIsSuccessful()
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.DOMESTIC_STS, domesticStatusCode)).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.DOMESTIC_STS, domesticStatusCode, allowInactive = true)).thenReturn(
         ReferenceCode(1, ReferenceCodeGroup.DOMESTIC_STS, "P", "Single", 1, true),
       )
 
@@ -323,7 +321,7 @@ class ContactPatchServiceTest {
       val contactCaptor = argumentCaptor<ContactEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
-      verify(referenceCodeService).getReferenceDataByGroupAndCode(ReferenceCodeGroup.DOMESTIC_STS, domesticStatusCode)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.DOMESTIC_STS, domesticStatusCode, allowInactive = true)
 
       val updatingEntity = contactCaptor.firstValue
 
@@ -399,7 +397,7 @@ class ContactPatchServiceTest {
 
     @Test
     fun `should patch when title is valid`() {
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(any(), any())).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.TITLE, "MRS", allowInactive = true)).thenReturn(
         ReferenceCode(
           0,
           ReferenceCodeGroup.TITLE,
@@ -456,13 +454,13 @@ class ContactPatchServiceTest {
 
       assertThat(response.title).isNull()
       assertThat(response.updatedBy).isEqualTo("Modifier")
-      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+      verify(referenceCodeService, never()).validateReferenceCode(any(), any(), any())
     }
 
     @Test
     fun `should not patch title if it is invalid code`() {
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(any(), any())).thenReturn(null)
-
+      val expectedException = ValidationException("Invalid")
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.TITLE, "FOO", allowInactive = true)).thenThrow(expectedException)
       val patchRequest = PatchContactRequest(
         title = JsonNullable.of("FOO"),
         updatedBy = "Modifier",
@@ -474,7 +472,7 @@ class ContactPatchServiceTest {
       val exception = assertThrows<ValidationException> {
         service.patch(contactId, patchRequest)
       }
-      assertThat(exception.message).isEqualTo("Reference code with groupCode TITLE and code 'FOO' not found.")
+      assertThat(exception).isEqualTo(expectedException)
       verify(contactRepository, never()).saveAndFlush(any())
     }
   }
@@ -530,7 +528,7 @@ class ContactPatchServiceTest {
 
       assertThat(response.middleNames).isNull()
       assertThat(response.updatedBy).isEqualTo("Modifier")
-      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+      verify(referenceCodeService, never()).validateReferenceCode(any(), any(), any())
     }
   }
 
@@ -629,7 +627,7 @@ class ContactPatchServiceTest {
     whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(originalContact))
   }
 
-  private fun createDummyContactEntity(languageCode: String? = countryCode, domesticStatus: String? = "M") = ContactEntity(
+  private fun createDummyContactEntity(languageCode: String? = this.languageCode, domesticStatus: String? = "M") = ContactEntity(
     contactId = 1L,
     title = "Mr.",
     firstName = "John",
@@ -699,7 +697,7 @@ class ContactPatchServiceTest {
       val patched = service.patch(contactId, patchRequest)
 
       assertThat(patched.gender).isEqualTo("NS")
-      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
+      verify(referenceCodeService, never()).validateReferenceCode(any(), any(), any())
       verify(contactRepository, times(1)).saveAndFlush(any())
     }
 
@@ -714,7 +712,7 @@ class ContactPatchServiceTest {
 
       whenContactExists()
       whenUpdateIsSuccessful()
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, "NS")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.GENDER, "NS", allowInactive = true)).thenReturn(
         ReferenceCode(1, ReferenceCodeGroup.GENDER, "NS", "Not specified", 99, true),
       )
 
@@ -723,48 +721,29 @@ class ContactPatchServiceTest {
       val contactCaptor = argumentCaptor<ContactEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
-      verify(referenceCodeService, times(1)).getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, "NS")
+      verify(referenceCodeService, times(1)).validateReferenceCode(ReferenceCodeGroup.GENDER, "NS", allowInactive = true)
 
       assertThat(updatedContact.gender).isEqualTo("NS")
       assertThat(updatedContact.updatedBy).isEqualTo(patchRequest.updatedBy)
     }
 
     @Test
-    fun `should reject gender when code is inactive`() {
+    fun `should reject gender when code is invalid`() {
       originalContact = createDummyContactEntity().copy(gender = null)
 
       val patchRequest = PatchContactRequest(
         gender = JsonNullable.of("NS"),
         updatedBy = "Modifier",
       )
-
+      val expectedException = ValidationException("Invalid")
       whenContactExists()
       whenUpdateIsSuccessful()
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, "NS")).thenReturn(ReferenceCode(1, ReferenceCodeGroup.GENDER, "NS", "Not specified", 99, false))
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.GENDER, "NS", allowInactive = true)).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.patch(contactId, patchRequest)
       }
-      assertThat(exception.message).isEqualTo("Reference code with groupCode GENDER and code 'NS' is not active and is no longer supported.")
-    }
-
-    @Test
-    fun `should reject gender when code is not found`() {
-      originalContact = createDummyContactEntity().copy(gender = null)
-
-      val patchRequest = PatchContactRequest(
-        gender = JsonNullable.of("NS"),
-        updatedBy = "Modifier",
-      )
-
-      whenContactExists()
-      whenUpdateIsSuccessful()
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, "NS")).thenReturn(null)
-
-      val exception = assertThrows<ValidationException> {
-        service.patch(contactId, patchRequest)
-      }
-      assertThat(exception.message).isEqualTo("Reference code with groupCode GENDER and code 'NS' not found.")
+      assertThat(exception).isEqualTo(expectedException)
     }
   }
 }

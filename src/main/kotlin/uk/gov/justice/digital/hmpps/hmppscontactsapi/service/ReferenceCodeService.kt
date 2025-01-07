@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
+import jakarta.validation.ValidationException
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
@@ -19,4 +20,16 @@ class ReferenceCodeService(private val referenceCodeRepository: ReferenceCodeRep
 
   fun getReferenceDataByGroupAndCode(groupCode: ReferenceCodeGroup, code: String): ReferenceCode? =
     referenceCodeRepository.findByGroupCodeAndCode(groupCode, code)?.toModel()
+
+  /**
+   * Validates a reference code for the supplied group and returns the details if it is. You should allow inactive reference codes
+   * when updating an existing entity so we do not block important updates on existing or imported data.
+   */
+  fun validateReferenceCode(groupCode: ReferenceCodeGroup, code: String, allowInactive: Boolean): ReferenceCode {
+    val referenceCode = getReferenceDataByGroupAndCode(groupCode, code) ?: throw ValidationException("Unsupported ${groupCode.displayName} ($code)")
+    if (!allowInactive && !referenceCode.isActive) {
+      throw ValidationException("Unsupported ${groupCode.displayName} ($code). This code is no longer active.")
+    }
+    return referenceCode
+  }
 }

@@ -69,40 +69,24 @@ class ContactIdentityServiceTest {
     }
 
     @Test
-    fun `should throw ValidationException creating identity if identity type doesn't exist`() {
+    fun `should throw ValidationException creating identity if identity type is invalid`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "FOO")).thenReturn(null)
+      val expectedException = ValidationException("Unsupported identity type (FOO)")
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.ID_TYPE, "FOO", allowInactive = false)).thenThrow(
+        expectedException,
+      )
 
       val exception = assertThrows<ValidationException> {
         service.create(contactId, request.copy(identityType = "FOO"))
       }
-      assertThat(exception.message).isEqualTo("Unsupported identity type (FOO)")
-    }
-
-    @Test
-    fun `should throw ValidationException creating identity if identity type is no longer active`() {
-      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "NHS")).thenReturn(
-        ReferenceCode(
-          0,
-          ReferenceCodeGroup.ID_TYPE,
-          "NHS",
-          "NHS Number",
-          0,
-          false,
-        ),
-      )
-
-      val exception = assertThrows<ValidationException> {
-        service.create(contactId, request.copy(identityType = "NHS"))
-      }
-      assertThat(exception.message).isEqualTo("Identity type (NHS) is no longer supported for creating or updating identities")
+      assertThat(exception).isEqualTo(expectedException)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.ID_TYPE, "FOO", allowInactive = false)
     }
 
     @Test
     fun `should throw ValidationException if identity type is PNC but identity is not a valid PNC`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "PNC")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.ID_TYPE, "PNC", allowInactive = false)).thenReturn(
         ReferenceCode(
           0,
           ReferenceCodeGroup.ID_TYPE,
@@ -122,7 +106,7 @@ class ContactIdentityServiceTest {
     @Test
     fun `should return identity details including the reference data after creating successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "DL")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.ID_TYPE, "DL", allowInactive = false)).thenReturn(
         ReferenceCode(
           0,
           ReferenceCodeGroup.ID_TYPE,
@@ -201,43 +185,24 @@ class ContactIdentityServiceTest {
     }
 
     @Test
-    fun `should throw ValidationException updating identity if identity type doesn't exist`() {
+    fun `should throw ValidationException updating identity if identity type is invalid`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "FOO")).thenReturn(null)
+      val expectedException = ValidationException("Unsupported identity type (FOO)")
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.ID_TYPE, "FOO", allowInactive = true)).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.update(contactId, contactIdentityId, request.copy(identityType = "FOO"))
       }
-      assertThat(exception.message).isEqualTo("Unsupported identity type (FOO)")
-    }
-
-    @Test
-    fun `should throw ValidationException updating identity if identity type is no longer active`() {
-      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "NHS")).thenReturn(
-        ReferenceCode(
-          0,
-          ReferenceCodeGroup.ID_TYPE,
-          "NHS",
-          "NHS Number",
-          0,
-          false,
-        ),
-      )
-
-      val exception = assertThrows<ValidationException> {
-        service.update(contactId, contactIdentityId, request.copy(identityType = "NHS"))
-      }
-      assertThat(exception.message).isEqualTo("Identity type (NHS) is no longer supported for creating or updating identities")
+      assertThat(exception).isEqualTo(expectedException)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.ID_TYPE, "FOO", allowInactive = true)
     }
 
     @Test
     fun `should throw ValidationException if identity type is PNC but identity is not a valid PNC`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "PNC")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.ID_TYPE, "PNC", allowInactive = true)).thenReturn(
         ReferenceCode(
           0,
           ReferenceCodeGroup.ID_TYPE,
@@ -258,7 +223,7 @@ class ContactIdentityServiceTest {
     fun `should return a identity details including the reference data after updating a identity successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "PASS")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.ID_TYPE, "PASS", allowInactive = true)).thenReturn(
         ReferenceCode(
           0,
           ReferenceCodeGroup.ID_TYPE,

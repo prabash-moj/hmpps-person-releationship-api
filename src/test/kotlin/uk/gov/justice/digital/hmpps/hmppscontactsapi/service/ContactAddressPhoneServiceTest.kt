@@ -77,15 +77,17 @@ class ContactAddressPhoneServiceTest {
 
     @Test
     fun `should throw ValidationException creating an address-specific phone if the phone type is invalid`() {
+      val expectedException = ValidationException("Unsupported phone type (FOO)")
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(contactAddressEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "FOO")).thenReturn(null)
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "FOO", allowInactive = false)).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.create(contactId, contactAddressId, request.copy(phoneType = "FOO"))
       }
 
-      assertThat(exception.message).isEqualTo("Unsupported phone type (FOO)")
+      assertThat(exception).isEqualTo(expectedException)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "FOO", allowInactive = false)
     }
 
     @ParameterizedTest
@@ -120,7 +122,7 @@ class ContactAddressPhoneServiceTest {
     fun `should throw ValidationException creating address-specific phone if phone number contains invalid chars`(phoneNumber: String) {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(contactAddressEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "HOME", allowInactive = false))
         .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       val exception = assertThrows<ValidationException> {
@@ -134,7 +136,7 @@ class ContactAddressPhoneServiceTest {
     fun `should return a the address-specific phone details after successful creation`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(contactAddressEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "HOME", allowInactive = false))
         .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       whenever(contactPhoneRepository.saveAndFlush(any())).thenAnswer { i ->
@@ -260,17 +262,19 @@ class ContactAddressPhoneServiceTest {
     }
 
     @Test
-    fun `should throw ValidationException updating phone if phone type doesn't exist`() {
+    fun `should throw ValidationException updating phone if phone type is invalid`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.of(addressPhoneEntity))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(phoneEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "FOO")).thenReturn(null)
+      val expectedException = ValidationException("Unsupported phone type (FOO)")
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "FOO", allowInactive = true)).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.update(contactId, contactAddressPhoneId, request.copy(phoneType = "FOO"))
       }
 
-      assertThat(exception.message).isEqualTo("Unsupported phone type (FOO)")
+      assertThat(exception).isEqualTo(expectedException)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "FOO", allowInactive = true)
     }
 
     @ParameterizedTest
@@ -320,7 +324,7 @@ class ContactAddressPhoneServiceTest {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.of(addressPhoneEntity))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(phoneEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "HOME", allowInactive = true))
         .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       whenever(contactPhoneRepository.saveAndFlush(any())).thenAnswer { i ->
@@ -355,7 +359,7 @@ class ContactAddressPhoneServiceTest {
       verify(contactRepository).findById(contactId)
       verify(contactAddressPhoneRepository).findById(contactAddressPhoneId)
       verify(contactPhoneRepository).findById(contactPhoneId)
-      verify(referenceCodeService).getReferenceDataByGroupAndCode(any(), any())
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "HOME", true)
     }
   }
 

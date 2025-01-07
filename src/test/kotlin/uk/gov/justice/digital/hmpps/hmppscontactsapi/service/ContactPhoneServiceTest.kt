@@ -73,14 +73,15 @@ class ContactPhoneServiceTest {
     }
 
     @Test
-    fun `should throw ValidationException creating phone if phone type doesn't exist`() {
+    fun `should throw ValidationException creating phone if phone type is invalid`() {
+      val expectedException = ValidationException("Invalid")
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "FOO")).thenReturn(null)
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "FOO", allowInactive = false)).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.create(contactId, request.copy(phoneType = "FOO"))
       }
-      assertThat(exception.message).isEqualTo("Unsupported phone type (FOO)")
+      assertThat(exception).isEqualTo(expectedException)
     }
 
     @ParameterizedTest
@@ -134,7 +135,7 @@ class ContactPhoneServiceTest {
     @Test
     fun `should return a phone details including the reference data after creating a contact successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "MOB")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "MOB", allowInactive = false)).thenReturn(
         ReferenceCode(
           0,
           ReferenceCodeGroup.PHONE_TYPE,
@@ -166,6 +167,7 @@ class ContactPhoneServiceTest {
           updatedTime = null,
         ),
       )
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "MOB", allowInactive = false)
     }
   }
 
@@ -258,15 +260,16 @@ class ContactPhoneServiceTest {
     }
 
     @Test
-    fun `should throw ValidationException updating phone if phone type doesn't exist`() {
+    fun `should throw ValidationException updating phone if phone type is invalid`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(existingPhone))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "FOO")).thenReturn(null)
+      val expectedException = ValidationException("Invalid")
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "FOO", allowInactive = true)).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.update(contactId, contactPhoneId, request.copy(phoneType = "FOO"))
       }
-      assertThat(exception.message).isEqualTo("Unsupported phone type (FOO)")
+      assertThat(exception).isEqualTo(expectedException)
     }
 
     @ParameterizedTest
@@ -322,7 +325,7 @@ class ContactPhoneServiceTest {
     fun `should return a phone details including the reference data after updating a phone successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(existingPhone))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "MOB")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "MOB", allowInactive = true)).thenReturn(
         ReferenceCode(
           0,
           ReferenceCodeGroup.PHONE_TYPE,
@@ -354,6 +357,7 @@ class ContactPhoneServiceTest {
           updatedTime = updated.updatedTime,
         ),
       )
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, "MOB", allowInactive = true)
     }
   }
 

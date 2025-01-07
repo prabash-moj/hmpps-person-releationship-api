@@ -683,7 +683,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         .build()
         .toUri()
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
-      assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode TITLE and code 'FOO' not found.")
+      assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported title (FOO)")
 
       stubEvents.assertHasNoEvents(
         event = OutboundEvent.CONTACT_UPDATED,
@@ -793,23 +793,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         .build()
         .toUri()
       val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
-      assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode GENDER and code 'FOO' not found.")
-
-      stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_UPDATED, ContactInfo(contactWithAGender, Source.DPS))
-    }
-
-    @Test
-    fun `should not be able to patch to an inactive gender value`() {
-      val req = PatchContactRequest(
-        gender = JsonNullable.of("REF"),
-        updatedBy = updatedByUser,
-      )
-
-      val uri = UriComponentsBuilder.fromPath("/contact/$contactWithAGender")
-        .build()
-        .toUri()
-      val errors = testAPIClient.getBadResponseErrorsWithPatch(req, uri)
-      assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode GENDER and code 'REF' is not active and is no longer supported.")
+      assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported gender (FOO)")
 
       stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_UPDATED, ContactInfo(contactWithAGender, Source.DPS))
     }

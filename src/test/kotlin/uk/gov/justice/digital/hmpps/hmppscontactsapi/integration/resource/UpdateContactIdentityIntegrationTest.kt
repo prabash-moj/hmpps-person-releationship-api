@@ -179,31 +179,6 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should not update the identity if the type is no longer active`() {
-    val request = UpdateIdentityRequest(
-      identityType = "NHS",
-      identityValue = "Is active is false",
-      updatedBy = "updated",
-    )
-
-    val errors = webTestClient.put()
-      .uri("/contact/$savedContactId/identity/$savedContactIdentityId")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-      .bodyValue(request)
-      .exchange()
-      .expectStatus()
-      .isBadRequest
-      .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(ErrorResponse::class.java)
-      .returnResult().responseBody!!
-
-    assertThat(errors.userMessage).isEqualTo("Validation failure: Identity type (NHS) is no longer supported for creating or updating identities")
-    stubEvents.assertHasNoEvents(OutboundEvent.CONTACT_IDENTITY_UPDATED, ContactIdentityInfo(savedContactIdentityId))
-  }
-
-  @Test
   fun `should not update the identity if the contact is not found`() {
     val request = aMinimalRequest()
 

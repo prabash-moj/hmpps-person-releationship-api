@@ -29,7 +29,7 @@ class ContactIdentityService(
   fun create(contactId: Long, request: CreateIdentityRequest): ContactIdentityDetails {
     validateContactExists(contactId)
     validatePNC(request.identityType, request.identityValue)
-    val type = validateIdentityType(request.identityType)
+    val type = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.ID_TYPE, request.identityType, allowInactive = false)
     val created = contactIdentityRepository.saveAndFlush(
       ContactIdentityEntity(
         contactIdentityId = 0,
@@ -47,7 +47,7 @@ class ContactIdentityService(
   fun update(contactId: Long, contactIdentityId: Long, request: UpdateIdentityRequest): ContactIdentityDetails {
     validateContactExists(contactId)
     val existing = validateExistingIdentity(contactIdentityId)
-    val type = validateIdentityType(request.identityType)
+    val type = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.ID_TYPE, request.identityType, allowInactive = true)
     validatePNC(request.identityType, request.identityValue)
 
     val updating = existing.copy(
@@ -78,15 +78,6 @@ class ContactIdentityService(
     val existing = contactIdentityRepository.findById(contactIdentityId)
       .orElseThrow { EntityNotFoundException("Contact identity ($contactIdentityId) not found") }
     return existing
-  }
-
-  private fun validateIdentityType(identityType: String): ReferenceCode {
-    val type = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, identityType)
-      ?: throw ValidationException("Unsupported identity type ($identityType)")
-    if (!type.isActive) {
-      throw ValidationException("Identity type ($identityType) is no longer supported for creating or updating identities")
-    }
-    return type
   }
 
   private fun validatePNC(identityType: String, identityValue: String) {

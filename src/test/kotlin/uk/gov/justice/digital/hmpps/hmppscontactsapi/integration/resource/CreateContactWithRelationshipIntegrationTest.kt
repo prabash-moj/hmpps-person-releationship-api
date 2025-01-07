@@ -118,7 +118,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
 
-    assertThat(errors.userMessage).isEqualTo("Validation failure: Reference code with groupCode RELATIONSHIP and code 'FOO' not found.")
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported relationship type (FOO)")
     stubEvents.assertHasNoEvents(event = OutboundEvent.CONTACT_CREATED)
     stubEvents.assertHasNoEvents(event = OutboundEvent.PRISONER_CONTACT_CREATED)
 

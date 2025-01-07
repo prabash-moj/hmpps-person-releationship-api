@@ -456,41 +456,35 @@ class RestrictionsServiceTest {
     }
 
     @Test
-    fun `blow up creating global restriction if type is not supported`() {
+    fun `blow up creating global restriction if type is invalid`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(null)
-
-      val exception = assertThrows<ValidationException> {
-        service.createContactGlobalRestriction(contactId, aCreateGlobalRestrictionRequest())
-      }
-      assertThat(exception.message).isEqualTo("Unsupported restriction type (BAN)")
-    }
-
-    @Test
-    fun `blow up creating global restriction if type is no longer active`() {
-      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(
-        ReferenceCode(
-          referenceCodeId = 0,
+      val expectedException = ValidationException("Invalid")
+      whenever(
+        referenceCodeService.validateReferenceCode(
           ReferenceCodeGroup.RESTRICTION,
           "BAN",
-          "Banned",
-          99,
-          false,
+          allowInactive = false,
         ),
-      )
+      ).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.createContactGlobalRestriction(contactId, aCreateGlobalRestrictionRequest())
       }
-      assertThat(exception.message).isEqualTo("Restriction type (BAN) is no longer supported for creating or updating restrictions")
+      assertThat(exception).isEqualTo(expectedException)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "BAN", allowInactive = false)
     }
 
     @Test
     fun `create global restriction`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(manageUsersService.getUserByUsername("created")).thenReturn(User("created", "Created User"))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(
+      whenever(
+        referenceCodeService.validateReferenceCode(
+          ReferenceCodeGroup.RESTRICTION,
+          "BAN",
+          allowInactive = false,
+        ),
+      ).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
           ReferenceCodeGroup.RESTRICTION,
@@ -525,6 +519,7 @@ class RestrictionsServiceTest {
         ),
       )
       verify(contactRestrictionRepository).saveAndFlush(any())
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "BAN", allowInactive = false)
     }
 
     private fun aCreateGlobalRestrictionRequest(
@@ -603,10 +598,11 @@ class RestrictionsServiceTest {
     }
 
     @Test
-    fun `blow up updating global restriction if type is not supported`() {
+    fun `blow up updating global restriction if type is invalid`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(null)
+      val expectedException = ValidationException("Invalid")
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.updateContactGlobalRestriction(
@@ -615,32 +611,8 @@ class RestrictionsServiceTest {
           anUpdateGlobalRestrictionRequest(),
         )
       }
-      assertThat(exception.message).isEqualTo("Unsupported restriction type (CCTV)")
-    }
-
-    @Test
-    fun `blow up updating global restriction if type is no longer active`() {
-      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(
-        ReferenceCode(
-          referenceCodeId = 0,
-          ReferenceCodeGroup.RESTRICTION,
-          "CCTV",
-          "CCTV",
-          99,
-          false,
-        ),
-      )
-
-      val exception = assertThrows<ValidationException> {
-        service.updateContactGlobalRestriction(
-          contactId,
-          contactRestrictionId,
-          anUpdateGlobalRestrictionRequest(),
-        )
-      }
-      assertThat(exception.message).isEqualTo("Restriction type (CCTV) is no longer supported for creating or updating restrictions")
+      assertThat(exception).isEqualTo(expectedException)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)
     }
 
     @Test
@@ -648,7 +620,7 @@ class RestrictionsServiceTest {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
       whenever(manageUsersService.getUserByUsername("updated")).thenReturn(User("updated", "Updated User"))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
           ReferenceCodeGroup.RESTRICTION,
@@ -687,6 +659,7 @@ class RestrictionsServiceTest {
         ),
       )
       verify(contactRestrictionRepository).saveAndFlush(any())
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)
     }
 
     private fun anUpdateGlobalRestrictionRequest(
@@ -715,41 +688,35 @@ class RestrictionsServiceTest {
     }
 
     @Test
-    fun `blow up creating prisoner contact restriction if type is not supported`() {
+    fun `blow up creating prisoner contact restriction if type is invalid`() {
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(null)
-
-      val exception = assertThrows<ValidationException> {
-        service.createPrisonerContactRestriction(prisonerContactId, aCreatePrisonerContactRestrictionRequest())
-      }
-      assertThat(exception.message).isEqualTo("Unsupported restriction type (BAN)")
-    }
-
-    @Test
-    fun `blow up creating prisoner contact restriction if type is no longer active`() {
-      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(
-        ReferenceCode(
-          referenceCodeId = 0,
+      val expectedException = ValidationException("Invalid")
+      whenever(
+        referenceCodeService.validateReferenceCode(
           ReferenceCodeGroup.RESTRICTION,
           "BAN",
-          "Banned",
-          99,
-          false,
+          allowInactive = false,
         ),
-      )
+      ).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.createPrisonerContactRestriction(prisonerContactId, aCreatePrisonerContactRestrictionRequest())
       }
-      assertThat(exception.message).isEqualTo("Restriction type (BAN) is no longer supported for creating or updating restrictions")
+      assertThat(exception).isEqualTo(expectedException)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "BAN", allowInactive = false)
     }
 
     @Test
     fun `create prisoner contact restriction`() {
       whenever(manageUsersService.getUserByUsername("created")).thenReturn(User("created", "Created User"))
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(
+      whenever(
+        referenceCodeService.validateReferenceCode(
+          ReferenceCodeGroup.RESTRICTION,
+          "BAN",
+          allowInactive = false,
+        ),
+      ).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
           ReferenceCodeGroup.RESTRICTION,
@@ -787,6 +754,7 @@ class RestrictionsServiceTest {
         ),
       )
       verify(prisonerContactRestrictionRepository).saveAndFlush(any())
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "BAN", allowInactive = false)
     }
 
     private fun aCreatePrisonerContactRestrictionRequest(): CreatePrisonerContactRestrictionRequest =
@@ -845,14 +813,15 @@ class RestrictionsServiceTest {
     }
 
     @Test
-    fun `blow up updating prisoner contact restriction if type is not supported`() {
+    fun `blow up updating prisoner contact restriction if type is invalid`() {
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
       whenever(prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)).thenReturn(
         Optional.of(
           existingEntity,
         ),
       )
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(null)
+      val expectedException = ValidationException("Invalid")
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)).thenThrow(expectedException)
 
       val exception = assertThrows<ValidationException> {
         service.updatePrisonerContactRestriction(
@@ -861,36 +830,8 @@ class RestrictionsServiceTest {
           anUpdatePrisonerContactRestrictionRequest(),
         )
       }
-      assertThat(exception.message).isEqualTo("Unsupported restriction type (CCTV)")
-    }
-
-    @Test
-    fun `blow up updating prisoner contact restriction if type is no longer active`() {
-      whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
-      whenever(prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)).thenReturn(
-        Optional.of(
-          existingEntity,
-        ),
-      )
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(
-        ReferenceCode(
-          referenceCodeId = 0,
-          ReferenceCodeGroup.RESTRICTION,
-          "CCTV",
-          "CCTV",
-          99,
-          false,
-        ),
-      )
-
-      val exception = assertThrows<ValidationException> {
-        service.updatePrisonerContactRestriction(
-          prisonerContactId,
-          prisonerContactRestrictionId,
-          anUpdatePrisonerContactRestrictionRequest(),
-        )
-      }
-      assertThat(exception.message).isEqualTo("Restriction type (CCTV) is no longer supported for creating or updating restrictions")
+      assertThat(exception).isEqualTo(expectedException)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)
     }
 
     @Test
@@ -902,7 +843,7 @@ class RestrictionsServiceTest {
           existingEntity,
         ),
       )
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
           ReferenceCodeGroup.RESTRICTION,
@@ -943,6 +884,7 @@ class RestrictionsServiceTest {
         ),
       )
       verify(prisonerContactRestrictionRepository).saveAndFlush(any())
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)
     }
 
     private fun anUpdatePrisonerContactRestrictionRequest(): UpdatePrisonerContactRestrictionRequest =

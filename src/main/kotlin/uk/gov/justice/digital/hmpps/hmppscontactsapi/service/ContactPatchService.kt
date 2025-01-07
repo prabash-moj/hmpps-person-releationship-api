@@ -15,7 +15,6 @@ import java.time.LocalDateTime
 @Service
 class ContactPatchService(
   private val contactRepository: ContactRepository,
-  private val languageService: LanguageService,
   private val referenceCodeService: ReferenceCodeService,
 ) {
 
@@ -59,7 +58,8 @@ class ContactPatchService(
 
   private fun validateLanguageCode(request: PatchContactRequest) {
     if (request.languageCode.isPresent && request.languageCode.get() != null) {
-      languageService.getLanguageByNomisCode(request.languageCode.get()!!)
+      val code = request.languageCode.get()!!
+      referenceCodeService.validateReferenceCode(ReferenceCodeGroup.LANGUAGE, code, allowInactive = true)
     }
   }
 
@@ -78,29 +78,21 @@ class ContactPatchService(
   private fun validateDomesticStatusCode(request: PatchContactRequest) {
     if (request.domesticStatus.isPresent && request.domesticStatus.get() != null) {
       val code = request.domesticStatus.get()!!
-      referenceCodeService.getReferenceDataByGroupAndCode(
-        ReferenceCodeGroup.DOMESTIC_STS, code,
-      )
-        ?: throw ValidationException("Reference code with groupCode DOMESTIC_STS and code '$code' not found.")
+      referenceCodeService.validateReferenceCode(ReferenceCodeGroup.DOMESTIC_STS, code, allowInactive = true)
     }
   }
 
   private fun validateTitle(request: PatchContactRequest) {
     if (request.title.isPresent && request.title.get() != null) {
       val code = request.title.get()!!
-      referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.TITLE, code)
-        ?: throw ValidationException("Reference code with groupCode TITLE and code '$code' not found.")
+      referenceCodeService.validateReferenceCode(ReferenceCodeGroup.TITLE, code, allowInactive = true)
     }
   }
 
   private fun validateGender(request: PatchContactRequest) {
     if (request.gender.isPresent && request.gender.get() != null) {
       val code = request.gender.get()!!
-      val referenceData = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, code)
-      when {
-        referenceData == null -> throw ValidationException("Reference code with groupCode GENDER and code '$code' not found.")
-        !referenceData.isActive -> throw ValidationException("Reference code with groupCode GENDER and code '$code' is not active and is no longer supported.")
-      }
+      referenceCodeService.validateReferenceCode(ReferenceCodeGroup.GENDER, code, allowInactive = true)
     }
   }
 }

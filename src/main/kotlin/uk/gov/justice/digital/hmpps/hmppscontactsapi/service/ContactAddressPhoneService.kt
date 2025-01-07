@@ -29,12 +29,16 @@ class ContactAddressPhoneService(
   private val referenceCodeService: ReferenceCodeService,
 ) {
 
-  fun create(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneDetails {
+  fun create(
+    contactId: Long,
+    contactAddressId: Long,
+    request: CreateContactAddressPhoneRequest,
+  ): ContactAddressPhoneDetails {
     // Validate the request
     validateContactExists(contactId)
     validateContactAddressExists(contactAddressId)
     validatePhoneNumber(request.phoneNumber)
-    val phoneTypeReference = validatePhoneType(request.phoneType)
+    val phoneTypeReference = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, request.phoneType, allowInactive = false)
 
     // Save the phone number
     val createdPhone = contactPhoneRepository.saveAndFlush(
@@ -66,15 +70,19 @@ class ContactAddressPhoneService(
   fun get(contactId: Long, contactAddressPhoneId: Long): ContactAddressPhoneDetails {
     val addressPhone = validateContactAddressPhoneExists(contactAddressPhoneId)
     val phone = validatePhoneExists(addressPhone.contactPhoneId)
-    val phoneTypeReference = validatePhoneType(phone.phoneType)
+    val phoneTypeReference = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, phone.phoneType)
     return addressPhone.toModel(phone, phoneTypeReference)
   }
 
-  fun update(contactId: Long, contactAddressPhoneId: Long, request: UpdateContactAddressPhoneRequest): ContactAddressPhoneDetails {
+  fun update(
+    contactId: Long,
+    contactAddressPhoneId: Long,
+    request: UpdateContactAddressPhoneRequest,
+  ): ContactAddressPhoneDetails {
     validateContactExists(contactId)
     val existing = validateContactAddressPhoneExists(contactAddressPhoneId)
     val phone = validatePhoneExists(existing.contactPhoneId)
-    val newPhoneType = validatePhoneType(request.phoneType)
+    val newPhoneType = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, request.phoneType, allowInactive = true)
 
     validatePhoneNumber(request.phoneNumber)
 
@@ -102,7 +110,7 @@ class ContactAddressPhoneService(
     validateContactExists(contactId)
     val existingContactAddressPhone = validateContactAddressPhoneExists(contactAddressPhoneId)
     val existingPhone = validatePhoneExists(existingContactAddressPhone.contactPhoneId)
-    val phoneTypeRef = validatePhoneType(existingPhone.phoneType)
+    val phoneTypeRef = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, existingPhone.phoneType)
 
     contactAddressPhoneRepository.deleteById(contactAddressPhoneId)
     contactPhoneRepository.deleteById(existingPhone.contactPhoneId)
@@ -115,10 +123,6 @@ class ContactAddressPhoneService(
       throw ValidationException("Phone number invalid, it can only contain numbers, () and whitespace with an optional + at the start")
     }
   }
-
-  private fun validatePhoneType(phoneType: String): ReferenceCode =
-    referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, phoneType)
-      ?: throw ValidationException("Unsupported phone type ($phoneType)")
 
   private fun validatePhoneExists(contactPhoneId: Long): ContactPhoneEntity =
     contactPhoneRepository.findById(contactPhoneId)
@@ -135,14 +139,14 @@ class ContactAddressPhoneService(
     contactAddressPhoneRepository.findById(contactAddressPhoneId)
       .orElseThrow { EntityNotFoundException("Contact address phone ($contactAddressPhoneId) not found") }
 
-  private fun ContactAddressPhoneEntity.toModel(phone: ContactPhoneEntity, type: ReferenceCode) =
+  private fun ContactAddressPhoneEntity.toModel(phone: ContactPhoneEntity, type: ReferenceCode?) =
     ContactAddressPhoneDetails(
       contactAddressPhoneId = this.contactAddressPhoneId,
       contactPhoneId = this.contactPhoneId,
       contactAddressId = this.contactAddressId,
       contactId = this.contactId,
       phoneType = phone.phoneType,
-      phoneTypeDescription = type.description,
+      phoneTypeDescription = type?.description ?: phone.phoneType,
       phoneNumber = phone.phoneNumber,
       extNumber = phone.extNumber,
       createdBy = this.createdBy,

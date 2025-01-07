@@ -210,15 +210,18 @@ class ContactServiceTest {
       )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true)
       whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRI")).thenReturn(
-        ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true),
+        referenceCode,
       )
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRI", allowInactive = false)).thenReturn(referenceCode)
 
       service.createContact(request)
 
       verify(contactRepository).saveAndFlush(any())
       val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
       verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRI", allowInactive = false)
       with(prisonerContactCaptor.firstValue) {
         assertThat(prisonerNumber).isEqualTo("A1234BC")
         assertThat(relationshipType).isEqualTo("FRI")
@@ -226,6 +229,44 @@ class ContactServiceTest {
         assertThat(emergencyContact).isEqualTo(true)
         assertThat(comments).isEqualTo("some comments")
       }
+    }
+
+    @Test
+    fun `should throw exception if relationship is invalid`() {
+      val relationshipRequest = ContactRelationship(
+        prisonerNumber = "A1234BC",
+        relationshipCode = "FRI",
+        isNextOfKin = true,
+        isEmergencyContact = true,
+        comments = "some comments",
+      )
+      val request = CreateContactRequest(
+        lastName = "last",
+        firstName = "first",
+        createdBy = "created",
+        relationship = relationshipRequest,
+      )
+      whenever(prisonerService.getPrisoner(any())).thenReturn(
+        prisoner(
+          relationshipRequest.prisonerNumber,
+          prisonId = "MDI",
+        ),
+      )
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
+      whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      val expectedException = ValidationException("Invalid")
+      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRI")).thenReturn(referenceCode)
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRI", allowInactive = false)).thenThrow(expectedException)
+
+      val exception = assertThrows<RuntimeException>("Bang!") {
+        service.createContact(request)
+      }
+
+      assertThat(exception).isEqualTo(expectedException)
+      verify(contactRepository, never()).saveAndFlush(any())
+      verify(prisonerContactRepository, never()).saveAndFlush(any())
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRI", allowInactive = false)
     }
 
     @Test
@@ -554,9 +595,9 @@ class ContactServiceTest {
       )
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "MOT")).thenReturn(
-        ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "MOT", "Mother", 1, true),
-      )
+      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "MOT", "Mother", 1, true)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "MOT")).thenReturn(referenceCode)
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "MOT", allowInactive = false)).thenReturn(referenceCode)
 
       service.addContactRelationship(request)
 
@@ -570,6 +611,7 @@ class ContactServiceTest {
         assertThat(comments).isEqualTo("Foo")
         assertThat(createdBy).isEqualTo("RELATIONSHIP_USER")
       }
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "MOT", allowInactive = false)
     }
 
     @Test
@@ -740,11 +782,13 @@ class ContactServiceTest {
 
         whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
         whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+        val expectedException = ValidationException("Invalid")
+        whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "OOO", allowInactive = true)).thenThrow(expectedException)
 
         val exception = assertThrows<ValidationException> {
           service.updateContactRelationship(prisonerContactId, request)
         }
-        assertThat(exception.message).isEqualTo("Reference code with groupCode RELATIONSHIP and code 'OOO' not found.")
+        assertThat(exception).isEqualTo(expectedException)
       }
     }
 

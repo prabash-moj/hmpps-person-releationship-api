@@ -102,7 +102,7 @@ class RestrictionsService(
     validateContactExists(contactId)
     validateExpiryDateBeforeStartDate(request.startDate, request.expiryDate)
 
-    val type = validateType(request.restrictionType)
+    val type = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RESTRICTION, request.restrictionType, allowInactive = false)
     val created = contactRestrictionRepository.saveAndFlush(
       ContactRestrictionEntity(
         contactRestrictionId = 0,
@@ -132,7 +132,7 @@ class RestrictionsService(
     validateExpiryDateBeforeStartDate(request.startDate, request.expiryDate)
     val contactRestriction = contactRestrictionRepository.findById(contactRestrictionId)
       .orElseThrow { EntityNotFoundException("Contact restriction ($contactRestrictionId) could not be found") }
-    val type = validateType(request.restrictionType)
+    val type = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RESTRICTION, request.restrictionType, allowInactive = true)
     val updated = contactRestrictionRepository.saveAndFlush(
       contactRestriction.copy(
         restrictionType = request.restrictionType,
@@ -175,7 +175,7 @@ class RestrictionsService(
   ): PrisonerContactRestrictionDetails {
     val relationship = prisonerContactRepository.findById(prisonerContactId)
       .orElseThrow { EntityNotFoundException("Prisoner contact ($prisonerContactId) could not be found") }
-    val type = validateType(request.restrictionType)
+    val type = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RESTRICTION, request.restrictionType, allowInactive = false)
     val created = prisonerContactRestrictionRepository.saveAndFlush(
       PrisonerContactRestrictionEntity(
         prisonerContactRestrictionId = 0,
@@ -199,7 +199,7 @@ class RestrictionsService(
       .orElseThrow { EntityNotFoundException("Prisoner contact ($prisonerContactId) could not be found") }
     val prisonerContactRestriction = prisonerContactRestrictionRepository.findById(prisonerContactRestrictionId)
       .orElseThrow { EntityNotFoundException("Prisoner contact restriction ($prisonerContactRestrictionId) could not be found") }
-    val type = validateType(request.restrictionType)
+    val type = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RESTRICTION, request.restrictionType, allowInactive = true)
     val updated = prisonerContactRestrictionRepository.saveAndFlush(
       prisonerContactRestriction.copy(
         restrictionType = request.restrictionType,
@@ -242,16 +242,5 @@ class RestrictionsService(
   private fun validateContactExists(contactId: Long) {
     contactRepository.findById(contactId)
       .orElseThrow { EntityNotFoundException("Contact ($contactId) could not be found") }
-  }
-
-  private fun validateType(restrictionType: String): ReferenceCode {
-    val referenceCode = referenceCodeService.getReferenceDataByGroupAndCode(
-      ReferenceCodeGroup.RESTRICTION, restrictionType,
-    )
-      ?: throw ValidationException("Unsupported restriction type ($restrictionType)")
-    if (!referenceCode.isActive) {
-      throw ValidationException("Restriction type ($restrictionType) is no longer supported for creating or updating restrictions")
-    }
-    return referenceCode
   }
 }

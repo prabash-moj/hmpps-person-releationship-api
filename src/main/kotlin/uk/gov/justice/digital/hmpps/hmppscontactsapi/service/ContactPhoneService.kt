@@ -29,7 +29,7 @@ class ContactPhoneService(
   @Transactional
   fun create(contactId: Long, request: CreatePhoneRequest): ContactPhoneDetails {
     validateContactExists(contactId)
-    val type = validatePhoneType(request.phoneType)
+    val type = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, request.phoneType, allowInactive = false)
     validatePhoneNumber(request.phoneNumber)
     val created = contactPhoneRepository.saveAndFlush(
       ContactPhoneEntity(
@@ -52,7 +52,7 @@ class ContactPhoneService(
   fun update(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails {
     validateContactExists(contactId)
     val existing = validateExistingPhone(contactPhoneId)
-    val type = validatePhoneType(request.phoneType)
+    val type = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, request.phoneType, allowInactive = true)
     validatePhoneNumber(request.phoneNumber)
 
     val updating = existing.copy(
@@ -86,14 +86,6 @@ class ContactPhoneService(
     if (!phoneNumber.matches(Regex("\\+?[\\d\\s()]+"))) {
       throw ValidationException("Phone number invalid, it can only contain numbers, () and whitespace with an optional + at the start")
     }
-  }
-
-  private fun validatePhoneType(phoneType: String): ReferenceCode {
-    val type = referenceCodeService.getReferenceDataByGroupAndCode(
-      ReferenceCodeGroup.PHONE_TYPE, phoneType,
-    )
-      ?: throw ValidationException("Unsupported phone type ($phoneType)")
-    return type
   }
 
   private fun validateContactExists(contactId: Long) {

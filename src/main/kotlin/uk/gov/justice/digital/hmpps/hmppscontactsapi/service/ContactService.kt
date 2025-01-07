@@ -56,7 +56,7 @@ class ContactService(
   @Transactional
   fun createContact(request: CreateContactRequest): ContactCreationResult {
     if (request.relationship != null) {
-      validateRelationship(request.relationship)
+      validateNewRelationship(request.relationship)
     }
     val newContact = request.toModel()
     val createdContact = contactRepository.saveAndFlush(newContact)
@@ -81,16 +81,17 @@ class ContactService(
 
   @Transactional
   fun addContactRelationship(request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
-    validateRelationship(request.relationship)
+    validateNewRelationship(request.relationship)
     getContact(request.contactId) ?: throw EntityNotFoundException("Contact (${request.contactId}) could not be found")
     val newRelationship = request.relationship.toEntity(request.contactId, request.createdBy)
     prisonerContactRepository.saveAndFlush(newRelationship)
     return enrichRelationship(newRelationship)
   }
 
-  private fun validateRelationship(relationship: ContactRelationship) {
+  private fun validateNewRelationship(relationship: ContactRelationship) {
     prisonerService.getPrisoner(relationship.prisonerNumber)
       ?: throw EntityNotFoundException("Prisoner (${relationship.prisonerNumber}) could not be found")
+    referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, relationship.relationshipCode, allowInactive = false)
   }
 
   private fun enrichContact(contactEntity: ContactEntity): ContactDetails {
@@ -224,13 +225,8 @@ class ContactService(
   private fun validateRelationshipTypeCode(request: UpdateRelationshipRequest) {
     if (request.relationshipCode.isPresent && request.relationshipCode.get() != null) {
       val code = request.relationshipCode.get()!!
-      getRelationshipDescriptionIfValid(code)
+      referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, code, allowInactive = true)
     }
-  }
-
-  private fun getRelationshipDescriptionIfValid(code: String): String {
-    return referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, code)?.description
-      ?: throw ValidationException("Reference code with groupCode RELATIONSHIP and code '$code' not found.")
   }
 
   private fun unsupportedRelationshipType(request: UpdateRelationshipRequest) {
@@ -269,7 +265,7 @@ class ContactService(
       contactId = relationship.contactId,
       prisonerNumber = relationship.prisonerNumber,
       relationshipCode = relationship.relationshipType,
-      relationshipDescription = getRelationshipDescriptionIfValid(relationship.relationshipType),
+      relationshipDescription = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, relationship.relationshipType)?.description ?: relationship.relationshipType,
       emergencyContact = relationship.emergencyContact,
       nextOfKin = relationship.nextOfKin,
       isRelationshipActive = relationship.active,

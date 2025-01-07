@@ -1,8 +1,10 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
+import jakarta.validation.ValidationException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations.openMocks
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Sort
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ReferenceCodeEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ReferenceCodeRepository
 
 class ReferenceCodeServiceTest {
@@ -68,5 +71,52 @@ class ReferenceCodeServiceTest {
     whenever(referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted())).thenReturn(emptyList())
     assertThat(service.getReferenceDataByGroup(groupCode, Sort.unsorted(), false)).isEmpty()
     verify(referenceCodeRepository).findAllByGroupCodeEquals(groupCode, Sort.unsorted())
+  }
+
+  @Test
+  fun `should return reference code if valid`() {
+    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, true, "name")
+    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND")).thenReturn(entity)
+
+    val code = service.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND", allowInactive = false)
+
+    assertThat(code).isEqualTo(
+      ReferenceCode(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, true),
+    )
+  }
+
+  @Test
+  fun `should return reference code if inactive but inactive are allowed`() {
+    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, false, "name")
+    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND")).thenReturn(entity)
+
+    val code = service.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND", allowInactive = true)
+
+    assertThat(code).isEqualTo(
+      ReferenceCode(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, false),
+    )
+  }
+
+  @Test
+  fun `should throw exception if reference code is inactive and it's not allowed`() {
+    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, false, "name")
+    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND")).thenReturn(entity)
+
+    val exception = assertThrows<ValidationException> {
+      service.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND", allowInactive = false)
+    }
+
+    assertThat(exception.message).isEqualTo("Unsupported relationship type (FRIEND). This code is no longer active.")
+  }
+
+  @Test
+  fun `should throw exception if reference code is not found`() {
+    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND")).thenReturn(null)
+
+    val exception = assertThrows<ValidationException> {
+      service.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND", allowInactive = true)
+    }
+
+    assertThat(exception.message).isEqualTo("Unsupported relationship type (FRIEND)")
   }
 }

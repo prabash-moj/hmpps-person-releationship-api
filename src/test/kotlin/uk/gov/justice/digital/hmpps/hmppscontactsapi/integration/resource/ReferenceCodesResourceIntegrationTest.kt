@@ -47,7 +47,7 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should return empty list if no matching code found`() {
+  fun `should return bad request if no matching code found`() {
     val error = webTestClient.get()
       .uri("/reference-codes/group/FOO")
       .accept(MediaType.APPLICATION_JSON)

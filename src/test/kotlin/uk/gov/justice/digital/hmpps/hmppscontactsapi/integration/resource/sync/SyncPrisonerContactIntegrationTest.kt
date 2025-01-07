@@ -115,8 +115,6 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(active).isTrue
         assertThat(approvedVisitor).isFalse
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isNull()
-        assertThat(approvedTime).isNull()
         assertThat(expiryDate).isNull()
         assertThat(createdAtPrison).isEqualTo("MDI")
         assertThat(comments).isEqualTo("Comment")
@@ -155,8 +153,6 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isEqualTo("officer456")
-        assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(updatedBy).isNull()
@@ -193,8 +189,6 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isEqualTo("officer456")
-        assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(updatedBy).isNull()
@@ -229,8 +223,6 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isEqualTo("officer456")
-        assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(updatedBy).isEqualTo("UpdatedUser")
@@ -282,8 +274,6 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         active = true,
         approvedVisitor = true,
         currentTerm = true,
-        approvedBy = "officer456",
-        approvedTime = LocalDateTime.now(),
         expiryDate = LocalDate.of(2025, 12, 31),
         createdAtPrison = "LONDN",
         updatedBy = "UpdatedUser",
@@ -302,8 +292,6 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         active = true,
         approvedVisitor = true,
         currentTerm = true,
-        approvedBy = "officer456",
-        approvedTime = LocalDateTime.now(),
         expiryDate = LocalDate.of(2025, 12, 31),
         createdAtPrison = "LONDN",
         createdBy = "adminUser",

@@ -40,8 +40,6 @@ class SyncPrisonerContactServiceTest {
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isEqualTo("officer456")
-        assertThat(approvedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(createdBy).isEqualTo("TEST")
@@ -83,8 +81,6 @@ class SyncPrisonerContactServiceTest {
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isEqualTo("officer456")
-        assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(createdBy).isEqualTo("adminUser")
@@ -105,8 +101,6 @@ class SyncPrisonerContactServiceTest {
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isEqualTo("officer456")
-        assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("LONDN")
         assertThat(createdBy).isEqualTo("adminUser")
@@ -158,8 +152,6 @@ class SyncPrisonerContactServiceTest {
         assertThat(active).isTrue
         assertThat(approvedVisitor).isTrue
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isEqualTo("officer123")
-        assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("HMP Wales")
         assertThat(createdBy).isEqualTo("TEST")
@@ -180,8 +172,6 @@ class SyncPrisonerContactServiceTest {
         assertThat(active).isFalse
         assertThat(approvedVisitor).isFalse
         assertThat(currentTerm).isTrue
-        assertThat(approvedBy).isEqualTo("ADMIN")
-        assertThat(approvedTime).isNotNull
         assertThat(expiryDate).isEqualTo(LocalDate.of(2025, 12, 31))
         assertThat(createdAtPrison).isEqualTo("HMP Wales")
         assertThat(createdBy).isEqualTo("TEST")
@@ -214,8 +204,6 @@ class SyncPrisonerContactServiceTest {
       active = true,
       approvedVisitor = true,
       currentTerm = true,
-      approvedBy = "officer123",
-      approvedTime = LocalDateTime.now(),
       expiryDate = LocalDate.of(2025, 12, 31),
       createdAtPrison = "HMP Wales",
       updatedBy = "adminUser",
@@ -234,8 +222,6 @@ class SyncPrisonerContactServiceTest {
       active = true,
       approvedVisitor = true,
       currentTerm = true,
-      approvedBy = "officer456",
-      approvedTime = LocalDateTime.now(),
       expiryDate = LocalDate.of(2025, 12, 31),
       createdAtPrison = "LONDN",
       createdBy = "adminUser",

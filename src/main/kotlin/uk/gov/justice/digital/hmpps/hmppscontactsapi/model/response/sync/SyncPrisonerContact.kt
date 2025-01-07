@@ -48,16 +48,6 @@ data class SyncPrisonerContact(
   @Schema(description = "Indicates if this relationship applies to the latest booking", example = "true")
   val currentTerm: Boolean,
 
-  @Schema(description = "The user who approved the prisoner contact", example = "officer123", nullable = true)
-  val approvedBy: String? = null,
-
-  @Schema(
-    description = "The timestamp when the prisoner contact was approved",
-    example = "2024-01-01T14:00:00Z",
-    nullable = true,
-  )
-  val approvedTime: LocalDateTime?,
-
   @Schema(description = "The expiry date of the prisoner contact", example = "2025-01-01", nullable = true)
   val expiryDate: LocalDate? = null,
 

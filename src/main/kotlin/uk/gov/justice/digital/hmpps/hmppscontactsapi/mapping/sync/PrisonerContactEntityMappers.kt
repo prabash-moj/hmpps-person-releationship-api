@@ -20,8 +20,6 @@ fun SyncCreatePrisonerContactRequest.toEntity(): PrisonerContactEntity {
     createdBy = this.createdBy,
     createdTime = this.createdTime,
   ).also {
-    it.approvedBy = this.approvedBy
-    it.approvedTime = this.approvedTime
     it.expiryDate = this.expiryDate
     it.createdAtPrison = this.createdAtPrison
   }
@@ -42,8 +40,6 @@ fun PrisonerContactEntity.toResponse(): SyncPrisonerContact {
     active = this.active,
     approvedVisitor = this.approvedVisitor,
     currentTerm = this.currentTerm,
-    approvedBy = this.approvedBy,
-    approvedTime = this.approvedTime,
     expiryDate = this.expiryDate,
     updatedTime = this.updatedTime,
     updatedBy = this.updatedBy,

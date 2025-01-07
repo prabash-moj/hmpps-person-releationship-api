@@ -225,7 +225,7 @@ class SyncFacadeTest {
   inner class ContactPhoneSyncFacadeEvents {
     @Test
     fun `should send domain event on contact phone create success`() {
-      val request = createContactPhoneRequest(contactId = 1L)
+      val request = createContactPhoneRequest()
       val response = contactPhoneResponse(contactId = 1L, contactPhoneId = 1L)
 
       whenever(syncContactPhoneService.createContactPhone(any())).thenReturn(response)
@@ -244,7 +244,7 @@ class SyncFacadeTest {
 
     @Test
     fun `should send domain event on contact phone update success`() {
-      val request = updateContactPhoneRequest(contactId = 2L)
+      val request = updateContactPhoneRequest()
       val response = contactPhoneResponse(contactId = 2L, contactPhoneId = 3L)
 
       whenever(syncContactPhoneService.updateContactPhone(any(), any())).thenReturn(response)
@@ -280,18 +280,18 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactPhoneRequest(contactId: Long) =
+    private fun createContactPhoneRequest() =
       SyncCreateContactPhoneRequest(
-        contactId = contactId,
+        contactId = 1L,
         phoneType = "MOB",
         phoneNumber = "0909 111222",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
       )
 
-    private fun updateContactPhoneRequest(contactId: Long) =
+    private fun updateContactPhoneRequest() =
       SyncUpdateContactPhoneRequest(
-        contactId = contactId,
+        contactId = 2L,
         phoneType = "MOB",
         phoneNumber = "0909 111222",
         updatedBy = "UPDATER",
@@ -315,7 +315,7 @@ class SyncFacadeTest {
   inner class ContactEmailSyncFacadeEvents {
     @Test
     fun `should send domain event on contact email create success`() {
-      val request = createContactEmailRequest(contactId = 1L)
+      val request = createContactEmailRequest()
       val response = contactEmailResponse(contactId = 1L, contactEmailId = 1L)
 
       whenever(syncContactEmailService.createContactEmail(any())).thenReturn(response)
@@ -334,7 +334,7 @@ class SyncFacadeTest {
 
     @Test
     fun `should send domain event on contact email update success`() {
-      val request = updateContactEmailRequest(contactId = 2L)
+      val request = updateContactEmailRequest()
       val response = contactEmailResponse(contactId = 2L, contactEmailId = 3L)
 
       whenever(syncContactEmailService.updateContactEmail(any(), any())).thenReturn(response)
@@ -370,17 +370,17 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactEmailRequest(contactId: Long) =
+    private fun createContactEmailRequest() =
       SyncCreateContactEmailRequest(
-        contactId = contactId,
+        contactId = 1L,
         emailAddress = "0909 111222",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
       )
 
-    private fun updateContactEmailRequest(contactId: Long) =
+    private fun updateContactEmailRequest() =
       SyncUpdateContactEmailRequest(
-        contactId = contactId,
+        contactId = 2L,
         emailAddress = "test@test.com",
         updatedBy = "UPDATER",
         updatedTime = LocalDateTime.now(),
@@ -401,7 +401,7 @@ class SyncFacadeTest {
   inner class ContactIdentitySyncFacadeEvents {
     @Test
     fun `should send domain event on contact identity create success`() {
-      val request = createContactIdentityRequest(contactId = 1L)
+      val request = createContactIdentityRequest()
       val response = contactIdentityResponse(contactId = 1L, contactIdentityId = 1L)
 
       whenever(syncContactIdentityService.createContactIdentity(any())).thenReturn(response)
@@ -420,7 +420,7 @@ class SyncFacadeTest {
 
     @Test
     fun `should send domain event on contact identity update success`() {
-      val request = updateContactIdentityRequest(contactId = 2L)
+      val request = updateContactIdentityRequest()
       val response = contactIdentityResponse(contactId = 2L, contactIdentityId = 3L)
 
       whenever(syncContactIdentityService.updateContactIdentity(any(), any())).thenReturn(response)
@@ -456,9 +456,9 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactIdentityRequest(contactId: Long) =
+    private fun createContactIdentityRequest() =
       SyncCreateContactIdentityRequest(
-        contactId = contactId,
+        contactId = 1L,
         identityType = "PASS",
         identityValue = "PW12345678",
         issuingAuthority = "Passport Office",
@@ -466,9 +466,9 @@ class SyncFacadeTest {
         createdTime = LocalDateTime.now(),
       )
 
-    private fun updateContactIdentityRequest(contactId: Long) =
+    private fun updateContactIdentityRequest() =
       SyncUpdateContactIdentityRequest(
-        contactId = contactId,
+        contactId = 2L,
         identityType = "PASS",
         identityValue = "PW12345678",
         issuingAuthority = "Passport Office",
@@ -493,7 +493,7 @@ class SyncFacadeTest {
   inner class ContactRestrictionSyncFacadeEvents {
     @Test
     fun `should send domain event on contact restriction create success`() {
-      val request = createContactRestrictionRequest(contactId = 1L)
+      val request = createContactRestrictionRequest()
       val response = contactRestrictionResponse(contactId = 1L, contactRestrictionId = 1L)
 
       whenever(syncContactRestrictionService.createContactRestriction(any())).thenReturn(response)
@@ -512,7 +512,7 @@ class SyncFacadeTest {
 
     @Test
     fun `should send domain event on contact restriction update success`() {
-      val request = updateContactRestrictionRequest(contactId = 2L)
+      val request = updateContactRestrictionRequest()
       val response = contactRestrictionResponse(contactId = 2L, contactRestrictionId = 3L)
 
       whenever(syncContactRestrictionService.updateContactRestriction(any(), any())).thenReturn(response)
@@ -548,9 +548,9 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactRestrictionRequest(contactId: Long) =
+    private fun createContactRestrictionRequest() =
       SyncCreateContactRestrictionRequest(
-        contactId = contactId,
+        contactId = 2L,
         restrictionType = "BAN",
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
@@ -559,9 +559,9 @@ class SyncFacadeTest {
         createdTime = LocalDateTime.now(),
       )
 
-    private fun updateContactRestrictionRequest(contactId: Long) =
+    private fun updateContactRestrictionRequest() =
       SyncUpdateContactRestrictionRequest(
-        contactId = contactId,
+        contactId = 2L,
         restrictionType = "BAN",
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
@@ -588,7 +588,7 @@ class SyncFacadeTest {
   inner class ContactAddressSyncFacadeEvents {
     @Test
     fun `should send domain event on contact address create success`() {
-      val request = createContactAddressRequest(contactId = 1L)
+      val request = createContactAddressRequest()
       val response = contactAddressResponse(contactId = 1L, contactAddressId = 1L)
 
       whenever(syncContactAddressService.createContactAddress(any())).thenReturn(response)
@@ -607,7 +607,7 @@ class SyncFacadeTest {
 
     @Test
     fun `should send domain event on contact address update success`() {
-      val request = updateContactAddressRequest(contactId = 2L)
+      val request = updateContactAddressRequest()
       val response = contactAddressResponse(contactId = 2L, contactAddressId = 3L)
 
       whenever(syncContactAddressService.updateContactAddress(any(), any())).thenReturn(response)
@@ -643,9 +643,9 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactAddressRequest(contactId: Long) =
+    private fun createContactAddressRequest() =
       SyncCreateContactAddressRequest(
-        contactId = contactId,
+        contactId = 1L,
         addressType = "HOME",
         property = "24",
         street = "Acacia Avenue",
@@ -655,9 +655,9 @@ class SyncFacadeTest {
         createdTime = LocalDateTime.now(),
       )
 
-    private fun updateContactAddressRequest(contactId: Long) =
+    private fun updateContactAddressRequest() =
       SyncUpdateContactAddressRequest(
-        contactId = contactId,
+        contactId = 2L,
         primaryAddress = false,
         addressType = "HOME",
         property = "24",
@@ -784,7 +784,7 @@ class SyncFacadeTest {
   inner class PrisonerContactSyncFacadeEvents {
     @Test
     fun `should send domain event on prisoner contact create success`() {
-      val request = createPrisonerContactRequest(contactId = 1L)
+      val request = createPrisonerContactRequest()
       val response = prisonerContactResponse(contactId = 1L, prisonerContactId = 1L)
 
       whenever(syncPrisonerContactService.createPrisonerContact(any())).thenReturn(response)
@@ -804,7 +804,7 @@ class SyncFacadeTest {
 
     @Test
     fun `should send domain event on prisoner contact update success`() {
-      val request = updatePrisonerContactRequest(contactId = 2L)
+      val request = updatePrisonerContactRequest()
       val response = prisonerContactResponse(contactId = 2L, prisonerContactId = 3L)
 
       whenever(syncPrisonerContactService.updatePrisonerContact(any(), any())).thenReturn(response)
@@ -842,9 +842,9 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createPrisonerContactRequest(contactId: Long) =
+    private fun createPrisonerContactRequest() =
       SyncCreatePrisonerContactRequest(
-        contactId = contactId,
+        contactId = 1L,
         contactType = "S",
         relationshipType = "MOT",
         prisonerNumber = "A1234AA",
@@ -858,9 +858,9 @@ class SyncFacadeTest {
         createdTime = LocalDateTime.now(),
       )
 
-    private fun updatePrisonerContactRequest(contactId: Long) =
+    private fun updatePrisonerContactRequest() =
       SyncUpdatePrisonerContactRequest(
-        contactId = contactId,
+        contactId = 2L,
         contactType = "S",
         relationshipType = "MOT",
         prisonerNumber = "A1234AA",
@@ -870,7 +870,6 @@ class SyncFacadeTest {
         comments = "Comment",
         active = true,
         currentTerm = true,
-        approvedTime = null,
         updatedBy = "UPDATER",
         updatedTime = LocalDateTime.now(),
       )
@@ -891,7 +890,6 @@ class SyncFacadeTest {
         currentTerm = true,
         updatedBy = null,
         updatedTime = null,
-        approvedTime = null,
       )
   }
 
@@ -899,12 +897,8 @@ class SyncFacadeTest {
   inner class PrisonerContactRestrictionSyncFacadeEvents {
     @Test
     fun `should send domain event on prisoner contact restriction create success`() {
-      val request = createPrisonerContactRestrictionRequest(prisonerContactId = 2L)
-      val response = prisonerContactRestrictionResponse(
-        prisonerContactRestrictionId = 3L,
-        prisonerContactId = 2L,
-        contactId = 1L,
-      )
+      val request = createPrisonerContactRestrictionRequest()
+      val response = prisonerContactRestrictionResponse()
 
       whenever(syncPrisonerContactRestrictionService.createPrisonerContactRestriction(any())).thenReturn(response)
       whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
@@ -924,11 +918,7 @@ class SyncFacadeTest {
     @Test
     fun `should send domain event on prisoner contact restriction update success`() {
       val request = updatePrisonerContactRestrictionRequest()
-      val response = prisonerContactRestrictionResponse(
-        prisonerContactRestrictionId = 3L,
-        prisonerContactId = 2L,
-        contactId = 1L,
-      )
+      val response = prisonerContactRestrictionResponse()
 
       whenever(syncPrisonerContactRestrictionService.updatePrisonerContactRestriction(any(), any())).thenReturn(response)
       whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
@@ -947,11 +937,7 @@ class SyncFacadeTest {
 
     @Test
     fun `should send domain event on prisoner contact restriction delete success`() {
-      val response = prisonerContactRestrictionResponse(
-        prisonerContactRestrictionId = 3L,
-        prisonerContactId = 2L,
-        contactId = 1L,
-      )
+      val response = prisonerContactRestrictionResponse()
 
       whenever(syncPrisonerContactRestrictionService.deletePrisonerContactRestriction(any())).thenReturn(response)
       whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
@@ -969,9 +955,9 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createPrisonerContactRestrictionRequest(prisonerContactId: Long) =
+    private fun createPrisonerContactRestrictionRequest() =
       SyncCreatePrisonerContactRestrictionRequest(
-        prisonerContactId = prisonerContactId,
+        prisonerContactId = 2L,
         restrictionType = "BAN",
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
@@ -989,15 +975,11 @@ class SyncFacadeTest {
         updatedBy = "UPDATER",
         updatedTime = LocalDateTime.now(),
       )
-    private fun prisonerContactRestrictionResponse(
-      prisonerContactRestrictionId: Long,
-      prisonerContactId: Long,
-      contactId: Long,
-    ) =
+    private fun prisonerContactRestrictionResponse() =
       SyncPrisonerContactRestriction(
-        prisonerContactRestrictionId = prisonerContactRestrictionId,
-        prisonerContactId = prisonerContactId,
-        contactId = contactId,
+        prisonerContactRestrictionId = 3L,
+        prisonerContactId = 2L,
+        contactId = 1L,
         prisonerNumber = "A1234AA",
         restrictionType = "BAN",
         startDate = LocalDate.now().minusDays(10),

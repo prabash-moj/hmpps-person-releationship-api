@@ -6,6 +6,7 @@ import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
@@ -88,7 +89,9 @@ class ContactPhoneService(
   }
 
   private fun validatePhoneType(phoneType: String): ReferenceCode {
-    val type = referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", phoneType)
+    val type = referenceCodeService.getReferenceDataByGroupAndCode(
+      ReferenceCodeGroup.PHONE_TYPE, phoneType,
+    )
       ?: throw ValidationException("Unsupported phone type ($phoneType)")
     return type
   }

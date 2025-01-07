@@ -9,6 +9,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.Sort
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ReferenceCodeService
 
@@ -21,24 +22,24 @@ class ReferenceCodeControllerTest {
   @CsvSource(value = ["true", "false"])
   fun `should get the reference codes with supplied options`(activeOnly: Boolean) {
     val expected = listOf(
-      ReferenceCode(1L, "TEST", "FRIEND", "Friend", 0, true),
-      ReferenceCode(2L, "TEST", "MOTHER", "Mother", 1, true),
-      ReferenceCode(3L, "TEST", "FATHER", "Father", 2, true),
+      ReferenceCode(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, true),
+      ReferenceCode(2L, ReferenceCodeGroup.RELATIONSHIP, "MOTHER", "Mother", 1, true),
+      ReferenceCode(3L, ReferenceCodeGroup.RELATIONSHIP, "FATHER", "Father", 2, true),
     )
-    whenever(service.getReferenceDataByGroup("TEST", Sort.unsorted(), activeOnly)).thenReturn(expected)
+    whenever(service.getReferenceDataByGroup(ReferenceCodeGroup.RELATIONSHIP, Sort.unsorted(), activeOnly)).thenReturn(expected)
 
-    val response = controller.getReferenceDataByGroup("TEST", Sort.unsorted(), activeOnly)
+    val response = controller.getReferenceDataByGroup(ReferenceCodeGroup.RELATIONSHIP, Sort.unsorted(), activeOnly)
 
     assertThat(response).isEqualTo(expected)
-    verify(service).getReferenceDataByGroup("TEST", Sort.unsorted(), activeOnly)
+    verify(service).getReferenceDataByGroup(ReferenceCodeGroup.RELATIONSHIP, Sort.unsorted(), activeOnly)
   }
 
   @Test
   fun `should propagate exceptions`() {
-    whenever(service.getReferenceDataByGroup("TEST", Sort.unsorted(), true)).thenThrow(RuntimeException("Bang!"))
+    whenever(service.getReferenceDataByGroup(ReferenceCodeGroup.RELATIONSHIP, Sort.unsorted(), true)).thenThrow(RuntimeException("Bang!"))
 
     assertThrows<RuntimeException>("Bang!") {
-      controller.getReferenceDataByGroup("TEST", Sort.unsorted(), true)
+      controller.getReferenceDataByGroup(ReferenceCodeGroup.RELATIONSHIP, Sort.unsorted(), true)
     }
   }
 }

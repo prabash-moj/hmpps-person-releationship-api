@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ReferenceCodeService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -69,7 +70,7 @@ class ReferenceCodeController(private val referenceCodeService: ReferenceCodeSer
   fun getReferenceDataByGroup(
     @Parameter(description = "The group code of the reference codes to load", required = true, example = "PHONE_TYPE")
     @PathVariable("groupCode", required = true)
-    groupCode: String,
+    groupCode: ReferenceCodeGroup,
     @Parameter(description = "Sort configuration - default displayOrder, description", required = false)
     @SortDefault("displayOrder", "description")
     sort: Sort,

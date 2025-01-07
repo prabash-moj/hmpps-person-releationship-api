@@ -18,6 +18,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneE
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressPhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
@@ -78,7 +79,7 @@ class ContactAddressPhoneServiceTest {
     fun `should throw ValidationException creating an address-specific phone if the phone type is invalid`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(contactAddressEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "FOO")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "FOO")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.create(contactId, contactAddressId, request.copy(phoneType = "FOO"))
@@ -119,8 +120,8 @@ class ContactAddressPhoneServiceTest {
     fun `should throw ValidationException creating address-specific phone if phone number contains invalid chars`(phoneNumber: String) {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(contactAddressEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME"))
-        .thenReturn(ReferenceCode(0, "PHONE_TYPE", "HOME", "Home", 90, true))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+        .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       val exception = assertThrows<ValidationException> {
         service.create(contactId, contactAddressId, request.copy(phoneNumber = phoneNumber))
@@ -133,8 +134,8 @@ class ContactAddressPhoneServiceTest {
     fun `should return a the address-specific phone details after successful creation`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressRepository.findById(contactAddressId)).thenReturn(Optional.of(contactAddressEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME"))
-        .thenReturn(ReferenceCode(0, "PHONE_TYPE", "HOME", "Home", 90, true))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+        .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       whenever(contactPhoneRepository.saveAndFlush(any())).thenAnswer { i ->
         (i.arguments[0] as ContactPhoneEntity).copy(
@@ -172,8 +173,8 @@ class ContactAddressPhoneServiceTest {
     fun `get address-specific phone number by ID`() {
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.of(addressPhoneEntity))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(phoneEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME"))
-        .thenReturn(ReferenceCode(0, "PHONE_TYPE", "HOME", "Home", 90, true))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+        .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       val response = service.get(contactId, contactAddressPhoneId)
 
@@ -187,15 +188,15 @@ class ContactAddressPhoneServiceTest {
 
       verify(contactAddressPhoneRepository).findById(contactAddressPhoneId)
       verify(contactPhoneRepository).findById(contactPhoneId)
-      verify(referenceCodeService).getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME")
+      verify(referenceCodeService).getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME")
     }
 
     @Test
     fun `throws an exception if the address specific phone number is not found`() {
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.empty())
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(phoneEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME"))
-        .thenReturn(ReferenceCode(0, "PHONE_TYPE", "HOME", "Home", 90, true))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+        .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       val exception = assertThrows<EntityNotFoundException> {
         service.get(contactId, contactAddressPhoneId)
@@ -212,8 +213,8 @@ class ContactAddressPhoneServiceTest {
     fun `throw an exception if the phone number is not found`() {
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.of(addressPhoneEntity))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.empty())
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME"))
-        .thenReturn(ReferenceCode(0, "PHONE_TYPE", "HOME", "Home", 90, true))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+        .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       val exception = assertThrows<EntityNotFoundException> {
         service.get(contactId, contactAddressPhoneId)
@@ -263,7 +264,7 @@ class ContactAddressPhoneServiceTest {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.of(addressPhoneEntity))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(phoneEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "FOO")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "FOO")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.update(contactId, contactAddressPhoneId, request.copy(phoneType = "FOO"))
@@ -305,8 +306,8 @@ class ContactAddressPhoneServiceTest {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.of(addressPhoneEntity))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(phoneEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME"))
-        .thenReturn(ReferenceCode(0, "PHONE_TYPE", "HOME", "Home", 90, true))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+        .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       val exception = assertThrows<ValidationException> {
         service.update(contactId, contactAddressPhoneId, request.copy(phoneNumber = phone))
@@ -319,8 +320,8 @@ class ContactAddressPhoneServiceTest {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.of(addressPhoneEntity))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(phoneEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME"))
-        .thenReturn(ReferenceCode(0, "PHONE_TYPE", "HOME", "Home", 90, true))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+        .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       whenever(contactPhoneRepository.saveAndFlush(any())).thenAnswer { i ->
         (i.arguments[0] as ContactPhoneEntity).copy(
@@ -402,8 +403,8 @@ class ContactAddressPhoneServiceTest {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(contactAddressPhoneRepository.findById(contactAddressPhoneId)).thenReturn(Optional.of(addressPhoneEntity))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(phoneEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "HOME"))
-        .thenReturn(ReferenceCode(0, "PHONE_TYPE", "HOME", "Home", 90, true))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "HOME"))
+        .thenReturn(ReferenceCode(0, ReferenceCodeGroup.PHONE_TYPE, "HOME", "Home", 90, true))
 
       service.delete(contactId, contactAddressPhoneId)
 

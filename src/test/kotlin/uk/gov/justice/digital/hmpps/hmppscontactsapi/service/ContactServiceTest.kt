@@ -31,6 +31,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdenti
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
@@ -209,8 +210,8 @@ class ContactServiceTest {
       )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", "FRI")).thenReturn(
-        ReferenceCode(1, "RELATIONSHIP", "FRI", "Friend", 1, true),
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRI")).thenReturn(
+        ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true),
       )
 
       service.createContact(request)
@@ -457,8 +458,8 @@ class ContactServiceTest {
 
     @Test
     fun `should get a contact with domestic status`() {
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", "S")).thenReturn(
-        ReferenceCode(1, "DOMESTIC_STS", "S", "Single", 1, true),
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.DOMESTIC_STS, "S")).thenReturn(
+        ReferenceCode(1, ReferenceCodeGroup.DOMESTIC_STS, "S", "Single", 1, true),
       )
 
       val entity = createContactEntity().copy(domesticStatus = "S")
@@ -553,8 +554,8 @@ class ContactServiceTest {
       )
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", "MOT")).thenReturn(
-        ReferenceCode(1, "RELATIONSHIP", "MOT", "Mother", 1, true),
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "MOT")).thenReturn(
+        ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "MOT", "Mother", 1, true),
       )
 
       service.addContactRelationship(request)
@@ -688,8 +689,8 @@ class ContactServiceTest {
           updatedBy = "Admin",
         )
         mockBrotherRelationshipReferenceCode()
-        whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", relationShipTypeCode)).thenReturn(
-          ReferenceCode(1, "RELATIONSHIP", "FRI", "Friend", 1, true),
+        whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, relationShipTypeCode)).thenReturn(
+          ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true),
         )
 
         whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
@@ -947,8 +948,8 @@ class ContactServiceTest {
           updatedBy = "Admin",
         )
         mockBrotherRelationshipReferenceCode()
-        whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", relationShipTypeCode)).thenReturn(
-          ReferenceCode(1, "RELATIONSHIP", "FRI", "Friend", 1, true),
+        whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, relationShipTypeCode)).thenReturn(
+          ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true),
         )
 
         whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
@@ -1109,8 +1110,8 @@ class ContactServiceTest {
   )
 
   private fun mockBrotherRelationshipReferenceCode() {
-    whenever(referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", "BRO")).thenReturn(
-      ReferenceCode(1, "RELATIONSHIP", "BRO", "Brother", 1, true),
+    whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "BRO")).thenReturn(
+      ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "BRO", "Brother", 1, true),
     )
   }
 }

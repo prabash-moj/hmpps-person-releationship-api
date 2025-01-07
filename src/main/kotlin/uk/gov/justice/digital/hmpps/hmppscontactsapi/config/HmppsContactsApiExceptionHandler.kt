@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.config
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.ValidationException
+import org.apache.commons.lang3.exception.ExceptionUtils
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST
@@ -16,7 +17,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.resource.NoResourceFoundException
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.exception.InvalidReferenceCodeGroupException
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.time.format.DateTimeParseException
@@ -66,6 +69,24 @@ class HmppsContactsApiExceptionHandler {
         developerMessage = e.message,
       ),
     ).also { log.debug("Forbidden (403) returned: {}", e.message) }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+  fun handleInvalidReferenceCodeGroupException(e: MethodArgumentTypeMismatchException): ResponseEntity<ErrorResponse> {
+    var message = e.message
+    val rootCause = ExceptionUtils.getRootCause(e)
+    if (rootCause != null && rootCause is InvalidReferenceCodeGroupException) {
+      message = rootCause.message
+    }
+    return ResponseEntity
+      .status(BAD_REQUEST)
+      .body(
+        ErrorResponse(
+          status = BAD_REQUEST,
+          userMessage = "Request parameters are invalid",
+          developerMessage = message,
+        ),
+      ).also { log.info("Failed to parse request parameters: {}", e.message) }
+  }
 
   @ExceptionHandler(Exception::class)
   fun handleException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity

@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response
 
 import io.swagger.v3.oas.annotations.media.Schema
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 
 @Schema(description = "Describes the details of a reference code")
 data class ReferenceCode(
@@ -9,7 +10,7 @@ data class ReferenceCode(
   val referenceCodeId: Long,
 
   @Schema(description = "The group name for related reference codes.", example = "PHONE_TYPE")
-  val groupCode: String,
+  val groupCode: ReferenceCodeGroup,
 
   @Schema(description = "The code for this reference data", example = "MOB")
   val code: String,

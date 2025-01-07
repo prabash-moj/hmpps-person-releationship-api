@@ -21,6 +21,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ReferenceCodeEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
@@ -37,7 +38,7 @@ class ContactAddressServiceTest {
   private val contactAddressRepository: ContactAddressRepository = mock()
   private val referenceCodeRepository: ReferenceCodeRepository = mock()
   private val contactAddressService = ContactAddressService(contactRepository, contactAddressRepository, referenceCodeRepository)
-  private val referenceData = ReferenceCodeEntity(1L, "groupCode", "FRIEND", "Friend", 0, true, "name")
+  private val referenceData = ReferenceCodeEntity(1L, ReferenceCodeGroup.CONTACT_TYPE, "FRIEND", "Friend", 0, true, "name")
 
   private val contactId: Long = 1L
   private val contactAddressId: Long = 2L
@@ -421,7 +422,7 @@ class ContactAddressServiceTest {
       ],
       delimiter = ';',
     )
-    fun `should fail to create a contact address when the reference type not present`(referenceType: String, referenceValue: String) {
+    fun `should fail to create a contact address when the reference type not present`(referenceType: ReferenceCodeGroup, referenceValue: String) {
       whenever(referenceCodeRepository.findByGroupCodeAndCode(referenceType, referenceValue)).thenReturn(null)
 
       val exception = assertThrows<EntityNotFoundException> {
@@ -459,7 +460,7 @@ class ContactAddressServiceTest {
       ],
       delimiter = ';',
     )
-    fun `should fail to update a contact address when the reference type not present`(referenceType: String, referenceValue: String) {
+    fun `should fail to update a contact address when the reference type not present`(referenceType: ReferenceCodeGroup, referenceValue: String) {
       whenever(referenceCodeRepository.findByGroupCodeAndCode(referenceType, referenceValue)).thenReturn(null)
 
       val exception = assertThrows<EntityNotFoundException> {
@@ -517,7 +518,7 @@ class ContactAddressServiceTest {
 
     @Test
     fun `should throw EntityNotFoundException when contact address city code does not exist`() {
-      val groupCode = "CITY"
+      val groupCode = ReferenceCodeGroup.CITY
       val cityCode = "BHAM"
       val request = PatchContactAddressRequest(
         cityCode = JsonNullable.of(cityCode),
@@ -535,7 +536,7 @@ class ContactAddressServiceTest {
 
     @Test
     fun `should throw EntityNotFoundException when contact address county code does not exist`() {
-      val groupCode = "COUNTY"
+      val groupCode = ReferenceCodeGroup.COUNTY
       val countyCode = "WM"
       val request = PatchContactAddressRequest(
         countyCode = JsonNullable.of(countyCode),
@@ -553,7 +554,7 @@ class ContactAddressServiceTest {
 
     @Test
     fun `should throw EntityNotFoundException when contact address country code does not exist`() {
-      val groupCode = "COUNTRY"
+      val groupCode = ReferenceCodeGroup.COUNTRY
       val countryCode = "WM"
       val request = PatchContactAddressRequest(
         countryCode = JsonNullable.of(countryCode),

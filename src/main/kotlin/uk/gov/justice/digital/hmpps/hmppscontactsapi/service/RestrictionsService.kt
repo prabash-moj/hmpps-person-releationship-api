@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
@@ -244,7 +245,9 @@ class RestrictionsService(
   }
 
   private fun validateType(restrictionType: String): ReferenceCode {
-    val referenceCode = referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", restrictionType)
+    val referenceCode = referenceCodeService.getReferenceDataByGroupAndCode(
+      ReferenceCodeGroup.RESTRICTION, restrictionType,
+    )
       ?: throw ValidationException("Unsupported restriction type ($restrictionType)")
     if (!referenceCode.isActive) {
       throw ValidationException("Restriction type ($restrictionType) is no longer supported for creating or updating restrictions")

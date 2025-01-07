@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
@@ -104,7 +105,7 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .returnResult().responseBody!!
 
   fun getReferenceCodes(
-    groupCode: String,
+    groupCode: ReferenceCodeGroup,
     sort: String? = null,
     activeOnly: Boolean? = null,
     role: String = "ROLE_CONTACTS_ADMIN",

@@ -12,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
@@ -111,12 +112,12 @@ class ContactService(
       contactEntity.languageCode?.let { languageService.getLanguageByNomisCode(it).nomisDescription }
     val domesticStatusDescription = contactEntity.domesticStatus?.let {
       referenceCodeService.getReferenceDataByGroupAndCode(
-        "DOMESTIC_STS",
+        ReferenceCodeGroup.DOMESTIC_STS,
         it,
       )?.description
     }
     val genderDescription =
-      contactEntity.gender?.let { referenceCodeService.getReferenceDataByGroupAndCode("GENDER", it)?.description }
+      contactEntity.gender?.let { referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, it)?.description }
     return ContactDetails(
       id = contactEntity.id(),
       title = contactEntity.title,
@@ -228,7 +229,7 @@ class ContactService(
   }
 
   private fun getRelationshipDescriptionIfValid(code: String): String {
-    return referenceCodeService.getReferenceDataByGroupAndCode("RELATIONSHIP", code)?.description
+    return referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, code)?.description
       ?: throw ValidationException("Reference code with groupCode RELATIONSHIP and code '$code' not found.")
   }
 

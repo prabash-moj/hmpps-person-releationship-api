@@ -21,6 +21,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactRestri
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRestrictionDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.isEqualTo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
@@ -457,7 +458,7 @@ class RestrictionsServiceTest {
     @Test
     fun `blow up creating global restriction if type is not supported`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.createContactGlobalRestriction(contactId, aCreateGlobalRestrictionRequest())
@@ -468,10 +469,10 @@ class RestrictionsServiceTest {
     @Test
     fun `blow up creating global restriction if type is no longer active`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
-          "RESTRICTION",
+          ReferenceCodeGroup.RESTRICTION,
           "BAN",
           "Banned",
           99,
@@ -489,10 +490,10 @@ class RestrictionsServiceTest {
     fun `create global restriction`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(manageUsersService.getUserByUsername("created")).thenReturn(User("created", "Created User"))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
-          "RESTRICTION",
+          ReferenceCodeGroup.RESTRICTION,
           "BAN",
           "Banned",
           99,
@@ -605,7 +606,7 @@ class RestrictionsServiceTest {
     fun `blow up updating global restriction if type is not supported`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.updateContactGlobalRestriction(
@@ -621,10 +622,10 @@ class RestrictionsServiceTest {
     fun `blow up updating global restriction if type is no longer active`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
-          "RESTRICTION",
+          ReferenceCodeGroup.RESTRICTION,
           "CCTV",
           "CCTV",
           99,
@@ -647,10 +648,10 @@ class RestrictionsServiceTest {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactRestrictionRepository.findById(contactRestrictionId)).thenReturn(Optional.of(existingEntity))
       whenever(manageUsersService.getUserByUsername("updated")).thenReturn(User("updated", "Updated User"))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
-          "RESTRICTION",
+          ReferenceCodeGroup.RESTRICTION,
           "CCTV",
           "CCTV",
           99,
@@ -716,7 +717,7 @@ class RestrictionsServiceTest {
     @Test
     fun `blow up creating prisoner contact restriction if type is not supported`() {
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.createPrisonerContactRestriction(prisonerContactId, aCreatePrisonerContactRestrictionRequest())
@@ -727,10 +728,10 @@ class RestrictionsServiceTest {
     @Test
     fun `blow up creating prisoner contact restriction if type is no longer active`() {
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
-          "RESTRICTION",
+          ReferenceCodeGroup.RESTRICTION,
           "BAN",
           "Banned",
           99,
@@ -748,10 +749,10 @@ class RestrictionsServiceTest {
     fun `create prisoner contact restriction`() {
       whenever(manageUsersService.getUserByUsername("created")).thenReturn(User("created", "Created User"))
       whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(aPrisonerContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "BAN")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "BAN")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
-          "RESTRICTION",
+          ReferenceCodeGroup.RESTRICTION,
           "BAN",
           "Banned",
           99,
@@ -851,7 +852,7 @@ class RestrictionsServiceTest {
           existingEntity,
         ),
       )
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.updatePrisonerContactRestriction(
@@ -871,10 +872,10 @@ class RestrictionsServiceTest {
           existingEntity,
         ),
       )
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
-          "RESTRICTION",
+          ReferenceCodeGroup.RESTRICTION,
           "CCTV",
           "CCTV",
           99,
@@ -901,10 +902,10 @@ class RestrictionsServiceTest {
           existingEntity,
         ),
       )
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("RESTRICTION", "CCTV")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RESTRICTION, "CCTV")).thenReturn(
         ReferenceCode(
           referenceCodeId = 0,
-          "RESTRICTION",
+          ReferenceCodeGroup.RESTRICTION,
           "CCTV",
           "CCTV",
           99,

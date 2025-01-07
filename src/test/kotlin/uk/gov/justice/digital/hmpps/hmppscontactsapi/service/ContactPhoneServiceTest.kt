@@ -15,6 +15,7 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
@@ -74,7 +75,7 @@ class ContactPhoneServiceTest {
     @Test
     fun `should throw ValidationException creating phone if phone type doesn't exist`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "FOO")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "FOO")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.create(contactId, request.copy(phoneType = "FOO"))
@@ -113,10 +114,10 @@ class ContactPhoneServiceTest {
     )
     fun `should throw ValidationException creating phone if phone contains invalid chars`(phoneNumber: String) {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "MOB")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "MOB")).thenReturn(
         ReferenceCode(
           0,
-          "PHONE_TYPE",
+          ReferenceCodeGroup.PHONE_TYPE,
           "MOB",
           "Mobile",
           90,
@@ -133,10 +134,10 @@ class ContactPhoneServiceTest {
     @Test
     fun `should return a phone details including the reference data after creating a contact successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "MOB")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "MOB")).thenReturn(
         ReferenceCode(
           0,
-          "PHONE_TYPE",
+          ReferenceCodeGroup.PHONE_TYPE,
           "MOB",
           "Mobile",
           90,
@@ -260,7 +261,7 @@ class ContactPhoneServiceTest {
     fun `should throw ValidationException updating phone if phone type doesn't exist`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(existingPhone))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "FOO")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "FOO")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.update(contactId, contactPhoneId, request.copy(phoneType = "FOO"))
@@ -300,10 +301,10 @@ class ContactPhoneServiceTest {
     fun `should throw ValidationException updating phone if phone contains invalid chars`(phoneNumber: String) {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(existingPhone))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "MOB")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "MOB")).thenReturn(
         ReferenceCode(
           0,
-          "PHONE_TYPE",
+          ReferenceCodeGroup.PHONE_TYPE,
           "MOB",
           "Mobile",
           90,
@@ -321,10 +322,10 @@ class ContactPhoneServiceTest {
     fun `should return a phone details including the reference data after updating a phone successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactPhoneRepository.findById(contactPhoneId)).thenReturn(Optional.of(existingPhone))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", "MOB")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, "MOB")).thenReturn(
         ReferenceCode(
           0,
-          "PHONE_TYPE",
+          ReferenceCodeGroup.PHONE_TYPE,
           "MOB",
           "Mobile",
           90,

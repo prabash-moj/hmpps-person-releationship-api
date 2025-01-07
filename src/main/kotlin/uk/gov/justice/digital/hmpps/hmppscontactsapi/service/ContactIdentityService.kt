@@ -6,6 +6,7 @@ import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
@@ -80,7 +81,7 @@ class ContactIdentityService(
   }
 
   private fun validateIdentityType(identityType: String): ReferenceCode {
-    val type = referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", identityType)
+    val type = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, identityType)
       ?: throw ValidationException("Unsupported identity type ($identityType)")
     if (!type.isActive) {
       throw ValidationException("Identity type ($identityType) is no longer supported for creating or updating identities")

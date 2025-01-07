@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
@@ -116,7 +117,7 @@ class ContactAddressPhoneService(
   }
 
   private fun validatePhoneType(phoneType: String): ReferenceCode =
-    referenceCodeService.getReferenceDataByGroupAndCode("PHONE_TYPE", phoneType)
+    referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.PHONE_TYPE, phoneType)
       ?: throw ValidationException("Unsupported phone type ($phoneType)")
 
   private fun validatePhoneExists(contactPhoneId: Long): ContactPhoneEntity =

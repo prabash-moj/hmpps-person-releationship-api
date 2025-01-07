@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
@@ -18,10 +19,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ReferenceCodeRepository
 import java.time.LocalDateTime
-
-private const val COUNTRY = "COUNTRY"
-private const val COUNTY = "COUNTY"
-private const val CITY = "CITY"
 
 @Service
 @Transactional
@@ -192,18 +189,18 @@ class ContactAddressService(
       .orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
 
   private fun validateCountryCode(countryCode: String?) {
-    countryCode?.let { validateReferenceDataExists(it, COUNTRY) }
+    countryCode?.let { validateReferenceDataExists(it, ReferenceCodeGroup.COUNTRY) }
   }
 
   private fun validateCountyCode(countyCode: String?) {
-    countyCode?.let { validateReferenceDataExists(it, COUNTY) }
+    countyCode?.let { validateReferenceDataExists(it, ReferenceCodeGroup.COUNTY) }
   }
 
   private fun validateCityCode(cityCode: String?) {
-    cityCode?.let { validateReferenceDataExists(it, CITY) }
+    cityCode?.let { validateReferenceDataExists(it, ReferenceCodeGroup.CITY) }
   }
 
-  private fun validateReferenceDataExists(code: String, groupCode: String) =
+  private fun validateReferenceDataExists(code: String, groupCode: ReferenceCodeGroup) =
     referenceCodeRepository
       .findByGroupCodeAndCode(groupCode, code)
       ?: throw EntityNotFoundException("No reference data found for groupCode: $groupCode and code: $code")

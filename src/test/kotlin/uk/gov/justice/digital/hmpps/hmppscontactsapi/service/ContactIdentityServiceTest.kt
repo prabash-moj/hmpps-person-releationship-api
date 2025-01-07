@@ -13,6 +13,7 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
@@ -70,7 +71,7 @@ class ContactIdentityServiceTest {
     @Test
     fun `should throw ValidationException creating identity if identity type doesn't exist`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "FOO")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "FOO")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.create(contactId, request.copy(identityType = "FOO"))
@@ -81,10 +82,10 @@ class ContactIdentityServiceTest {
     @Test
     fun `should throw ValidationException creating identity if identity type is no longer active`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "NHS")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "NHS")).thenReturn(
         ReferenceCode(
           0,
-          "ID_TYPE",
+          ReferenceCodeGroup.ID_TYPE,
           "NHS",
           "NHS Number",
           0,
@@ -101,10 +102,10 @@ class ContactIdentityServiceTest {
     @Test
     fun `should throw ValidationException if identity type is PNC but identity is not a valid PNC`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "PNC")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "PNC")).thenReturn(
         ReferenceCode(
           0,
-          "ID_TYPE",
+          ReferenceCodeGroup.ID_TYPE,
           "PNC",
           "PNC Number",
           0,
@@ -121,10 +122,10 @@ class ContactIdentityServiceTest {
     @Test
     fun `should return identity details including the reference data after creating successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "DL")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "DL")).thenReturn(
         ReferenceCode(
           0,
-          "ID_TYPE",
+          ReferenceCodeGroup.ID_TYPE,
           "DL",
           "Driving licence",
           90,
@@ -203,7 +204,7 @@ class ContactIdentityServiceTest {
     fun `should throw ValidationException updating identity if identity type doesn't exist`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "FOO")).thenReturn(null)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "FOO")).thenReturn(null)
 
       val exception = assertThrows<ValidationException> {
         service.update(contactId, contactIdentityId, request.copy(identityType = "FOO"))
@@ -215,10 +216,10 @@ class ContactIdentityServiceTest {
     fun `should throw ValidationException updating identity if identity type is no longer active`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "NHS")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "NHS")).thenReturn(
         ReferenceCode(
           0,
-          "ID_TYPE",
+          ReferenceCodeGroup.ID_TYPE,
           "NHS",
           "NHS Number",
           0,
@@ -236,10 +237,10 @@ class ContactIdentityServiceTest {
     fun `should throw ValidationException if identity type is PNC but identity is not a valid PNC`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "PNC")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "PNC")).thenReturn(
         ReferenceCode(
           0,
-          "ID_TYPE",
+          ReferenceCodeGroup.ID_TYPE,
           "PNC",
           "PNC Number",
           0,
@@ -257,10 +258,10 @@ class ContactIdentityServiceTest {
     fun `should return a identity details including the reference data after updating a identity successfully`() {
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(aContact))
       whenever(contactIdentityRepository.findById(contactIdentityId)).thenReturn(Optional.of(existingIdentity))
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode("ID_TYPE", "PASS")).thenReturn(
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.ID_TYPE, "PASS")).thenReturn(
         ReferenceCode(
           0,
-          "ID_TYPE",
+          ReferenceCodeGroup.ID_TYPE,
           "PASS",
           "Passport",
           90,

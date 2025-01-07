@@ -6,6 +6,7 @@ import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch.mapToResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -77,7 +78,9 @@ class ContactPatchService(
   private fun validateDomesticStatusCode(request: PatchContactRequest) {
     if (request.domesticStatus.isPresent && request.domesticStatus.get() != null) {
       val code = request.domesticStatus.get()!!
-      referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", code)
+      referenceCodeService.getReferenceDataByGroupAndCode(
+        ReferenceCodeGroup.DOMESTIC_STS, code,
+      )
         ?: throw ValidationException("Reference code with groupCode DOMESTIC_STS and code '$code' not found.")
     }
   }
@@ -85,7 +88,7 @@ class ContactPatchService(
   private fun validateTitle(request: PatchContactRequest) {
     if (request.title.isPresent && request.title.get() != null) {
       val code = request.title.get()!!
-      referenceCodeService.getReferenceDataByGroupAndCode("TITLE", code)
+      referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.TITLE, code)
         ?: throw ValidationException("Reference code with groupCode TITLE and code '$code' not found.")
     }
   }
@@ -93,7 +96,7 @@ class ContactPatchService(
   private fun validateGender(request: PatchContactRequest) {
     if (request.gender.isPresent && request.gender.get() != null) {
       val code = request.gender.get()!!
-      val referenceData = referenceCodeService.getReferenceDataByGroupAndCode("GENDER", code)
+      val referenceData = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, code)
       when {
         referenceData == null -> throw ValidationException("Reference code with groupCode GENDER and code '$code' not found.")
         !referenceData.isActive -> throw ValidationException("Reference code with groupCode GENDER and code '$code' is not active and is no longer supported.")

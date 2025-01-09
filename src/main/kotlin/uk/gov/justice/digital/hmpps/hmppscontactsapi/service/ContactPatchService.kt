@@ -45,7 +45,6 @@ class ContactPatchService(
       interpreterRequired = request.interpreterRequired.orElse(this.interpreterRequired),
       languageCode = request.languageCode.orElse(this.languageCode),
       dateOfBirth = request.dateOfBirth.orElse(this.dateOfBirth),
-      estimatedIsOverEighteen = request.estimatedIsOverEighteen.orElse(this.estimatedIsOverEighteen),
       title = request.title.orElse(this.title),
       middleNames = request.middleNames.orElse(this.middleNames),
       gender = request.gender.orElse(this.gender),

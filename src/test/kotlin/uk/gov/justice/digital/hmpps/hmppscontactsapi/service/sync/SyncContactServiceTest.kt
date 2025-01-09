@@ -13,7 +13,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithFixedIdEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.mapSyncRequestToEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactWithFixedIdRepository
@@ -42,7 +41,6 @@ class SyncContactServiceTest {
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
         assertThat(dateOfBirth).isNull()
-        assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.NO)
         assertThat(deceasedDate).isNull()
         assertThat(isStaff).isFalse()
         assertThat(deceasedFlag).isFalse()
@@ -164,7 +162,6 @@ class SyncContactServiceTest {
       lastName = "Doe",
       middleName = "William",
       dateOfBirth = LocalDate.of(1980, 1, 1),
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
@@ -184,7 +181,6 @@ class SyncContactServiceTest {
       lastName = "Doe",
       middleName = "William",
       dateOfBirth = LocalDate.of(1980, 1, 1),
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
       createdBy = "JD000001",
       createdTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0),
       isStaff = false,
@@ -204,7 +200,6 @@ class SyncContactServiceTest {
       middleNames = null,
       lastName = "Smith",
       dateOfBirth = null,
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
       isDeceased = false,
       deceasedDate = null,
       createdBy = "TEST",
@@ -227,7 +222,6 @@ class SyncContactServiceTest {
       lastName = this.lastName,
       middleNames = this.middleName,
       dateOfBirth = this.dateOfBirth,
-      estimatedIsOverEighteen = this.estimatedIsOverEighteen,
       isDeceased = false,
       deceasedDate = null,
       createdBy = "Admin",

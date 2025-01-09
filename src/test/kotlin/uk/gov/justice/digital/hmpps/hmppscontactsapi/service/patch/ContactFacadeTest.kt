@@ -19,7 +19,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
@@ -165,7 +164,6 @@ class ContactFacadeTest {
     id = 99,
     lastName = "Last",
     firstName = "First",
-    estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
     isDeceased = false,
     deceasedDate = null,
     languageCode = null,

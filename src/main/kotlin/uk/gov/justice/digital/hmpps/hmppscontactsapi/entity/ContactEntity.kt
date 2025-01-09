@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
@@ -29,7 +28,6 @@ data class ContactEntity(
   override val lastName: String,
   override val middleNames: String?,
   override val dateOfBirth: LocalDate?,
-  override val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
   override val isDeceased: Boolean,
   override val deceasedDate: LocalDate?,
   override val createdBy: String,
@@ -48,7 +46,6 @@ data class ContactEntity(
   lastName = lastName,
   middleNames = middleNames,
   dateOfBirth = dateOfBirth,
-  estimatedIsOverEighteen = estimatedIsOverEighteen,
   isDeceased = isDeceased,
   deceasedDate = deceasedDate,
   createdBy = createdBy,

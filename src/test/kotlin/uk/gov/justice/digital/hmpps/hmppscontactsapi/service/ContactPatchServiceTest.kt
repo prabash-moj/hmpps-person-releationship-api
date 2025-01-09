@@ -16,7 +16,6 @@ import org.mockito.kotlin.whenever
 import org.openapitools.jackson.nullable.JsonNullable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
@@ -575,50 +574,6 @@ class ContactPatchServiceTest {
     }
   }
 
-  @Nested
-  inner class PatchEstimatedIsOverEighteen {
-
-    @Test
-    fun `should patch when estimated is over eighteen is null`() {
-      originalContact = createDummyContactEntity().copy(estimatedIsOverEighteen = EstimatedIsOverEighteen.YES)
-
-      val patchRequest = PatchContactRequest(
-        estimatedIsOverEighteen = JsonNullable.of(null),
-        updatedBy = "Modifier",
-      )
-
-      whenContactExists()
-      whenUpdateIsSuccessful()
-
-      val updatedContact = service.patch(contactId, patchRequest)
-
-      assertThat(updatedContact.estimatedIsOverEighteen).isEqualTo(null)
-      assertThat(updatedContact.updatedBy).isEqualTo("Modifier")
-    }
-
-    @Test
-    fun `should patch when estimated is over eighteen provided`() {
-      originalContact = createDummyContactEntity().copy(estimatedIsOverEighteen = EstimatedIsOverEighteen.YES)
-
-      val patchRequest = PatchContactRequest(
-        estimatedIsOverEighteen = JsonNullable.of(EstimatedIsOverEighteen.DO_NOT_KNOW),
-        updatedBy = "Modifier",
-      )
-
-      whenContactExists()
-      whenUpdateIsSuccessful()
-
-      val updatedContact = service.patch(contactId, patchRequest)
-
-      val contactCaptor = argumentCaptor<ContactEntity>()
-
-      verify(contactRepository).saveAndFlush(contactCaptor.capture())
-
-      assertThat(updatedContact.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
-      assertThat(updatedContact.updatedBy).isEqualTo("Modifier")
-    }
-  }
-
   private fun whenUpdateIsSuccessful() {
     whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
   }
@@ -636,7 +591,6 @@ class ContactPatchServiceTest {
     dateOfBirth = LocalDate.of(1990, 1, 1),
     isDeceased = false,
     deceasedDate = null,
-    estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
     createdBy = "Admin",
     createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
     staffFlag = false,

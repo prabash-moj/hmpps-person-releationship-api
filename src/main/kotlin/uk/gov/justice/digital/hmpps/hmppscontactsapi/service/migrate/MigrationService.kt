@@ -13,7 +13,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEn
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithFixedIdEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.AddressAndPhones
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.ContactsAndRestrictions
@@ -123,7 +122,6 @@ class MigrationService(
           dateOfBirth = req.dateOfBirth,
           deceasedDate = req.deceasedDate,
           isDeceased = req.deceasedDate != null,
-          estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
           createdBy = req.createUsername ?: "MIGRATION",
           createdTime = req.createDateTime ?: LocalDateTime.now(),
           staffFlag = req.staff,

@@ -12,7 +12,6 @@ fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
     firstName = this.firstName,
     middleNames = this.middleNames,
     dateOfBirth = this.dateOfBirth,
-    estimatedIsOverEighteen = this.estimatedIsOverEighteen,
     relationshipCode = this.relationshipType,
     relationshipDescription = this.relationshipDescription ?: "",
     flat = this.flat,

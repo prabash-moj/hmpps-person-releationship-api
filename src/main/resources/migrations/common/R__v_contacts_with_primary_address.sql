@@ -12,7 +12,6 @@ select
     c.created_by,
     c.created_time,
     c.date_of_birth,
-    c.estimated_is_over_eighteen,
     c.first_name,
     c.last_name,
     c.middle_names,

@@ -1,11 +1,8 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
 import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,9 +23,6 @@ data class ContactWithAddressEntity(
   val middleNames: String?,
 
   val dateOfBirth: LocalDate?,
-
-  @Enumerated(EnumType.STRING)
-  val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
   val createdBy: String,
 

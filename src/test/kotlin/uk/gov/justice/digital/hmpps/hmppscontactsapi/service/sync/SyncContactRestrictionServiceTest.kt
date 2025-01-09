@@ -16,7 +16,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -233,7 +232,6 @@ class SyncContactRestrictionServiceTest {
       middleNames = null,
       lastName = "Smith",
       dateOfBirth = null,
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
       isDeceased = false,
       deceasedDate = null,
       createdBy = "TEST",

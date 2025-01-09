@@ -3,12 +3,9 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -67,7 +64,6 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
       assertThat(firstName).isEqualTo("Jack")
       assertThat(middleNames).isEqualTo("Middle")
       assertThat(dateOfBirth).isEqualTo(LocalDate.of(2000, 11, 21))
-      assertThat(estimatedIsOverEighteen).isNull()
       assertThat(isDeceased).isFalse()
       assertThat(deceasedDate).isNull()
       assertThat(createdBy).isEqualTo("TIM")
@@ -213,7 +209,6 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
       assertThat(firstName).isEqualTo("Currently")
       assertThat(middleNames).isNull()
       assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
-      assertThat(estimatedIsOverEighteen).isNull()
       assertThat(isDeceased).isTrue()
       assertThat(deceasedDate).isEqualTo(LocalDate.of(2000, 1, 1))
       assertThat(createdBy).isEqualTo("TIM")
@@ -264,22 +259,5 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
       assertThat(id).isEqualTo(1)
       assertThat(isStaff).isTrue()
     }
-  }
-
-  @ParameterizedTest
-  @EnumSource(EstimatedIsOverEighteen::class)
-  fun `should return is over eighteen when DOB is not known`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
-    val createdContactId = testAPIClient.createAContact(
-      CreateContactRequest(
-        firstName = "First",
-        lastName = "Last",
-        dateOfBirth = null,
-        estimatedIsOverEighteen = estimatedIsOverEighteen,
-        createdBy = "USER1",
-      ),
-
-    ).id
-    val contact = testAPIClient.getContact(createdContactId)
-    assertThat(contact.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
   }
 }

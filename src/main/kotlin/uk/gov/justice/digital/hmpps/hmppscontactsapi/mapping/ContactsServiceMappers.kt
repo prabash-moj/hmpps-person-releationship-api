@@ -7,7 +7,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEn
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -61,12 +60,8 @@ fun CreateContactRequest.toModel() =
     firstName = this.firstName,
     middleNames = this.middleNames,
     dateOfBirth = this.dateOfBirth,
-    estimatedIsOverEighteen = mapIsOverEighteen(this),
     createdBy = this.createdBy,
   )
-
-private fun mapIsOverEighteen(entity: CreateContactRequest): EstimatedIsOverEighteen? =
-  if (entity.dateOfBirth != null) null else entity.estimatedIsOverEighteen
 
 private fun newContact(
   title: String?,
@@ -74,7 +69,6 @@ private fun newContact(
   lastName: String,
   middleNames: String?,
   dateOfBirth: LocalDate?,
-  estimatedIsOverEighteen: EstimatedIsOverEighteen?,
   createdBy: String,
 ): ContactEntity {
   return ContactEntity(
@@ -84,7 +78,6 @@ private fun newContact(
     lastName = lastName,
     middleNames = middleNames,
     dateOfBirth = dateOfBirth,
-    estimatedIsOverEighteen = estimatedIsOverEighteen,
     isDeceased = false,
     deceasedDate = null,
     createdBy = createdBy,

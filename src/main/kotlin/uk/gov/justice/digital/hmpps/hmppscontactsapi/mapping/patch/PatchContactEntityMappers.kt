@@ -11,7 +11,6 @@ fun ContactEntity.mapToResponse(): PatchContactResponse {
     lastName = this.lastName,
     middleNames = this.middleNames,
     dateOfBirth = this.dateOfBirth,
-    estimatedIsOverEighteen = this.estimatedIsOverEighteen,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     isStaff = this.staffFlag,

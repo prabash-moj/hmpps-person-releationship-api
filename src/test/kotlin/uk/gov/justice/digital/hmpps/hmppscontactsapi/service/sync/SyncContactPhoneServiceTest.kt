@@ -14,7 +14,6 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
@@ -190,7 +189,6 @@ class SyncContactPhoneServiceTest {
       middleNames = null,
       lastName = "Smith",
       dateOfBirth = null,
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
       isDeceased = false,
       deceasedDate = null,
       createdBy = "TEST",

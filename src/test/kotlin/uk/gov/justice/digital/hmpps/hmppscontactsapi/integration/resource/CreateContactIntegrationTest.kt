@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
-import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
@@ -190,33 +188,6 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @ParameterizedTest
-  @EnumSource(EstimatedIsOverEighteen::class)
-  fun `should record the estimated date of birth if supplied`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
-    val request = CreateContactRequest(
-      lastName = "last",
-      firstName = "first",
-      dateOfBirth = null,
-      estimatedIsOverEighteen = estimatedIsOverEighteen,
-      createdBy = "created",
-    )
-
-    val contactReturnedOnCreate = testAPIClient.createAContact(request)
-
-    assertThat(contactReturnedOnCreate.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
-    assertThat(contactReturnedOnCreate).isEqualTo(
-      testAPIClient.getContact(
-        contactReturnedOnCreate.id,
-      ),
-    )
-
-    stubEvents.assertHasEvent(
-      event = OutboundEvent.CONTACT_CREATED,
-      additionalInfo = ContactInfo(contactReturnedOnCreate.id, Source.DPS),
-      personReference = PersonReference(dpsContactId = contactReturnedOnCreate.id),
-    )
-  }
-
   private fun assertContactsAreEqualExcludingTimestamps(contact: ContactDetails, request: CreateContactRequest) {
     with(contact) {
       assertThat(title).isEqualTo(request.title)
@@ -224,9 +195,6 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(firstName).isEqualTo(request.firstName)
       assertThat(middleNames).isEqualTo(request.middleNames)
       assertThat(dateOfBirth).isEqualTo(request.dateOfBirth)
-      if (request.estimatedIsOverEighteen != null) {
-        assertThat(estimatedIsOverEighteen).isEqualTo(request.estimatedIsOverEighteen)
-      }
       assertThat(createdBy).isEqualTo(request.createdBy)
     }
   }

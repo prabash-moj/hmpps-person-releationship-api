@@ -19,7 +19,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
@@ -424,7 +423,6 @@ class ContactAddressPhoneServiceTest {
     middleNames = "middle",
     firstName = "first",
     dateOfBirth = null,
-    estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
     isDeceased = false,
     deceasedDate = null,
     createdBy = "user",

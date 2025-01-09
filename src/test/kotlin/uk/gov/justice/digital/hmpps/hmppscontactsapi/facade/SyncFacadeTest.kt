@@ -208,14 +208,12 @@ class SyncFacadeTest {
         createdTime = LocalDateTime.now(),
         updatedBy = null,
         updatedTime = null,
-        estimatedIsOverEighteen = null,
       )
 
     private fun updateContactSyncRequest() =
       SyncUpdateContactRequest(
         firstName = "John",
         lastName = "Doe",
-        estimatedIsOverEighteen = null,
         updatedBy = "ANYONE",
         updatedTime = LocalDateTime.now(),
       )

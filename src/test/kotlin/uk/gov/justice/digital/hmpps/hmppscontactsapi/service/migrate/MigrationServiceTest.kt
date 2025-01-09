@@ -22,7 +22,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEn
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithFixedIdEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.CodedValue
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.Corporate
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateAddress
@@ -806,7 +805,6 @@ class MigrationServiceTest {
       middleNames = null,
       lastName = "Smith",
       dateOfBirth = null,
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
       isDeceased = false,
       deceasedDate = null,
       createdBy = aUsername,

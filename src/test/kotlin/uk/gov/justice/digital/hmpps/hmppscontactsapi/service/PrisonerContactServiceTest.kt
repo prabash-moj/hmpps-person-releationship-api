@@ -19,7 +19,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactSummaryRepository
 import java.time.LocalDate
 
@@ -55,7 +54,6 @@ class PrisonerContactServiceTest {
       dateOfBirth,
       firstName = "John",
       lastName = "Doe",
-      EstimatedIsOverEighteen.DO_NOT_KNOW,
     )
     val c2 = makePrisonerContact(
       prisonerContactId = 2L,
@@ -63,7 +61,6 @@ class PrisonerContactServiceTest {
       dateOfBirth,
       firstName = "David",
       lastName = "Doe",
-      EstimatedIsOverEighteen.YES,
     )
     val contacts = listOf(c1, c2)
     val page = PageImpl(contacts, pageable, contacts.size.toLong())
@@ -101,7 +98,6 @@ class PrisonerContactServiceTest {
     dateOfBirth: LocalDate?,
     firstName: String,
     lastName: String,
-    estimatedIsOverEighteen: EstimatedIsOverEighteen,
     active: Boolean = true,
   ): PrisonerContactSummaryEntity =
     PrisonerContactSummaryEntity(
@@ -112,7 +108,6 @@ class PrisonerContactServiceTest {
       middleNames = "Any",
       lastName = lastName,
       dateOfBirth = dateOfBirth,
-      estimatedIsOverEighteen = estimatedIsOverEighteen,
       contactAddressId = 3L,
       flat = "2B",
       property = "123",

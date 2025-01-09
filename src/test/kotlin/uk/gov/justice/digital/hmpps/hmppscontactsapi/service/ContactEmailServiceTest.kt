@@ -17,7 +17,6 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmailDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
@@ -39,7 +38,6 @@ class ContactEmailServiceTest {
     middleNames = "middle",
     firstName = "first",
     dateOfBirth = null,
-    estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
     isDeceased = false,
     deceasedDate = null,
     createdBy = "user",

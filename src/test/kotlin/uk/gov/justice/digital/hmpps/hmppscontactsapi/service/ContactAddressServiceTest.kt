@@ -23,7 +23,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ReferenceCodeEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
@@ -998,7 +997,6 @@ private fun contactEntity(contactId: Long = 1L) =
     middleNames = null,
     lastName = "Smith",
     dateOfBirth = null,
-    estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
     isDeceased = false,
     deceasedDate = null,
     createdBy = "TEST",

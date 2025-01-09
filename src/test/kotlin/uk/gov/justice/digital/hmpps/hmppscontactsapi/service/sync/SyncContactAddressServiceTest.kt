@@ -13,7 +13,6 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
@@ -227,7 +226,6 @@ class SyncContactAddressServiceTest {
       middleNames = null,
       lastName = "Smith",
       dateOfBirth = null,
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
       isDeceased = false,
       deceasedDate = null,
       createdBy = "TEST",

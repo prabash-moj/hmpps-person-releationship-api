@@ -14,7 +14,6 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.prisoner
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactSummaryRepository
 import java.time.LocalDate
@@ -60,7 +59,6 @@ class PrisonerContactRelationshipServiceTest {
       dateOfBirth = LocalDate.of(2000, 11, 21),
       firstName = "Jack",
       lastName = "Doe",
-      EstimatedIsOverEighteen.DO_NOT_KNOW,
     )
 
     whenever(prisonerContactSummaryRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContactSummaryEntity))
@@ -90,7 +88,6 @@ class PrisonerContactRelationshipServiceTest {
     dateOfBirth: LocalDate?,
     firstName: String,
     lastName: String,
-    estimatedIsOverEighteen: EstimatedIsOverEighteen,
     active: Boolean = true,
   ): PrisonerContactSummaryEntity =
     PrisonerContactSummaryEntity(
@@ -101,7 +98,6 @@ class PrisonerContactRelationshipServiceTest {
       middleNames = "Any",
       lastName = lastName,
       dateOfBirth = dateOfBirth,
-      estimatedIsOverEighteen = estimatedIsOverEighteen,
       contactAddressId = 3L,
       flat = "2B",
       property = "123",

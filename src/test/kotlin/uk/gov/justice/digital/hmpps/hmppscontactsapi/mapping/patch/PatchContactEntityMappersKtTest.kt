@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -21,7 +20,6 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.lastName).isEqualTo(contactEntity.lastName)
     assertThat(response.middleNames).isEqualTo(contactEntity.middleNames)
     assertThat(response.dateOfBirth).isEqualTo(contactEntity.dateOfBirth)
-    assertThat(response.estimatedIsOverEighteen).isEqualTo(contactEntity.estimatedIsOverEighteen)
     assertThat(response.createdBy).isEqualTo(contactEntity.createdBy)
     assertThat(response.createdTime).isEqualTo(contactEntity.createdTime)
     assertThat(response.isStaff).isEqualTo(contactEntity.staffFlag)
@@ -43,7 +41,6 @@ class PatchContactEntityMappersKtTest {
       lastName = "Doe",
       middleNames = "A B",
       dateOfBirth = LocalDate.of(1980, 1, 1),
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
       createdBy = "system",
       isDeceased = false,
       deceasedDate = null,

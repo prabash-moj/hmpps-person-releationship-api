@@ -9,8 +9,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
@@ -36,7 +34,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
@@ -146,7 +143,6 @@ class ContactServiceTest {
         assertThat(firstName).isEqualTo(request.firstName)
         assertThat(middleNames).isEqualTo(request.middleNames)
         assertNull(dateOfBirth)
-        assertThat(estimatedIsOverEighteen).isEqualTo(request.estimatedIsOverEighteen)
         assertThat(createdBy).isEqualTo(request.createdBy)
         assertThat(createdTime).isNotNull()
       }
@@ -157,7 +153,6 @@ class ContactServiceTest {
           assertThat(firstName).isEqualTo(request.firstName)
           assertThat(middleNames).isEqualTo(request.middleNames)
           assertNull(dateOfBirth)
-          assertThat(estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
           assertThat(createdBy).isEqualTo(request.createdBy)
           assertThat(createdTime).isNotNull()
         }
@@ -340,16 +335,15 @@ class ContactServiceTest {
   inner class GetContact {
     private val contactId = 123456L
 
-    @ParameterizedTest
-    @EnumSource(EstimatedIsOverEighteen::class)
-    fun `should get a contact without dob successfully`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {
+    @Test
+    fun `should get a contact without dob successfully`() {
       whenever(contactAddressDetailsRepository.findByContactId(contactId)).thenReturn(
         listOf(
           aContactAddressDetailsEntity,
         ),
       )
 
-      val entity = createContactEntity(estimatedIsOverEighteen)
+      val entity = createContactEntity()
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
       val contact = service.getContact(contactId)
       assertNotNull(contact)
@@ -360,7 +354,6 @@ class ContactServiceTest {
         assertThat(firstName).isEqualTo(entity.firstName)
         assertThat(middleNames).isEqualTo(entity.middleNames)
         assertThat(dateOfBirth).isNull()
-        assertThat(estimatedIsOverEighteen).isEqualTo(entity.estimatedIsOverEighteen)
         assertThat(createdBy).isEqualTo(entity.createdBy)
         assertThat(createdTime).isEqualTo(entity.createdTime)
         assertThat(addresses).isEqualTo(listOf(aContactAddressDetailsEntity.toModel(emptyList())))
@@ -578,7 +571,6 @@ class ContactServiceTest {
       middleNames = null,
       firstName = "first",
       dateOfBirth = null,
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       isDeceased = false,
       deceasedDate = null,
       createdBy = "user",
@@ -690,7 +682,6 @@ class ContactServiceTest {
       middleNames = "middle",
       firstName = "first",
       dateOfBirth = LocalDate.of(1980, 2, 1),
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       contactAddressId = 1L,
       primaryAddress = true,
       verified = false,
@@ -1137,16 +1128,13 @@ class ContactServiceTest {
     }
   }
 
-  private fun createContactEntity(
-    estimatedIsOverEighteen: EstimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-  ) = ContactEntity(
+  private fun createContactEntity() = ContactEntity(
     contactId = 123456L,
     title = "Mr",
     lastName = "last",
     middleNames = "middle",
     firstName = "first",
     dateOfBirth = null,
-    estimatedIsOverEighteen = estimatedIsOverEighteen,
     isDeceased = false,
     deceasedDate = null,
     createdBy = "user",

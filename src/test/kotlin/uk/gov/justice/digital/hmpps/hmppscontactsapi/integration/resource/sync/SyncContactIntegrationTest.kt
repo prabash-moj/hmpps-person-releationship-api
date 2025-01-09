@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
@@ -123,7 +122,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(lastName).isEqualTo("Fifteen")
         assertThat(middleName).isEqualTo("Middle")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(2000, 11, 26))
-        assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isEqualTo("2024-01-26")
@@ -161,7 +159,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(lastName).isEqualTo("Doe")
         assertThat(middleName).isEqualTo("William")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
-        assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
@@ -232,7 +229,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(lastName).isEqualTo("Doe")
         assertThat(middleName).isEqualTo("William")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
-        assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
         assertThat(createdBy).isEqualTo("JD000001")
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
@@ -303,7 +299,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         lastName = "Doe",
         middleName = "William",
         dateOfBirth = LocalDate.of(1980, 1, 1),
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
         isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,
@@ -323,7 +318,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         lastName = "Doe",
         middleName = "William",
         dateOfBirth = LocalDate.of(1980, 1, 1),
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
         createdBy = "JD000001",
         isStaff = false,
         deceasedFlag = false,

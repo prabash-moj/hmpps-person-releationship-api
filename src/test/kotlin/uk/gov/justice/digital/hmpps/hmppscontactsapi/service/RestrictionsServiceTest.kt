@@ -24,7 +24,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
@@ -52,7 +51,6 @@ class RestrictionsServiceTest {
     middleNames = "middle",
     firstName = "first",
     dateOfBirth = null,
-    estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
     isDeceased = false,
     deceasedDate = null,
     createdBy = "user",

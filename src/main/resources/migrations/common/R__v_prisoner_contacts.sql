@@ -15,7 +15,6 @@ AS
       c.middle_names,
       c.last_name,
       c.date_of_birth,
-      c.estimated_is_over_eighteen,
       ca.contact_address_id,
       ca.flat,
       ca.property,

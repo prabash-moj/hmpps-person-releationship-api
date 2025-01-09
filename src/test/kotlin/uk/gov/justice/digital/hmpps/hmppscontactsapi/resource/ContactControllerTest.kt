@@ -21,7 +21,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneN
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -49,7 +48,6 @@ class ContactControllerTest {
         id = 99,
         lastName = request.lastName,
         firstName = request.firstName,
-        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
         isDeceased = false,
         deceasedDate = null,
         languageCode = null,
@@ -100,7 +98,6 @@ class ContactControllerTest {
       id = id,
       lastName = "last",
       firstName = "first",
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       isDeceased = false,
       deceasedDate = null,
       languageCode = null,
@@ -229,7 +226,6 @@ class ContactControllerTest {
       firstName = "John",
       middleNames = "William",
       dateOfBirth = LocalDate.of(1980, 1, 1),
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,

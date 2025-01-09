@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response
 
 import io.swagger.v3.oas.annotations.media.Schema
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 
 @Schema(description = "Describes the details of a prisoner's contact")
@@ -27,9 +26,6 @@ data class PrisonerContactSummary(
 
   @Schema(description = "The date of birth of the contact", example = "1980-01-01")
   val dateOfBirth: LocalDate?,
-
-  @Schema(description = "YES if the contact is over 18 years old, NO if under, null if unknown", example = "YES")
-  val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
   @Schema(description = "The relationship code between the prisoner and the contact", example = "FRI")
   val relationshipCode: String,

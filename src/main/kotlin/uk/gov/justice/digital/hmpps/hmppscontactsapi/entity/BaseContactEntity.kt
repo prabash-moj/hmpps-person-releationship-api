@@ -1,11 +1,8 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
 import jakarta.persistence.Column
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
 import jakarta.persistence.MappedSuperclass
 import org.hibernate.annotations.CreationTimestamp
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
@@ -22,9 +19,6 @@ abstract class BaseContactEntity(
   open val middleNames: String?,
 
   open val dateOfBirth: LocalDate?,
-
-  @Enumerated(EnumType.STRING)
-  open val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
   @Column(name = "deceased_flag")
   open val isDeceased: Boolean,

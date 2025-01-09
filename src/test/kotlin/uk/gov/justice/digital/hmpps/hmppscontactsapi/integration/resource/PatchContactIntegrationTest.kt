@@ -12,7 +12,6 @@ import org.springframework.http.MediaType
 import org.springframework.web.util.UriComponentsBuilder
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
@@ -482,78 +481,6 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         event = OutboundEvent.CONTACT_UPDATED,
         additionalInfo = ContactInfo(contactIdThatHasDOB, Source.DPS),
         personReference = PersonReference(dpsContactId = contactIdThatHasDOB),
-      )
-    }
-  }
-
-  @Nested
-  inner class PatchEstimatedIsOverEighteen {
-    private var contactIdThatHasEstimatedDOB = 0L
-
-    @BeforeEach
-    fun createContactWithDob() {
-      contactIdThatHasEstimatedDOB = testAPIClient.createAContact(
-        CreateContactRequest(
-          lastName = "Date of birth",
-          firstName = "Has",
-          dateOfBirth = null,
-          estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-          createdBy = "created",
-        ),
-
-      ).id
-    }
-
-    @Test
-    fun `should not patch estimated is over eighteen when not provided`() {
-      val req = PatchContactRequest(
-        updatedBy = updatedByUser,
-      )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
-
-      assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
-      assertThat(res.updatedBy).isEqualTo(updatedByUser)
-
-      stubEvents.assertHasEvent(
-        event = OutboundEvent.CONTACT_UPDATED,
-        additionalInfo = ContactInfo(contactIdThatHasEstimatedDOB, Source.DPS),
-        personReference = PersonReference(dpsContactId = contactIdThatHasEstimatedDOB),
-      )
-    }
-
-    @Test
-    fun `should successfully patch estimated is over eighteen with null value`() {
-      val req = PatchContactRequest(
-        estimatedIsOverEighteen = JsonNullable.of(null),
-        updatedBy = updatedByUser,
-      )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
-
-      assertThat(res.estimatedIsOverEighteen).isEqualTo(null)
-      assertThat(res.updatedBy).isEqualTo(updatedByUser)
-
-      stubEvents.assertHasEvent(
-        event = OutboundEvent.CONTACT_UPDATED,
-        additionalInfo = ContactInfo(contactIdThatHasEstimatedDOB, Source.DPS),
-        personReference = PersonReference(dpsContactId = contactIdThatHasEstimatedDOB),
-      )
-    }
-
-    @Test
-    fun `should successfully patch estimated is over eighteen with a value`() {
-      val req = PatchContactRequest(
-        estimatedIsOverEighteen = JsonNullable.of(EstimatedIsOverEighteen.DO_NOT_KNOW),
-        updatedBy = updatedByUser,
-      )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
-
-      assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
-      assertThat(res.updatedBy).isEqualTo(updatedByUser)
-
-      stubEvents.assertHasEvent(
-        event = OutboundEvent.CONTACT_UPDATED,
-        additionalInfo = ContactInfo(contactIdThatHasEstimatedDOB, Source.DPS),
-        personReference = PersonReference(dpsContactId = contactIdThatHasEstimatedDOB),
       )
     }
   }

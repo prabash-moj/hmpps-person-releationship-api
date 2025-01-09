@@ -15,7 +15,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetai
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
@@ -42,7 +41,6 @@ class ContactIdentityServiceTest {
     middleNames = "middle",
     firstName = "first",
     dateOfBirth = null,
-    estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
     isDeceased = false,
     deceasedDate = null,
     createdBy = "user",

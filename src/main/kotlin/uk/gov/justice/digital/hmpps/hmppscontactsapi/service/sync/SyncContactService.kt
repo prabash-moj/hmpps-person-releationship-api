@@ -61,7 +61,6 @@ class SyncContactService(
       dateOfBirth = request.dateOfBirth,
       isDeceased = request.deceasedFlag!!,
       deceasedDate = request.deceasedDate,
-      estimatedIsOverEighteen = request.estimatedIsOverEighteen,
       staffFlag = request.isStaff,
       gender = request.gender,
       domesticStatus = request.domesticStatus,

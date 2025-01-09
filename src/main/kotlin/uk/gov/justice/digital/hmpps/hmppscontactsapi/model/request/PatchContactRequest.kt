@@ -29,9 +29,6 @@ data class PatchContactRequest(
   @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", type = "string", nullable = true, format = "yyyy-MM-dd", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   var dateOfBirth: JsonNullable<LocalDate?> = JsonNullable.undefined(),
 
-  @Schema(description = "If the date of birth is not known, this indicates whether they are believed to be over 18 or not", type = "string", example = "YES", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  var estimatedIsOverEighteen: JsonNullable<EstimatedIsOverEighteen?> = JsonNullable.undefined(),
-
   @Schema(description = "The title code for the contact, if any", type = "string", example = "MR", nullable = true, maxLength = 12, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @field:Size(max = 12, message = "title must be <= 12 characters")
   var title: JsonNullable<String> = JsonNullable.undefined(),

@@ -38,9 +38,6 @@ data class CreateContactRequest(
   @field:DateTimeFormat(pattern = "yyyy-MM-dd")
   val dateOfBirth: LocalDate? = null,
 
-  @Schema(description = "If the date of birth is not known, this indicates whether they are believed to be over 18 or not", example = "YES", nullable = true)
-  val estimatedIsOverEighteen: EstimatedIsOverEighteen? = null,
-
   @Schema(description = "A description of the relationship if the contact should be linked to a prisoner", nullable = true, exampleClasses = [ContactRelationship::class])
   val relationship: ContactRelationship? = null,
 

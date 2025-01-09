@@ -8,6 +8,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -160,6 +164,11 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("adminUser")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.PRISONER_CONTACT_CREATED,
+        additionalInfo = PrisonerContactInfo(prisonerContact.id, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = prisonerContact.contactId, nomsNumber = prisonerContact.prisonerNumber),
+      )
     }
 
     @Test
@@ -228,6 +237,11 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(updatedBy).isEqualTo("UpdatedUser")
         assertThat(updatedTime).isNotNull
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+        additionalInfo = PrisonerContactInfo(updatedPrisonerContact.id, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = updatedPrisonerContact.contactId, nomsNumber = updatedPrisonerContact.prisonerNumber),
+      )
     }
 
     @Test
@@ -260,6 +274,11 @@ class SyncPrisonerContactIntegrationTest : H2IntegrationTestBase() {
         .exchange()
         .expectStatus()
         .isNotFound
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.PRISONER_CONTACT_DELETED,
+        additionalInfo = PrisonerContactInfo(prisonerContact.id, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = prisonerContact.contactId, nomsNumber = prisonerContact.prisonerNumber),
+      )
     }
 
     private fun updatePrisonerContactRequest() =

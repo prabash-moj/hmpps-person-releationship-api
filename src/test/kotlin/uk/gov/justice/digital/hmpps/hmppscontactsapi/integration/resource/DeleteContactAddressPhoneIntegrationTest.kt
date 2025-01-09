@@ -101,6 +101,7 @@ class DeleteContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
+    stubEvents.assertHasNoEvents(event = OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED)
   }
 
   @Test
@@ -117,6 +118,7 @@ class DeleteContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact address phone (-400) not found")
+    stubEvents.assertHasNoEvents(event = OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED)
   }
 
   @ParameterizedTest

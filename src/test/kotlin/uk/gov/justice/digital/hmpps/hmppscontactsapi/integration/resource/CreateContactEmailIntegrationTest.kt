@@ -96,6 +96,9 @@ class CreateContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_CREATED,
+    )
   }
 
   @ParameterizedTest
@@ -115,6 +118,9 @@ class CreateContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_CREATED,
+    )
   }
 
   @Test
@@ -135,6 +141,9 @@ class CreateContactEmailIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_EMAIL_CREATED,
+    )
   }
 
   @Test

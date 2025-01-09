@@ -14,6 +14,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCrea
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddress
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactAddressInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDateTime
 
 class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
@@ -152,6 +156,11 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_ADDRESS_CREATED,
+        additionalInfo = ContactAddressInfo(contactAddress.contactAddressId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -201,6 +210,12 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }
+
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+        additionalInfo = ContactAddressInfo(contactAddress.contactAddressId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contactId),
+      )
     }
 
     @Test
@@ -266,6 +281,11 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
 
       val afterCount = contactAddressRepository.count()
       assertThat(beforeCount).isEqualTo((afterCount + 1))
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_ADDRESS_DELETED,
+        additionalInfo = ContactAddressInfo(5, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = 4),
+      )
     }
 
     private fun updateContactAddressRequest(contactId: Long, verified: Boolean = false) =

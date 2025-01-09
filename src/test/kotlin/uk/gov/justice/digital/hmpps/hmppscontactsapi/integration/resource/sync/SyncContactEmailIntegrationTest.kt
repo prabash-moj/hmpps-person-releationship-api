@@ -12,6 +12,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactEmailInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDateTime
 
 class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
@@ -141,6 +145,11 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_EMAIL_CREATED,
+        additionalInfo = ContactEmailInfo(contactEmail.contactEmailId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contactEmail.contactId),
+      )
     }
 
     @Test
@@ -187,6 +196,11 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_EMAIL_UPDATED,
+        additionalInfo = ContactEmailInfo(contactEmail.contactEmailId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contactEmail.contactId),
+      )
     }
 
     @Test
@@ -208,6 +222,11 @@ class SyncContactEmailIntegrationTest : H2IntegrationTestBase() {
         .exchange()
         .expectStatus()
         .isNotFound
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_EMAIL_DELETED,
+        additionalInfo = ContactEmailInfo(contactEmailId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = 3),
+      )
     }
 
     private fun updateContactEmailRequest(contactId: Long) =

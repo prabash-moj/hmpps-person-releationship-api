@@ -52,6 +52,8 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(event = OutboundEvent.CONTACT_CREATED)
+    stubEvents.assertHasNoEvents(event = OutboundEvent.PRISONER_CONTACT_CREATED)
   }
 
   @Test
@@ -85,6 +87,8 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Prisoner (A1234AB) could not be found")
+    stubEvents.assertHasNoEvents(event = OutboundEvent.CONTACT_CREATED)
+    stubEvents.assertHasNoEvents(event = OutboundEvent.PRISONER_CONTACT_CREATED)
   }
 
   @Test

@@ -100,6 +100,9 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+    )
   }
 
   @ParameterizedTest
@@ -119,6 +122,9 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+    )
   }
 
   @Test
@@ -139,6 +145,9 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) could not be found")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+    )
   }
 
   @Test
@@ -159,6 +168,9 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported restriction type (FOO)")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+    )
   }
 
   @Test

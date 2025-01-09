@@ -49,6 +49,8 @@ feature:
         deleted: true
       prisoner-contact:
         created: true
+        updated: true
+        deleted: true
       contact-restriction:
         created: true
         updated: true

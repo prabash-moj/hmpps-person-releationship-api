@@ -89,6 +89,9 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_CREATED,
+    )
   }
 
   @ParameterizedTest
@@ -108,6 +111,9 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_CREATED,
+    )
   }
 
   @ParameterizedTest
@@ -133,6 +139,9 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: dateOfBirth could not be parsed as a date")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_CREATED,
+    )
   }
 
   @Test

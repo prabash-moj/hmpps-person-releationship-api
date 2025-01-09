@@ -8,6 +8,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactRestrictionInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -147,6 +151,11 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(updatedBy).isNull()
         assertThat(updatedTime).isNull()
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
+        additionalInfo = PrisonerContactRestrictionInfo(prisonerContactRestriction.prisonerContactRestrictionId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = prisonerContactRestriction.contactId, nomsNumber = prisonerContactRestriction.prisonerNumber),
+      )
     }
 
     @Test
@@ -203,6 +212,11 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         assertThat(updatedBy).isEqualTo("UpdatedUser")
         assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+        additionalInfo = PrisonerContactRestrictionInfo(updatedPrisonerContactRestriction.prisonerContactRestrictionId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = updatedPrisonerContactRestriction.contactId, nomsNumber = updatedPrisonerContactRestriction.prisonerNumber),
+      )
     }
 
     @Test
@@ -235,6 +249,11 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : H2IntegrationTestBas
         .exchange()
         .expectStatus()
         .isNotFound
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_DELETED,
+        additionalInfo = PrisonerContactRestrictionInfo(prisonerContactRestriction.prisonerContactRestrictionId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = prisonerContactRestriction.contactId, nomsNumber = prisonerContactRestriction.prisonerNumber),
+      )
     }
 
     private fun updatePrisonerContactRestrictionRequest() =

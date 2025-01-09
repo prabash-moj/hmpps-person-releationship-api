@@ -98,6 +98,9 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_PHONE_CREATED,
+    )
   }
 
   @ParameterizedTest
@@ -117,6 +120,9 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_PHONE_CREATED,
+    )
   }
 
   @ParameterizedTest
@@ -145,6 +151,9 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Phone number invalid, it can only contain numbers, () and whitespace with an optional + at the start")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_PHONE_CREATED,
+    )
   }
 
   @Test
@@ -169,6 +178,9 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported phone type (SATELLITE)")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_PHONE_CREATED,
+    )
   }
 
   @Test
@@ -189,6 +201,9 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_PHONE_CREATED,
+    )
   }
 
   @Test

@@ -13,6 +13,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
@@ -49,6 +53,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(event = OutboundEvent.PRISONER_CONTACT_UPDATED)
   }
 
   @Test
@@ -69,6 +74,11 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertThat(updatedPrisonerContacts[0].relationshipCode).isEqualTo("SIS")
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
   }
 
   @Test
@@ -89,6 +99,11 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertThat(updatedPrisonerContacts[0].nextOfKin).isTrue
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
   }
 
   @Test
@@ -109,6 +124,11 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertThat(updatedPrisonerContacts[0].approvedVisitor).isTrue
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
   }
 
   @Test
@@ -129,6 +149,11 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertThat(updatedPrisonerContacts[0].emergencyContact).isTrue
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
   }
 
   @Test
@@ -149,6 +174,11 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertThat(updatedPrisonerContacts[0].isRelationshipActive).isTrue
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
   }
 
   @Test
@@ -169,6 +199,11 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertThat(updatedPrisonerContacts[0].comments).isEqualTo("New comment")
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
   }
 
   @Test
@@ -187,6 +222,11 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
   }
 
   @ParameterizedTest
@@ -214,6 +254,11 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertUpdatedPrisonerContactEquals(updatedPrisonerContacts[0], updateRequest)
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
   }
 
   private fun assertUpdatedPrisonerContactEquals(prisonerContact: PrisonerContactSummary, relationship: UpdateRelationshipRequest) {

@@ -115,6 +115,9 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
+    )
   }
 
   @ParameterizedTest

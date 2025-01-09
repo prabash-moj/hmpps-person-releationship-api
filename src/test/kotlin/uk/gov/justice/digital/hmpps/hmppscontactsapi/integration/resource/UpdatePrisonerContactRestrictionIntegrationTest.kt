@@ -126,6 +126,9 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+    )
   }
 
   @ParameterizedTest
@@ -145,6 +148,9 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+    )
   }
 
   @Test
@@ -165,6 +171,9 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Prisoner contact (-321) could not be found")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+    )
   }
 
   @Test
@@ -185,6 +194,9 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Prisoner contact restriction (-321) could not be found")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+    )
   }
 
   @Test
@@ -205,6 +217,9 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported restriction type (FOO)")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+    )
   }
 
   @Test

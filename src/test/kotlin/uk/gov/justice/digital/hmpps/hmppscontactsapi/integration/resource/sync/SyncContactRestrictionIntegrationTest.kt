@@ -12,6 +12,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactRestrictionInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -149,6 +153,11 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+        additionalInfo = ContactRestrictionInfo(contactRestriction.contactRestrictionId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contactRestriction.contactId),
+      )
     }
 
     @Test
@@ -200,6 +209,11 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
+        additionalInfo = ContactRestrictionInfo(updatedRestriction.contactRestrictionId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = updatedRestriction.contactId),
+      )
     }
 
     @Test
@@ -221,6 +235,11 @@ class SyncContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         .exchange()
         .expectStatus()
         .isNotFound
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_RESTRICTION_DELETED,
+        additionalInfo = ContactRestrictionInfo(contactRestrictionId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = 3),
+      )
     }
 
     private fun updateContactRestrictionRequest(contactId: Long) =

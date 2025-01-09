@@ -98,6 +98,9 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+    )
   }
 
   @ParameterizedTest
@@ -117,6 +120,9 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure(s): $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+    )
   }
 
   @Test
@@ -137,6 +143,9 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: $expectedMessage")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+    )
   }
 
   @Test
@@ -161,6 +170,9 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported identity type (MACRO CARD)")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+    )
   }
 
   @Test
@@ -185,6 +197,9 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported identity type (NHS). This code is no longer active.")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+    )
   }
 
   @Test
@@ -205,6 +220,9 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       .returnResult().responseBody!!
 
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (-321) not found")
+    stubEvents.assertHasNoEvents(
+      event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+    )
   }
 
   @Test

@@ -12,6 +12,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactPhoneInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDateTime
 
 class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
@@ -146,6 +150,11 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_PHONE_CREATED,
+        additionalInfo = ContactPhoneInfo(contactPhone.contactPhoneId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contactPhone.contactId),
+      )
     }
 
     @Test
@@ -195,6 +204,11 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_PHONE_UPDATED,
+        additionalInfo = ContactPhoneInfo(contactPhone.contactPhoneId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contactPhone.contactId),
+      )
     }
 
     @Test
@@ -216,6 +230,11 @@ class SyncContactPhoneIntegrationTest : H2IntegrationTestBase() {
         .exchange()
         .expectStatus()
         .isNotFound
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_PHONE_DELETED,
+        additionalInfo = ContactPhoneInfo(contactPhoneId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = 10),
+      )
     }
 
     private fun updateContactPhoneRequest(contactId: Long) =

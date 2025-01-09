@@ -13,6 +13,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactIdentityInfo
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import java.time.LocalDateTime
 
 class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
@@ -145,6 +149,11 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_IDENTITY_CREATED,
+        additionalInfo = ContactIdentityInfo(contactIdentity.contactIdentityId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = contactIdentity.contactId),
+      )
     }
 
     @ParameterizedTest
@@ -201,6 +210,11 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATE")
         assertThat(createdTime).isNotNull()
       }
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_IDENTITY_UPDATED,
+        additionalInfo = ContactIdentityInfo(updatedIdentity.contactIdentityId, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = updatedIdentity.contactId),
+      )
     }
 
     @Test
@@ -222,6 +236,11 @@ class SyncContactIdentityIntegrationTest : H2IntegrationTestBase() {
         .exchange()
         .expectStatus()
         .isNotFound
+      stubEvents.assertHasEvent(
+        event = OutboundEvent.CONTACT_IDENTITY_DELETED,
+        additionalInfo = ContactIdentityInfo(3, Source.NOMIS),
+        personReference = PersonReference(dpsContactId = 3),
+      )
     }
 
     private fun updateContactIdentityRequest(contactId: Long, issuingAuthority: String? = "UKBORDER") =

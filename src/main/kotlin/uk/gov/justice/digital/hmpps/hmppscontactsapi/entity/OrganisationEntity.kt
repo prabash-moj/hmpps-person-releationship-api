@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 /**
@@ -26,6 +27,8 @@ data class OrganisationEntity(
   override val vatNumber: String?,
   override val caseloadId: String?,
   override val comments: String?,
+  override val active: Boolean,
+  override val deactivatedDate: LocalDate?,
   override val createdBy: String,
   override val createdTime: LocalDateTime,
   override val updatedBy: String?,
@@ -36,6 +39,8 @@ data class OrganisationEntity(
   vatNumber = vatNumber,
   caseloadId = caseloadId,
   comments = comments,
+  active = active,
+  deactivatedDate = deactivatedDate,
   createdBy = createdBy,
   createdTime = createdTime,
   updatedBy = updatedBy,

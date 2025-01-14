@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
 import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 
@@ -18,6 +19,10 @@ abstract class BaseOrganisationEntity(
   open val caseloadId: String?,
 
   open val comments: String?,
+
+  open val active: Boolean,
+
+  open val deactivatedDate: LocalDate?,
 
   @Column(updatable = false)
   open val createdBy: String,

@@ -64,8 +64,8 @@ class PrisonerContactControllerTest {
       prisonerContactId = 1,
       contactId = 2,
       prisonerNumber = "A1234BC",
-      relationshipCode = "FRI",
-      relationshipDescription = "Friend",
+      relationshipToPrisonerCode = "FRI",
+      relationshipToPrisonerDescription = "Friend",
       nextOfKin = false,
       emergencyContact = true,
       isRelationshipActive = true,
@@ -98,7 +98,7 @@ class PrisonerContactControllerTest {
     }
 
     private fun patchContactRelationshipRequest() = UpdateRelationshipRequest(
-      relationshipCode = JsonNullable.of("ENG"),
+      relationshipToPrisoner = JsonNullable.of("ENG"),
       updatedBy = "system",
     )
   }
@@ -108,7 +108,8 @@ class PrisonerContactControllerTest {
     private val contactId = 123456L
     private val relationship = ContactRelationship(
       prisonerNumber = "A1234BC",
-      relationshipCode = "MOT",
+      relationshipType = "S",
+      relationshipToPrisoner = "MOT",
       isNextOfKin = true,
       isEmergencyContact = false,
       comments = "Foo",

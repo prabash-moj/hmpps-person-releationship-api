@@ -25,10 +25,10 @@ class LinkedPrisonersService(
               relationships = summaries.map { summary ->
                 LinkedPrisonerRelationshipDetails(
                   prisonerContactId = summary.prisonerContactId,
-                  contactType = summary.contactType,
+                  relationshipType = summary.relationshipType,
                   contactTypeDescription = summary.contactTypeDescription,
-                  relationshipCode = summary.relationshipType,
-                  relationshipDescription = summary.relationshipDescription,
+                  relationshipToPrisoner = summary.relationshipToPrisoner,
+                  relationshipToPrisonerDescription = summary.relationshipDescription,
                 )
               },
             )

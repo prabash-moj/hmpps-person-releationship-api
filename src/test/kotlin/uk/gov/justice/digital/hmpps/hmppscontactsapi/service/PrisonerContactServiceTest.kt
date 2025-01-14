@@ -67,7 +67,7 @@ class PrisonerContactServiceTest {
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
     whenever(
-      prisonerContactSummaryRepository.findByPrisonerNumberAndActiveAndContactType(
+      prisonerContactSummaryRepository.findByPrisonerNumberAndActiveAndRelationshipType(
         prisonerNumber,
         true,
         "S",
@@ -80,7 +80,7 @@ class PrisonerContactServiceTest {
     result.content hasSize 2
     assertThat(result).containsAll(listOf(c1.toModel(), c2.toModel()))
 
-    verify(prisonerContactSummaryRepository).findByPrisonerNumberAndActiveAndContactType(prisonerNumber, true, "S", pageable)
+    verify(prisonerContactSummaryRepository).findByPrisonerNumberAndActiveAndRelationshipType(prisonerNumber, true, "S", pageable)
   }
 
   @Test
@@ -130,7 +130,7 @@ class PrisonerContactServiceTest {
       contactEmailId = 5L,
       emailAddress = "john.doe@example.com",
       prisonerNumber = "A1234BC",
-      relationshipType = "FRIEND",
+      relationshipToPrisoner = "FRIEND",
       relationshipDescription = "Friend",
       active = active,
       approvedVisitor = true,
@@ -138,7 +138,7 @@ class PrisonerContactServiceTest {
       emergencyContact = false,
       currentTerm = true,
       comments = "No comments",
-      contactType = "S",
+      relationshipType = "S",
       contactTypeDescription = "Social/Family",
     )
 }

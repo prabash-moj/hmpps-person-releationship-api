@@ -37,7 +37,8 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
         firstName = "first",
         relationship = ContactRelationship(
           prisonerNumber = prisonerNumberCreatedAgainst,
-          relationshipCode = "FRI",
+          relationshipType = "S",
+          relationshipToPrisoner = "FRI",
           isNextOfKin = true,
           isEmergencyContact = true,
           comments = "Some comments",

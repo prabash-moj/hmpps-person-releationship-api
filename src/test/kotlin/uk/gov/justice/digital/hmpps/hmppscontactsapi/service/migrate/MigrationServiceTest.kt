@@ -85,7 +85,7 @@ class MigrationServiceTest {
     @Test
     fun `should migrate a basic contact`() {
       val request = migrateRequest(personId = 1L)
-      val contact = aContactEntity(1L)
+      val contact = aContactEntity()
 
       whenever(contactRepository.existsById(1L)).thenReturn(false)
       whenever(contactRepository.save(any())).thenReturn(contact)
@@ -118,7 +118,7 @@ class MigrationServiceTest {
     @Test
     fun `should identify duplicate requests for the same contact and replace them`() {
       val contactCaptor = argumentCaptor<ContactWithFixedIdEntity>()
-      val contact = aContactEntity(1L)
+      val contact = aContactEntity()
 
       whenever(contactRepository.existsById(1L)).thenReturn(false)
       whenever(contactRepository.save(any())).thenReturn(contact)
@@ -137,7 +137,7 @@ class MigrationServiceTest {
       whenever(contactRepository.existsById(1L)).thenReturn(true)
 
       // Duplicate the request
-      val result2 = migrationService.migrateContact(request)
+      migrationService.migrateContact(request)
 
       // IDs should be the same as the request
       assertThat(result1.contact.nomisId).isEqualTo(request.personId)
@@ -173,7 +173,7 @@ class MigrationServiceTest {
     @Test
     fun `should extract and save basic contact details`() {
       val request = migrateRequest(personId = 1L)
-      val contact = aContactEntity(1L)
+      val contact = aContactEntity()
 
       whenever(contactRepository.save(any())).thenReturn(contact)
 
@@ -556,8 +556,8 @@ class MigrationServiceTest {
         PrisonerContactEntity(
           prisonerContactId = 1L,
           contactId = 2L,
-          contactType = request.contacts[0].contactType.code,
-          relationshipType = request.contacts[0].relationshipType.code,
+          relationshipType = request.contacts[0].contactType.code,
+          relationshipToPrisoner = request.contacts[0].relationshipType.code,
           prisonerNumber = request.contacts[0].prisonerNumber,
           emergencyContact = request.contacts[0].emergencyContact,
           nextOfKin = request.contacts[0].nextOfKin,
@@ -571,8 +571,8 @@ class MigrationServiceTest {
         PrisonerContactEntity(
           prisonerContactId = 2L,
           contactId = 2L,
-          contactType = request.contacts[1].contactType.code,
-          relationshipType = request.contacts[1].relationshipType.code,
+          relationshipType = request.contacts[1].contactType.code,
+          relationshipToPrisoner = request.contacts[1].relationshipType.code,
           prisonerNumber = request.contacts[1].prisonerNumber,
           emergencyContact = request.contacts[1].emergencyContact,
           nextOfKin = request.contacts[1].nextOfKin,
@@ -601,8 +601,8 @@ class MigrationServiceTest {
           .extracting(
             "contactId",
             "prisonerContactId",
-            "contactType",
             "relationshipType",
+            "relationshipToPrisoner",
             "prisonerNumber",
             "nextOfKin",
             "emergencyContact",
@@ -612,8 +612,8 @@ class MigrationServiceTest {
           .contains(
             responses[i].contactId,
             responses[i].prisonerContactId,
-            responses[i].contactType,
             responses[i].relationshipType,
+            responses[i].relationshipToPrisoner,
             responses[i].prisonerNumber,
             responses[i].nextOfKin,
             responses[i].emergencyContact,
@@ -645,8 +645,8 @@ class MigrationServiceTest {
       val relationshipResponse = PrisonerContactEntity(
         prisonerContactId = 1L,
         contactId = 1L,
-        contactType = request.contacts[0].contactType.code,
-        relationshipType = request.contacts[0].relationshipType.code,
+        relationshipType = request.contacts[0].contactType.code,
+        relationshipToPrisoner = request.contacts[0].relationshipType.code,
         prisonerNumber = request.contacts[0].prisonerNumber,
         emergencyContact = request.contacts[0].emergencyContact,
         nextOfKin = request.contacts[0].nextOfKin,
@@ -722,8 +722,8 @@ class MigrationServiceTest {
           second = PrisonerContactEntity(
             prisonerContactId = 1L,
             contactId = 1L,
-            contactType = "S",
-            relationshipType = "BRO",
+            relationshipType = "S",
+            relationshipToPrisoner = "BRO",
             prisonerNumber = "A1234AA",
             createdBy = "TEST",
             createdTime = LocalDateTime.now(),
@@ -797,9 +797,9 @@ class MigrationServiceTest {
       it.modifyUsername = aUsername
     }
 
-  private fun aContactEntity(contactId: Long = 1L) =
+  private fun aContactEntity() =
     ContactWithFixedIdEntity(
-      contactId = contactId,
+      contactId = 1L,
       title = "Mr",
       firstName = "John",
       middleNames = null,

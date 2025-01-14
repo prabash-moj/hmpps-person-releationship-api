@@ -77,14 +77,16 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     value = [
       "relationship must not be null;{\"relationship\": null, \"createdBy\": \"USER\"}",
       "relationship must not be null;{\"createdBy\": \"USER\"}",
-      "createdBy must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": null}",
-      "createdBy must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}}",
-      "relationship.prisonerNumber must not be null;{\"relationship\": {\"prisonerNumber\": null, \"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.prisonerNumber must not be null;{\"relationship\": {\"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.relationshipCode must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": null, \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.relationshipCode must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.isNextOfKin must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.isEmergencyContact must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isNextOfKin\": false}, \"createdBy\": \"USER\"}",
+      "createdBy must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipType\": \"S\", \"relationshipToPrisoner\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": null}",
+      "createdBy must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipType\": \"S\", \"relationshipToPrisoner\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}}",
+      "relationship.prisonerNumber must not be null;{\"relationship\": {\"prisonerNumber\": null, \"relationshipType\": \"S\", \"relationshipToPrisoner\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.prisonerNumber must not be null;{\"relationship\": {\"relationshipType\": \"S\", \"relationshipToPrisoner\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.relationshipType must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipToPrisoner\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.relationshipType must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipType\":null, \"relationshipToPrisoner\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.relationshipToPrisoner must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipType\": \"S\", \"relationshipToPrisoner\": null, \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.relationshipToPrisoner must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipType\": \"S\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.isNextOfKin must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipType\": \"S\", \"relationshipToPrisoner\": \"MOT\", \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.isEmergencyContact must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipType\": \"S\", \"relationshipToPrisoner\": \"MOT\", \"isNextOfKin\": false}, \"createdBy\": \"USER\"}",
     ],
     delimiter = ';',
   )
@@ -152,8 +154,9 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       contactId = contact.id,
       relationship = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "MOT",
+        relationshipToPrisoner = "MOT",
         isNextOfKin = true,
+        relationshipType = "S",
         isEmergencyContact = false,
       ),
       createdBy = "USER",
@@ -161,8 +164,8 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val createdRelationship = testAPIClient.addAContactRelationship(request, role)
 
-    assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
-    assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
+    assertThat(createdRelationship.relationshipToPrisonerCode).isEqualTo("MOT")
+    assertThat(createdRelationship.relationshipToPrisonerDescription).isEqualTo("Mother")
     assertThat(createdRelationship.nextOfKin).isTrue()
     assertThat(createdRelationship.emergencyContact).isFalse()
     assertThat(createdRelationship.comments).isNull()
@@ -182,8 +185,9 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       contactId = contact.id,
       relationship = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "MOT",
+        relationshipToPrisoner = "MOT",
         isNextOfKin = false,
+        relationshipType = "S",
         isEmergencyContact = true,
         comments = "Some comments",
       ),
@@ -191,8 +195,8 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     )
 
     val createdRelationship = testAPIClient.addAContactRelationship(request)
-    assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
-    assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
+    assertThat(createdRelationship.relationshipToPrisonerCode).isEqualTo("MOT")
+    assertThat(createdRelationship.relationshipToPrisonerDescription).isEqualTo("Mother")
     assertThat(createdRelationship.nextOfKin).isFalse()
     assertThat(createdRelationship.emergencyContact).isTrue()
     assertThat(createdRelationship.comments).isEqualTo("Some comments")
@@ -208,8 +212,9 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     contactId = contact.id,
     relationship = ContactRelationship(
       prisonerNumber = "A1234BC",
-      relationshipCode = "MOT",
+      relationshipToPrisoner = "MOT",
       isNextOfKin = true,
+      relationshipType = "S",
       isEmergencyContact = false,
     ),
     createdBy = "USER",

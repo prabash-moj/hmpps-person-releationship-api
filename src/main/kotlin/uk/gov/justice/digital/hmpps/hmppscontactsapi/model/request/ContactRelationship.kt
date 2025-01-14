@@ -8,8 +8,11 @@ data class ContactRelationship(
   @Schema(description = "Prisoner number (NOMS ID)", example = "A1234BC")
   val prisonerNumber: String,
 
-  @Schema(description = "The relationship code between the prisoner and the contact", example = "FRI")
-  val relationshipCode: String,
+  @Schema(description = "The relationship between the prisoner and the contact - for social(S) or official(O)", example = "S")
+  val relationshipType: String,
+
+  @Schema(description = "The relationship to the prisoner. A code from SOCIAL_RELATIONSHIP or OFFICIAL_RELATIONSHIP reference data groups depending on the relationship type.", example = "FRI")
+  val relationshipToPrisoner: String,
 
   @Schema(description = "Whether they are the next of kin for the prisoner", example = "true", required = true)
   @JsonProperty(required = true)

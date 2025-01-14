@@ -186,7 +186,8 @@ class ContactServiceTest {
     fun `should create a contact with a relationship successfully`() {
       val relationshipRequest = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "FRI",
+        relationshipType = "S",
+        relationshipToPrisoner = "FRI",
         isNextOfKin = true,
         isEmergencyContact = true,
         comments = "some comments",
@@ -205,21 +206,21 @@ class ContactServiceTest {
       )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
-      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true)
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRI")).thenReturn(
+      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI", "Friend", 1, true)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI")).thenReturn(
         referenceCode,
       )
-      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRI", allowInactive = false)).thenReturn(referenceCode)
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI", allowInactive = false)).thenReturn(referenceCode)
 
       service.createContact(request)
 
       verify(contactRepository).saveAndFlush(any())
       val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
       verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
-      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRI", allowInactive = false)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI", allowInactive = false)
       with(prisonerContactCaptor.firstValue) {
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("FRI")
+        assertThat(relationshipToPrisoner).isEqualTo("FRI")
         assertThat(nextOfKin).isEqualTo(true)
         assertThat(emergencyContact).isEqualTo(true)
         assertThat(comments).isEqualTo("some comments")
@@ -230,9 +231,10 @@ class ContactServiceTest {
     fun `should throw exception if relationship is invalid`() {
       val relationshipRequest = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "FRI",
+        relationshipToPrisoner = "FRI",
         isNextOfKin = true,
         isEmergencyContact = true,
+        relationshipType = "S",
         comments = "some comments",
       )
       val request = CreateContactRequest(
@@ -250,9 +252,9 @@ class ContactServiceTest {
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> (i.arguments[0] as ContactEntity).copy(contactId = 123) }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
       val expectedException = ValidationException("Invalid")
-      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true)
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRI")).thenReturn(referenceCode)
-      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRI", allowInactive = false)).thenThrow(expectedException)
+      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI", "Friend", 1, true)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI")).thenReturn(referenceCode)
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI", allowInactive = false)).thenThrow(expectedException)
 
       val exception = assertThrows<RuntimeException>("Bang!") {
         service.createContact(request)
@@ -261,7 +263,7 @@ class ContactServiceTest {
       assertThat(exception).isEqualTo(expectedException)
       verify(contactRepository, never()).saveAndFlush(any())
       verify(prisonerContactRepository, never()).saveAndFlush(any())
-      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRI", allowInactive = false)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI", allowInactive = false)
     }
 
     @Test
@@ -286,7 +288,8 @@ class ContactServiceTest {
         createdBy = "created",
         relationship = ContactRelationship(
           prisonerNumber = "A1234BC",
-          relationshipCode = "FRI",
+          relationshipType = "S",
+          relationshipToPrisoner = "FRI",
           isNextOfKin = true,
           isEmergencyContact = true,
           comments = "some comments",
@@ -312,7 +315,8 @@ class ContactServiceTest {
         createdBy = "created",
         relationship = ContactRelationship(
           prisonerNumber = "A1234BC",
-          relationshipCode = "FRI",
+          relationshipType = "S",
+          relationshipToPrisoner = "FRI",
           isNextOfKin = true,
           isEmergencyContact = true,
           comments = "some comments",
@@ -558,7 +562,8 @@ class ContactServiceTest {
     private val contactId = 123456L
     private val relationship = ContactRelationship(
       prisonerNumber = "A1234BC",
-      relationshipCode = "MOT",
+      relationshipType = "S",
+      relationshipToPrisoner = "MOT",
       isNextOfKin = true,
       isEmergencyContact = false,
       comments = "Foo",
@@ -587,9 +592,9 @@ class ContactServiceTest {
       )
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(contact))
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
-      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "MOT", "Mother", 1, true)
-      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "MOT")).thenReturn(referenceCode)
-      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "MOT", allowInactive = false)).thenReturn(referenceCode)
+      val referenceCode = ReferenceCode(1, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "MOT", "Mother", 1, true)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "MOT")).thenReturn(referenceCode)
+      whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "MOT", allowInactive = false)).thenReturn(referenceCode)
 
       service.addContactRelationship(request)
 
@@ -597,13 +602,13 @@ class ContactServiceTest {
       verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
       with(prisonerContactCaptor.firstValue) {
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("MOT")
+        assertThat(relationshipToPrisoner).isEqualTo("MOT")
         assertThat(nextOfKin).isEqualTo(true)
         assertThat(emergencyContact).isEqualTo(false)
         assertThat(comments).isEqualTo("Foo")
         assertThat(createdBy).isEqualTo("RELATIONSHIP_USER")
       }
-      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "MOT", allowInactive = false)
+      verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "MOT", allowInactive = false)
     }
 
     @Test
@@ -701,14 +706,13 @@ class ContactServiceTest {
 
   @Nested
   inner class UpdateContactRelationship {
-    private val contactId = 1L
     private val prisonerContactId = 2L
 
     private lateinit var prisonerContact: PrisonerContactEntity
 
     @BeforeEach
     fun before() {
-      prisonerContact = createPrisonerContact(contactId)
+      prisonerContact = createPrisonerContact()
     }
 
     @Nested
@@ -718,12 +722,12 @@ class ContactServiceTest {
       fun `should update the contact relationship type`() {
         val relationShipTypeCode = "FRI"
         val request = UpdateRelationshipRequest(
-          relationshipCode = JsonNullable.of(relationShipTypeCode),
+          relationshipToPrisoner = JsonNullable.of(relationShipTypeCode),
           updatedBy = "Admin",
         )
         mockBrotherRelationshipReferenceCode()
-        whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, relationShipTypeCode)).thenReturn(
-          ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true),
+        whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, relationShipTypeCode)).thenReturn(
+          ReferenceCode(1, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI", "Friend", 1, true),
         )
 
         whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
@@ -735,7 +739,7 @@ class ContactServiceTest {
         verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
         with(prisonerContactCaptor.firstValue) {
           // assert changed
-          assertThat(relationshipType).isEqualTo("FRI")
+          assertThat(relationshipToPrisoner).isEqualTo("FRI")
           assertThat(updatedBy).isEqualTo("Admin")
           assertThat(updatedTime).isInThePast()
           // assert unchanged
@@ -751,7 +755,7 @@ class ContactServiceTest {
       @Test
       fun `should not update relationship type with null`() {
         val request = UpdateRelationshipRequest(
-          relationshipCode = JsonNullable.of(null),
+          relationshipToPrisoner = JsonNullable.of(null),
           updatedBy = "Admin",
         )
 
@@ -767,14 +771,14 @@ class ContactServiceTest {
       @Test
       fun `should not update relationship type with invalid type`() {
         val request = UpdateRelationshipRequest(
-          relationshipCode = JsonNullable.of("OOO"),
+          relationshipToPrisoner = JsonNullable.of("OOO"),
           updatedBy = "Admin",
         )
 
         whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
         whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
         val expectedException = ValidationException("Invalid")
-        whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "OOO", allowInactive = true)).thenThrow(expectedException)
+        whenever(referenceCodeService.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "OOO", allowInactive = true)).thenThrow(expectedException)
 
         val exception = assertThrows<ValidationException> {
           service.updateContactRelationship(prisonerContactId, request)
@@ -848,7 +852,7 @@ class ContactServiceTest {
           assertThat(updatedBy).isEqualTo("Admin")
           assertThat(updatedTime).isInThePast()
           // assert unchanged
-          assertThat(relationshipType).isEqualTo("BRO")
+          assertThat(relationshipToPrisoner).isEqualTo("BRO")
           assertThat(emergencyContact).isTrue()
           assertThat(active).isTrue()
           assertThat(comments).isEqualTo("Updated relationship type to Brother")
@@ -897,7 +901,7 @@ class ContactServiceTest {
           assertThat(updatedBy).isEqualTo("Admin")
           assertThat(updatedTime).isInThePast()
           // assert unchanged
-          assertThat(relationshipType).isEqualTo("BRO")
+          assertThat(relationshipToPrisoner).isEqualTo("BRO")
           assertThat(nextOfKin).isTrue()
           assertThat(active).isTrue()
           assertThat(comments).isEqualTo("Updated relationship type to Brother")
@@ -946,7 +950,7 @@ class ContactServiceTest {
           assertThat(updatedBy).isEqualTo("Admin")
           assertThat(updatedTime).isInThePast()
           // assert unchanged
-          assertThat(relationshipType).isEqualTo("BRO")
+          assertThat(relationshipToPrisoner).isEqualTo("BRO")
           assertThat(nextOfKin).isTrue()
           assertThat(emergencyContact).isTrue()
           assertThat(comments).isEqualTo("Updated relationship type to Brother")
@@ -983,8 +987,8 @@ class ContactServiceTest {
           updatedBy = "Admin",
         )
         mockBrotherRelationshipReferenceCode()
-        whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, relationShipTypeCode)).thenReturn(
-          ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "FRI", "Friend", 1, true),
+        whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, relationShipTypeCode)).thenReturn(
+          ReferenceCode(1, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRI", "Friend", 1, true),
         )
 
         whenever(prisonerContactRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContact))
@@ -1000,7 +1004,7 @@ class ContactServiceTest {
           assertThat(updatedBy).isEqualTo("Admin")
           assertThat(updatedTime).isInThePast()
           // assert unchanged
-          assertThat(relationshipType).isEqualTo("BRO")
+          assertThat(relationshipToPrisoner).isEqualTo("BRO")
           assertThat(nextOfKin).isTrue()
           assertThat(emergencyContact).isTrue()
           assertThat(active).isTrue()
@@ -1012,7 +1016,7 @@ class ContactServiceTest {
       @Test
       fun `should not update relationship comment with null`() {
         val request = UpdateRelationshipRequest(
-          relationshipCode = JsonNullable.of(null),
+          relationshipToPrisoner = JsonNullable.of(null),
           updatedBy = "Admin",
         )
 
@@ -1047,7 +1051,7 @@ class ContactServiceTest {
         assertThat(updatedTime).isInThePast()
         // assert unchanged
         assertThat(nextOfKin).isTrue()
-        assertThat(relationshipType).isEqualTo("BRO")
+        assertThat(relationshipToPrisoner).isEqualTo("BRO")
         assertThat(emergencyContact).isTrue()
         assertThat(active).isTrue()
         assertThat(comments).isEqualTo("Updated relationship type to Brother")
@@ -1078,13 +1082,13 @@ class ContactServiceTest {
       }
     }
 
-    private fun createPrisonerContact(cId: Long): PrisonerContactEntity {
+    private fun createPrisonerContact(): PrisonerContactEntity {
       return PrisonerContactEntity(
         prisonerContactId = prisonerContactId,
-        contactId = cId,
+        contactId = 1L,
         prisonerNumber = "A1234BC",
-        contactType = "SOCIAL",
-        relationshipType = "BRO",
+        relationshipType = "SOCIAL",
+        relationshipToPrisoner = "BRO",
         nextOfKin = true,
         emergencyContact = true,
         approvedVisitor = true,
@@ -1105,7 +1109,7 @@ class ContactServiceTest {
 
     private fun PrisonerContactEntity.assertUnchangedFields() {
       assertThat(prisonerNumber).isEqualTo("A1234BC")
-      assertThat(contactType).isEqualTo("SOCIAL")
+      assertThat(relationshipType).isEqualTo("SOCIAL")
       assertThat(currentTerm).isTrue()
       assertThat(approvedVisitor).isTrue()
       assertThat(createdBy).isEqualTo("TEST")
@@ -1118,7 +1122,7 @@ class ContactServiceTest {
 
     private fun updateRelationshipRequest(): UpdateRelationshipRequest {
       return UpdateRelationshipRequest(
-        relationshipCode = JsonNullable.of("MOT"),
+        relationshipToPrisoner = JsonNullable.of("MOT"),
         isEmergencyContact = JsonNullable.of(true),
         isNextOfKin = JsonNullable.of(true),
         isRelationshipActive = JsonNullable.of(false),
@@ -1142,8 +1146,8 @@ class ContactServiceTest {
   )
 
   private fun mockBrotherRelationshipReferenceCode() {
-    whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, "BRO")).thenReturn(
-      ReferenceCode(1, ReferenceCodeGroup.RELATIONSHIP, "BRO", "Brother", 1, true),
+    whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "BRO")).thenReturn(
+      ReferenceCode(1, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "BRO", "Brother", 1, true),
     )
   }
 }

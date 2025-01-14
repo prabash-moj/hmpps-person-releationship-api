@@ -73,8 +73,8 @@ class SyncPrisonerContactServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("S")
-        assertThat(relationshipType).isEqualTo("FRI")
+        assertThat(relationshipType).isEqualTo("S")
+        assertThat(relationshipToPrisoner).isEqualTo("FRI")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Updated relationship type to family")
@@ -144,8 +144,8 @@ class SyncPrisonerContactServiceTest {
         assertThat(prisonerContactId).isEqualTo(prisonerContactID)
         assertThat(contactId).isEqualTo(12345L)
         assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(contactType).isEqualTo("O")
-        assertThat(relationshipType).isEqualTo("LAW")
+        assertThat(relationshipType).isEqualTo("O")
+        assertThat(relationshipToPrisoner).isEqualTo("LAW")
         assertThat(nextOfKin).isTrue
         assertThat(emergencyContact).isFalse
         assertThat(comments).isEqualTo("Updated prison location")
@@ -233,8 +233,8 @@ class SyncPrisonerContactServiceTest {
       prisonerContactId = 1L,
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      contactType = "S",
-      relationshipType = "Family",
+      relationshipType = "S",
+      relationshipToPrisoner = "Family",
       nextOfKin = true,
       emergencyContact = false,
       approvedVisitor = true,
@@ -260,8 +260,8 @@ class SyncPrisonerContactServiceTest {
       prisonerContactId = 1L,
       contactId = 12345L,
       prisonerNumber = "A1234BC",
-      contactType = "O",
-      relationshipType = "LAW",
+      relationshipType = "O",
+      relationshipToPrisoner = "LAW",
       nextOfKin = true,
       emergencyContact = false,
       active = false,

@@ -21,9 +21,9 @@ data class PrisonerContactEntity(
 
   val prisonerNumber: String,
 
-  val contactType: String,
-
   val relationshipType: String,
+
+  val relationshipToPrisoner: String,
 
   val nextOfKin: Boolean,
 

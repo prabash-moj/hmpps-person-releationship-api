@@ -12,7 +12,7 @@ fun PrisonerContactSummaryEntity.toModel(): PrisonerContactSummary {
     firstName = this.firstName,
     middleNames = this.middleNames,
     dateOfBirth = this.dateOfBirth,
-    relationshipCode = this.relationshipType,
+    relationshipToPrisoner = this.relationshipToPrisoner,
     relationshipDescription = this.relationshipDescription ?: "",
     flat = this.flat,
     property = this.property,

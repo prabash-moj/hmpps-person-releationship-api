@@ -34,7 +34,8 @@ class MostRelevantAddressTest : PostgresIntegrationTestBase() {
         firstName = "ThisIsFor",
         relationship = ContactRelationship(
           prisonerNumber = prisonerNumber,
-          relationshipCode = "FRI",
+          relationshipType = "S",
+          relationshipToPrisoner = "FRI",
           isNextOfKin = false,
           isEmergencyContact = false,
           comments = null,

@@ -24,7 +24,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "Unsupported relationship type null.;{\"relationshipCode\": null,  \"updatedBy\": \"Admin\"}",
+      "Unsupported relationship type null.;{\"relationshipToPrisoner\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported approved visitor value null.;{\"isApprovedVisitor\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported emergency contact null.;{\"isEmergencyContact\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported next of kin null.;{\"isNextOfKin\": null,  \"updatedBy\": \"Admin\"}",
@@ -63,7 +63,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val prisonerContact = cretePrisonerContact(prisonerNumber)
 
     val updateRequest = UpdateRelationshipRequest(
-      relationshipCode = JsonNullable.of("SIS"),
+      relationshipToPrisoner = JsonNullable.of("SIS"),
       updatedBy = "Admin",
     )
 
@@ -73,7 +73,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
-    assertThat(updatedPrisonerContacts[0].relationshipCode).isEqualTo("SIS")
+    assertThat(updatedPrisonerContacts[0].relationshipToPrisoner).isEqualTo("SIS")
     stubEvents.assertHasEvent(
       event = OutboundEvent.PRISONER_CONTACT_UPDATED,
       additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
@@ -237,7 +237,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val prisonerContact = cretePrisonerContact(prisonerNumber)
 
     val updateRequest = UpdateRelationshipRequest(
-      relationshipCode = JsonNullable.of("FRI"),
+      relationshipToPrisoner = JsonNullable.of("FRI"),
       isNextOfKin = JsonNullable.of(true),
       isApprovedVisitor = JsonNullable.of(true),
       isEmergencyContact = JsonNullable.of(true),
@@ -263,7 +263,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
   private fun assertUpdatedPrisonerContactEquals(prisonerContact: PrisonerContactSummary, relationship: UpdateRelationshipRequest) {
     with(prisonerContact) {
-      assertThat(relationshipCode).isEqualTo(relationship.relationshipCode.get())
+      assertThat(relationshipToPrisoner).isEqualTo(relationship.relationshipToPrisoner.get())
       assertThat(nextOfKin).isEqualTo(relationship.isNextOfKin.get())
       assertThat(approvedVisitor).isEqualTo(relationship.isApprovedVisitor.get())
       assertThat(emergencyContact).isEqualTo(relationship.isEmergencyContact.get())
@@ -285,7 +285,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   private fun cretePrisonerContact(prisonerNumber: String = "A1234AB"): PrisonerContactSummary {
     val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
-      relationshipCode = "BRO",
+      relationshipType = "S",
+      relationshipToPrisoner = "BRO",
       isNextOfKin = false,
       isEmergencyContact = false,
       comments = null,
@@ -311,7 +312,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     relationship: ContactRelationship,
   ) {
     with(prisonerContact) {
-      assertThat(relationshipCode).isEqualTo(relationship.relationshipCode)
+      assertThat(relationshipToPrisoner).isEqualTo(relationship.relationshipToPrisoner)
       assertThat(nextOfKin).isEqualTo(relationship.isNextOfKin)
       assertThat(emergencyContact).isEqualTo(relationship.isEmergencyContact)
       assertThat(comments).isEqualTo(relationship.comments)

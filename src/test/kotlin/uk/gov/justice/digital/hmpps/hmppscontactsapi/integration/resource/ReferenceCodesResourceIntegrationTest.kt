@@ -58,13 +58,13 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
 
-    assertThat(error.developerMessage).startsWith(""""FOO" is not a valid reference code group. Valid groups are DOMESTIC_STS, OFF_RELATION""")
+    assertThat(error.developerMessage).startsWith(""""FOO" is not a valid reference code group. Valid groups are DOMESTIC_STS, OFFICIAL_RELATIONSHIP""")
   }
 
   @ParameterizedTest
   @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
   fun `should return a list of relationship type reference codes`(role: String) {
-    val groupCode = ReferenceCodeGroup.RELATIONSHIP
+    val groupCode = ReferenceCodeGroup.SOCIAL_RELATIONSHIP
     referenceCodeRepository.findAllByGroupCodeEquals(groupCode, Sort.unsorted()) hasSize 36
 
     val listOfCodes = testAPIClient.getReferenceCodes(groupCode, role = role)

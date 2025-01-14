@@ -27,7 +27,7 @@ class ReferenceCodeServiceTest {
 
   @Test
   fun `Should return a list of references codes with active only`() {
-    val groupCode = ReferenceCodeGroup.RELATIONSHIP
+    val groupCode = ReferenceCodeGroup.SOCIAL_RELATIONSHIP
     val listOfCodes = listOf(
       ReferenceCodeEntity(1L, groupCode, "FRIEND", "Friend", 0, true, "name"),
       ReferenceCodeEntity(2L, groupCode, "MOTHER", "Mother", 1, true, "name"),
@@ -43,7 +43,7 @@ class ReferenceCodeServiceTest {
 
   @Test
   fun `Should return a list of references codes for all is active status`() {
-    val groupCode = ReferenceCodeGroup.RELATIONSHIP
+    val groupCode = ReferenceCodeGroup.SOCIAL_RELATIONSHIP
     val listOfCodes = listOf(
       ReferenceCodeEntity(1L, groupCode, "FRIEND", "Friend", 0, true, "name"),
       ReferenceCodeEntity(2L, groupCode, "MOTHER", "Mother", 1, true, "name"),
@@ -75,48 +75,48 @@ class ReferenceCodeServiceTest {
 
   @Test
   fun `should return reference code if valid`() {
-    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, true, "name")
-    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND")).thenReturn(entity)
+    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", "Friend", 0, true, "name")
+    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND")).thenReturn(entity)
 
-    val code = service.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND", allowInactive = false)
+    val code = service.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", allowInactive = false)
 
     assertThat(code).isEqualTo(
-      ReferenceCode(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, true),
+      ReferenceCode(1L, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", "Friend", 0, true),
     )
   }
 
   @Test
   fun `should return reference code if inactive but inactive are allowed`() {
-    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, false, "name")
-    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND")).thenReturn(entity)
+    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", "Friend", 0, false, "name")
+    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND")).thenReturn(entity)
 
-    val code = service.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND", allowInactive = true)
+    val code = service.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", allowInactive = true)
 
     assertThat(code).isEqualTo(
-      ReferenceCode(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, false),
+      ReferenceCode(1L, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", "Friend", 0, false),
     )
   }
 
   @Test
   fun `should throw exception if reference code is inactive and it's not allowed`() {
-    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.RELATIONSHIP, "FRIEND", "Friend", 0, false, "name")
-    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND")).thenReturn(entity)
+    val entity = ReferenceCodeEntity(1L, ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", "Friend", 0, false, "name")
+    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND")).thenReturn(entity)
 
     val exception = assertThrows<ValidationException> {
-      service.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND", allowInactive = false)
+      service.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", allowInactive = false)
     }
 
-    assertThat(exception.message).isEqualTo("Unsupported relationship type (FRIEND). This code is no longer active.")
+    assertThat(exception.message).isEqualTo("Unsupported social relationship (FRIEND). This code is no longer active.")
   }
 
   @Test
   fun `should throw exception if reference code is not found`() {
-    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND")).thenReturn(null)
+    whenever(referenceCodeRepository.findByGroupCodeAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND")).thenReturn(null)
 
     val exception = assertThrows<ValidationException> {
-      service.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, "FRIEND", allowInactive = true)
+      service.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, "FRIEND", allowInactive = true)
     }
 
-    assertThat(exception.message).isEqualTo("Unsupported relationship type (FRIEND)")
+    assertThat(exception.message).isEqualTo("Unsupported social relationship (FRIEND)")
   }
 }

@@ -78,9 +78,10 @@ class ContactFacadeTest {
       firstName = "first",
       relationship = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "FRI",
+        relationshipToPrisoner = "FRI",
         isNextOfKin = false,
         isEmergencyContact = false,
+        relationshipType = "S",
         comments = null,
       ),
       createdBy = "created",
@@ -103,8 +104,9 @@ class ContactFacadeTest {
       99,
       ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "FRI",
+        relationshipToPrisoner = "FRI",
         isNextOfKin = false,
+        relationshipType = "S",
         isEmergencyContact = false,
         comments = null,
       ),

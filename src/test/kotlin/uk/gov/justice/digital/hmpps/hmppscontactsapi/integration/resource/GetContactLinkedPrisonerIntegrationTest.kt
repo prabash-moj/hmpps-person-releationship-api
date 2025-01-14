@@ -96,10 +96,10 @@ class GetContactLinkedPrisonerIntegrationTest : H2IntegrationTestBase() {
           relationships = listOf(
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = prisoner2FatherRelationship.prisonerContactId,
-              contactType = "S",
+              relationshipType = "S",
               contactTypeDescription = "Social/Family",
-              relationshipCode = "FA",
-              relationshipDescription = "Father",
+              relationshipToPrisoner = "FA",
+              relationshipToPrisonerDescription = "Father",
             ),
           ),
         ),
@@ -111,17 +111,17 @@ class GetContactLinkedPrisonerIntegrationTest : H2IntegrationTestBase() {
           relationships = listOf(
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = prisoner1OtherRelationship.prisonerContactId,
-              contactType = "S",
+              relationshipType = "S",
               contactTypeDescription = "Social/Family",
-              relationshipCode = "OTHER",
-              relationshipDescription = "Other - Social",
+              relationshipToPrisoner = "OTHER",
+              relationshipToPrisonerDescription = "Other - Social",
             ),
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = prisoner1FriendRelationship.prisonerContactId,
-              contactType = "S",
+              relationshipType = "S",
               contactTypeDescription = "Social/Family",
-              relationshipCode = "FRI",
-              relationshipDescription = "Friend",
+              relationshipToPrisoner = "FRI",
+              relationshipToPrisonerDescription = "Friend",
             ),
           ),
         ),
@@ -150,10 +150,10 @@ class GetContactLinkedPrisonerIntegrationTest : H2IntegrationTestBase() {
           relationships = listOf(
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = prisoner1OtherRelationship.prisonerContactId,
-              contactType = "S",
+              relationshipType = "S",
               contactTypeDescription = "Social/Family",
-              relationshipCode = "OTHER",
-              relationshipDescription = "Other - Social",
+              relationshipToPrisoner = "OTHER",
+              relationshipToPrisonerDescription = "Other - Social",
             ),
           ),
         ),
@@ -167,8 +167,9 @@ class GetContactLinkedPrisonerIntegrationTest : H2IntegrationTestBase() {
         contactId = savedContactId,
         ContactRelationship(
           prisonerNumber = prisoner.prisonerNumber,
-          relationshipCode = relationshipCode,
+          relationshipToPrisoner = relationshipCode,
           isNextOfKin = true,
+          relationshipType = "S",
           isEmergencyContact = true,
         ),
         createdBy = "created",

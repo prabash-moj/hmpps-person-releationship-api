@@ -44,17 +44,17 @@ class LinkedPrisonersServiceTest {
           relationships = listOf(
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 999,
-              contactType = "S",
+              relationshipType = "S",
               contactTypeDescription = "Social/Family",
-              relationshipCode = "FRI",
-              relationshipDescription = "Friend",
+              relationshipToPrisoner = "FRI",
+              relationshipToPrisonerDescription = "Friend",
             ),
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 888,
-              contactType = "O",
+              relationshipType = "O",
               contactTypeDescription = "Official",
-              relationshipCode = "LAW",
-              relationshipDescription = "Lawyer",
+              relationshipToPrisoner = "LAW",
+              relationshipToPrisonerDescription = "Lawyer",
             ),
           ),
         ),
@@ -67,10 +67,10 @@ class LinkedPrisonersServiceTest {
 
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 777,
-              contactType = "S",
+              relationshipType = "S",
               contactTypeDescription = "Social/Family",
-              relationshipCode = "FA",
-              relationshipDescription = "Father",
+              relationshipToPrisoner = "FA",
+              relationshipToPrisonerDescription = "Father",
             ),
           ),
         ),
@@ -105,10 +105,10 @@ class LinkedPrisonersServiceTest {
           relationships = listOf(
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 999,
-              contactType = "S",
+              relationshipType = "S",
               contactTypeDescription = "Social/Family",
-              relationshipCode = "FRI",
-              relationshipDescription = "Friend",
+              relationshipToPrisoner = "FRI",
+              relationshipToPrisonerDescription = "Friend",
             ),
           ),
         ),
@@ -157,7 +157,7 @@ class LinkedPrisonersServiceTest {
       contactEmailId = 5L,
       emailAddress = "john.doe@example.com",
       prisonerNumber = prisonerNumber,
-      relationshipType = relationshipCode,
+      relationshipToPrisoner = relationshipCode,
       relationshipDescription = relationshipDescription,
       active = true,
       approvedVisitor = true,
@@ -165,7 +165,7 @@ class LinkedPrisonersServiceTest {
       emergencyContact = false,
       currentTerm = true,
       comments = "No comments",
-      contactType = contactType,
+      relationshipType = contactType,
       contactTypeDescription = contactTypeDescription,
     )
 }

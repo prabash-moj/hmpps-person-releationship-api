@@ -21,7 +21,7 @@ class ReferenceCodeGroupEnumConverterTest {
     val exception = assertThrows<InvalidReferenceCodeGroupException> {
       ReferenceCodeGroupEnumConverter().convert("FOO")
     }
-    assertThat(exception.message).startsWith("\"FOO\" is not a valid reference code group. Valid groups are DOMESTIC_STS, OFF_RELATION")
+    assertThat(exception.message).startsWith("\"FOO\" is not a valid reference code group. Valid groups are DOMESTIC_STS, OFFICIAL_RELATIONSHIP")
     assertThat(exception.message).doesNotContain(ReferenceCodeGroup.TEST_TYPE.name)
   }
 }

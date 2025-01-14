@@ -20,6 +20,6 @@ class PrisonerContactService(
   fun getAllContacts(prisonerNumber: String, active: Boolean, pageable: Pageable): Page<PrisonerContactSummary> {
     prisonerService.getPrisoner(prisonerNumber)
       ?: throw EntityNotFoundException("Prisoner number $prisonerNumber - not found")
-    return prisonerContactSummaryRepository.findByPrisonerNumberAndActiveAndContactType(prisonerNumber, active, CONTACT_TYPE, pageable).map { it.toModel() }
+    return prisonerContactSummaryRepository.findByPrisonerNumberAndActiveAndRelationshipType(prisonerNumber, active, CONTACT_TYPE, pageable).map { it.toModel() }
   }
 }

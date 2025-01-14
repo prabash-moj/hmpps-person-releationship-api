@@ -24,10 +24,10 @@ class ContactLinkedPrisonersControllerTest {
         relationships = listOf(
           LinkedPrisonerRelationshipDetails(
             prisonerContactId = 99,
-            contactType = "S",
+            relationshipType = "S",
             contactTypeDescription = "Social/Family",
-            relationshipCode = "FA",
-            relationshipDescription = "Father",
+            relationshipToPrisoner = "FA",
+            relationshipToPrisonerDescription = "Father",
           ),
         ),
       ),

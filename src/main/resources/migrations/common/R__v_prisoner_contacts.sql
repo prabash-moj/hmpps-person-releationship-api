@@ -37,13 +37,13 @@ AS
       ce.contact_email_id,
       ce.email_address,
       pc.prisoner_contact_id,
-      pc.contact_type,
+      pc.relationship_type,
       rc5.description as contact_type_description,
       pc.prisoner_number,
-      pc.relationship_type,
+      pc.relationship_to_prisoner,
       case
-          when pc.contact_type = 'S' then rc3.description
-          when pc.contact_type = 'O' then rc4.description
+          when pc.relationship_type = 'S' then rc3.description
+          when pc.relationship_type = 'O' then rc4.description
           else 'Unknown relationship type'
       end as relationship_description,
       pc.active,
@@ -75,9 +75,9 @@ AS
   )
   left join reference_codes rc1 ON rc1.group_code = 'TITLE' and rc1.code = c.title
   left join reference_codes rc2 ON rc2.group_code = 'PHONE_TYPE' and rc2.code = cp.phone_type
-  left join reference_codes rc3 ON rc3.group_code = 'RELATIONSHIP' and rc3.code = pc.relationship_type
-  left join reference_codes rc4 ON rc4.group_code = 'OFF_RELATION' and rc4.code = pc.relationship_type
-  left join reference_codes rc5 ON rc5.group_code = 'CONTACT_TYPE' and rc5.code = pc.contact_type
+  left join reference_codes rc3 ON rc3.group_code = 'SOCIAL_RELATIONSHIP' and rc3.code = pc.relationship_to_prisoner
+  left join reference_codes rc4 ON rc4.group_code = 'OFFICIAL_RELATIONSHIP' and rc4.code = pc.relationship_to_prisoner
+  left join reference_codes rc5 ON rc5.group_code = 'RELATIONSHIP_TYPE' and rc5.code = pc.relationship_type
   left join city_reference city_ref on city_ref.nomis_code = ca.city_code
   left join county_reference county_ref on county_ref.nomis_code = ca.county_code
   left join country_reference country_ref on country_ref.nomis_code = ca.country_code

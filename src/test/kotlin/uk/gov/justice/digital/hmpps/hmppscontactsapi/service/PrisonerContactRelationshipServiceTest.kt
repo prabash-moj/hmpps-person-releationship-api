@@ -44,8 +44,8 @@ class PrisonerContactRelationshipServiceTest {
       prisonerContactId = prisonerContactId,
       contactId = 2,
       prisonerNumber = "A1234BC",
-      relationshipCode = "FRIEND",
-      relationshipDescription = "Friend",
+      relationshipToPrisonerCode = "FRIEND",
+      relationshipToPrisonerDescription = "Friend",
       nextOfKin = false,
       emergencyContact = false,
       isRelationshipActive = true,
@@ -120,7 +120,7 @@ class PrisonerContactRelationshipServiceTest {
       contactEmailId = 5L,
       emailAddress = "john.doe@example.com",
       prisonerNumber = "A1234BC",
-      relationshipType = "FRIEND",
+      relationshipToPrisoner = "FRIEND",
       relationshipDescription = "Friend",
       active = active,
       approvedVisitor = true,
@@ -128,7 +128,7 @@ class PrisonerContactRelationshipServiceTest {
       emergencyContact = false,
       currentTerm = true,
       comments = "No comments",
-      contactType = "S",
+      relationshipType = "S",
       contactTypeDescription = "Social/Family",
     )
 }

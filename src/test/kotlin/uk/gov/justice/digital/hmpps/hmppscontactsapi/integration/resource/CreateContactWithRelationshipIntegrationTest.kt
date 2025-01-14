@@ -28,10 +28,11 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "relationship.prisonerNumber must not be null;{ \"relationshipCode\": \"FRI\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
-      "relationship.relationshipCode must not be null;{ \"prisonerNumber\": \"A1234BC\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
-      "relationship.isNextOfKin must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipCode\": \"FRI\", \"isEmergencyContact\": false }",
-      "relationship.isEmergencyContact must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipCode\": \"FRI\", \"isNextOfKin\": false }",
+      "relationship.prisonerNumber must not be null;{\"relationshipType\": \"S\", \"relationshipToPrisoner\": \"FRI\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
+      "relationship.relationshipType must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipToPrisoner\": \"FRI\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
+      "relationship.relationshipToPrisoner must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipType\": \"S\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
+      "relationship.isNextOfKin must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipType\": \"S\", \"relationshipToPrisoner\": \"FRI\", \"isEmergencyContact\": false }",
+      "relationship.isEmergencyContact must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipType\": \"S\", \"relationshipToPrisoner\": \"FRI\", \"isNextOfKin\": false }",
     ],
     delimiter = ';',
   )
@@ -66,7 +67,8 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
       relationship = ContactRelationship(
         prisonerNumber = prisonerNumber,
-        relationshipCode = "FRI",
+        relationshipType = "S",
+        relationshipToPrisoner = "FRI",
         isNextOfKin = false,
         isEmergencyContact = false,
         comments = null,
@@ -97,7 +99,8 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse(prisonerNumber)
     val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
-      relationshipCode = "FOO",
+      relationshipType = "S",
+      relationshipToPrisoner = "FOO",
       isNextOfKin = false,
       isEmergencyContact = false,
       comments = null,
@@ -122,7 +125,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
 
-    assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported relationship type (FOO)")
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported social relationship (FOO)")
     stubEvents.assertHasNoEvents(event = OutboundEvent.CONTACT_CREATED)
     stubEvents.assertHasNoEvents(event = OutboundEvent.PRISONER_CONTACT_CREATED)
 
@@ -137,7 +140,8 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse(prisonerNumber)
     val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
-      relationshipCode = "FRI",
+      relationshipType = "S",
+      relationshipToPrisoner = "FRI",
       isNextOfKin = false,
       isEmergencyContact = false,
       comments = null,
@@ -174,7 +178,8 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse(prisonerNumber)
     val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
-      relationshipCode = "FRI",
+      relationshipType = "S",
+      relationshipToPrisoner = "FRI",
       isNextOfKin = true,
       isEmergencyContact = true,
       comments = "Some comments",
@@ -209,7 +214,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     relationship: ContactRelationship,
   ) {
     with(prisonerContact) {
-      assertThat(relationshipCode).isEqualTo(relationship.relationshipCode)
+      assertThat(relationshipToPrisonerCode).isEqualTo(relationship.relationshipToPrisoner)
       assertThat(nextOfKin).isEqualTo(relationship.isNextOfKin)
       assertThat(emergencyContact).isEqualTo(relationship.isEmergencyContact)
       assertThat(comments).isEqualTo(relationship.comments)

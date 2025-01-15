@@ -18,8 +18,8 @@ data class LinkedPrisonerRelationshipDetails(
   )
   val relationshipType: String,
 
-  @Schema(description = "The description of the contact type", example = "Official")
-  val contactTypeDescription: String,
+  @Schema(description = "The description of the contact relationship type. Description from reference data Official or Social/Family", example = "Official")
+  val relationshipTypeDescription: String,
 
   @Schema(description = "The relationship to the prisoner. A code from SOCIAL_RELATIONSHIP or OFFICIAL_RELATIONSHIP reference data groups depending on the relationship type.", example = "FRI")
   val relationshipToPrisoner: String,

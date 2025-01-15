@@ -25,7 +25,7 @@ class ContactLinkedPrisonersControllerTest {
           LinkedPrisonerRelationshipDetails(
             prisonerContactId = 99,
             relationshipType = "S",
-            contactTypeDescription = "Social/Family",
+            relationshipTypeDescription = "Social/Family",
             relationshipToPrisoner = "FA",
             relationshipToPrisonerDescription = "Father",
           ),

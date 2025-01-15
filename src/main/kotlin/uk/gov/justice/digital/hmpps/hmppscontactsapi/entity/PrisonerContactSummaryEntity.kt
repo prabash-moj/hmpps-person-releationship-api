@@ -87,5 +87,5 @@ data class PrisonerContactSummaryEntity(
 
   val relationshipType: String,
 
-  val contactTypeDescription: String,
+  val relationshipTypeDescription: String,
 )

@@ -38,7 +38,7 @@ AS
       ce.email_address,
       pc.prisoner_contact_id,
       pc.relationship_type,
-      rc5.description as contact_type_description,
+      rc5.description as relationship_type_description,
       pc.prisoner_number,
       pc.relationship_to_prisoner,
       case

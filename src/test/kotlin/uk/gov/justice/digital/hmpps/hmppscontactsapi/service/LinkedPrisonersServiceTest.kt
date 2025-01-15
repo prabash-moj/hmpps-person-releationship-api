@@ -45,14 +45,14 @@ class LinkedPrisonersServiceTest {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 999,
               relationshipType = "S",
-              contactTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social/Family",
               relationshipToPrisoner = "FRI",
               relationshipToPrisonerDescription = "Friend",
             ),
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 888,
               relationshipType = "O",
-              contactTypeDescription = "Official",
+              relationshipTypeDescription = "Official",
               relationshipToPrisoner = "LAW",
               relationshipToPrisonerDescription = "Lawyer",
             ),
@@ -68,7 +68,7 @@ class LinkedPrisonersServiceTest {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 777,
               relationshipType = "S",
-              contactTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social/Family",
               relationshipToPrisoner = "FA",
               relationshipToPrisonerDescription = "Father",
             ),
@@ -106,7 +106,7 @@ class LinkedPrisonersServiceTest {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 999,
               relationshipType = "S",
-              contactTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social/Family",
               relationshipToPrisoner = "FRI",
               relationshipToPrisonerDescription = "Friend",
             ),
@@ -166,6 +166,6 @@ class LinkedPrisonersServiceTest {
       currentTerm = true,
       comments = "No comments",
       relationshipType = contactType,
-      contactTypeDescription = contactTypeDescription,
+      relationshipTypeDescription = contactTypeDescription,
     )
 }

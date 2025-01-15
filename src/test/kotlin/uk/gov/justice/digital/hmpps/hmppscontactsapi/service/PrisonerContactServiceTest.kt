@@ -139,6 +139,6 @@ class PrisonerContactServiceTest {
       currentTerm = true,
       comments = "No comments",
       relationshipType = "S",
-      contactTypeDescription = "Social/Family",
+      relationshipTypeDescription = "Social/Family",
     )
 }

@@ -127,7 +127,9 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
     with(contact) {
       assertThat(id).isEqualTo(1)
-      assertThat(contact.phoneNumbers).hasSize(2)
+
+      // Phone numbers should exclude any address-specific numbers
+      assertThat(contact.phoneNumbers).hasSize(1)
       with(contact.phoneNumbers[0]) {
         assertThat(contactPhoneId).isEqualTo(1)
         assertThat(contactId).isEqualTo(1)
@@ -136,15 +138,6 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
         assertThat(phoneNumber).isEqualTo("07878 111111")
         assertThat(extNumber).isNull()
         assertThat(createdBy).isEqualTo("TIM")
-      }
-      with(contact.phoneNumbers[1]) {
-        assertThat(contactPhoneId).isEqualTo(2)
-        assertThat(contactId).isEqualTo(1)
-        assertThat(phoneType).isEqualTo("HOME")
-        assertThat(phoneTypeDescription).isEqualTo("Home")
-        assertThat(phoneNumber).isEqualTo("01111 777777")
-        assertThat(extNumber).isEqualTo("+0123")
-        assertThat(createdBy).isEqualTo("JAMES")
       }
 
       assertThat(contact.addresses).hasSize(2)

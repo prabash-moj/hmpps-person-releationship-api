@@ -97,6 +97,8 @@ class ContactService(
   private fun enrichContact(contactEntity: ContactEntity): ContactDetails {
     val phoneNumbers = contactPhoneDetailsRepository.findByContactId(contactEntity.id()).map { it.toModel() }
     val addressPhoneNumbers = contactAddressPhoneRepository.findByContactId(contactEntity.id())
+
+    // Match address phone numbers with addresses
     val addresses = contactAddressDetailsRepository.findByContactId(contactEntity.id())
       .map { address ->
         address.toModel(
@@ -107,18 +109,30 @@ class ContactService(
           ),
         )
       }
+
     val emailAddresses = contactEmailRepository.findByContactId(contactEntity.id()).map { it.toModel() }
     val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.id()).map { it.toModel() }
-    val languageDescription =
-      contactEntity.languageCode?.let { languageService.getLanguageByNomisCode(it).nomisDescription }
+
+    val languageDescription = contactEntity.languageCode?.let {
+      languageService.getLanguageByNomisCode(it).nomisDescription
+    }
+
     val domesticStatusDescription = contactEntity.domesticStatus?.let {
       referenceCodeService.getReferenceDataByGroupAndCode(
         ReferenceCodeGroup.DOMESTIC_STS,
         it,
       )?.description
     }
-    val genderDescription =
-      contactEntity.gender?.let { referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, it)?.description }
+
+    val genderDescription = contactEntity.gender?.let {
+      referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.GENDER, it)?.description
+    }
+
+    // Filter address-specific phone numbers out of the "global" phone number list
+    val globalPhoneNumbers = phoneNumbers.filterNot { phone ->
+      addressPhoneNumbers.any { addressPhone -> addressPhone.contactPhoneId == phone.contactPhoneId }
+    }
+
     return ContactDetails(
       id = contactEntity.id(),
       title = contactEntity.title,
@@ -133,7 +147,7 @@ class ContactService(
       languageDescription = languageDescription,
       interpreterRequired = contactEntity.interpreterRequired,
       addresses = addresses,
-      phoneNumbers = phoneNumbers,
+      phoneNumbers = globalPhoneNumbers,
       emailAddresses = emailAddresses,
       identities = identities,
       domesticStatusCode = contactEntity.domesticStatus,

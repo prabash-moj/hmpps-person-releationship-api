@@ -365,7 +365,7 @@ class ContactServiceTest {
     }
 
     @Test
-    fun `should get a contact with phone numbers including those attached to addresses`() {
+    fun `should get a contact with phone numbers but exclude those attached to addresses`() {
       val aGeneralPhoneNumber = createContactPhoneDetailsEntity(id = 1, contactId = contactId)
       val aPhoneAttachedToAddress1 = createContactPhoneDetailsEntity(id = 2, contactId = contactId)
       val aPhoneAttachedToAddress2 = createContactPhoneDetailsEntity(id = 3, contactId = contactId)
@@ -398,11 +398,9 @@ class ContactServiceTest {
       with(contact!!) {
         assertThat(id).isEqualTo(entity.contactId)
 
-        assertThat(phoneNumbers).hasSize(4)
+        // Should not include the 3 address-specific phone numbers
+        assertThat(phoneNumbers).hasSize(1)
         assertThat(phoneNumbers[0].contactPhoneId).isEqualTo(1)
-        assertThat(phoneNumbers[1].contactPhoneId).isEqualTo(2)
-        assertThat(phoneNumbers[2].contactPhoneId).isEqualTo(3)
-        assertThat(phoneNumbers[3].contactPhoneId).isEqualTo(4)
 
         assertThat(addresses).hasSize(2)
         assertThat(addresses[0].contactAddressId).isEqualTo(1)

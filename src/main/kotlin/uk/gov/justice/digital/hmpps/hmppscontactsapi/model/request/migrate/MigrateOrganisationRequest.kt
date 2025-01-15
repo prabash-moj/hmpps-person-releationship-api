@@ -45,7 +45,7 @@ data class MigrateOrganisationRequest(
   @Schema(description = "The date the organisation was deactivated, EXPIRY_DATE in NOMIS", example = "2010-12-30")
   val deactivatedDate: LocalDate?,
 
-  @Schema(description = "The types of the organisation, CORPORATE_TYPES in NOMIS.", example = "TRUST")
+  @Schema(description = "The types of the organisation, CORPORATE_TYPES in NOMIS.")
   val organisationTypes: List<MigrateOrganisationType>,
 
   @Schema(description = "Phone numbers associated directly with the organisation and it's addresses")
@@ -62,7 +62,7 @@ data class MigrateOrganisationRequest(
 ) : AbstractAuditable()
 
 data class MigrateOrganisationType(
-  @Schema(description = "Type of organisation from reference data")
+  @Schema(description = "Type of organisation from reference data", example = "TRUST")
   val type: String,
 ) : AbstractAuditable()
 

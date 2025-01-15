@@ -55,6 +55,11 @@ class OrganisationMigrationService(
       request.organisationTypes.size,
     )
 
+    if (organisationRepository.existsById(request.nomisCorporateId)) {
+      logger.info("Migration: Duplicate corporate ID received ${request.nomisCorporateId} - replacing it")
+      removeExistingOrgAndDetail(request.nomisCorporateId)
+    }
+
     val organisation = createOrganisation(request)
     val createdOrganisation = IdPair(
       ElementType.ORGANISATION,
@@ -143,6 +148,16 @@ class OrganisationMigrationService(
       createdWebAddresses,
       createdAddresses,
     )
+  }
+
+  private fun removeExistingOrgAndDetail(organisationId: Long) {
+    organisationAddressPhoneRepository.deleteAllByOrganisationId(organisationId)
+    organisationAddressRepository.deleteAllByOrganisationId(organisationId)
+    organisationPhoneRepository.deleteAllByOrganisationId(organisationId)
+    organisationEmailRepository.deleteAllByOrganisationId(organisationId)
+    organisationWebAddressRepository.deleteAllByOrganisationId(organisationId)
+    organisationTypeRepository.deleteAllByOrganisationId(organisationId)
+    organisationRepository.deleteById(organisationId)
   }
 
   private fun createOrganisationAddressPhone(

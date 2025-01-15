@@ -474,9 +474,11 @@ class MigrateOrganisationIntegrationTest : PostgresIntegrationTestBase() {
     assertThat(migrated.addresses).hasSize(1)
     val migratedAddress = migrated.addresses.first()
 
-    val firstPhone = organisationAddressPhoneRepository.getReferenceById(migratedAddress.phoneNumbers.find { it.nomisId == 123L }!!.dpsId)
+    val firstPhone =
+      organisationAddressPhoneRepository.getReferenceById(migratedAddress.phoneNumbers.find { it.nomisId == 123L }!!.dpsId)
     assertThat(firstPhone.organisationAddressId).isEqualTo(migratedAddress.address.dpsId)
-    val secondPhone = organisationAddressPhoneRepository.getReferenceById(migratedAddress.phoneNumbers.find { it.nomisId == 456L }!!.dpsId)
+    val secondPhone =
+      organisationAddressPhoneRepository.getReferenceById(migratedAddress.phoneNumbers.find { it.nomisId == 456L }!!.dpsId)
     assertThat(secondPhone.organisationAddressId).isEqualTo(migratedAddress.address.dpsId)
 
     with(organisationPhoneRepository.getReferenceById(firstPhone.organisationPhoneId)) {
@@ -497,6 +499,107 @@ class MigrateOrganisationIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(updatedTime).isEqualTo(LocalDateTime.of(2020, 3, 4, 11, 45))
       assertThat(updatedBy).isEqualTo("MODIFIED")
     }
+  }
+
+  @Test
+  fun `duplicate corporate id should remove existing entities and re-create`() {
+    val request = minimalMigrationRequest().copy(
+      organisationTypes = listOf(MigrateOrganisationType("BSKILLS")),
+      phoneNumbers = listOf(
+        MigrateOrganisationPhoneNumber(
+          nomisPhoneId = 123,
+          type = "MOB",
+          number = "123",
+          extension = null,
+        ),
+      ),
+      emailAddresses = listOf(
+        MigrateOrganisationEmailAddress(
+          nomisEmailAddressId = 456,
+          email = "test@example.com",
+        ),
+      ),
+      webAddresses = listOf(
+        MigrateOrganisationWebAddress(
+          nomisWebAddressId = 789,
+          webAddress = "test@example.com",
+        ),
+      ),
+      addresses = listOf(
+        MigrateOrganisationAddress(
+          nomisAddressId = 369,
+          type = null,
+          primaryAddress = false,
+          mailAddress = false,
+          serviceAddress = false,
+          noFixedAddress = false,
+          flat = null,
+          premise = null,
+          street = null,
+          locality = null,
+          city = null,
+          county = null,
+          postCode = null,
+          country = null,
+          specialNeedsCode = null,
+          contactPersonName = null,
+          businessHours = null,
+          comment = null,
+          startDate = null,
+          endDate = null,
+          phoneNumbers = listOf(
+            MigrateOrganisationPhoneNumber(
+              nomisPhoneId = 248,
+              type = "MOB",
+              number = "123",
+              extension = null,
+            ),
+          ),
+        ),
+      ),
+    )
+    val migrated = testAPIClient.migrateAnOrganisation(request)
+    assertThat(migrated.organisation.dpsId).isEqualTo(corporateId)
+    val originalDpsPhoneId = migrated.phoneNumbers.first().dpsId
+    val originalDpsEmailId = migrated.emailAddresses.first().dpsId
+    val originalDpsWebId = migrated.webAddresses.first().dpsId
+    val originalDpsAddressId = migrated.addresses.first().address.dpsId
+    val originalDpsAddressPhoneId = migrated.addresses.first().phoneNumbers.first().dpsId
+    val originalDpsAddressPhonePhoneId =
+      organisationAddressPhoneRepository.getReferenceById(originalDpsAddressPhoneId).organisationPhoneId
+
+    assertThat(organisationRepository.existsById(migrated.organisation.dpsId)).isTrue()
+    assertThat(organisationPhoneRepository.existsById(originalDpsPhoneId)).isTrue()
+    assertThat(organisationPhoneRepository.existsById(originalDpsAddressPhonePhoneId)).isTrue()
+    assertThat(organisationEmailRepository.existsById(originalDpsEmailId)).isTrue()
+    assertThat(organisationWebAddressRepository.existsById(originalDpsWebId)).isTrue()
+    assertThat(organisationAddressRepository.existsById(originalDpsAddressId)).isTrue()
+
+    val newName = "A new name to check we updated org"
+    val migratedAgain = testAPIClient.migrateAnOrganisation(request.copy(organisationName = newName))
+    assertThat(migratedAgain.organisation.dpsId).isEqualTo(corporateId)
+    val newDpsPhoneId = migratedAgain.phoneNumbers.first().dpsId
+    val newDpsEmailId = migratedAgain.emailAddresses.first().dpsId
+    val newDpsWebId = migratedAgain.webAddresses.first().dpsId
+    val newDpsAddressId = migratedAgain.addresses.first().address.dpsId
+    val newDpsAddressPhoneId = migratedAgain.addresses.first().phoneNumbers.first().dpsId
+    val newDpsAddressPhonePhoneId =
+      organisationAddressPhoneRepository.getReferenceById(newDpsAddressPhoneId).organisationPhoneId
+
+    // old removed
+    assertThat(organisationPhoneRepository.existsById(originalDpsPhoneId)).isFalse()
+    assertThat(organisationPhoneRepository.existsById(originalDpsAddressPhonePhoneId)).isFalse()
+    assertThat(organisationEmailRepository.existsById(originalDpsEmailId)).isFalse()
+    assertThat(organisationWebAddressRepository.existsById(originalDpsWebId)).isFalse()
+    assertThat(organisationAddressRepository.existsById(originalDpsAddressId)).isFalse()
+
+    // new added
+    assertThat(organisationRepository.getReferenceById(corporateId).organisationName).isEqualTo(newName)
+    assertThat(organisationPhoneRepository.existsById(newDpsPhoneId)).isTrue()
+    assertThat(organisationPhoneRepository.existsById(newDpsAddressPhonePhoneId)).isTrue()
+    assertThat(organisationEmailRepository.existsById(newDpsEmailId)).isTrue()
+    assertThat(organisationWebAddressRepository.existsById(newDpsWebId)).isTrue()
+    assertThat(organisationAddressRepository.existsById(newDpsAddressId)).isTrue()
   }
 
   private fun minimalMigrationRequest(): MigrateOrganisationRequest = MigrateOrganisationRequest(

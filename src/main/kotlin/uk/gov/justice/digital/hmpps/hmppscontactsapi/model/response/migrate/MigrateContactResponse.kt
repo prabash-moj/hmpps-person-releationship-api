@@ -37,20 +37,6 @@ data class MigrateContactResponse(
 )
 
 /**
- * Class to group together a type and the NOMIS / DPS IDs for it.
- */
-data class IdPair(
-  @Schema(description = "The category of information returned", example = "PHONE")
-  val elementType: ElementType,
-
-  @Schema(description = "The unique ID for this piece of data provided in the request", example = "123435")
-  val nomisId: Long,
-
-  @Schema(description = "The unique ID created in the DPS contacts service", example = "1234")
-  val dpsId: Long,
-)
-
-/**
  * Class to return the IDs for an address and a list of associated phone numbers
  */
 data class AddressAndPhones(
@@ -71,19 +57,3 @@ data class ContactsAndRestrictions(
   @Schema(description = "The pairs of IDs in NOMIS and DPS for relationship-specific restrictions")
   val restrictions: List<IdPair>,
 )
-
-/**
- * Describes the valid type values for an IdPair object
- */
-enum class ElementType(val elementType: String) {
-  CONTACT("Contact"),
-  PHONE("Phone"),
-  EMAIL("Email"),
-  ADDRESS("Address"),
-  ADDRESS_PHONE("AddressPhone"),
-  IDENTITY("Identity"),
-  RESTRICTION("Restriction"),
-  PRISONER_CONTACT("PrisonerContact"),
-  PRISONER_CONTACT_RESTRICTION("PrisonerContactRestriction"),
-  EMPLOYMENT("Employment"),
-}

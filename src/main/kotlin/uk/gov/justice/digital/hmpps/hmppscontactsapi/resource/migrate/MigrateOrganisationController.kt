@@ -13,32 +13,32 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.MigrateContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.ContactMigrationService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateOrganisationRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.MigrateOrganisationResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.OrganisationMigrationService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Sync & Migrate")
 @RestController
-@RequestMapping(value = ["migrate/contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping(value = ["migrate/organisation"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
-class MigrateContactController(val migrationService: ContactMigrationService) {
+class MigrateOrganisationController(val migrationService: OrganisationMigrationService) {
 
   @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
-    summary = "Migrate a contact",
-    description = "Migrate a contact from NOMIS with all of its associated data.",
+    summary = "Migrate an organisation",
+    description = "Migrate an organisation from NOMIS with all of its associated data. If an organisation with the same id id already exists it will be replaced",
   )
   @ApiResponses(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "The contact and associated data was created successfully",
+        description = "The organisation and associated data was created successfully",
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = MigrateContactResponse::class),
+            schema = Schema(implementation = MigrateOrganisationResponse::class),
           ),
         ],
       ),
@@ -47,15 +47,10 @@ class MigrateContactController(val migrationService: ContactMigrationService) {
         description = "The request failed validation with invalid or missing data supplied",
         content = [Content(schema = Schema(implementation = ErrorResponse::class))],
       ),
-      ApiResponse(
-        responseCode = "409",
-        description = "Conflict. The request contained a personId which already exists",
-        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
-      ),
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_MIGRATION')")
-  fun migrateContact(
-    @Valid @RequestBody migrateContactRequest: MigrateContactRequest,
-  ) = migrationService.migrateContact(migrateContactRequest)
+  fun migrateOrganisation(
+    @Valid @RequestBody request: MigrateOrganisationRequest,
+  ): MigrateOrganisationResponse = migrationService.migrateOrganisation(request)
 }

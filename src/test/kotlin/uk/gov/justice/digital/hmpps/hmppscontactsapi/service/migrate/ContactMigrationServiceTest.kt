@@ -47,7 +47,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactR
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class MigrationServiceTest {
+class ContactMigrationServiceTest {
   private val contactRepository: ContactWithFixedIdRepository = mock()
   private val contactAddressRepository: ContactAddressRepository = mock()
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
@@ -59,7 +59,7 @@ class MigrationServiceTest {
   private val prisonerContactRestrictionRepository: PrisonerContactRestrictionRepository = mock()
   private val contactEmploymentRepository: ContactEmploymentRepository = mock()
 
-  val migrationService = MigrationService(
+  val migrationService = ContactMigrationService(
     contactRepository,
     contactAddressRepository,
     contactAddressPhoneRepository,

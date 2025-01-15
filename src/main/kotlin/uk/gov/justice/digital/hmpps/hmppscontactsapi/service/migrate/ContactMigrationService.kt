@@ -32,7 +32,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactR
 import java.time.LocalDateTime
 
 @Service
-class MigrationService(
+class ContactMigrationService(
   private val contactRepository: ContactWithFixedIdRepository,
   private val contactAddressRepository: ContactAddressRepository,
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository,

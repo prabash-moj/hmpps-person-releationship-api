@@ -5,21 +5,6 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
-import java.time.LocalDateTime
-
-abstract class AbstractAuditable(
-  @Schema(description = "The data and time the record was created", nullable = true, example = "2022-10-01T16:45:45")
-  var createDateTime: LocalDateTime? = null,
-
-  @Schema(description = "The username who created the row", nullable = true, example = "X999X")
-  var createUsername: String? = null,
-
-  @Schema(description = "The date and time the record was last amended", nullable = true, example = "2022-10-01T16:45:45")
-  var modifyDateTime: LocalDateTime? = null,
-
-  @Schema(description = "The username who last modified the row", nullable = true, example = "X999X")
-  var modifyUsername: String? = null,
-)
 
 @Schema(description = "Request to migrate a contact and all of its sub-elements from NOMIS into this service")
 data class MigrateContactRequest(

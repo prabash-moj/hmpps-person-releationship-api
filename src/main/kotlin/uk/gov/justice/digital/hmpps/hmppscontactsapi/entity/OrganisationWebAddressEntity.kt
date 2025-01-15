@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 
 @Entity
@@ -19,9 +19,10 @@ data class OrganisationWebAddressEntity(
 
   val webAddress: String,
 
+  @Column(updatable = false)
   val createdBy: String,
 
-  @CreationTimestamp
+  @Column(updatable = false)
   val createdTime: LocalDateTime,
 
   val updatedBy: String?,

@@ -247,6 +247,7 @@ class SyncContactRestrictionServiceTest {
       expiryDate = LocalDate.of(2025, 2, 1),
       comments = "N/A",
       createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
     )
 
   private fun SyncUpdateContactRestrictionRequest.toEntity(contactRestrictionId: Long = 1L): ContactRestrictionEntity {
@@ -261,6 +262,7 @@ class SyncContactRestrictionServiceTest {
       expiryDate = this.expiryDate,
       comments = this.comments,
       createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
       updatedBy = updatedBy,
       updatedTime = updatedTime,
     )

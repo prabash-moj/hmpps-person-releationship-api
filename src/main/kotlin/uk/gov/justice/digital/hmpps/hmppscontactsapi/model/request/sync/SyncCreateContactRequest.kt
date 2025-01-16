@@ -35,7 +35,7 @@ data class SyncCreateContactRequest(
   @Schema(description = "The middle name of the contact, if any", example = "William", nullable = true, maxLength = 35)
   val middleName: String? = null,
 
-  @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true, format = "yyyy-MM-dd")
+  @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true)
   val dateOfBirth: LocalDate? = null,
 
   @Schema(description = "A description of the relationship if the contact should be linked to a prisoner", nullable = true, exampleClasses = [ContactRelationship::class])

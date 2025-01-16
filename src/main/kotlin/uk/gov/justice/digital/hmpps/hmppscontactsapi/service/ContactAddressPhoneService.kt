@@ -39,7 +39,7 @@ class ContactAddressPhoneService(
     validateContactAddressExists(contactAddressId)
     validatePhoneNumber(request.phoneNumber)
     val phoneTypeReference = referenceCodeService.validateReferenceCode(ReferenceCodeGroup.PHONE_TYPE, request.phoneType, allowInactive = false)
-
+    val createdTime = LocalDateTime.now()
     // Save the phone number
     val createdPhone = contactPhoneRepository.saveAndFlush(
       ContactPhoneEntity(
@@ -49,6 +49,7 @@ class ContactAddressPhoneService(
         phoneNumber = request.phoneNumber,
         extNumber = request.extNumber,
         createdBy = request.createdBy,
+        createdTime = createdTime,
       ),
     )
 
@@ -60,6 +61,7 @@ class ContactAddressPhoneService(
         contactAddressId = contactAddressId,
         contactPhoneId = createdPhone.contactPhoneId,
         createdBy = request.createdBy,
+        createdTime = createdTime,
       ),
     )
 

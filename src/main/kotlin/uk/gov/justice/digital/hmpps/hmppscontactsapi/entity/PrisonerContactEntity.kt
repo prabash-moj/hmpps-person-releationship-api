@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -37,11 +36,10 @@ data class PrisonerContactEntity(
 
   val currentTerm: Boolean,
 
-  @Column(updatable = false, name = "created_by")
+  @Column(updatable = false)
   val createdBy: String,
 
-  @Column(updatable = false, name = "created_time")
-  @CreationTimestamp
+  @Column(updatable = false)
   val createdTime: LocalDateTime,
 ) {
   var approvedBy: String? = null

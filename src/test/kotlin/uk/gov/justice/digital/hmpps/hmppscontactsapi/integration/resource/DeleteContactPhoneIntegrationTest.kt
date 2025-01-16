@@ -19,6 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEven
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
+import java.time.LocalDateTime
 
 class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -161,6 +162,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
         countryCode = "UK",
         comments = "Some comments",
         createdBy = "CREATE",
+        createdTime = LocalDateTime.now(),
       ),
     )
     val addressPhone = addressPhoneRepository.saveAndFlush(
@@ -170,6 +172,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
         contactPhoneId = savedContactPhoneId,
         contactAddressId = address.contactAddressId,
         createdBy = "USER1",
+        createdTime = LocalDateTime.now(),
       ),
     )
 

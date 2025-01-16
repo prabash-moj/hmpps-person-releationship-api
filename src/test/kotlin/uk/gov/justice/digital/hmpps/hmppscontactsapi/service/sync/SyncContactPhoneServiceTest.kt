@@ -203,6 +203,7 @@ class SyncContactPhoneServiceTest {
       phoneNumber = "555-1234",
       extNumber = "101",
       createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
     )
 
   private fun SyncUpdateContactPhoneRequest.toEntity(contactPhoneId: Long = 1L): ContactPhoneEntity {
@@ -218,6 +219,7 @@ class SyncContactPhoneServiceTest {
       createdBy = "TEST",
       updatedBy = updatedBy,
       updatedTime = updatedTime,
+      createdTime = LocalDateTime.now(),
     )
   }
 }

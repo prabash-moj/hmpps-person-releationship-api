@@ -2,10 +2,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
-import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalDateTime.now
 
 @MappedSuperclass
 abstract class BaseContactEntity(
@@ -29,8 +27,7 @@ abstract class BaseContactEntity(
   open val createdBy: String,
 
   @Column(updatable = false)
-  @CreationTimestamp
-  open val createdTime: LocalDateTime = now(),
+  open val createdTime: LocalDateTime,
 
   open val staffFlag: Boolean = false,
 

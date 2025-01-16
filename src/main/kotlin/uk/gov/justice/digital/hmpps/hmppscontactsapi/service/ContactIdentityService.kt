@@ -38,6 +38,7 @@ class ContactIdentityService(
         identityValue = request.identityValue,
         issuingAuthority = request.issuingAuthority,
         createdBy = request.createdBy,
+        createdTime = LocalDateTime.now(),
       ),
     )
     return created.toDomainWithType(type)

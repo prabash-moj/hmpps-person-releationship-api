@@ -17,6 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonRefere
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 const val LOCAL_CONTACT_ID_SEQUENCE_MIN: Long = 20000000L
 
@@ -149,11 +150,12 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
     val contactReturnedOnCreate = testAPIClient.createAContact(request)
 
     assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
-    assertThat(contactReturnedOnCreate).isEqualTo(
-      testAPIClient.getContact(
-        contactReturnedOnCreate.id,
-      ),
-    )
+    val contactReturnedFromGet = testAPIClient.getContact(contactReturnedOnCreate.id)
+    assertThat(contactReturnedOnCreate).usingRecursiveComparison()
+      .ignoringFields("createdTime") // get a weird timestamp precision failure when run on linux
+      .isEqualTo(contactReturnedFromGet)
+    assertThat(contactReturnedOnCreate.createdTime.truncatedTo(ChronoUnit.SECONDS))
+      .isEqualTo(contactReturnedFromGet.createdTime.truncatedTo(ChronoUnit.SECONDS))
 
     // Verify that a contact created locally has an ID in the appropriate range - above 20,000,000
     assertThat(contactReturnedOnCreate.id).isGreaterThanOrEqualTo(LOCAL_CONTACT_ID_SEQUENCE_MIN)

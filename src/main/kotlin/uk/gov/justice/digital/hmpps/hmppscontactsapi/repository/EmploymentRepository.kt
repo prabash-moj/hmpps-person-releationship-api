@@ -9,6 +9,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.EmploymentEntity
 @Repository
 interface EmploymentRepository : JpaRepository<EmploymentEntity, Long> {
   @Modifying
-  @Query("delete from EmploymentEntity c where c.organisationId = :organisationId")
-  fun deleteAllByOrganisationId(organisationId: Long): Int
+  @Query("delete from EmploymentEntity cr where cr.contactId = :contactId")
+  fun deleteAllByContactId(contactId: Long): Int
 }

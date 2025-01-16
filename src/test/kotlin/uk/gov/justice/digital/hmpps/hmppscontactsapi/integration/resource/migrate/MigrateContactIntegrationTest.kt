@@ -9,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.CodedValue
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.Corporate
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateAddress
@@ -25,7 +25,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepositor
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class MigrateContactIntegrationTest : H2IntegrationTestBase() {
+class MigrateContactIntegrationTest : PostgresIntegrationTestBase() {
   @Autowired
   private lateinit var contactRepository: ContactRepository
 
@@ -115,13 +115,14 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
     }
 
     @Test
-    fun `should migrate a contact with addresses, phones, emails, restrictions and identifiers`() {
+    fun `should migrate a contact with addresses, phones, emails, restrictions, identifiers and employments`() {
       val request = basicMigrationRequest(502).copy(
         addresses = addresses(),
         phoneNumbers = phoneNumbers(),
         emailAddresses = emails(),
         identifiers = identifiers(),
         restrictions = restrictions(),
+        employments = employments(),
       )
 
       val result = testAPIClient.migrateAContact(request)
@@ -155,6 +156,10 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(identities).hasSize(2)
         assertThat(identities).extracting("elementType", "nomisId")
           .containsAll(listOf(Tuple(ElementType.IDENTITY, 601L), Tuple(ElementType.IDENTITY, 602L)))
+
+        assertThat(employments).hasSize(2)
+        assertThat(employments).extracting("elementType", "nomisId")
+          .containsAll(listOf(Tuple(ElementType.EMPLOYMENT, 501L), Tuple(ElementType.EMPLOYMENT, 502L)))
       }
     }
 
@@ -293,7 +298,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
 
   private fun employments() =
     listOf(
-      MigrateEmployment(sequence = 501L, corporate = Corporate(id = 123L, name = "Big Blue"), active = true),
-      MigrateEmployment(sequence = 502L, corporate = Corporate(id = 124L, name = "Big Yellow"), active = false),
+      MigrateEmployment(sequence = 501L, corporate = Corporate(id = 123L), active = true),
+      MigrateEmployment(sequence = 502L, corporate = Corporate(id = 124L), active = false),
     )
 }

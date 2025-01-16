@@ -112,6 +112,7 @@ class RestrictionsService(
         expiryDate = request.expiryDate,
         comments = request.comments,
         createdBy = request.createdBy,
+        createdTime = LocalDateTime.now(),
       ),
     )
     return contactRestrictionDetails(created, type)
@@ -185,6 +186,7 @@ class RestrictionsService(
         expiryDate = request.expiryDate,
         comments = request.comments,
         createdBy = request.createdBy,
+        createdTime = LocalDateTime.now(),
       ),
     )
     return prisonerContactRestrictionDetails(created, relationship, type)

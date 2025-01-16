@@ -6,6 +6,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
+import java.time.LocalDateTime
 
 fun ContactAddressDetailsEntity.toModel(phoneNumbers: List<ContactAddressPhoneDetails>): ContactAddressDetails {
   return ContactAddressDetails(
@@ -62,6 +63,7 @@ fun CreateContactAddressRequest.toEntity(contactId: Long): ContactAddressEntity 
     noFixedAddress = this.noFixedAddress ?: false,
     comments = this.comments,
     createdBy = this.createdBy,
+    createdTime = LocalDateTime.now(),
   )
 }
 

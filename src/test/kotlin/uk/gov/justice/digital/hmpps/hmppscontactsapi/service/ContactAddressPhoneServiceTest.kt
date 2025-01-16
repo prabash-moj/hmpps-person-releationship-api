@@ -444,6 +444,7 @@ class ContactAddressPhoneServiceTest {
       postCode = "LS13 4KD",
       countryCode = "UK",
       createdBy = "TEST",
+      createdTime = now(),
     )
 
   private val addressPhoneEntity = ContactAddressPhoneEntity(
@@ -463,5 +464,6 @@ class ContactAddressPhoneServiceTest {
     phoneType = "HOME",
     phoneNumber = phoneNumber,
     createdBy = "USER1",
+    createdTime = now(),
   )
 }

@@ -384,9 +384,9 @@ class ContactServiceTest {
       )
       whenever(contactAddressPhoneRepository.findByContactId(contactId)).thenReturn(
         listOf(
-          ContactAddressPhoneEntity(1, contactId, 1, 2, createdBy = "TEST"),
-          ContactAddressPhoneEntity(1, contactId, 1, 4, createdBy = "TEST"),
-          ContactAddressPhoneEntity(1, contactId, 2, 3, createdBy = "TEST"),
+          ContactAddressPhoneEntity(1, contactId, 1, 2, createdBy = "TEST", createdTime = LocalDateTime.now()),
+          ContactAddressPhoneEntity(1, contactId, 1, 4, createdBy = "TEST", createdTime = LocalDateTime.now()),
+          ContactAddressPhoneEntity(1, contactId, 2, 3, createdBy = "TEST", createdTime = LocalDateTime.now()),
         ),
       )
 

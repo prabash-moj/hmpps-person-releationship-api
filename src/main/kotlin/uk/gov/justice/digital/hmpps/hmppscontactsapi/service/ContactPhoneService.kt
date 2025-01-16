@@ -39,6 +39,7 @@ class ContactPhoneService(
         phoneNumber = request.phoneNumber,
         extNumber = request.extNumber,
         createdBy = request.createdBy,
+        createdTime = LocalDateTime.now(),
       ),
     )
     return created.toDomainWithType(type)

@@ -226,6 +226,7 @@ class SyncContactIdentityServiceTest {
       identityValue = "PP87878787878",
       issuingAuthority = "UKBORDER",
       createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
     )
 
   private fun SyncUpdateContactIdentityRequest.toEntity(contactIdentityId: Long = 1L, issuingAuthority: String? = "UKBORDER"): ContactIdentityEntity {
@@ -236,6 +237,7 @@ class SyncContactIdentityServiceTest {
       identityValue = this.identityValue,
       issuingAuthority = issuingAuthority,
       createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
       updatedBy = this.updatedBy,
       updatedTime = this.updatedTime,
     )

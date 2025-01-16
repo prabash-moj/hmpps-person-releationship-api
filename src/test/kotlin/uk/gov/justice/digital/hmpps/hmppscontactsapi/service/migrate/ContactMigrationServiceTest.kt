@@ -15,11 +15,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmploymentEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithFixedIdEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.EmploymentEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.CodedValue
@@ -37,11 +37,11 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.Elem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmploymentRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestrictionRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactWithFixedIdRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.EmploymentRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionRepository
 import java.time.LocalDate
@@ -57,7 +57,7 @@ class ContactMigrationServiceTest {
   private val contactRestrictionRepository: ContactRestrictionRepository = mock()
   private val prisonerContactRepository: PrisonerContactRepository = mock()
   private val prisonerContactRestrictionRepository: PrisonerContactRestrictionRepository = mock()
-  private val contactEmploymentRepository: ContactEmploymentRepository = mock()
+  private val employmentRepository: EmploymentRepository = mock()
 
   val migrationService = ContactMigrationService(
     contactRepository,
@@ -69,7 +69,7 @@ class ContactMigrationServiceTest {
     contactRestrictionRepository,
     prisonerContactRepository,
     prisonerContactRestrictionRepository,
-    contactEmploymentRepository,
+    employmentRepository,
   )
 
   private val aUsername = "J999J"
@@ -150,7 +150,7 @@ class ContactMigrationServiceTest {
       verify(contactEmailRepository).deleteAllByContactId(request.personId)
       verify(contactIdentityRepository).deleteAllByContactId(request.personId)
       verify(contactRestrictionRepository).deleteAllByContactId(request.personId)
-      verify(contactEmploymentRepository).deleteAllByContactId(request.personId)
+      verify(employmentRepository).deleteAllByContactId(request.personId)
       verify(prisonerContactRepository).findAllByContactId(request.personId)
       verify(prisonerContactRepository).deleteAllByContactId(request.personId)
       verify(contactRepository).deleteAllByContactId(request.personId)
@@ -494,31 +494,33 @@ class ContactMigrationServiceTest {
       val request = migrateRequest(personId = 1L).copy(employments = employments())
 
       val responses = listOf(
-        ContactEmploymentEntity(
-          contactEmploymentId = 1L,
+        EmploymentEntity(
+          employmentId = 1L,
           contactId = 1L,
-          corporateId = request.employments[0].corporate?.id,
-          corporateName = request.employments[0].corporate?.name,
+          organisationId = request.employments[0].corporate.id,
           active = request.employments[0].active,
           createdBy = aUsername,
           createdTime = aDateTime,
+          updatedBy = null,
+          updatedTime = null,
         ),
-        ContactEmploymentEntity(
-          contactEmploymentId = 2L,
+        EmploymentEntity(
+          employmentId = 2L,
           contactId = 1L,
-          corporateId = request.employments[1].corporate?.id,
-          corporateName = request.employments[1].corporate?.name,
+          organisationId = request.employments[1].corporate.id,
           active = request.employments[1].active,
           createdBy = aUsername,
           createdTime = aDateTime,
+          updatedBy = null,
+          updatedTime = null,
         ),
       )
 
-      whenever(contactEmploymentRepository.save(any()))
+      whenever(employmentRepository.save(any()))
         .thenReturn(responses[0])
         .thenReturn(responses[1])
 
-      val contactEmploymentCaptor = argumentCaptor<ContactEmploymentEntity>()
+      val contactEmploymentCaptor = argumentCaptor<EmploymentEntity>()
 
       val result = migrationService.extractAndSaveEmployments(request, 1L)
 
@@ -527,22 +529,21 @@ class ContactMigrationServiceTest {
       for (i in 0..1) {
         assertThat(result[i].first).isEqualTo(request.employments[i].sequence)
         assertThat(result[i].second)
-          .extracting("contactId", "contactEmploymentId", "corporateId", "corporateName", "active")
+          .extracting("contactId", "employmentId", "organisationId", "active")
           .contains(
             responses[i].contactId,
-            responses[i].contactEmploymentId,
-            responses[i].corporateId,
-            responses[i].corporateName,
+            responses[i].employmentId,
+            responses[i].organisationId,
             responses[i].active,
           )
       }
 
-      verify(contactEmploymentRepository, times(2)).save(contactEmploymentCaptor.capture())
+      verify(employmentRepository, times(2)).save(contactEmploymentCaptor.capture())
 
       for (x in 0..1) {
         with(contactEmploymentCaptor.allValues[x]) {
           assertThat(this)
-            .extracting("contactId", "contactEmploymentId", "createdBy", "createdTime")
+            .extracting("contactId", "employmentId", "createdBy", "createdTime")
             .contains(responses[x].contactId, 0L, aUsername, aDateTime)
         }
       }
@@ -892,12 +893,12 @@ class ContactMigrationServiceTest {
 
   private fun employments() =
     listOf(
-      MigrateEmployment(sequence = 1L, corporate = Corporate(id = 123L, name = "Big Blue"), active = true)
+      MigrateEmployment(sequence = 1L, corporate = Corporate(id = 123L), active = true)
         .also {
           it.createDateTime = aDateTime
           it.createUsername = aUsername
         },
-      MigrateEmployment(sequence = 2L, corporate = Corporate(id = 321L, name = "Big Yellow"), active = false)
+      MigrateEmployment(sequence = 2L, corporate = Corporate(id = 321L), active = false)
         .also {
           it.createDateTime = aDateTime
           it.createUsername = aUsername

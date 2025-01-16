@@ -247,6 +247,7 @@ class SyncContactAddressServiceTest {
       postCode = "LS13 4KD",
       countryCode = "UK",
       createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
     )
 
   private fun SyncCreateContactAddressRequest.toEntity(contactAddressId: Long = 0) =
@@ -264,6 +265,7 @@ class SyncContactAddressServiceTest {
       postCode = this.postcode,
       countryCode = this.countryCode,
       createdBy = this.createdBy,
+      createdTime = LocalDateTime.now(),
     )
 
   private fun SyncUpdateContactAddressRequest.toEntity(contactAddressId: Long = 1L): ContactAddressEntity {
@@ -284,6 +286,7 @@ class SyncContactAddressServiceTest {
       postCode = this.postcode,
       countryCode = this.countryCode,
       createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
     ).also {
       it.updatedBy = updatedBy
       it.updatedTime = updatedTime

@@ -24,7 +24,7 @@ data class MigrateContactRequest(
   @field:Size(max = 35, message = "middleName must be <= 35 characters")
   val middleName: String? = null,
 
-  @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true, format = "yyyy-MM-dd")
+  @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", nullable = true)
   @field:DateTimeFormat(pattern = "yyyy-MM-dd")
   val dateOfBirth: LocalDate? = null,
 
@@ -203,8 +203,8 @@ data class MigrateEmployment(
   @Schema(description = "Unique sequence ID in NOMIS for this employment", example = "123")
   val sequence: Long,
 
-  @Schema(description = "The corporate organisation this person works for", nullable = true)
-  val corporate: Corporate? = null,
+  @Schema(description = "The corporate organisation this person works for")
+  val corporate: Corporate,
 
   @Schema(description = "Comments relating to this restriction", example = "true")
   val active: Boolean = false,
@@ -214,9 +214,6 @@ data class MigrateEmployment(
 data class Corporate(
   @Schema(description = "The corporate ID in NOMIS", example = "123")
   val id: Long,
-
-  @Schema(description = "The name of the corporate organisation", example = "West Midlands Police")
-  val name: String,
 )
 
 data class MigrateRelationship(

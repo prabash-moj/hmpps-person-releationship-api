@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmploymentEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithFixedIdEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.EmploymentEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
@@ -22,11 +22,11 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.Migr
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmploymentRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestrictionRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactWithFixedIdRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.EmploymentRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionRepository
 import java.time.LocalDateTime
@@ -42,7 +42,7 @@ class ContactMigrationService(
   private val contactRestrictionRepository: ContactRestrictionRepository,
   private val prisonerContactRepository: PrisonerContactRepository,
   private val prisonerContactRestrictionRepository: PrisonerContactRestrictionRepository,
-  private val contactEmploymentRepository: ContactEmploymentRepository,
+  private val employmentRepository: EmploymentRepository,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -100,7 +100,7 @@ class ContactMigrationService(
       identities = identityPairs.map { IdPair(ElementType.IDENTITY, it.first, it.second.contactIdentityId) },
       restrictions = restrictionPairs.map { IdPair(ElementType.RESTRICTION, it.first, it.second.contactRestrictionId) },
       relationships = buildContactsAndRestrictionsResponse(prisonerContactPairs, prisonerContactRestrictionPairs),
-      employments = employmentPairs.map { IdPair(ElementType.EMPLOYMENT, it.first, it.second.contactEmploymentId) },
+      employments = employmentPairs.map { IdPair(ElementType.EMPLOYMENT, it.first, it.second.employmentId) },
     )
   }
 
@@ -302,23 +302,21 @@ class ContactMigrationService(
   fun extractAndSaveEmployments(
     req: MigrateContactRequest,
     contactId: Long,
-  ): List<Pair<Long, ContactEmploymentEntity>> =
+  ): List<Pair<Long, EmploymentEntity>> =
     req.employments.map { employment ->
       Pair(
         employment.sequence,
-        contactEmploymentRepository.save(
-          ContactEmploymentEntity(
-            contactEmploymentId = 0L,
+        employmentRepository.save(
+          EmploymentEntity(
+            employmentId = 0L,
             contactId = contactId,
-            corporateId = employment.corporate?.id,
-            corporateName = employment.corporate?.name,
+            organisationId = employment.corporate.id,
             active = employment.active,
             createdBy = employment.createUsername ?: "MIGRATION",
             createdTime = employment.createDateTime ?: LocalDateTime.now(),
-          ).also {
-            it.updatedBy = employment.modifyUsername
-            it.updatedTime = employment.modifyDateTime
-          },
+            updatedBy = employment.modifyUsername,
+            updatedTime = employment.modifyDateTime,
+          ),
         ),
       )
     }
@@ -421,7 +419,7 @@ class ContactMigrationService(
     contactEmailRepository.deleteAllByContactId(contactId)
     contactIdentityRepository.deleteAllByContactId(contactId)
     contactRestrictionRepository.deleteAllByContactId(contactId)
-    contactEmploymentRepository.deleteAllByContactId(contactId)
+    employmentRepository.deleteAllByContactId(contactId)
     prisonerContactRepository.findAllByContactId(contactId).map { pc ->
       prisonerContactRestrictionRepository.deleteAllByPrisonerContactId(pc.prisonerContactId)
     }

@@ -1,14 +1,13 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalDateTime.now
 
 @Entity
 @Table(name = "contact_restriction")
@@ -27,10 +26,11 @@ data class ContactRestrictionEntity(
 
   val comments: String? = null,
 
+  @Column(updatable = false)
   val createdBy: String,
 
-  @CreationTimestamp
-  val createdTime: LocalDateTime = now(),
+  @Column(updatable = false)
+  val createdTime: LocalDateTime,
 
   val updatedBy: String? = null,
 

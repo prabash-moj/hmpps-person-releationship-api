@@ -57,10 +57,10 @@ data class PatchContactAddressRequest(
   @Schema(description = "Whether the address can be used for mailing", example = "false", nullable = false, type = "boolean", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   val mailFlag: JsonNullable<Boolean> = JsonNullable.undefined(),
 
-  @Schema(description = "The start date when this address can be considered active from", example = "2023-01-12", type = "string", nullable = true, format = "yyyy-MM-dd", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(description = "The start date when this address can be considered active from", example = "2023-01-12", type = "string", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   val startDate: JsonNullable<LocalDate?> = JsonNullable.undefined(),
 
-  @Schema(description = "The end date when this address can be considered active until", example = "2023-01-12", type = "string", nullable = true, format = "yyyy-MM-dd", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(description = "The end date when this address can be considered active until", example = "2023-01-12", type = "string", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   val endDate: JsonNullable<LocalDate?> = JsonNullable.undefined(),
 
   @Schema(description = "Flag to indicate this address should be considered as no fixed address", example = "false", nullable = false, type = "boolean", requiredMode = Schema.RequiredMode.NOT_REQUIRED)

@@ -1017,6 +1017,7 @@ private fun contactAddressEntity(contactId: Long = 1L, contactAddressId: Long = 
     postCode = "LS13 4KD",
     countryCode = "UK",
     createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
   )
 
 private fun CreateContactAddressRequest.toEntity(contactId: Long, contactAddressId: Long = 0) =
@@ -1034,6 +1035,7 @@ private fun CreateContactAddressRequest.toEntity(contactId: Long, contactAddress
     postCode = this.postcode,
     countryCode = this.countryCode,
     createdBy = this.createdBy,
+    createdTime = LocalDateTime.now(),
   )
 
 private fun UpdateContactAddressRequest.toEntity(contactId: Long, contactAddressId: Long = 1L): ContactAddressEntity {
@@ -1053,6 +1055,7 @@ private fun UpdateContactAddressRequest.toEntity(contactId: Long, contactAddress
     postCode = this.postcode,
     countryCode = this.countryCode,
     createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
   ).also {
     it.updatedBy = updatedBy
     it.updatedTime = LocalDateTime.now()
@@ -1076,6 +1079,7 @@ private fun PatchContactAddressRequest.toEntity(contactId: Long, contactAddressI
     postCode = this.postcode.orElse(""),
     countryCode = this.countryCode.orElse(""),
     createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
   ).also {
     it.updatedBy = updatedBy
     it.updatedTime = LocalDateTime.now()

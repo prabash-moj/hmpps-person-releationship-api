@@ -26,7 +26,7 @@ data class PatchContactRequest(
   @Schema(description = "The language code of the contact", example = "EN", nullable = true, type = "string", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   var languageCode: JsonNullable<String?> = JsonNullable.undefined(),
 
-  @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", type = "string", nullable = true, format = "yyyy-MM-dd", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(description = "The date of birth of the contact, if known", example = "1980-01-01", type = "string", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   var dateOfBirth: JsonNullable<LocalDate?> = JsonNullable.undefined(),
 
   @Schema(description = "The title code for the contact, if any", type = "string", example = "MR", nullable = true, maxLength = 12, requiredMode = Schema.RequiredMode.NOT_REQUIRED)

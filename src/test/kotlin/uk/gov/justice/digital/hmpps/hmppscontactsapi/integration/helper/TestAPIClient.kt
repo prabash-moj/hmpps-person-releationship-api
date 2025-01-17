@@ -34,6 +34,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.LinkedPrisonerDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionDetails
@@ -93,6 +94,19 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectBody(ContactDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun getOrganisation(id: Long, role: String = "ROLE_CONTACTS_ADMIN"): Organisation {
+    return webTestClient.get()
+      .uri("/organisation/$id")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(Organisation::class.java)
       .returnResult().responseBody!!
   }
 

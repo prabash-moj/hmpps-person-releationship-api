@@ -121,7 +121,7 @@ class PrisonerContactRelationshipServiceTest {
       emailAddress = "john.doe@example.com",
       prisonerNumber = "A1234BC",
       relationshipToPrisoner = "FRIEND",
-      relationshipDescription = "Friend",
+      relationshipToPrisonerDescription = "Friend",
       active = active,
       approvedVisitor = true,
       nextOfKin = false,

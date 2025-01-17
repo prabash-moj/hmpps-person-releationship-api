@@ -24,7 +24,8 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "Unsupported relationship type null.;{\"relationshipToPrisoner\": null,  \"updatedBy\": \"Admin\"}",
+      "Unsupported relationship type null.;{\"relationshipType\": null,  \"updatedBy\": \"Admin\"}",
+      "Unsupported relationship to prisoner null.;{\"relationshipToPrisoner\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported approved visitor value null.;{\"isApprovedVisitor\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported emergency contact null.;{\"isEmergencyContact\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported next of kin null.;{\"isNextOfKin\": null,  \"updatedBy\": \"Admin\"}",
@@ -74,6 +75,33 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
     assertThat(updatedPrisonerContacts[0].relationshipToPrisoner).isEqualTo("SIS")
+    stubEvents.assertHasEvent(
+      event = OutboundEvent.PRISONER_CONTACT_UPDATED,
+      additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),
+      personReference = PersonReference(prisonerNumber, prisonerContact.contactId),
+    )
+  }
+
+  @Test
+  fun `should update the contact relationship from social to official`() {
+    val prisonerNumber = getRandomPrisonerCode()
+    stubPrisonSearchWithResponse(prisonerNumber)
+    val prisonerContact = cretePrisonerContact(prisonerNumber)
+
+    val updateRequest = UpdateRelationshipRequest(
+      relationshipType = JsonNullable.of("O"),
+      relationshipToPrisoner = JsonNullable.of("DR"),
+      updatedBy = "Admin",
+    )
+
+    val prisonerContactId = prisonerContact.prisonerContactId
+
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
+
+    val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
+    assertThat(updatedPrisonerContacts).hasSize(1)
+    assertThat(updatedPrisonerContacts[0].relationshipType).isEqualTo("O")
+    assertThat(updatedPrisonerContacts[0].relationshipToPrisoner).isEqualTo("DR")
     stubEvents.assertHasEvent(
       event = OutboundEvent.PRISONER_CONTACT_UPDATED,
       additionalInfo = PrisonerContactInfo(prisonerContactId, Source.DPS),

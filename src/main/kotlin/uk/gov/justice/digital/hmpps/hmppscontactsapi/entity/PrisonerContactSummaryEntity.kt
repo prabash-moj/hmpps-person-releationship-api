@@ -71,7 +71,7 @@ data class PrisonerContactSummaryEntity(
 
   val relationshipToPrisoner: String,
 
-  val relationshipDescription: String?,
+  val relationshipToPrisonerDescription: String?,
 
   val active: Boolean,
 

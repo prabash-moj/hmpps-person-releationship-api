@@ -158,7 +158,7 @@ class LinkedPrisonersServiceTest {
       emailAddress = "john.doe@example.com",
       prisonerNumber = prisonerNumber,
       relationshipToPrisoner = relationshipCode,
-      relationshipDescription = relationshipDescription,
+      relationshipToPrisonerDescription = relationshipDescription,
       active = true,
       approvedVisitor = true,
       nextOfKin = false,

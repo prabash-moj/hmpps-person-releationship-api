@@ -27,11 +27,25 @@ data class PrisonerContactSummary(
   @Schema(description = "The date of birth of the contact", example = "1980-01-01")
   val dateOfBirth: LocalDate?,
 
+  @Schema(
+    description =
+    """
+      Coded value indicating either a social or official contact (mandatory).
+      This is a coded value from the group code CONTACT_TYPE in reference data.
+      Known values are (S) Social/Family or (O) official.
+      """,
+    example = "S",
+  )
+  val relationshipType: String,
+
+  @Schema(description = "The description of the relationship type", example = "Friend")
+  val relationshipTypeDescription: String,
+
   @Schema(description = "The relationship to the prisoner. A code from SOCIAL_RELATIONSHIP or OFFICIAL_RELATIONSHIP reference data groups depending on the relationship type.", example = "FRI")
   val relationshipToPrisoner: String,
 
-  @Schema(description = "The description of the relationship", example = "Friend")
-  val relationshipDescription: String,
+  @Schema(description = "The description of the relationship to the prisoner", example = "Friend")
+  val relationshipToPrisonerDescription: String,
 
   @Schema(description = "Flat number in the address, if any", example = "Flat 1", nullable = true)
   val flat: String?,

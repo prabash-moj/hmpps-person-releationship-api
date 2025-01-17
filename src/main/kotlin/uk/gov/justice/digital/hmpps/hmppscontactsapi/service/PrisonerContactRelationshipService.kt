@@ -22,7 +22,7 @@ class PrisonerContactRelationshipService(
       contactId = this.contactId,
       prisonerNumber = this.prisonerNumber,
       relationshipToPrisonerCode = this.relationshipToPrisoner,
-      relationshipToPrisonerDescription = this.relationshipDescription ?: "",
+      relationshipToPrisonerDescription = this.relationshipToPrisonerDescription ?: "",
       nextOfKin = this.nextOfKin,
       emergencyContact = this.emergencyContact,
       isRelationshipActive = this.active,

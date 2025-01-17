@@ -57,7 +57,7 @@ class GetPrisonerContactsIntegrationTest : H2IntegrationTestBase() {
 
   @ParameterizedTest
   @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
-  fun `should return only the social contacts`(role: String) {
+  fun `should return social and official contacts`(role: String) {
     stubPrisonSearchWithResponse("A4162DZ")
 
     val contacts = webTestClient.get()
@@ -70,7 +70,7 @@ class GetPrisonerContactsIntegrationTest : H2IntegrationTestBase() {
       .expectBody(PrisonerContactSummaryResponse::class.java)
       .returnResult().responseBody!!
 
-    assertThat(contacts.content).hasSize(5)
+    assertThat(contacts.content).hasSize(6)
   }
 
   @Test

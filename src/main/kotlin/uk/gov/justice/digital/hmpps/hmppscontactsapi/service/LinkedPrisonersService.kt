@@ -28,7 +28,7 @@ class LinkedPrisonersService(
                   relationshipType = summary.relationshipType,
                   relationshipTypeDescription = summary.relationshipTypeDescription,
                   relationshipToPrisoner = summary.relationshipToPrisoner,
-                  relationshipToPrisonerDescription = summary.relationshipDescription,
+                  relationshipToPrisonerDescription = summary.relationshipToPrisonerDescription,
                 )
               },
             )

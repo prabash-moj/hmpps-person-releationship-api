@@ -37,7 +37,7 @@ class ContactAddressServiceTest {
   private val contactAddressRepository: ContactAddressRepository = mock()
   private val referenceCodeRepository: ReferenceCodeRepository = mock()
   private val contactAddressService = ContactAddressService(contactRepository, contactAddressRepository, referenceCodeRepository)
-  private val referenceData = ReferenceCodeEntity(1L, ReferenceCodeGroup.CONTACT_TYPE, "FRIEND", "Friend", 0, true, "name")
+  private val referenceData = ReferenceCodeEntity(1L, ReferenceCodeGroup.RELATIONSHIP_TYPE, "FRIEND", "Friend", 0, true, "name")
 
   private val contactId: Long = 1L
   private val contactAddressId: Long = 2L

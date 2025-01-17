@@ -66,21 +66,13 @@ class PrisonerContactServiceTest {
     val page = PageImpl(contacts, pageable, contacts.size.toLong())
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(
-      prisonerContactSummaryRepository.findByPrisonerNumberAndActiveAndRelationshipType(
-        prisonerNumber,
-        true,
-        "S",
-        pageable,
-      ),
-    ).thenReturn(page)
-
+    whenever(prisonerContactSummaryRepository.findByPrisonerNumberAndActive(prisonerNumber, true, pageable)).thenReturn(page)
     val result = prisonerContactService.getAllContacts(prisonerNumber, true, pageable)
 
     result.content hasSize 2
     assertThat(result).containsAll(listOf(c1.toModel(), c2.toModel()))
 
-    verify(prisonerContactSummaryRepository).findByPrisonerNumberAndActiveAndRelationshipType(prisonerNumber, true, "S", pageable)
+    verify(prisonerContactSummaryRepository).findByPrisonerNumberAndActive(prisonerNumber, true, pageable)
   }
 
   @Test
@@ -131,7 +123,7 @@ class PrisonerContactServiceTest {
       emailAddress = "john.doe@example.com",
       prisonerNumber = "A1234BC",
       relationshipToPrisoner = "FRIEND",
-      relationshipDescription = "Friend",
+      relationshipToPrisonerDescription = "Friend",
       active = active,
       approvedVisitor = true,
       nextOfKin = false,

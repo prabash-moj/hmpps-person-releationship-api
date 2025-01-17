@@ -13,13 +13,9 @@ class PrisonerContactService(
   private val prisonerContactSummaryRepository: PrisonerContactSummaryRepository,
   private val prisonerService: PrisonerService,
 ) {
-  companion object {
-    val CONTACT_TYPE = "S"
-  }
-
   fun getAllContacts(prisonerNumber: String, active: Boolean, pageable: Pageable): Page<PrisonerContactSummary> {
     prisonerService.getPrisoner(prisonerNumber)
       ?: throw EntityNotFoundException("Prisoner number $prisonerNumber - not found")
-    return prisonerContactSummaryRepository.findByPrisonerNumberAndActiveAndRelationshipType(prisonerNumber, active, CONTACT_TYPE, pageable).map { it.toModel() }
+    return prisonerContactSummaryRepository.findByPrisonerNumberAndActive(prisonerNumber, active, pageable).map { it.toModel() }
   }
 }

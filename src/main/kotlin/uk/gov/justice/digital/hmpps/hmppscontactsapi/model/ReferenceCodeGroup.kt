@@ -12,7 +12,7 @@ enum class ReferenceCodeGroup(val displayName: String, val isDocumented: Boolean
   SOCIAL_RELATIONSHIP("social relationship", true),
   CITY("city", true),
   COUNTY("county", true),
-  CONTACT_TYPE("contact type", true),
+  RELATIONSHIP_TYPE("contact type", true),
   COUNTRY("country", true),
   ADDRESS_TYPE("address type", true),
   PHONE_TYPE("phone type", true),

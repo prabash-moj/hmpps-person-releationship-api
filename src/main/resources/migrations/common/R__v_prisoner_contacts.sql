@@ -45,7 +45,7 @@ AS
           when pc.relationship_type = 'S' then rc3.description
           when pc.relationship_type = 'O' then rc4.description
           else 'Unknown relationship type'
-      end as relationship_description,
+      end as relationship_to_prisoner_description,
       pc.active,
       pc.approved_visitor,
       pc.current_term,

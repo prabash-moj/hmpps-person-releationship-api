@@ -7,6 +7,9 @@ import org.openapitools.jackson.nullable.JsonNullable
 @Schema(description = "Request to update an existing relationship details")
 data class UpdateRelationshipRequest(
 
+  @Schema(description = "The code representing the relationship type as social or official", example = "S", nullable = false, type = "string", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  val relationshipType: JsonNullable<String> = JsonNullable.undefined(),
+
   @Schema(description = "The relationship reference code between the prisoner and the contact", example = "FRI", nullable = false, type = "string", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   val relationshipToPrisoner: JsonNullable<String> = JsonNullable.undefined(),
 

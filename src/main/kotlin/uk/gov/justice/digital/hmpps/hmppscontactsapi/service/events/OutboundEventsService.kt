@@ -17,76 +17,117 @@ class OutboundEventsService(
   fun send(
     outboundEvent: OutboundEvent,
     identifier: Long,
-    contactId: Long,
+    contactId: Long? = null,
     noms: String = "",
     source: Source = Source.DPS,
     secondIdentifier: Long? = 0,
   ) {
     if (featureSwitches.isEnabled(outboundEvent)) {
-      log.info("Sending outbound event $outboundEvent with source $source for identifier $identifier  (contactId $contactId, noms $noms)")
+      log.info("Sending outbound event $outboundEvent with source $source for identifier $identifier (contactId $contactId, noms $noms, secondIdentifier ${secondIdentifier ?: "N/A"})")
 
       when (outboundEvent) {
         OutboundEvent.CONTACT_CREATED,
         OutboundEvent.CONTACT_UPDATED,
         OutboundEvent.CONTACT_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactInfo(identifier, source), PersonReference(dpsContactId = contactId))
+          sendSafely(
+            outboundEvent,
+            ContactInfo(identifier, source),
+            contactId?.let { PersonReference(dpsContactId = it) },
+          )
         }
 
         OutboundEvent.CONTACT_ADDRESS_CREATED,
         OutboundEvent.CONTACT_ADDRESS_UPDATED,
         OutboundEvent.CONTACT_ADDRESS_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactAddressInfo(identifier, source), PersonReference(dpsContactId = contactId))
+          sendSafely(
+            outboundEvent,
+            ContactAddressInfo(identifier, source),
+            contactId?.let { PersonReference(dpsContactId = it) },
+          )
         }
 
         OutboundEvent.CONTACT_PHONE_CREATED,
         OutboundEvent.CONTACT_PHONE_UPDATED,
         OutboundEvent.CONTACT_PHONE_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactPhoneInfo(identifier, source), PersonReference(dpsContactId = contactId))
+          sendSafely(
+            outboundEvent,
+            ContactPhoneInfo(identifier, source),
+            contactId?.let { PersonReference(dpsContactId = it) },
+          )
         }
 
         OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
         OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
         OutboundEvent.CONTACT_ADDRESS_PHONE_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactAddressPhoneInfo(identifier, secondIdentifier!!, source), PersonReference(dpsContactId = contactId))
+          sendSafely(
+            outboundEvent,
+            ContactAddressPhoneInfo(identifier, secondIdentifier!!, source),
+            contactId?.let { PersonReference(dpsContactId = it) },
+          )
         }
 
         OutboundEvent.CONTACT_EMAIL_CREATED,
         OutboundEvent.CONTACT_EMAIL_UPDATED,
         OutboundEvent.CONTACT_EMAIL_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactEmailInfo(identifier, source), PersonReference(dpsContactId = contactId))
+          sendSafely(
+            outboundEvent,
+            ContactEmailInfo(identifier, source),
+            contactId?.let { PersonReference(dpsContactId = it) },
+          )
         }
 
         OutboundEvent.CONTACT_IDENTITY_CREATED,
         OutboundEvent.CONTACT_IDENTITY_UPDATED,
         OutboundEvent.CONTACT_IDENTITY_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactIdentityInfo(identifier, source), PersonReference(dpsContactId = contactId))
+          sendSafely(
+            outboundEvent,
+            ContactIdentityInfo(identifier, source),
+            contactId?.let { PersonReference(dpsContactId = it) },
+          )
         }
 
         OutboundEvent.CONTACT_RESTRICTION_CREATED,
         OutboundEvent.CONTACT_RESTRICTION_UPDATED,
         OutboundEvent.CONTACT_RESTRICTION_DELETED,
         -> {
-          sendSafely(outboundEvent, ContactRestrictionInfo(identifier, source), PersonReference(dpsContactId = contactId))
+          sendSafely(
+            outboundEvent,
+            ContactRestrictionInfo(identifier, source),
+            contactId?.let { PersonReference(dpsContactId = it) },
+          )
         }
 
         OutboundEvent.PRISONER_CONTACT_CREATED,
         OutboundEvent.PRISONER_CONTACT_UPDATED,
         OutboundEvent.PRISONER_CONTACT_DELETED,
         -> {
-          sendSafely(outboundEvent, PrisonerContactInfo(identifier, source), PersonReference(dpsContactId = contactId, nomsNumber = noms))
+          sendSafely(
+            outboundEvent,
+            PrisonerContactInfo(identifier, source),
+            contactId?.let { PersonReference(dpsContactId = it, nomsNumber = noms) },
+          )
         }
 
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
         OutboundEvent.PRISONER_CONTACT_RESTRICTION_DELETED,
         -> {
-          sendSafely(outboundEvent, PrisonerContactRestrictionInfo(identifier, source), PersonReference(dpsContactId = contactId, nomsNumber = noms))
+          sendSafely(
+            outboundEvent,
+            PrisonerContactRestrictionInfo(identifier, source),
+            contactId?.let { PersonReference(dpsContactId = it, nomsNumber = noms) },
+          )
+        }
+
+        OutboundEvent.ORGANISATION_CREATED,
+        -> {
+          sendSafely(outboundEvent, OrganisationInfo(identifier, source))
         }
       }
     } else {
@@ -97,7 +138,7 @@ class OutboundEventsService(
   private fun sendSafely(
     outboundEvent: OutboundEvent,
     additionalInformation: AdditionalInformation,
-    personReference: PersonReference?,
+    personReference: PersonReference? = null,
   ) {
     try {
       publisher.send(outboundEvent.event(additionalInformation, personReference))

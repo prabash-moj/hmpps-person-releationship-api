@@ -250,6 +250,14 @@ enum class OutboundEvent(val eventType: String) {
         description = "A prisoner contact restriction has been deleted",
       )
   },
+  ORGANISATION_CREATED("contacts-api.organisation.created") {
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
+      OutboundHMPPSDomainEvent(
+        eventType = eventType,
+        additionalInformation = additionalInformation,
+        description = "An organisation has been created",
+      )
+  },
   ;
 
   abstract fun event(
@@ -292,6 +300,7 @@ data class ContactIdentityInfo(val contactIdentityId: Long, override val source:
 data class ContactRestrictionInfo(val contactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class PrisonerContactInfo(val prisonerContactId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class PrisonerContactRestrictionInfo(val prisonerContactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class OrganisationInfo(val organisationId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 
 /**
  * The event source.

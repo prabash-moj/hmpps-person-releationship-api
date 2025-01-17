@@ -6,16 +6,23 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.OrganisationFacade
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.City
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = "Organisation")
 @RestController
@@ -48,4 +55,36 @@ class OrganisationController(private val organisationFacade: OrganisationFacade)
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
   fun getOrganisationById(@PathVariable organisationId: Long): Organisation = organisationFacade.getOrganisationById(organisationId)
+
+  @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
+  @Operation(
+    summary = "Create new organisation",
+    description = "Creates a new organisation",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "201",
+        description = "Created the organisation successfully",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = Organisation::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "The request has invalid or missing fields",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN','ROLE_CONTACTS__RW')")
+  fun createOrganisation(
+    @Valid @RequestBody request: CreateOrganisationRequest,
+  ): ResponseEntity<Organisation> {
+    return organisationFacade.create(request)
+      .let { ResponseEntity.status(HttpStatus.CREATED).body(it) }
+  }
 }

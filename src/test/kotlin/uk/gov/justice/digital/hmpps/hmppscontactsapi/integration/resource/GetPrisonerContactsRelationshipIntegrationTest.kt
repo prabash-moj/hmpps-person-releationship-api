@@ -61,6 +61,8 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
       prisonerContactId = 1,
       contactId = 1,
       prisonerNumber = "A1234BB",
+      relationshipType = "S",
+      relationshipTypeDescription = "Social/Family",
       relationshipToPrisonerCode = "FA",
       relationshipToPrisonerDescription = "Father",
       nextOfKin = false,

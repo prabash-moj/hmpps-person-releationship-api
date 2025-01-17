@@ -91,8 +91,16 @@ class ContactService(
   private fun validateNewRelationship(relationship: ContactRelationship) {
     prisonerService.getPrisoner(relationship.prisonerNumber)
       ?: throw EntityNotFoundException("Prisoner (${relationship.prisonerNumber}) could not be found")
-    referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP_TYPE, relationship.relationshipType, allowInactive = false)
-    validateRelationshipToPrisoner(relationship.relationshipType, relationship.relationshipToPrisoner, allowInactive = false)
+    referenceCodeService.validateReferenceCode(
+      ReferenceCodeGroup.RELATIONSHIP_TYPE,
+      relationship.relationshipType,
+      allowInactive = false,
+    )
+    validateRelationshipToPrisoner(
+      relationship.relationshipType,
+      relationship.relationshipToPrisoner,
+      allowInactive = false,
+    )
   }
 
   private fun enrichContact(contactEntity: ContactEntity): ContactDetails {
@@ -237,11 +245,18 @@ class ContactService(
     it.updatedTime = LocalDateTime.now()
   }
 
-  private fun validateRelationshipCodes(request: UpdateRelationshipRequest, preUpdateRelationship: PrisonerContactEntity) {
+  private fun validateRelationshipCodes(
+    request: UpdateRelationshipRequest,
+    preUpdateRelationship: PrisonerContactEntity,
+  ) {
     if (request.relationshipType.isPresent && request.relationshipToPrisoner.isPresent) {
       // Changing both
       val relationshipType = request.relationshipType.get()
-      referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP_TYPE, relationshipType, allowInactive = true)
+      referenceCodeService.validateReferenceCode(
+        ReferenceCodeGroup.RELATIONSHIP_TYPE,
+        relationshipType,
+        allowInactive = true,
+      )
 
       val relationshipToPrisoner = request.relationshipToPrisoner.get()
       validateRelationshipToPrisoner(relationshipType, relationshipToPrisoner, allowInactive = true)
@@ -253,19 +268,36 @@ class ContactService(
     } else if (request.relationshipType.isPresent && !request.relationshipToPrisoner.isPresent) {
       // Changing only relationship type (this is only going to be valid if the type didn't actually change)
       val relationshipType = request.relationshipType.get()
-      referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP_TYPE, relationshipType, allowInactive = true)
+      referenceCodeService.validateReferenceCode(
+        ReferenceCodeGroup.RELATIONSHIP_TYPE,
+        relationshipType,
+        allowInactive = true,
+      )
 
       val relationshipToPrisoner = preUpdateRelationship.relationshipToPrisoner
       validateRelationshipToPrisoner(relationshipType, relationshipToPrisoner, allowInactive = true)
     }
   }
 
-  private fun validateRelationshipToPrisoner(relationshipType: String?, relationshipToPrisoner: String, allowInactive: Boolean) {
-    when (relationshipType) {
-      "S" -> referenceCodeService.validateReferenceCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, relationshipToPrisoner, allowInactive)
-      "O" -> referenceCodeService.validateReferenceCode(ReferenceCodeGroup.OFFICIAL_RELATIONSHIP, relationshipToPrisoner, allowInactive)
+  private fun validateRelationshipToPrisoner(
+    relationshipType: String?,
+    relationshipToPrisoner: String,
+    allowInactive: Boolean,
+  ) {
+    referenceCodeService.validateReferenceCode(
+      referenceCodeGroupForRelationshipType(relationshipType),
+      relationshipToPrisoner,
+      allowInactive,
+    )
+  }
+
+  private fun referenceCodeGroupForRelationshipType(relationshipType: String?): ReferenceCodeGroup {
+    val groupCodeForRelationship = when (relationshipType) {
+      "S" -> ReferenceCodeGroup.SOCIAL_RELATIONSHIP
+      "O" -> ReferenceCodeGroup.OFFICIAL_RELATIONSHIP
       else -> throw IllegalStateException("Unexpected relationshipType: $relationshipType")
     }
+    return groupCodeForRelationship
   }
 
   private fun unsupportedRelationshipType(request: UpdateRelationshipRequest) {
@@ -273,6 +305,7 @@ class ContactService(
       throw ValidationException("Unsupported relationship type null.")
     }
   }
+
   private fun unsupportedRelationshipToPrisoner(request: UpdateRelationshipRequest) {
     if (request.relationshipToPrisoner.isPresent && request.relationshipToPrisoner.get() == null) {
       throw ValidationException("Unsupported relationship to prisoner null.")
@@ -308,8 +341,16 @@ class ContactService(
       prisonerContactId = relationship.prisonerContactId,
       contactId = relationship.contactId,
       prisonerNumber = relationship.prisonerNumber,
+      relationshipType = relationship.relationshipType,
+      relationshipTypeDescription = referenceCodeService.getReferenceDataByGroupAndCode(
+        ReferenceCodeGroup.RELATIONSHIP_TYPE,
+        relationship.relationshipType,
+      )?.description ?: relationship.relationshipType,
       relationshipToPrisonerCode = relationship.relationshipToPrisoner,
-      relationshipToPrisonerDescription = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.SOCIAL_RELATIONSHIP, relationship.relationshipToPrisoner)?.description ?: relationship.relationshipToPrisoner,
+      relationshipToPrisonerDescription = referenceCodeService.getReferenceDataByGroupAndCode(
+        referenceCodeGroupForRelationshipType(relationship.relationshipType),
+        relationship.relationshipToPrisoner,
+      )?.description ?: relationship.relationshipToPrisoner,
       emergencyContact = relationship.emergencyContact,
       nextOfKin = relationship.nextOfKin,
       isRelationshipActive = relationship.active,

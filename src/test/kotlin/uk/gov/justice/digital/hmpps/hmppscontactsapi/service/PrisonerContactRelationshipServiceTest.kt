@@ -44,6 +44,8 @@ class PrisonerContactRelationshipServiceTest {
       prisonerContactId = prisonerContactId,
       contactId = 2,
       prisonerNumber = "A1234BC",
+      relationshipType = "S",
+      relationshipTypeDescription = "Social/Family",
       relationshipToPrisonerCode = "FRIEND",
       relationshipToPrisonerDescription = "Friend",
       nextOfKin = false,

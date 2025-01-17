@@ -21,6 +21,8 @@ class PrisonerContactRelationshipService(
       prisonerContactId = this.prisonerContactId,
       contactId = this.contactId,
       prisonerNumber = this.prisonerNumber,
+      relationshipType = this.relationshipType,
+      relationshipTypeDescription = this.relationshipTypeDescription,
       relationshipToPrisonerCode = this.relationshipToPrisoner,
       relationshipToPrisonerDescription = this.relationshipToPrisonerDescription ?: "",
       nextOfKin = this.nextOfKin,

@@ -39,7 +39,7 @@ dependencies {
   // OpenAPI
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
 
-  implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.11.0")
+  implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.12.0")
 
   // Test dependencies
   testImplementation("com.h2database:h2")

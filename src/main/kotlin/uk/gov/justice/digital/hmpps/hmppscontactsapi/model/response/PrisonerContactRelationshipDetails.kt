@@ -18,13 +18,13 @@ data class PrisonerContactRelationshipDetails(
     """
       Coded value indicating either a social or official contact (mandatory).
       This is a coded value from the group code CONTACT_TYPE in reference data.
-      Known values are (S) Social/Family or (O) official.
+      Known values are (S) Social or (O) official.
       """,
     example = "S",
   )
   val relationshipType: String,
 
-  @Schema(description = "The description of the contact relationship type. Description from reference data Official or Social/Family", example = "Official")
+  @Schema(description = "The description of the contact relationship type. Description from reference data Official or Social", example = "Official")
   val relationshipTypeDescription: String,
 
   @Schema(description = "The relationship to the prisoner. A code from SOCIAL_RELATIONSHIP or OFFICIAL_RELATIONSHIP reference data groups depending on the relationship type.", example = "FRI")

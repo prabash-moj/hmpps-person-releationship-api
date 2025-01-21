@@ -288,7 +288,7 @@ fun createPrisonerContactRelationshipDetails(
   contactId: Long = 99,
   prisonerNumber: String = "A1234BC",
   relationshipType: String = "S",
-  relationshipTypeDescription: String = "Social/Family",
+  relationshipTypeDescription: String = "Social",
   relationshipCode: String = "FRI",
   relationshipDescription: String = "Friend",
   emergencyContact: Boolean = false,

@@ -65,7 +65,7 @@ class PrisonerContactControllerTest {
       contactId = 2,
       prisonerNumber = "A1234BC",
       relationshipType = "S",
-      relationshipTypeDescription = "Social/Family",
+      relationshipTypeDescription = "Social",
       relationshipToPrisonerCode = "FRI",
       relationshipToPrisonerDescription = "Friend",
       nextOfKin = false,

@@ -24,9 +24,9 @@ class LinkedPrisonersServiceTest {
     whenever(repo.findByContactIdAndActive(contactId, true)).thenReturn(
       listOf(
         // two relationships for A1234BC and one for X6789YZ
-        prisonerContactEntity(999, "A1234BC", "S", "Social/Family", "FRI", "Friend"),
+        prisonerContactEntity(999, "A1234BC", "S", "Social", "FRI", "Friend"),
         prisonerContactEntity(888, "A1234BC", "O", "Official", "LAW", "Lawyer"),
-        prisonerContactEntity(777, "X6789YZ", "S", "Social/Family", "FA", "Father"),
+        prisonerContactEntity(777, "X6789YZ", "S", "Social", "FA", "Father"),
       ),
     )
     whenever(prisonerService.getPrisoner("A1234BC")).thenReturn(prisoner(prisonerNumber = "A1234BC", firstName = "A", middleNames = "1234", lastName = "BC"))
@@ -45,7 +45,7 @@ class LinkedPrisonersServiceTest {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 999,
               relationshipType = "S",
-              relationshipTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social",
               relationshipToPrisoner = "FRI",
               relationshipToPrisonerDescription = "Friend",
             ),
@@ -68,7 +68,7 @@ class LinkedPrisonersServiceTest {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 777,
               relationshipType = "S",
-              relationshipTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social",
               relationshipToPrisoner = "FA",
               relationshipToPrisonerDescription = "Father",
             ),
@@ -86,8 +86,8 @@ class LinkedPrisonersServiceTest {
     whenever(repo.findByContactIdAndActive(contactId, true)).thenReturn(
       listOf(
         // two relationships for A1234BC and one for X6789YZ
-        prisonerContactEntity(999, "A1234BC", "S", "Social/Family", "FRI", "Friend"),
-        prisonerContactEntity(777, "X6789YZ", "S", "Social/Family", "FA", "Father"),
+        prisonerContactEntity(999, "A1234BC", "S", "Social", "FRI", "Friend"),
+        prisonerContactEntity(777, "X6789YZ", "S", "Social", "FA", "Father"),
       ),
     )
     whenever(prisonerService.getPrisoner("A1234BC")).thenReturn(prisoner(prisonerNumber = "A1234BC", firstName = "A", middleNames = "1234", lastName = "BC"))
@@ -106,7 +106,7 @@ class LinkedPrisonersServiceTest {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = 999,
               relationshipType = "S",
-              relationshipTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social",
               relationshipToPrisoner = "FRI",
               relationshipToPrisonerDescription = "Friend",
             ),

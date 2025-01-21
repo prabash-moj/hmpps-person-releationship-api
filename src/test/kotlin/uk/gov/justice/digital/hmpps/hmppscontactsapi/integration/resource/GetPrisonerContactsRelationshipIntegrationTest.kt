@@ -62,7 +62,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : PostgresIntegrationTestBa
       contactId = 1,
       prisonerNumber = "A1234BB",
       relationshipType = "S",
-      relationshipTypeDescription = "Social/Family",
+      relationshipTypeDescription = "Social",
       relationshipToPrisonerCode = "FA",
       relationshipToPrisonerDescription = "Father",
       nextOfKin = false,

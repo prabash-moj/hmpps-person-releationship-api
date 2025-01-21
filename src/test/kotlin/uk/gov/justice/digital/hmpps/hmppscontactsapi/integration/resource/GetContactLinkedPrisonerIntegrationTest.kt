@@ -97,7 +97,7 @@ class GetContactLinkedPrisonerIntegrationTest : PostgresIntegrationTestBase() {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = prisoner2FatherRelationship.prisonerContactId,
               relationshipType = "S",
-              relationshipTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social",
               relationshipToPrisoner = "FA",
               relationshipToPrisonerDescription = "Father",
             ),
@@ -112,14 +112,14 @@ class GetContactLinkedPrisonerIntegrationTest : PostgresIntegrationTestBase() {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = prisoner1OtherRelationship.prisonerContactId,
               relationshipType = "S",
-              relationshipTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social",
               relationshipToPrisoner = "OTHER",
               relationshipToPrisonerDescription = "Other - Social",
             ),
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = prisoner1FriendRelationship.prisonerContactId,
               relationshipType = "S",
-              relationshipTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social",
               relationshipToPrisoner = "FRI",
               relationshipToPrisonerDescription = "Friend",
             ),
@@ -151,7 +151,7 @@ class GetContactLinkedPrisonerIntegrationTest : PostgresIntegrationTestBase() {
             LinkedPrisonerRelationshipDetails(
               prisonerContactId = prisoner1OtherRelationship.prisonerContactId,
               relationshipType = "S",
-              relationshipTypeDescription = "Social/Family",
+              relationshipTypeDescription = "Social",
               relationshipToPrisoner = "OTHER",
               relationshipToPrisonerDescription = "Other - Social",
             ),

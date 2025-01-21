@@ -32,7 +32,7 @@ data class PrisonerContactSummary(
     """
       Coded value indicating either a social or official contact (mandatory).
       This is a coded value from the group code CONTACT_TYPE in reference data.
-      Known values are (S) Social/Family or (O) official.
+      Known values are (S) Social or (O) official.
       """,
     example = "S",
   )

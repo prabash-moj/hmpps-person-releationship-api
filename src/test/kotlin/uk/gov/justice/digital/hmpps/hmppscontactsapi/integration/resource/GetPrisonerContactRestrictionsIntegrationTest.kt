@@ -91,7 +91,7 @@ class GetPrisonerContactRestrictionsIntegrationTest : PostgresIntegrationTestBas
       assertThat(contactId).isEqualTo(3L)
       assertThat(prisonerNumber).isEqualTo("G4793VF")
       assertThat(restrictionType).isEqualTo("PREINF")
-      assertThat(restrictionTypeDescription).isEqualTo("Previous Info")
+      assertThat(restrictionTypeDescription).isEqualTo("Previous info")
       assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
       assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
       assertThat(comments).isEqualTo("Restriction due to ongoing investigation")

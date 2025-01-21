@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import java.time.LocalDate
 
-class GetContactGlobalRestrictionsIntegrationTest : H2IntegrationTestBase() {
+class GetContactGlobalRestrictionsIntegrationTest : PostgresIntegrationTestBase() {
 
   @Test
   fun `should return unauthorized if no token`() {

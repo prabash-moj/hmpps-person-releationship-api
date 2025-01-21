@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactEmailInfo
@@ -15,7 +15,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonRefere
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-class DeleteContactEmailIntegrationTest : H2IntegrationTestBase() {
+class DeleteContactEmailIntegrationTest : PostgresIntegrationTestBase() {
   private var savedContactId = 0L
   private var savedContactEmailId = 0L
 

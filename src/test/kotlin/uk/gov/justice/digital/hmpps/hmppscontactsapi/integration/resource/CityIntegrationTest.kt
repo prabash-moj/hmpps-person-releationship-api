@@ -7,10 +7,10 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.City
 
-class CityIntegrationTest : H2IntegrationTestBase() {
+class CityIntegrationTest : PostgresIntegrationTestBase() {
 
   companion object {
     private const val GET_CITY_REFERENCE_DATA = "/city-reference"

@@ -5,14 +5,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.isBool
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@ActiveProfiles("test", "h2")
-class FeatureSwitchesTest {
+class FeatureSwitchesTest : PostgresIntegrationTestBase() {
   @TestPropertySource(properties = ["feature.events.sns.enabled=true"])
   @Nested
   @DisplayName("Features are enabled when set")

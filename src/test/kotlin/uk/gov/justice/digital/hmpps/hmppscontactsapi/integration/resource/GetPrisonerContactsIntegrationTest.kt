@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.TestAPIClient.PrisonerContactSummaryResponse
 
-class GetPrisonerContactsIntegrationTest : H2IntegrationTestBase() {
+class GetPrisonerContactsIntegrationTest : PostgresIntegrationTestBase() {
   companion object {
     private const val GET_PRISONER_CONTACT = "/prisoner/A4385DZ/contact"
   }

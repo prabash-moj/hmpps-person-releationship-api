@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
@@ -21,7 +21,7 @@ import java.time.temporal.ChronoUnit
 
 const val LOCAL_CONTACT_ID_SEQUENCE_MIN: Long = 20000000L
 
-class CreateContactIntegrationTest : H2IntegrationTestBase() {
+class CreateContactIntegrationTest : PostgresIntegrationTestBase() {
 
   @Test
   fun `should return unauthorized if no token`() {

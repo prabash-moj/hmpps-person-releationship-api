@@ -39,6 +39,19 @@ class ContactSearchRepository(
     return PageImpl(resultList, pageable, total)
   }
 
+  private fun getTotalCount(
+    request: ContactSearchRequest,
+  ): Long {
+    val cb = entityManager.criteriaBuilder
+    val countQuery = cb.createQuery(Long::class.java)
+    val contact = countQuery.from(ContactWithAddressEntity::class.java)
+
+    val predicates: List<Predicate> = buildPredicates(request, cb, contact)
+
+    countQuery.select(cb.count(contact)).where(*predicates.toTypedArray<Predicate>())
+    return entityManager.createQuery(countQuery).singleResult
+  }
+
   private fun applySorting(
     pageable: Pageable,
     cq: CriteriaQuery<ContactWithAddressEntity>,
@@ -62,31 +75,14 @@ class ContactSearchRepository(
   ): MutableList<Predicate> {
     val predicates: MutableList<Predicate> = ArrayList()
 
-    request.lastName.let {
-      predicates.add(
-        cb.like(
-          cb.upper(contact.get("lastName")),
-          cb.literal("%${it.trim().uppercase()}%"),
-        ),
-      )
-    }
+    predicates.add(ilikePredicate(cb, contact, "lastName", request.lastName))
 
     request.firstName?.let {
-      predicates.add(
-        cb.like(
-          cb.upper(contact.get("firstName")),
-          cb.literal("%${it.trim().uppercase()}%"),
-        ),
-      )
+      predicates.add(ilikePredicate(cb, contact, "firstName", it))
     }
 
     request.middleNames?.let {
-      predicates.add(
-        cb.like(
-          cb.upper(contact.get("middleNames")),
-          cb.literal("%${it.trim().uppercase()}%"),
-        ),
-      )
+      predicates.add(ilikePredicate(cb, contact, "middleNames", it))
     }
 
     request.dateOfBirth?.let {
@@ -101,17 +97,18 @@ class ContactSearchRepository(
     return predicates
   }
 
-  private fun getTotalCount(
-    request: ContactSearchRequest,
-  ): Long {
-    val cb = entityManager.criteriaBuilder
-    val countQuery = cb.createQuery(Long::class.java)
-    val contact = countQuery.from(ContactWithAddressEntity::class.java)
-
-    val predicates: List<Predicate> = buildPredicates(request, cb, contact)
-
-    countQuery.select(cb.count(contact)).where(*predicates.toTypedArray<Predicate>())
-    val total = entityManager.createQuery(countQuery).singleResult
-    return total
-  }
+  private fun ilikePredicate(
+    cb: CriteriaBuilder,
+    contact: Root<ContactWithAddressEntity>,
+    field: String,
+    value: String,
+  ) = cb.isTrue(
+    cb.function(
+      "sql",
+      Boolean::class.java,
+      cb.literal("? ILIKE ?"),
+      contact.get<String>(field),
+      cb.literal("%${value.trim()}%"),
+    ),
+  )
 }

@@ -7,13 +7,13 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ReferenceCodeRepository
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
-class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
+class ReferenceCodesResourceIntegrationTest : PostgresIntegrationTestBase() {
   @Autowired
   private lateinit var referenceCodeRepository: ReferenceCodeRepository
 

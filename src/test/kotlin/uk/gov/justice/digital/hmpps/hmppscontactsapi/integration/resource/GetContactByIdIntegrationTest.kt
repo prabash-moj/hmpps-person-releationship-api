@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
+class GetContactByIdIntegrationTest : PostgresIntegrationTestBase() {
 
   @Test
   fun `should return unauthorized if no token`() {

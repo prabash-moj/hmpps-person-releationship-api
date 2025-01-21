@@ -70,7 +70,7 @@ class OrganisationIntegrationTest : PostgresIntegrationTestBase() {
         .isCreated
         .expectBody(Organisation::class.java)
         .returnResult()
-        .responseBody
+        .responseBody!!
 
       val organisation = testAPIClient.getOrganisation(response.organisationId)
 

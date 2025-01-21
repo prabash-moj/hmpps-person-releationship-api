@@ -10,6 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationEmailEnt
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationTypeEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationTypeId
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationWebAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationWithFixedIdEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
@@ -141,27 +142,28 @@ class OrganisationEntityIntegrationTest : PostgresIntegrationTestBase() {
   fun `can create organisation types`() {
     val org = aNewOrganisation()
     val withMinimalFields = OrganisationTypeEntity(
-      organisationTypeId = 0,
-      organisationId = org.id(),
-      organisationType = "SWO",
+      OrganisationTypeId(
+        organisationId = org.id(),
+        organisationType = "SWO",
+      ),
       createdBy = "CREATED",
       createdTime = LocalDateTime.now().minusMinutes(20),
       updatedBy = null,
       updatedTime = null,
     )
     val withAllFields = OrganisationTypeEntity(
-      organisationTypeId = 0,
-      organisationId = org.id(),
-      organisationType = "SWO",
+      OrganisationTypeId(
+        organisationId = org.id(),
+        organisationType = "TRUST",
+      ),
       createdBy = "CREATED",
       createdTime = LocalDateTime.now().minusMinutes(20),
       updatedBy = "UPDATED",
       updatedTime = LocalDateTime.now().plusMinutes(20),
     )
-    val createdMin = organisationTypeRepository.saveAndFlush(withMinimalFields)
-    assertThat(createdMin.organisationTypeId).isGreaterThan(0)
-    val createdMax = organisationTypeRepository.saveAndFlush(withAllFields)
-    assertThat(createdMax.organisationTypeId).isGreaterThan(0)
+    organisationTypeRepository.saveAndFlush(withMinimalFields)
+    organisationTypeRepository.saveAndFlush(withAllFields)
+    assertThat(organisationTypeRepository.getByIdOrganisationId(org.id())).hasSize(2)
   }
 
   @Test

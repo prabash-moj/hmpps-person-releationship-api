@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationAddressP
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationTypeEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationTypeId
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationWebAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationWithFixedIdEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateOrganisationEmailAddress
@@ -19,7 +20,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.Elem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.IdPair
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.MigrateOrganisationResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.MigratedOrganisationAddress
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.MigratedOrganisationType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationAddressRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationEmailRepository
@@ -67,10 +67,7 @@ class OrganisationMigrationService(
       organisation.organisationId,
     )
     val createdOrganisationTypes = request.organisationTypes.map {
-      MigratedOrganisationType(
-        it.type,
-        createOrganisationType(organisation, it).organisationTypeId,
-      )
+      createOrganisationType(organisation, it).id.organisationType
     }
     val createdPhoneNumbers = request.phoneNumbers.map {
       IdPair(
@@ -201,9 +198,10 @@ class OrganisationMigrationService(
     it: MigrateOrganisationType,
   ) = organisationTypeRepository.saveAndFlush(
     OrganisationTypeEntity(
-      organisationTypeId = 0,
-      organisationId = organisation.id(),
-      organisationType = it.type,
+      OrganisationTypeId(
+        organisationId = organisation.id(),
+        organisationType = it.type,
+      ),
       createdBy = it.createUsername ?: "MIGRATION",
       createdTime = it.createDateTime ?: LocalDateTime.now(),
       updatedBy = it.modifyUsername,

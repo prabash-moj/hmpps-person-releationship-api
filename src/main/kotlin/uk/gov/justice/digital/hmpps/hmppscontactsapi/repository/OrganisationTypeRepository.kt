@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationTypeEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationTypeId
 
 @Repository
-interface OrganisationTypeRepository : JpaRepository<OrganisationTypeEntity, Long> {
+interface OrganisationTypeRepository : JpaRepository<OrganisationTypeEntity, OrganisationTypeId> {
   @Modifying
-  @Query("delete from OrganisationTypeEntity c where c.organisationId = :organisationId")
+  @Query("delete from OrganisationTypeEntity c where c.id.organisationId = :organisationId")
   fun deleteAllByOrganisationId(organisationId: Long): Int
+
+  fun getByIdOrganisationId(organisationId: Long): List<OrganisationTypeEntity>
 }

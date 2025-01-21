@@ -7,8 +7,8 @@ data class MigrateOrganisationResponse(
   @Schema(description = "The pair of IDs for this organisation in NOMIS")
   val organisation: IdPair,
 
-  @Schema(description = "List of NOMIS and DPS IDs for organisation types.")
-  val organisationTypes: List<MigratedOrganisationType> = emptyList(),
+  @Schema(description = "List of organisation types that were created")
+  val organisationTypes: List<String> = emptyList(),
 
   @Schema(description = "List of Nomis and DPS IDs for phone numbers")
   val phoneNumbers: List<IdPair> = emptyList(),

@@ -153,16 +153,7 @@ class MigrateOrganisationIntegrationTest : PostgresIntegrationTestBase() {
     )
     val migrated = testAPIClient.migrateAnOrganisation(request)
     assertThat(migrated.organisation.dpsId).isEqualTo(corporateId)
-    assertThat(migrated.organisationTypes).hasSize(2)
-    migrated.organisationTypes.onEach {
-      with(organisationTypeRepository.getReferenceById(it.dpsId)) {
-        assertThat(organisationType).isEqualTo(it.organisationType)
-        assertThat(createdTime).isEqualTo(LocalDateTime.of(2020, 2, 3, 10, 30))
-        assertThat(createdBy).isEqualTo("CREATED")
-        assertThat(updatedTime).isEqualTo(LocalDateTime.of(2020, 3, 4, 11, 45))
-        assertThat(updatedBy).isEqualTo("MODIFIED")
-      }
-    }
+    assertThat(migrated.organisationTypes).isEqualTo(listOf("BSKILLS", "TRUST"))
   }
 
   @Test

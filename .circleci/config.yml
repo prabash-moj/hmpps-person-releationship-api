@@ -4,12 +4,14 @@ orbs:
   hmpps: ministryofjustice/hmpps@10
 
 parameters:
-  alerts-slack-channel:
+  slack-channel-prod-alerts:
     type: string
-    default: managing-contacts-internal-dev
-  releases-slack-channel:
+    # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
+    # This is to avoid a general alert dumping ground that no-one then monitors
+    default: managing-contacts-alerts-prod
+  slack-channel-non-prod-alerts:
     type: string
-    default: managing-contacts-internal-dev
+    default: managing-contacts-alerts-non-prod
   java-version:
     type: string
     default: "21.0"
@@ -86,6 +88,8 @@ workflows:
           jira_env_type: staging
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
+          slack_notification: true
+          slack_channel_name: << pipeline.parameters.slack-channel-non-prod-alerts >>
           context:
             - hmpps-common-vars
             - hmpps-contacts-preprod
@@ -104,7 +108,7 @@ workflows:
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
           slack_notification: true
-          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+          slack_channel_name: << pipeline.parameters.slack-channel-prod-alerts >>
           context:
             - hmpps-common-vars
             - hmpps-contacts-prod
@@ -124,16 +128,16 @@ workflows:
       - hmpps/gradle_owasp_dependency_check:
           cache_key: "v2_0"
           jdk_tag: << pipeline.parameters.java-version >>
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          slack_channel: << pipeline.parameters.slack-channel-non-prod-alerts >>
           context:
             - hmpps-common-vars
       - hmpps/trivy_latest_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          slack_channel: << pipeline.parameters.slack-channel-non-prod-alerts >>
           context:
             - hmpps-common-vars
       - hmpps/veracode_pipeline_scan:
           jdk_tag: << pipeline.parameters.java-version >>
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          slack_channel: << pipeline.parameters.slack-channel-non-prod-alerts >>
           context:
             - veracode-credentials
             - hmpps-common-vars
@@ -147,7 +151,7 @@ workflows:
                 - main
     jobs:
       - hmpps/veracode_policy_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          slack_channel: << pipeline.parameters.slack-channel-non-prod-alerts >>
           context:
             - veracode-credentials
             - hmpps-common-vars

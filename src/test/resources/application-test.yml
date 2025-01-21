@@ -59,3 +59,7 @@ feature:
         created: true
         updated: true
         deleted: true
+      employment:
+        created: true
+        updated: true
+        deleted: true

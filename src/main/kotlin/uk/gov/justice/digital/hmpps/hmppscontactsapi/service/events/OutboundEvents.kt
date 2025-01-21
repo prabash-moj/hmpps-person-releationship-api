@@ -258,6 +258,33 @@ enum class OutboundEvent(val eventType: String) {
         description = "An organisation has been created",
       )
   },
+  EMPLOYMENT_CREATED("contacts-api.employment.created") {
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
+      OutboundHMPPSDomainEvent(
+        eventType = eventType,
+        additionalInformation = additionalInformation,
+        personReference = personReference,
+        description = "An employment has been created",
+      )
+  },
+  EMPLOYMENT_UPDATED("contacts-api.employment.updated") {
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
+      OutboundHMPPSDomainEvent(
+        eventType = eventType,
+        additionalInformation = additionalInformation,
+        personReference = personReference,
+        description = "An employment has been updated",
+      )
+  },
+  EMPLOYMENT_DELETED("contacts-api.employment.deleted") {
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
+      OutboundHMPPSDomainEvent(
+        eventType = eventType,
+        additionalInformation = additionalInformation,
+        personReference = personReference,
+        description = "An employment has been deleted",
+      )
+  },
   ;
 
   abstract fun event(
@@ -301,6 +328,7 @@ data class ContactRestrictionInfo(val contactRestrictionId: Long, override val s
 data class PrisonerContactInfo(val prisonerContactId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class PrisonerContactRestrictionInfo(val prisonerContactRestrictionId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 data class OrganisationInfo(val organisationId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
+data class EmploymentInfo(val employmentId: Long, override val source: Source = Source.DPS) : AdditionalInformation(source)
 
 /**
  * The event source.

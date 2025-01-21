@@ -16,6 +16,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCrea
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressPhoneRequest
@@ -25,6 +26,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpda
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
@@ -34,6 +36,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncCon
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncEmployment
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContactRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
@@ -46,6 +49,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactIde
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactPhoneService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactRestrictionService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncEmploymentService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncPrisonerContactRestrictionService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncPrisonerContactService
 import java.time.LocalDate
@@ -61,6 +65,7 @@ class SyncFacadeTest {
   private val syncContactRestrictionService: SyncContactRestrictionService = mock()
   private val syncPrisonerContactService: SyncPrisonerContactService = mock()
   private val syncPrisonerContactRestrictionService: SyncPrisonerContactRestrictionService = mock()
+  private val syncEmploymentService: SyncEmploymentService = mock()
   private val outboundEventsService: OutboundEventsService = mock()
 
   private val facade = SyncFacade(
@@ -73,6 +78,7 @@ class SyncFacadeTest {
     syncContactRestrictionService,
     syncPrisonerContactService,
     syncPrisonerContactRestrictionService,
+    syncEmploymentService,
     outboundEventsService,
   )
 
@@ -983,6 +989,95 @@ class SyncFacadeTest {
         startDate = LocalDate.now().minusDays(10),
         expiryDate = LocalDate.now().plusDays(10),
         comments = "Not allowed to visit. Ever.",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class EmploymentSyncFacadeEvents {
+    @Test
+    fun `should send domain event on employment create success`() {
+      val request = createEmploymentSyncRequest()
+      val response = employmentSyncResponse()
+
+      whenever(syncEmploymentService.createEmployment(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createEmployment(request)
+
+      verify(syncEmploymentService).createEmployment(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.EMPLOYMENT_CREATED,
+        identifier = result.employmentId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on employment update success`() {
+      val request = updateEmploymentRequest()
+      val response = employmentSyncResponse()
+
+      whenever(syncEmploymentService.updateEmployment(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updateEmployment(3L, request)
+
+      verify(syncEmploymentService).updateEmployment(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.EMPLOYMENT_UPDATED,
+        identifier = result.employmentId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on employment delete success`() {
+      val response = employmentSyncResponse()
+
+      whenever(syncEmploymentService.deleteEmployment(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deleteEmployment(3L)
+
+      verify(syncEmploymentService).deleteEmployment(3L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.EMPLOYMENT_DELETED,
+        identifier = result.employmentId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createEmploymentSyncRequest() =
+      SyncCreateEmploymentRequest(
+        organisationId = 2L,
+        contactId = 2L,
+        active = true,
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updateEmploymentRequest() =
+      SyncUpdateEmploymentRequest(
+        organisationId = 2L,
+        contactId = 2L,
+        active = true,
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun employmentSyncResponse() =
+      SyncEmployment(
+        employmentId = 2L,
+        organisationId = 2L,
+        contactId = 2L,
+        active = true,
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
         updatedBy = null,

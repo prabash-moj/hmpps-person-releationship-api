@@ -125,6 +125,17 @@ class OutboundEventsService(
           )
         }
 
+        OutboundEvent.EMPLOYMENT_CREATED,
+        OutboundEvent.EMPLOYMENT_UPDATED,
+        OutboundEvent.EMPLOYMENT_DELETED,
+        -> {
+          sendSafely(
+            outboundEvent,
+            EmploymentInfo(identifier, source),
+            contactId?.let { PersonReference(it) },
+          )
+        }
+
         OutboundEvent.ORGANISATION_CREATED,
         -> {
           sendSafely(outboundEvent, OrganisationInfo(identifier, source))

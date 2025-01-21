@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCrea
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressPhoneRequest
@@ -17,6 +18,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpda
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
@@ -29,6 +31,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactIde
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactPhoneService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactRestrictionService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncEmploymentService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncPrisonerContactRestrictionService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncPrisonerContactService
 
@@ -60,6 +63,7 @@ class SyncFacade(
   private val syncContactRestrictionService: SyncContactRestrictionService,
   private val syncPrisonerContactService: SyncPrisonerContactService,
   private val syncPrisonerContactRestrictionService: SyncPrisonerContactRestrictionService,
+  private val syncEmploymentService: SyncEmploymentService,
   private val outboundEventsService: OutboundEventsService,
 ) {
   // ================================================================
@@ -426,6 +430,46 @@ class SyncFacade(
           identifier = it.prisonerContactRestrictionId,
           contactId = it.contactId,
           noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
+      }
+
+  // ================================================================
+  //  Employment sync
+  // ================================================================
+
+  fun getEmploymentById(employmentId: Long) =
+    syncEmploymentService.getEmploymentById(employmentId)
+
+  fun createEmployment(request: SyncCreateEmploymentRequest) =
+    syncEmploymentService.createEmployment(request)
+      .also {
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.EMPLOYMENT_CREATED,
+          identifier = it.employmentId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
+      }
+
+  fun updateEmployment(employmentId: Long, request: SyncUpdateEmploymentRequest) =
+    syncEmploymentService.updateEmployment(employmentId, request)
+      .also {
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.EMPLOYMENT_UPDATED,
+          identifier = it.employmentId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
+      }
+
+  fun deleteEmployment(employmentId: Long) =
+    syncEmploymentService.deleteEmployment(employmentId)
+      .also {
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.EMPLOYMENT_DELETED,
+          identifier = it.employmentId,
+          contactId = it.contactId,
           source = Source.NOMIS,
         )
       }

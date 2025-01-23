@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
@@ -18,7 +19,7 @@ class ContactSearchRepository(
   @PersistenceContext
   private var entityManager: EntityManager,
 ) {
-  fun searchContacts(request: ContactSearchRequest, pageable: Pageable): PageImpl<ContactWithAddressEntity> {
+  fun searchContacts(request: ContactSearchRequest, pageable: Pageable): Page<ContactWithAddressEntity> {
     val cb = entityManager.criteriaBuilder
     val cq = cb.createQuery(ContactWithAddressEntity::class.java)
     val contact = cq.from(ContactWithAddressEntity::class.java)
@@ -75,14 +76,14 @@ class ContactSearchRepository(
   ): MutableList<Predicate> {
     val predicates: MutableList<Predicate> = ArrayList()
 
-    predicates.add(ilikePredicate(cb, contact, "lastName", request.lastName))
+    predicates.add(cb.ilikePredicate(contact, "lastName", request.lastName))
 
     request.firstName?.let {
-      predicates.add(ilikePredicate(cb, contact, "firstName", it))
+      predicates.add(cb.ilikePredicate(contact, "firstName", it))
     }
 
     request.middleNames?.let {
-      predicates.add(ilikePredicate(cb, contact, "middleNames", it))
+      predicates.add(cb.ilikePredicate(contact, "middleNames", it))
     }
 
     request.dateOfBirth?.let {
@@ -96,19 +97,4 @@ class ContactSearchRepository(
 
     return predicates
   }
-
-  private fun ilikePredicate(
-    cb: CriteriaBuilder,
-    contact: Root<ContactWithAddressEntity>,
-    field: String,
-    value: String,
-  ) = cb.isTrue(
-    cb.function(
-      "sql",
-      Boolean::class.java,
-      cb.literal("? ILIKE ?"),
-      contact.get<String>(field),
-      cb.literal("%${value.trim()}%"),
-    ),
-  )
 }

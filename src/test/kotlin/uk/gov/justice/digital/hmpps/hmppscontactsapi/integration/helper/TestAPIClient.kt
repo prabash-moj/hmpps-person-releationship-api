@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
@@ -35,6 +36,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestr
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.LinkedPrisonerDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionDetails
@@ -107,6 +109,19 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectBody(Organisation::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun searchOrganisations(request: OrganisationSearchRequest, page: Long? = null, size: Long? = null, sort: List<String> = emptyList(), role: String = "ROLE_CONTACTS_ADMIN"): OrganisationSearchResponse {
+    return webTestClient.get()
+      .uri("/organisation/search?name=${request.name}${page?.let {"&page=$page"} ?: "" }${size?.let {"&size=$size"} ?: "" }${sort.joinToString("") { "&sort=$it" }}")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(authorised(role))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(OrganisationSearchResponse::class.java)
       .returnResult().responseBody!!
   }
 
@@ -569,6 +584,20 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
 
   data class PrisonerContactSummaryResponse(
     val content: List<PrisonerContactSummary>,
+    val pageable: ReturnedPageable,
+    val last: Boolean,
+    val totalPages: Int,
+    val totalElements: Int,
+    val first: Boolean,
+    val size: Int,
+    val number: Int,
+    val sort: ReturnedSort,
+    val numberOfElements: Int,
+    val empty: Boolean,
+  )
+
+  data class OrganisationSearchResponse(
+    val content: List<OrganisationSummary>,
     val pageable: ReturnedPageable,
     val last: Boolean,
     val totalPages: Int,

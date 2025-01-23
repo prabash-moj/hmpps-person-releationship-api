@@ -22,11 +22,11 @@ select
     ca.updated_time,
     ca.area,
     ca.city_code,
-    city_ref.nomis_description as city_description,
+    city_ref.description as city_description,
     ca.county_code,
-    county_ref.nomis_description as county_description,
+    county_ref.description as county_description,
     ca.country_code,
-    country_ref.nomis_description as country_description,
+    country_ref.description as country_description,
     ca.flat,
     ca.post_code,
     ca.primary_address,
@@ -48,8 +48,8 @@ select
       order by ca1.primary_address desc, ca1.mail_flag desc, ca1.start_date desc nulls last, ca1.created_time desc
       limit 1
   )
-  left join city_reference city_ref on city_ref.nomis_code = ca.city_code
-  left join county_reference county_ref on county_ref.nomis_code = ca.county_code
-  left join country_reference country_ref on country_ref.nomis_code = ca.country_code;
+  left join reference_codes city_ref ON city_ref.group_code = 'CITY' and city_ref.code = ca.city_code
+  left join reference_codes county_ref ON county_ref.group_code = 'COUNTY' and county_ref.code = ca.county_code
+  left join reference_codes country_ref ON country_ref.group_code = 'COUNTRY' and country_ref.code = ca.country_code;
 
 -- End

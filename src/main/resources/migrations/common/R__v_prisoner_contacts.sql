@@ -21,12 +21,12 @@ AS
       ca.street,
       ca.area,
       ca.city_code,
-      city_ref.nomis_description as city_description,
+      city_ref.description as city_description,
       ca.county_code,
-      county_ref.nomis_description as county_description,
+      county_ref.description as county_description,
       ca.post_code,
       ca.country_code,
-      country_ref.nomis_description as country_description,
+      country_ref.description as country_description,
       ca.primary_address,
       ca.mail_flag,
       cp.contact_phone_id,
@@ -78,9 +78,9 @@ AS
   left join reference_codes rc3 ON rc3.group_code = 'SOCIAL_RELATIONSHIP' and rc3.code = pc.relationship_to_prisoner
   left join reference_codes rc4 ON rc4.group_code = 'OFFICIAL_RELATIONSHIP' and rc4.code = pc.relationship_to_prisoner
   left join reference_codes rc5 ON rc5.group_code = 'RELATIONSHIP_TYPE' and rc5.code = pc.relationship_type
-  left join city_reference city_ref on city_ref.nomis_code = ca.city_code
-  left join county_reference county_ref on county_ref.nomis_code = ca.county_code
-  left join country_reference country_ref on country_ref.nomis_code = ca.country_code
+  left join reference_codes city_ref ON city_ref.group_code = 'CITY' and city_ref.code = ca.city_code
+  left join reference_codes county_ref ON county_ref.group_code = 'COUNTY' and county_ref.code = ca.county_code
+  left join reference_codes country_ref ON country_ref.group_code = 'COUNTRY' and country_ref.code = ca.country_code
   where pc.contact_id = c.contact_id
     and pc.current_term = true
   order by pc.created_time desc;

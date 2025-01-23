@@ -7,10 +7,14 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.OrganisationFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -86,6 +90,25 @@ class OrganisationControllerTest {
       assertThrows<RuntimeException> {
         organisationController.createOrganisation(invalidRequest)
       }
+    }
+  }
+
+  @Nested
+  inner class SearchOrganisations {
+    @Test
+    fun `should return search results with paging params used`() {
+      // Given
+      val request = OrganisationSearchRequest("foo")
+      val params = Pageable.ofSize(99)
+      val expectedResults = PageImpl<OrganisationSummary>(emptyList())
+      whenever(organisationFacade.search(request, params)).thenReturn(expectedResults)
+
+      // When
+      val response = organisationController.searchOrganisations(request, params)
+
+      // Then
+      assertThat(response).isEqualTo(expectedResults)
+      verify(organisationFacade).search(request, params)
     }
   }
 

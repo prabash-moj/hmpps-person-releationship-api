@@ -1,8 +1,12 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.facade
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.OrganisationService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
@@ -25,4 +29,7 @@ class OrganisationFacade(
   fun getOrganisationById(organisationId: Long): Organisation {
     return organisationService.getOrganisationById(organisationId)
   }
+
+  fun search(request: OrganisationSearchRequest, pageable: Pageable): Page<OrganisationSummary> =
+    organisationService.search(request, pageable)
 }

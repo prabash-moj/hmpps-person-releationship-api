@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
@@ -37,7 +36,7 @@ fun ContactWithAddressEntity.toModel() = ContactSearchResultItem(
   comments = this.comments,
 )
 
-fun PageImpl<ContactWithAddressEntity>.toModel(): Page<ContactSearchResultItem> = map { it.toModel() }
+fun Page<ContactWithAddressEntity>.toModel(): Page<ContactSearchResultItem> = map { it.toModel() }
 
 fun ContactRelationship.toEntity(
   contactId: Long,

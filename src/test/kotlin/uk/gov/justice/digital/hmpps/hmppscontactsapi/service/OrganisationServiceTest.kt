@@ -3,34 +3,32 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 import jakarta.persistence.EntityNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationSearchRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
 class OrganisationServiceTest {
 
-  private lateinit var organisationService: OrganisationService
-
-  @Mock
-  private lateinit var organisationRepository: OrganisationRepository
-
-  @BeforeEach
-  fun setUp() {
-    MockitoAnnotations.openMocks(this)
-    organisationService = OrganisationService(organisationRepository)
-  }
+  private val organisationRepository: OrganisationRepository = mock()
+  private val organisationSearchRepository: OrganisationSearchRepository = mock()
+  private val organisationService: OrganisationService =
+    OrganisationService(organisationRepository, organisationSearchRepository)
 
   @Nested
   inner class GetOrganisationByOrganisationId {
@@ -132,6 +130,69 @@ class OrganisationServiceTest {
       }
 
       verify(organisationRepository).saveAndFlush(any())
+    }
+  }
+
+  @Nested
+  inner class SearchOrganisations {
+
+    private val request = OrganisationSearchRequest("Some name")
+    private val pageable = Pageable.ofSize(99)
+
+    @Test
+    fun `should return search results`() {
+      // Given
+      val resultEntity = OrganisationSummaryEntity(
+        organisationId = 123,
+        organisationName = "Some name limited",
+        organisationActive = true,
+        flat = "Flat",
+        property = "Property",
+        street = "Street",
+        area = "Area",
+        cityCode = "123",
+        cityDescription = "City",
+        countyCode = "C.OUNTY",
+        countyDescription = "County",
+        postCode = "AB12 3CD",
+        countryCode = "COU",
+        countryDescription = "Country",
+        businessPhoneNumber = "0123456",
+        businessPhoneNumberExtension = "789",
+      )
+      whenever(organisationSearchRepository.search(request, pageable)).thenReturn(
+        PageImpl(
+          listOf(resultEntity),
+          pageable,
+          1,
+        ),
+      )
+
+      // When
+      val result = organisationService.search(request, pageable)
+
+      // Then
+      assertThat(result.content).hasSize(1)
+      assertThat(result.content[0]).isEqualTo(
+        OrganisationSummary(
+          organisationId = 123,
+          organisationName = "Some name limited",
+          organisationActive = true,
+          flat = "Flat",
+          property = "Property",
+          street = "Street",
+          area = "Area",
+          cityCode = "123",
+          cityDescription = "City",
+          countyCode = "C.OUNTY",
+          countyDescription = "County",
+          postCode = "AB12 3CD",
+          countryCode = "COU",
+          countryDescription = "Country",
+          businessPhoneNumber = "0123456",
+          businessPhoneNumberExtension = "789",
+        ),
+      )
     }
   }
 

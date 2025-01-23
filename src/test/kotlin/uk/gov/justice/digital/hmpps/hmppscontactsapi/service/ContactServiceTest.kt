@@ -38,7 +38,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
@@ -63,7 +62,6 @@ class ContactServiceTest {
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
   private val contactEmailRepository: ContactEmailRepository = mock()
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository = mock()
-  private val languageService: LanguageService = mock()
   private val referenceCodeService: ReferenceCodeService = mock()
   private val service = ContactService(
     contactRepository,
@@ -75,7 +73,6 @@ class ContactServiceTest {
     contactAddressPhoneRepository,
     contactEmailRepository,
     contactIdentityDetailsRepository,
-    languageService,
     referenceCodeService,
   )
 
@@ -223,9 +220,11 @@ class ContactServiceTest {
       service.createContact(request)
 
       verify(contactRepository).saveAndFlush(any())
+
       val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
       verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
       verify(referenceCodeService).validateReferenceCode(expectedReferenceCodeGroup, "FRI", allowInactive = false)
+
       with(prisonerContactCaptor.firstValue) {
         assertThat(prisonerNumber).isEqualTo("A1234BC")
         assertThat(relationshipToPrisoner).isEqualTo("FRI")
@@ -471,17 +470,14 @@ class ContactServiceTest {
 
     @Test
     fun `should get a contact with language code`() {
-      whenever(languageService.getLanguageByNomisCode("FRE-FRA")).thenReturn(
-        Language(1, "FRE-FRA", "French", "Foo", "Bar", "X", 99),
-      )
+      val languageReference = ReferenceCode(1, ReferenceCodeGroup.LANGUAGE, "FRE-FRA", "French", 1, true)
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.LANGUAGE, "FRE-FRA")).thenReturn(languageReference)
 
-      val entity = createContactEntity().copy(
-        languageCode = "FRE-FRA",
-        interpreterRequired = true,
-      )
+      val entity = createContactEntity().copy(languageCode = "FRE-FRA", interpreterRequired = true)
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
 
       val contact = service.getContact(contactId)
+
       assertNotNull(contact)
       with(contact!!) {
         assertThat(id).isEqualTo(entity.contactId)
@@ -503,7 +499,8 @@ class ContactServiceTest {
         assertThat(languageCode).isNull()
         assertThat(languageDescription).isNull()
       }
-      verify(languageService, never()).getLanguageByNomisCode(any())
+
+      verify(referenceCodeService, never()).getReferenceDataByGroupAndCode(any(), any())
     }
 
     @Test

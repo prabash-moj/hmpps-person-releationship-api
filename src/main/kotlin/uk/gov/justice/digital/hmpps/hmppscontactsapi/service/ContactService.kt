@@ -46,7 +46,6 @@ class ContactService(
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository,
   private val contactEmailRepository: ContactEmailRepository,
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository,
-  private val languageService: LanguageService,
   private val referenceCodeService: ReferenceCodeService,
 ) {
   companion object {
@@ -123,7 +122,10 @@ class ContactService(
     val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.id()).map { it.toModel() }
 
     val languageDescription = contactEntity.languageCode?.let {
-      languageService.getLanguageByNomisCode(it).nomisDescription
+      referenceCodeService.getReferenceDataByGroupAndCode(
+        ReferenceCodeGroup.LANGUAGE,
+        it,
+      )?.description
     }
 
     val domesticStatusDescription = contactEntity.domesticStatus?.let {

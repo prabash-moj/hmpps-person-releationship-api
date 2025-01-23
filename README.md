@@ -67,21 +67,34 @@ values required.
 
 or you can use the `Run API Locally` run config, which should be automatically picked up in intellij but is located in .run if you need to add it manually.
 
-## Testing GOV Notify locally
-
-To test Gov Notify emails locally, you just need to add one more variable to your `.env` file.
-
-```
-export NOTIFY_API_KEY=<gov.notify.api.key>
-```
-If you have added it correctly, you will see the log on startup with the following output:
-
-```
-Gov Notify emails are enabled
-```
-
-## contact_id and person_id sync
-To allow searching for a contact by the same id in both NOMIS and DPS we keeping contact_id in sync with NOMIS' person_id.
+## DPS and NOMIS contact_id and person_id sync
+To allow searching for a contact by the same id in both NOMIS and DPS we are keeping contact_id in sync with NOMIS' person_id.
 To prevent an overlap of IDs we are starting the DPS contact_id sequence at 20000000. 
 When we receive a new contact from NOMIS we use the person_id as the contact_id, ignoring the sequence.
-When we create a new contact in DPS we will generate a new contact_id > 20000000 and NOMIS will use the contact_id as the person_id in their database. 
+When we create a new contact in DPS we will generate a new contact_id > 20000000 and NOMIS will use the contact_id as the person_id in their database.
+The result is that contacts which originate in the DPS service will be in the person/contact ID range 2,000,000+ and those that originate in NOMIS will be in the ID range < 1,000,000.
+
+# NOMIS reference data
+
+We had originally planned that some reference data domains would be temporarily hosted in the Contacts service. 
+These were the coded values, descriptions and sort order for domains including COUNTRY, COUNTY, CITY and LANGUAGE.
+They do not really belong in the contacts (or personal relationships) domain, but they are used on addresses and to 
+specify the primary spoken language for contacts.
+
+These same coded values are used in a variety of other areas of NOMIS, for example, for prisoners, organisations, finance, ROTL and agencies.
+
+It became clear that there is much more analysis required in these areas, and some different ideas about what format addresses outside NOMIS 
+should take going forward. There are also some clear omissions and mistakes in the NOMIS data sets for language, country, county 
+and city data, but we needed to exactly match these mistakes and all.
+
+Though we have built the endpoints for some of this data, and services and data model to store and expose it, it became clear that the 
+analysis work to enrich it, is not an easy or quick task,nor was it core to our current work in extracting and managing contacts outside NOMIS.
+
+We therefore took the decision to deprecate these endpoints until such time as some of these decisions are made, and a suitable domain found
+to host a single copy of reference data, with the time to conduct proper analysis.
+
+In the interim, we have re-imported an exact copy NOMIS reference data for the values we need, and these are stored in our `reference_codes` 
+table, with an endpoint to return them by `groupName`. 
+
+For sync and migrate to operate, we needed exactly the same coded values as NOMIS in lots of areas, including organisation types, contact types, 
+employment types, phone number types, address types etc... ).  

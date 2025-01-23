@@ -17,6 +17,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.CountyService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 
 @Tag(name = "Reference Data")
+@Deprecated(
+  level = DeprecationLevel.WARNING,
+  message = "No longer used. Please use the generic endpoint /reference-codes/group/{groupCode} for all reference values",
+)
 @RestController
 @RequestMapping(value = ["county-reference"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses

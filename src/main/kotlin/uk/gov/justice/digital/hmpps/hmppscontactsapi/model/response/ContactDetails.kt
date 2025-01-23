@@ -64,6 +64,9 @@ data class ContactDetails(
   @Schema(description = "All identities for the contact")
   val identities: List<ContactIdentityDetails>,
 
+  @Schema(description = "All employments for the contact")
+  val employments: List<EmploymentDetails>,
+
   @Schema(description = "The NOMIS code for the contacts domestic status", example = "S", nullable = true)
   val domesticStatusCode: String?,
 

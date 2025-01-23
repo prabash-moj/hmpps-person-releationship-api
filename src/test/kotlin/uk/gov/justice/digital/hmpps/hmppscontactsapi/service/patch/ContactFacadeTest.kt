@@ -175,6 +175,7 @@ class ContactFacadeTest {
     phoneNumbers = listOf(createContactPhoneNumberDetails()),
     emailAddresses = listOf(createContactEmailDetails()),
     identities = listOf(createContactIdentityDetails()),
+    employments = emptyList(),
     domesticStatusCode = "S",
     domesticStatusDescription = "Single",
     gender = null,

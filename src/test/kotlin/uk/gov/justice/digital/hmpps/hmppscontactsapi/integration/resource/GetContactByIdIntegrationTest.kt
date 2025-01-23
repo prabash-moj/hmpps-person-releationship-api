@@ -1,15 +1,27 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
+import org.apache.commons.lang3.RandomStringUtils
+import org.apache.commons.lang3.RandomUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.EmploymentEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateOrganisationAddress
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateOrganisationPhoneNumber
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateOrganisationRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.EmploymentRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class GetContactByIdIntegrationTest : PostgresIntegrationTestBase() {
+
+  @Autowired
+  private lateinit var employmentRepository: EmploymentRepository
 
   @Test
   fun `should return unauthorized if no token`() {
@@ -252,5 +264,98 @@ class GetContactByIdIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(id).isEqualTo(1)
       assertThat(isStaff).isTrue()
     }
+  }
+
+  @Test
+  fun `should get the contact with employments`() {
+    val newContact = testAPIClient.createAContact(CreateContactRequest(firstName = "First", lastName = "Bob", createdBy = "TEST"))
+    val org1 = createOrg()
+    val org2 = createOrg()
+
+    val activeEmployment = employmentRepository.saveAndFlush(
+      EmploymentEntity(
+        employmentId = 0,
+        organisationId = org1.nomisCorporateId,
+        contactId = newContact.id,
+        active = true,
+        createdBy = "TEST",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      ),
+    )
+
+    val inactiveEmployment = employmentRepository.saveAndFlush(
+      EmploymentEntity(
+        employmentId = 0,
+        organisationId = org2.nomisCorporateId,
+        contactId = newContact.id,
+        active = false,
+        createdBy = "TEST",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      ),
+    )
+
+    val contact = testAPIClient.getContact(newContact.id)
+
+    with(contact) {
+      assertThat(id).isEqualTo(newContact.id)
+      assertThat(contact.employments).hasSize(2)
+
+      val activeEmploymentDetails = employments.find { it.employmentId == activeEmployment.employmentId }!!
+      with(activeEmploymentDetails) {
+        assertThat(employer.organisationId).isEqualTo(org1.nomisCorporateId)
+        assertThat(isActive).isTrue()
+      }
+      val inactiveEmploymentDetails = employments.find { it.employmentId == inactiveEmployment.employmentId }!!
+      with(inactiveEmploymentDetails) {
+        assertThat(employer.organisationId).isEqualTo(org2.nomisCorporateId)
+        assertThat(isActive).isFalse()
+      }
+    }
+  }
+
+  private fun createOrg(): MigrateOrganisationRequest {
+    val request = MigrateOrganisationRequest(
+      nomisCorporateId = RandomUtils.secure().randomLong(10000, 99999),
+      organisationName = RandomStringUtils.secure().nextAlphabetic(25),
+      programmeNumber = null,
+      vatNumber = null,
+      caseloadId = null,
+      comments = null,
+      active = true,
+      deactivatedDate = null,
+      organisationTypes = emptyList(),
+      phoneNumbers = emptyList(),
+      emailAddresses = emptyList(),
+      webAddresses = emptyList(),
+      addresses = listOf(
+        MigrateOrganisationAddress(
+          nomisAddressId = RandomUtils.secure().randomLong(),
+          type = "HOME",
+          flat = "F",
+          premise = "10",
+          street = "Dublin Road",
+          locality = "locality",
+          postCode = "D1 1DN",
+          city = "25343",
+          county = "S.YORKSHIRE",
+          country = "ENG",
+          primaryAddress = true,
+          phoneNumbers = listOf(
+            MigrateOrganisationPhoneNumber(
+              nomisPhoneId = RandomUtils.secure().randomLong(),
+              type = "BUS",
+              number = "123",
+              extension = "321",
+            ),
+          ),
+        ),
+      ),
+    )
+    testAPIClient.migrateAnOrganisation(request)
+    return request
   }
 }

@@ -29,6 +29,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactAddres
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createEmploymentEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createOrganisationSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ReferenceCodeGroup
@@ -46,6 +48,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityD
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.EmploymentRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationSummaryRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -62,6 +66,8 @@ class ContactServiceTest {
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
   private val contactEmailRepository: ContactEmailRepository = mock()
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository = mock()
+  private val employmentRepository: EmploymentRepository = mock()
+  private val organisationSummaryRepository: OrganisationSummaryRepository = mock()
   private val referenceCodeService: ReferenceCodeService = mock()
   private val service = ContactService(
     contactRepository,
@@ -74,6 +80,8 @@ class ContactServiceTest {
     contactEmailRepository,
     contactIdentityDetailsRepository,
     referenceCodeService,
+    employmentRepository,
+    organisationSummaryRepository,
   )
 
   private val aContactAddressDetailsEntity = createContactAddressDetailsEntity()
@@ -546,6 +554,33 @@ class ContactServiceTest {
       with(contact!!) {
         assertThat(id).isEqualTo(entity.contactId)
         assertThat(isStaff).isTrue()
+      }
+    }
+
+    @Test
+    fun `should get a contact with employments`() {
+      val employmentEntity1 = createEmploymentEntity(id = 1, organisationId = 1)
+      val employmentEntity2 = createEmploymentEntity(id = 2, organisationId = 2)
+      val orgEntity1 = createOrganisationSummaryEntity(id = 1, organisationName = "One")
+      val orgEntity2 = createOrganisationSummaryEntity(id = 2, organisationName = "Two")
+
+      whenever(employmentRepository.findByContactId(contactId)).thenReturn(listOf(employmentEntity1, employmentEntity2))
+      whenever(organisationSummaryRepository.findById(1)).thenReturn(Optional.of(orgEntity1))
+      whenever(organisationSummaryRepository.findById(2)).thenReturn(Optional.of(orgEntity2))
+
+      val entity = createContactEntity()
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+
+      val contact = service.getContact(contactId)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+
+        assertThat(employments).hasSize(2)
+        assertThat(employments[0].employmentId).isEqualTo(1)
+        assertThat(employments[0].employer.organisationId).isEqualTo(1)
+        assertThat(employments[1].employmentId).isEqualTo(2)
+        assertThat(employments[1].employer.organisationId).isEqualTo(2)
       }
     }
 

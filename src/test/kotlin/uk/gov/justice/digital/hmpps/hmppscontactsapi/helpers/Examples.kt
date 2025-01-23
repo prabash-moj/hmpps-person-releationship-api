@@ -7,6 +7,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEmailEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionDetailsEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.EmploymentEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactRestrictionDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
@@ -583,4 +585,60 @@ fun prisoner(
   lastName,
   firstName,
   middleNames,
+)
+
+fun createEmploymentEntity(
+  id: Long = 1,
+  contactId: Long = 1,
+  organisationId: Long = 1,
+  active: Boolean = true,
+  createdBy: String = "USER",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+  updatedBy: String? = "AMEND_USER",
+  updatedTime: LocalDateTime? = LocalDateTime.now(),
+) = EmploymentEntity(
+  id,
+  organisationId,
+  contactId,
+  active,
+  createdBy,
+  createdTime,
+  updatedBy,
+  updatedTime,
+)
+
+fun createOrganisationSummaryEntity(
+  id: Long = 1,
+  organisationName: String = "Some name limited",
+  organisationActive: Boolean = true,
+  flat: String? = "Flat",
+  property: String? = "Property",
+  street: String? = "Street",
+  area: String? = "Area",
+  cityCode: String? = "123",
+  cityDescription: String? = "City",
+  countyCode: String? = "C.OUNTY",
+  countyDescription: String? = "County",
+  postCode: String? = "AB12 3CD",
+  countryCode: String? = "COU",
+  countryDescription: String? = "Country",
+  businessPhoneNumber: String? = "0123456",
+  businessPhoneNumberExtension: String? = "789",
+) = OrganisationSummaryEntity(
+  id,
+  organisationName,
+  organisationActive,
+  flat,
+  property,
+  street,
+  area,
+  cityCode,
+  cityDescription,
+  countyCode,
+  countyDescription,
+  postCode,
+  countryCode,
+  countryDescription,
+  businessPhoneNumber,
+  businessPhoneNumberExtension,
 )

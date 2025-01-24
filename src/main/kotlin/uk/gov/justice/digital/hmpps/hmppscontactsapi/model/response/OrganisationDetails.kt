@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@Schema(description = "Organisation data")
-data class Organisation(
+@Schema(description = "Complete organisation data with reference data descriptions")
+data class OrganisationDetails(
 
   @Schema(description = "Unique identifier of the Organisation", example = "1")
   val organisationId: Long,
@@ -36,6 +36,21 @@ data class Organisation(
 
   @Schema(description = "The date the organisation was deactivated, EXPIRY_DATE in NOMIS")
   val deactivatedDate: LocalDate?,
+
+  @Schema(description = "All organisation types associated with an organisation")
+  val organisationTypes: List<OrganisationTypeDetails>,
+
+  @Schema(description = "All phone numbers associated with an organisation directly and not one of their addresses")
+  val phoneNumbers: List<OrganisationPhoneDetails>,
+
+  @Schema(description = "All email addresses associated with an organisation")
+  val emailAddresses: List<OrganisationEmailDetails>,
+
+  @Schema(description = "All web addresses associated with an organisation")
+  val webAddresses: List<OrganisationWebAddressDetails>,
+
+  @Schema(description = "All addresses associated with an organisation")
+  val addresses: List<OrganisationAddressDetails>,
 
   @Schema(description = "User who created the entry")
   val createdBy: String,

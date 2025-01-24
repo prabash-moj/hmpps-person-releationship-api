@@ -26,7 +26,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.OrganisationFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.City
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummaryResultItemPage
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -61,7 +61,7 @@ class OrganisationController(private val organisationFacade: OrganisationFacade)
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
-  fun getOrganisationById(@PathVariable organisationId: Long): Organisation =
+  fun getOrganisationById(@PathVariable organisationId: Long): OrganisationDetails =
     organisationFacade.getOrganisationById(organisationId)
 
   @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
@@ -77,7 +77,7 @@ class OrganisationController(private val organisationFacade: OrganisationFacade)
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = Organisation::class),
+            schema = Schema(implementation = OrganisationDetails::class),
           ),
         ],
       ),
@@ -91,7 +91,7 @@ class OrganisationController(private val organisationFacade: OrganisationFacade)
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN','ROLE_CONTACTS__RW')")
   fun createOrganisation(
     @Valid @RequestBody request: CreateOrganisationRequest,
-  ): ResponseEntity<Organisation> {
+  ): ResponseEntity<OrganisationDetails> {
     return organisationFacade.create(request)
       .let { ResponseEntity.status(HttpStatus.CREATED).body(it) }
   }

@@ -17,7 +17,7 @@ fun OrganisationSummaryEntity.toModel(): OrganisationSummary {
     cityDescription = this.cityDescription,
     countyCode = this.countyCode,
     countyDescription = this.countyDescription,
-    postCode = this.postCode,
+    postcode = this.postCode,
     countryCode = this.countryCode,
     countryDescription = this.countryDescription,
     businessPhoneNumber = this.businessPhoneNumber,

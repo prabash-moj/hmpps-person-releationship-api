@@ -17,8 +17,14 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationSummaryE
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationAddressDetailsRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationAddressPhoneRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationEmailRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationSearchRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationTypeDetailsRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationWebAddressRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
@@ -27,8 +33,23 @@ class OrganisationServiceTest {
 
   private val organisationRepository: OrganisationRepository = mock()
   private val organisationSearchRepository: OrganisationSearchRepository = mock()
-  private val organisationService: OrganisationService =
-    OrganisationService(organisationRepository, organisationSearchRepository)
+  private val organisationPhoneDetailsRepository: OrganisationPhoneDetailsRepository = mock()
+  private val organisationAddressPhoneRepository: OrganisationAddressPhoneRepository = mock()
+  private val organisationTypeDetailsRepository: OrganisationTypeDetailsRepository = mock()
+  private val organisationEmailRepository: OrganisationEmailRepository = mock()
+  private val organisationWebAddressRepository: OrganisationWebAddressRepository = mock()
+  private val organisationAddressRepository: OrganisationAddressDetailsRepository = mock()
+
+  private val organisationService: OrganisationService = OrganisationService(
+    organisationRepository,
+    organisationSearchRepository,
+    organisationPhoneDetailsRepository,
+    organisationAddressPhoneRepository,
+    organisationTypeDetailsRepository,
+    organisationEmailRepository,
+    organisationWebAddressRepository,
+    organisationAddressRepository,
+  )
 
   @Nested
   inner class GetOrganisationByOrganisationId {
@@ -186,7 +207,7 @@ class OrganisationServiceTest {
           cityDescription = "City",
           countyCode = "C.OUNTY",
           countyDescription = "County",
-          postCode = "AB12 3CD",
+          postcode = "AB12 3CD",
           countryCode = "COU",
           countryDescription = "Country",
           businessPhoneNumber = "0123456",

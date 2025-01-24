@@ -8,7 +8,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.OrganisationService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
@@ -27,7 +27,7 @@ class OrganisationFacadeTest {
     val deactivatedDate = LocalDate.now()
     val createdTime = LocalDateTime.now().minusMinutes(20)
     val updatedTime = LocalDateTime.now().plusMinutes(20)
-    val organisation = Organisation(
+    val organisation = OrganisationDetails(
       organisationId = 1L,
       organisationName = "Name",
       programmeNumber = "P1",
@@ -36,6 +36,11 @@ class OrganisationFacadeTest {
       comments = "C2",
       active = false,
       deactivatedDate = deactivatedDate,
+      organisationTypes = emptyList(),
+      phoneNumbers = emptyList(),
+      emailAddresses = emptyList(),
+      webAddresses = emptyList(),
+      addresses = emptyList(),
       createdBy = "Created by",
       createdTime = createdTime,
       updatedBy = "U1",
@@ -53,7 +58,7 @@ class OrganisationFacadeTest {
   fun `should create organisation and send outbound event`() {
     // Given
     val request = createTestOrganisationRequest()
-    val expectedOrganisation = Organisation(
+    val expectedOrganisation = OrganisationDetails(
       organisationId = 1L,
       organisationName = request.organisationName,
       programmeNumber = request.programmeNumber,
@@ -62,6 +67,11 @@ class OrganisationFacadeTest {
       comments = request.comments,
       active = request.active,
       deactivatedDate = request.deactivatedDate,
+      organisationTypes = emptyList(),
+      phoneNumbers = emptyList(),
+      emailAddresses = emptyList(),
+      webAddresses = emptyList(),
+      addresses = emptyList(),
       createdBy = "test-user",
       createdTime = LocalDateTime.now(),
       updatedBy = "test-user",

@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource.Organi
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateEmploymentRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncEmployment
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.EmploymentInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
@@ -278,7 +278,7 @@ class SyncEmploymentIntegrationTest : PostgresIntegrationTestBase() {
       .exchange()
       .expectStatus()
       .isCreated
-      .expectBody(Organisation::class.java)
+      .expectBody(OrganisationDetails::class.java)
       .returnResult()
       .responseBody
 

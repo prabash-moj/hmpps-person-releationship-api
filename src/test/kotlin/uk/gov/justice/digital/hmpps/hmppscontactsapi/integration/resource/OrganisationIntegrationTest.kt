@@ -3,91 +3,14 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationDetails
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.time.LocalDateTime
 
 class OrganisationIntegrationTest : PostgresIntegrationTestBase() {
-
-  @Nested
-  inner class GetOrganisationByOrganisationId {
-
-    @Test
-    fun `should return unauthorized if no token`() {
-      webTestClient.get()
-        .uri("$GET_ORGANISATION_DATA/001")
-        .exchange()
-        .expectStatus()
-        .isUnauthorized
-    }
-
-    @Test
-    fun `should return forbidden if no role`() {
-      webTestClient.get()
-        .uri("$GET_ORGANISATION_DATA/001")
-        .headers(setAuthorisation())
-        .exchange()
-        .expectStatus()
-        .isForbidden
-    }
-
-    @Test
-    fun `should return forbidden if wrong role`() {
-      webTestClient.get()
-        .uri("$GET_ORGANISATION_DATA/001")
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
-        .exchange()
-        .expectStatus()
-        .isForbidden
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
-    fun `should return not found if no organisation found`(role: String) {
-      webTestClient.get()
-        .uri("$GET_ORGANISATION_DATA/9999")
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isNotFound
-    }
-
-    @Test
-    fun `should return organisation data when using a valid organisation id`() {
-      val request = createValidOrganisationRequest()
-
-      val response = webTestClient.post()
-        .uri(GET_ORGANISATION_DATA)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS__RW")))
-        .bodyValue(request)
-        .exchange()
-        .expectStatus()
-        .isCreated
-        .expectBody(Organisation::class.java)
-        .returnResult()
-        .responseBody!!
-
-      val organisation = testAPIClient.getOrganisation(response.organisationId)
-
-      with(organisation) {
-        assertThat(organisationName).isEqualTo(request.organisationName)
-        assertThat(programmeNumber).isEqualTo(request.programmeNumber)
-        assertThat(vatNumber).isEqualTo(request.vatNumber)
-        assertThat(caseloadId).isEqualTo(request.caseloadId)
-        assertThat(comments).isEqualTo(request.comments)
-        assertThat(active).isEqualTo(request.active)
-        assertThat(deactivatedDate).isEqualTo(request.deactivatedDate)
-        assertThat(createdBy).isEqualTo(request.createdBy)
-        assertThat(createdTime).isNotNull()
-        assertThat(organisationId).isEqualTo(response.organisationId)
-      }
-    }
-  }
 
   @Nested
   inner class CreateOrganisation {
@@ -251,7 +174,7 @@ class OrganisationIntegrationTest : PostgresIntegrationTestBase() {
         .exchange()
         .expectStatus()
         .isCreated
-        .expectBody(Organisation::class.java)
+        .expectBody(OrganisationDetails::class.java)
         .returnResult()
         .responseBody
 

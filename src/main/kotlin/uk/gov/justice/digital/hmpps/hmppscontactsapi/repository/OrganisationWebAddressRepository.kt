@@ -8,6 +8,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationWebAddre
 
 @Repository
 interface OrganisationWebAddressRepository : JpaRepository<OrganisationWebAddressEntity, Long> {
+  fun findByOrganisationId(organisationId: Long): List<OrganisationWebAddressEntity>
+
   @Modifying
   @Query("delete from OrganisationWebAddressEntity o where o.organisationId = :organisationId")
   fun deleteAllByOrganisationId(organisationId: Long): Int

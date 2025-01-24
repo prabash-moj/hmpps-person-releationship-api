@@ -38,7 +38,7 @@ data class OrganisationSummary(
   val countyDescription: String?,
 
   @Schema(description = "Postal code, if any", example = "NW1 6XE", nullable = true)
-  val postCode: String?,
+  val postcode: String?,
 
   @Schema(description = "Country code, if any", example = "ENG", nullable = true)
   val countryCode: String?,

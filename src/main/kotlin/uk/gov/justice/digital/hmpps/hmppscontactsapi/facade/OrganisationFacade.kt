@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.OrganisationService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
@@ -17,7 +17,7 @@ class OrganisationFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun create(request: CreateOrganisationRequest): Organisation {
+  fun create(request: CreateOrganisationRequest): OrganisationDetails {
     return organisationService.create(request).also {
       outboundEventsService.send(
         outboundEvent = OutboundEvent.ORGANISATION_CREATED,
@@ -26,7 +26,7 @@ class OrganisationFacade(
     }
   }
 
-  fun getOrganisationById(organisationId: Long): Organisation {
+  fun getOrganisationById(organisationId: Long): OrganisationDetails {
     return organisationService.getOrganisationById(organisationId)
   }
 

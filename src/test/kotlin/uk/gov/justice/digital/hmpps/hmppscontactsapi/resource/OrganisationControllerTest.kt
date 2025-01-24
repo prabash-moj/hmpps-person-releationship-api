@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.OrganisationFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateOrganisationRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -158,7 +158,7 @@ class OrganisationControllerTest {
       createdBy: String = CREATED_BY,
       updatedTime: LocalDateTime? = DEFAULT_CREATED_TIME,
       active: Boolean = true,
-    ) = Organisation(
+    ) = OrganisationDetails(
       organisationId = ORGANISATION_ID,
       organisationName = ORGANISATION_NAME,
       programmeNumber = PROGRAMME_NUMBER,
@@ -167,6 +167,11 @@ class OrganisationControllerTest {
       comments = COMMENTS,
       active = active,
       deactivatedDate = deactivatedDate,
+      organisationTypes = emptyList(),
+      phoneNumbers = emptyList(),
+      emailAddresses = emptyList(),
+      webAddresses = emptyList(),
+      addresses = emptyList(),
       createdBy = createdBy,
       createdTime = createdTime,
       updatedBy = updatedBy,

@@ -1,22 +1,22 @@
 generic-service:
-  nameOverride: hmpps-contacts-api
+  nameOverride: hmpps-person-releationship-api
   productId: "DPS096" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-contacts-api
+    repository: quay.io/hmpps/hmpps-person-releationship-api
     tag: app_version # override at deployment time
     port: 8080
 
   ingress:
     enabled: true
     host: app-hostname.local # override per environment
-    tlsSecretName: hmpps-contacts-api-cert
+    tlsSecretName: hmpps-person-releationship-api-cert
 
 
   # Used to access resources like SQS queues and SNS topics
-  serviceAccountName: hmpps-contacts-api
+  serviceAccountName: hmpps-person-releationship-api
 
   # Environment variables to load into the deployment
   env:
@@ -64,7 +64,7 @@ generic-service:
   #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
 
   namespace_secrets:
-    hmpps-contacts-api:
+    hmpps-person-releationship-api:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
       SYSTEM_CLIENT_ID: "SYSTEM_CLIENT_ID"
       SYSTEM_CLIENT_SECRET: "SYSTEM_CLIENT_SECRET"
@@ -81,4 +81,4 @@ generic-service:
       - internal
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-contacts-api
+  targetApplication: hmpps-person-releationship-api

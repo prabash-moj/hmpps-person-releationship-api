@@ -15,6 +15,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.OrganisationSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactAddressRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchEmploymentsRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
@@ -34,6 +35,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.EmploymentDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.LinkedPrisonerDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
@@ -566,6 +568,20 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBodyList(LinkedPrisonerDetails::class.java)
     .returnResult().responseBody!!
 
+  fun patchEmployments(contactId: Long, request: PatchEmploymentsRequest, role: String = "ROLE_CONTACTS_ADMIN"): List<EmploymentDetails> {
+    return webTestClient.patch()
+      .uri("/contact/$contactId/employment")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised(role))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(EmploymentDetails::class.java)
+      .returnResult().responseBody!!
+  }
   private fun authorised(role: String = "ROLE_CONTACTS_ADMIN") = setAuthorisation(roles = listOf(role))
 
   data class ContactSearchResponse(

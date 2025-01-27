@@ -92,8 +92,9 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "updatedBy must not be null;{\"updatedBy\": null}",
-      "updatedBy must not be null;{}",
+      "updatedBy must not be null;{\"updatedBy\": null, \"primaryAddress\": true}",
+      "updatedBy must not be null;{\"primaryAddress\": true}",
+      "primaryAddress must not be null;{\"updatedBy\": \"foo\"}",
     ],
     delimiter = ';',
   )

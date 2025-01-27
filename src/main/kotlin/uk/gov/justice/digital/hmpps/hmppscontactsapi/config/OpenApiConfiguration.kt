@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.config
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
 import io.swagger.v3.core.util.PrimitiveType
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
@@ -118,6 +119,7 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
   fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer {
     return Jackson2ObjectMapperBuilderCustomizer { builder: Jackson2ObjectMapperBuilder ->
       builder.serializationInclusion(JsonInclude.Include.NON_NULL)
+      builder.featuresToEnable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
     }
   }
 }

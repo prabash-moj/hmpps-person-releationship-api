@@ -1,6 +1,6 @@
 {
   "role": {
-    "name": "hmpps-contacts-api"
+    "name": "hmpps-person-releationship-api"
   },
   "customDimensions": {
     "service.version": "${BUILD_NUMBER}"

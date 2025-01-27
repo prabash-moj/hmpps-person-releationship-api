@@ -1,5 +1,5 @@
 ---
-# Per environment values which override defaults in hmpps-contacts-api/values.yaml
+# Per environment values which override defaults in hmpps-person-releationship-api/values.yaml
 
 generic-service:
   replicaCount: 2

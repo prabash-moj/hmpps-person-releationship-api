@@ -16,7 +16,7 @@ class InfoTest : PostgresIntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("build.name").isEqualTo("hmpps-contacts-api")
+      .jsonPath("build.name").isEqualTo("hmpps-person-releationship-api")
   }
 
   @Test

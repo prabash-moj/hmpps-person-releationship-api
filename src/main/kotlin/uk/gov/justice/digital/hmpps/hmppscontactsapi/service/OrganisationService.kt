@@ -20,6 +20,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationEmai
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationSearchRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationSummaryRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationTypeDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationWebAddressRepository
 
@@ -33,6 +34,7 @@ class OrganisationService(
   private val organisationEmailRepository: OrganisationEmailRepository,
   private val organisationWebAddressRepository: OrganisationWebAddressRepository,
   private val organisationAddressRepository: OrganisationAddressDetailsRepository,
+  private val organisationSummaryRepository: OrganisationSummaryRepository,
 ) {
 
   fun getOrganisationById(id: Long): OrganisationDetails {
@@ -61,6 +63,12 @@ class OrganisationService(
       updatedBy = organisationEntity.updatedBy,
       updatedTime = organisationEntity.updatedTime,
     )
+  }
+
+  fun getOrganisationSummaryById(id: Long): OrganisationSummary {
+    val entity = organisationSummaryRepository.findById(id)
+      .orElseThrow { EntityNotFoundException("Organisation with id $id not found") }
+    return entity.toModel()
   }
 
   private fun addressesWithPhoneNumbers(

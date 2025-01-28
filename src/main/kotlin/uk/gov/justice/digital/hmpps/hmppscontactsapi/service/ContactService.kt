@@ -23,7 +23,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreat
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.EmploymentDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
@@ -32,9 +31,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityD
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.EmploymentRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationSummaryRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.EmploymentService
 import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
@@ -50,8 +48,7 @@ class ContactService(
   private val contactEmailRepository: ContactEmailRepository,
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository,
   private val referenceCodeService: ReferenceCodeService,
-  private val employmentRepository: EmploymentRepository,
-  private val organisationSummaryRepository: OrganisationSummaryRepository,
+  private val employmentService: EmploymentService,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -125,7 +122,7 @@ class ContactService(
 
     val emailAddresses = contactEmailRepository.findByContactId(contactEntity.id()).map { it.toModel() }
     val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.id()).map { it.toModel() }
-    val employments = getEmploymentDetails(contactEntity)
+    val employments = employmentService.getEmploymentDetails(contactEntity.id())
     val languageDescription = contactEntity.languageCode?.let {
       referenceCodeService.getReferenceDataByGroupAndCode(
         ReferenceCodeGroup.LANGUAGE,
@@ -366,21 +363,4 @@ class ContactService(
       comments = relationship.comments,
     )
   }
-
-  private fun getEmploymentDetails(contactEntity: ContactEntity) =
-    employmentRepository.findByContactId(contactEntity.id()).map { employment ->
-      val org = organisationSummaryRepository.findById(employment.organisationId)
-        .map { it.toModel() }
-        .orElseThrow { EntityNotFoundException("Organisation ${employment.organisationId} for employment ${employment.employmentId} not found") }
-      EmploymentDetails(
-        employmentId = employment.employmentId,
-        contactId = employment.contactId,
-        employer = org,
-        isActive = employment.active,
-        createdBy = employment.createdBy,
-        createdTime = employment.createdTime,
-        updatedBy = employment.updatedBy,
-        updatedTime = employment.updatedTime,
-      )
-    }
 }

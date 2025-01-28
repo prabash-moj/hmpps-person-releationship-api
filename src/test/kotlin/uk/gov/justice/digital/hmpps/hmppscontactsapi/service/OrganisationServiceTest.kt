@@ -23,6 +23,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationEmai
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationPhoneDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationSearchRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationSummaryRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationTypeDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationWebAddressRepository
 import java.time.LocalDate
@@ -39,6 +40,7 @@ class OrganisationServiceTest {
   private val organisationEmailRepository: OrganisationEmailRepository = mock()
   private val organisationWebAddressRepository: OrganisationWebAddressRepository = mock()
   private val organisationAddressRepository: OrganisationAddressDetailsRepository = mock()
+  private val organisationSummaryRepository: OrganisationSummaryRepository = mock()
 
   private val organisationService: OrganisationService = OrganisationService(
     organisationRepository,
@@ -49,6 +51,7 @@ class OrganisationServiceTest {
     organisationEmailRepository,
     organisationWebAddressRepository,
     organisationAddressRepository,
+    organisationSummaryRepository,
   )
 
   @Nested

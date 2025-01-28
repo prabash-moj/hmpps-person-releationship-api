@@ -22,6 +22,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentityDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestrictionDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.EmploymentDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRestrictionDetails
 import java.time.LocalDate
@@ -607,6 +609,26 @@ fun createEmploymentEntity(
   updatedTime,
 )
 
+fun createEmploymentDetails(
+  id: Long = 1,
+  contactId: Long = 1,
+  organisation: OrganisationSummary = createOrganisationSummary(),
+  active: Boolean = true,
+  createdBy: String = "USER",
+  createdTime: LocalDateTime = LocalDateTime.now(),
+  updatedBy: String? = "AMEND_USER",
+  updatedTime: LocalDateTime? = LocalDateTime.now(),
+) = EmploymentDetails(
+  employmentId = id,
+  contactId = contactId,
+  employer = organisation,
+  isActive = active,
+  createdBy = createdBy,
+  createdTime = createdTime,
+  updatedBy = updatedBy,
+  updatedTime = updatedTime,
+)
+
 fun createOrganisationSummaryEntity(
   id: Long = 1,
   organisationName: String = "Some name limited",
@@ -625,6 +647,41 @@ fun createOrganisationSummaryEntity(
   businessPhoneNumber: String? = "0123456",
   businessPhoneNumberExtension: String? = "789",
 ) = OrganisationSummaryEntity(
+  id,
+  organisationName,
+  organisationActive,
+  flat,
+  property,
+  street,
+  area,
+  cityCode,
+  cityDescription,
+  countyCode,
+  countyDescription,
+  postCode,
+  countryCode,
+  countryDescription,
+  businessPhoneNumber,
+  businessPhoneNumberExtension,
+)
+fun createOrganisationSummary(
+  id: Long = 1,
+  organisationName: String = "Some name limited",
+  organisationActive: Boolean = true,
+  flat: String? = "Flat",
+  property: String? = "Property",
+  street: String? = "Street",
+  area: String? = "Area",
+  cityCode: String? = "123",
+  cityDescription: String? = "City",
+  countyCode: String? = "C.OUNTY",
+  countyDescription: String? = "County",
+  postCode: String? = "AB12 3CD",
+  countryCode: String? = "COU",
+  countryDescription: String? = "Country",
+  businessPhoneNumber: String? = "0123456",
+  businessPhoneNumberExtension: String? = "789",
+) = OrganisationSummary(
   id,
   organisationName,
   organisationActive,

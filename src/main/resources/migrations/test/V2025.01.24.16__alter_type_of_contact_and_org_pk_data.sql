@@ -1,5 +1,7 @@
 --
 -- The two were incorrectly set as integers despite being modelled as longs in Kotlin allowing integer overflow.
+-- This breaks the dev environment now that there are millions of contacts so needs to be rolled into main scripts
+-- when we next wipe the db.
 --
 DROP VIEW IF EXISTS v_contact_addresses;
 DROP VIEW IF EXISTS v_contact_identities;

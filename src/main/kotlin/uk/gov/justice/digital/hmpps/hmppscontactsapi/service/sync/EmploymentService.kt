@@ -5,8 +5,12 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.EmploymentEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.internal.PatchEmploymentResult
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchEmploymentsRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.EmploymentDetails
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.OrganisationSummary
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.EmploymentRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.OrganisationService
 import java.time.LocalDateTime
@@ -14,11 +18,13 @@ import java.time.LocalDateTime
 @Service
 @Transactional
 class EmploymentService(
+  private val contactRepository: ContactRepository,
   private val employmentRepository: EmploymentRepository,
   private val organisationService: OrganisationService,
 ) {
 
   fun patchEmployments(contactId: Long, request: PatchEmploymentsRequest): PatchEmploymentResult {
+    validateContactExists(contactId)
     val createdIds = mutableListOf<Long>()
     val updatedIds = mutableListOf<Long>()
     val deletedIds = mutableListOf<Long>()
@@ -68,15 +74,80 @@ class EmploymentService(
   fun getEmploymentDetails(contactId: Long) =
     employmentRepository.findByContactId(contactId).map { employment ->
       val org = organisationService.getOrganisationSummaryById(employment.organisationId)
-      EmploymentDetails(
-        employmentId = employment.employmentId,
-        contactId = employment.contactId,
-        employer = org,
-        isActive = employment.active,
-        createdBy = employment.createdBy,
-        createdTime = employment.createdTime,
-        updatedBy = employment.updatedBy,
-        updatedTime = employment.updatedTime,
-      )
+      createEmploymentDetails(employment, org)
     }
+
+  fun getEmployment(contactId: Long, employmentId: Long): EmploymentDetails {
+    validateContactExists(contactId)
+    val employment = validateEmploymentExists(employmentId)
+    val org = organisationService.getOrganisationSummaryById(employment.organisationId)
+    return createEmploymentDetails(employment, org)
+  }
+
+  fun createEmployment(contactId: Long, request: CreateEmploymentRequest): EmploymentDetails {
+    validateContactExists(contactId)
+    val organisation = validateOrganisationExists(request.organisationId)
+    val created = employmentRepository.saveAndFlush(
+      EmploymentEntity(
+        employmentId = 0,
+        organisationId = request.organisationId,
+        contactId = contactId,
+        active = request.isActive,
+        createdBy = request.createdBy,
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      ),
+    )
+    return createEmploymentDetails(created, organisation)
+  }
+
+  fun updateEmployment(contactId: Long, employmentId: Long, request: UpdateEmploymentRequest): EmploymentDetails {
+    validateContactExists(contactId)
+    val organisation = validateOrganisationExists(request.organisationId)
+    val originalEntity = validateEmploymentExists(employmentId)
+    val updated = employmentRepository.saveAndFlush(
+      originalEntity.copy(
+        organisationId = request.organisationId,
+        active = request.isActive,
+        updatedBy = request.updatedBy,
+        updatedTime = LocalDateTime.now(),
+      ),
+    )
+    return createEmploymentDetails(updated, organisation)
+  }
+
+  fun deleteEmployment(contactId: Long, employmentId: Long) {
+    validateContactExists(contactId)
+    val originalEntity = validateEmploymentExists(employmentId)
+    employmentRepository.delete(originalEntity)
+  }
+
+  private fun validateContactExists(contactId: Long) {
+    contactRepository.findById(contactId)
+      .orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
+  }
+
+  private fun validateEmploymentExists(employmentId: Long): EmploymentEntity {
+    return employmentRepository.findById(employmentId)
+      .orElseThrow { EntityNotFoundException("Employment ($employmentId) not found") }!!
+  }
+
+  private fun validateOrganisationExists(organisationId: Long): OrganisationSummary {
+    return organisationService.getOrganisationSummaryById(organisationId)
+  }
+
+  private fun createEmploymentDetails(
+    employment: EmploymentEntity,
+    org: OrganisationSummary,
+  ) = EmploymentDetails(
+    employmentId = employment.employmentId,
+    contactId = employment.contactId,
+    employer = org,
+    isActive = employment.active,
+    createdBy = employment.createdBy,
+    createdTime = employment.createdTime,
+    updatedBy = employment.updatedBy,
+    updatedTime = employment.updatedTime,
+  )
 }

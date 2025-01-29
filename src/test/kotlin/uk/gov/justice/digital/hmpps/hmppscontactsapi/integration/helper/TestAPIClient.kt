@@ -10,6 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
@@ -20,6 +21,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
@@ -582,6 +584,61 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectBodyList(EmploymentDetails::class.java)
       .returnResult().responseBody!!
   }
+
+  fun createAnEmployment(contactId: Long, request: CreateEmploymentRequest, role: String = "ROLE_CONTACTS_ADMIN"): EmploymentDetails {
+    return webTestClient.post()
+      .uri("/contact/$contactId/employment")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised(role))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectHeader().valuesMatch("Location", "/contact/$contactId/employment/(\\d)+")
+      .expectBody(EmploymentDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun getAnEmployment(contactId: Long, employmentId: Long, role: String = "ROLE_CONTACTS_ADMIN"): EmploymentDetails {
+    return webTestClient.get()
+      .uri("/contact/$contactId/employment/$employmentId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(authorised(role))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(EmploymentDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun updateAnEmployment(contactId: Long, employmentId: Long, request: UpdateEmploymentRequest, role: String = "ROLE_CONTACTS_ADMIN"): EmploymentDetails {
+    return webTestClient.put()
+      .uri("/contact/$contactId/employment/$employmentId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised(role))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(EmploymentDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun deleteAnEmployment(contactId: Long, employmentId: Long, role: String = "ROLE_CONTACTS_ADMIN") {
+    webTestClient.delete()
+      .uri("/contact/$contactId/employment/$employmentId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(authorised(role))
+      .exchange()
+      .expectStatus()
+      .isNoContent
+  }
+
   private fun authorised(role: String = "ROLE_CONTACTS_ADMIN") = setAuthorisation(roles = listOf(role))
 
   data class ContactSearchResponse(

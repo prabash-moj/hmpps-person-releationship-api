@@ -183,10 +183,9 @@ class ContactAddressService(
     return rowToDelete.toModel()
   }
 
-  private fun validateContactExists(contactId: Long) =
-    contactRepository
-      .findById(contactId)
-      .orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
+  private fun validateContactExists(contactId: Long) = contactRepository
+    .findById(contactId)
+    .orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
 
   private fun validateCountryCode(countryCode: String?) {
     countryCode?.let { validateReferenceDataExists(it, ReferenceCodeGroup.COUNTRY) }
@@ -200,13 +199,11 @@ class ContactAddressService(
     cityCode?.let { validateReferenceDataExists(it, ReferenceCodeGroup.CITY) }
   }
 
-  private fun validateReferenceDataExists(code: String, groupCode: ReferenceCodeGroup) =
-    referenceCodeRepository
-      .findByGroupCodeAndCode(groupCode, code)
-      ?: throw EntityNotFoundException("No reference data found for groupCode: $groupCode and code: $code")
+  private fun validateReferenceDataExists(code: String, groupCode: ReferenceCodeGroup) = referenceCodeRepository
+    .findByGroupCodeAndCode(groupCode, code)
+    ?: throw EntityNotFoundException("No reference data found for groupCode: $groupCode and code: $code")
 
-  private fun validateExistingAddress(contactAddressId: Long) =
-    contactAddressRepository
-      .findById(contactAddressId)
-      .orElseThrow { EntityNotFoundException("Contact address ($contactAddressId) not found") }
+  private fun validateExistingAddress(contactAddressId: Long) = contactAddressRepository
+    .findById(contactAddressId)
+    .orElseThrow { EntityNotFoundException("Contact address ($contactAddressId) not found") }
 }

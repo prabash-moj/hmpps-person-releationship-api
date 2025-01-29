@@ -262,16 +262,14 @@ class ContactEmailServiceTest {
 
   companion object {
     @JvmStatic
-    fun allInvalidEmailAddresses(): List<Arguments> {
-      return listOf(
-        Arguments.of("Must have something before the @", "@example.com"),
-        Arguments.of("Must have something after the @", "test@"),
-        Arguments.of("Must have something between the @ and dot", "test@."),
-        Arguments.of("Must have something after the .", "test@a."),
-        Arguments.of("Must not have an @ after @ before .", "test@a@a.a"),
-        Arguments.of("Must not have an @ after .", "test@a.@a"),
-        Arguments.of("Must match whole string to check for more @", "test@a.a@"),
-      )
-    }
+    fun allInvalidEmailAddresses(): List<Arguments> = listOf(
+      Arguments.of("Must have something before the @", "@example.com"),
+      Arguments.of("Must have something after the @", "test@"),
+      Arguments.of("Must have something between the @ and dot", "test@."),
+      Arguments.of("Must have something after the .", "test@a."),
+      Arguments.of("Must not have an @ after @ before .", "test@a@a.a"),
+      Arguments.of("Must not have an @ after .", "test@a.@a"),
+      Arguments.of("Must match whole string to check for more @", "test@a.a@"),
+    )
   }
 }

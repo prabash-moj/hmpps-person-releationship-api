@@ -29,7 +29,10 @@ class ManageUsersApiMockServer : MockServer(8093) {
   }
 }
 
-class ManageUsersApiExtension : BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
+class ManageUsersApiExtension :
+  BeforeAllCallback,
+  AfterAllCallback,
+  BeforeEachCallback {
   companion object {
     @JvmField
     val manageUsersApiMockServer = ManageUsersApiMockServer()

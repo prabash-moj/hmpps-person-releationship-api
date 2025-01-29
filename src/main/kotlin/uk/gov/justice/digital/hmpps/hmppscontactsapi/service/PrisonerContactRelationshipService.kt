@@ -11,25 +11,21 @@ class PrisonerContactRelationshipService(
   private val prisonerContactSummaryRepository: PrisonerContactSummaryRepository,
 ) {
 
-  fun getById(prisonerContactId: Long): PrisonerContactRelationshipDetails {
-    return prisonerContactSummaryRepository.findById(prisonerContactId)
-      .orElseThrow { EntityNotFoundException("prisoner contact relationship with id $prisonerContactId not found") }.toRelationshipModel()
-  }
+  fun getById(prisonerContactId: Long): PrisonerContactRelationshipDetails = prisonerContactSummaryRepository.findById(prisonerContactId)
+    .orElseThrow { EntityNotFoundException("prisoner contact relationship with id $prisonerContactId not found") }.toRelationshipModel()
 
-  fun PrisonerContactSummaryEntity.toRelationshipModel(): PrisonerContactRelationshipDetails {
-    return PrisonerContactRelationshipDetails(
-      prisonerContactId = this.prisonerContactId,
-      contactId = this.contactId,
-      prisonerNumber = this.prisonerNumber,
-      relationshipType = this.relationshipType,
-      relationshipTypeDescription = this.relationshipTypeDescription,
-      relationshipToPrisonerCode = this.relationshipToPrisoner,
-      relationshipToPrisonerDescription = this.relationshipToPrisonerDescription ?: "",
-      nextOfKin = this.nextOfKin,
-      emergencyContact = this.emergencyContact,
-      isRelationshipActive = this.active,
-      isApprovedVisitor = this.approvedVisitor,
-      comments = this.comments,
-    )
-  }
+  fun PrisonerContactSummaryEntity.toRelationshipModel(): PrisonerContactRelationshipDetails = PrisonerContactRelationshipDetails(
+    prisonerContactId = this.prisonerContactId,
+    contactId = this.contactId,
+    prisonerNumber = this.prisonerNumber,
+    relationshipType = this.relationshipType,
+    relationshipTypeDescription = this.relationshipTypeDescription,
+    relationshipToPrisonerCode = this.relationshipToPrisoner,
+    relationshipToPrisonerDescription = this.relationshipToPrisonerDescription ?: "",
+    nextOfKin = this.nextOfKin,
+    emergencyContact = this.emergencyContact,
+    isRelationshipActive = this.active,
+    isApprovedVisitor = this.approvedVisitor,
+    comments = this.comments,
+  )
 }

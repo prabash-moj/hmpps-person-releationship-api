@@ -80,9 +80,7 @@ class ContactEmploymentController(
       example = "123456",
     ) contactId: Long,
     @Valid @RequestBody request: PatchEmploymentsRequest,
-  ): List<EmploymentDetails> {
-    return employmentFacade.patchEmployments(contactId, request)
-  }
+  ): List<EmploymentDetails> = employmentFacade.patchEmployments(contactId, request)
 
   @PostMapping
   @Operation(

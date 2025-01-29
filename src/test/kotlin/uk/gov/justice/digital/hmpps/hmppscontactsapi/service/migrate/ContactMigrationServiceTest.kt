@@ -784,207 +784,198 @@ class ContactMigrationServiceTest {
     }
   }
 
-  private fun migrateRequest(personId: Long): MigrateContactRequest =
-    MigrateContactRequest(
-      personId = personId,
-      title = CodedValue("MR", "Mr"),
-      lastName = "Smith",
-      firstName = "John",
-      gender = CodedValue("M", "Male"),
+  private fun migrateRequest(personId: Long): MigrateContactRequest = MigrateContactRequest(
+    personId = personId,
+    title = CodedValue("MR", "Mr"),
+    lastName = "Smith",
+    firstName = "John",
+    gender = CodedValue("M", "Male"),
+  ).also {
+    it.createDateTime = aDateTime
+    it.createUsername = aUsername
+    it.modifyDateTime = aDateTime
+    it.modifyUsername = aUsername
+  }
+
+  private fun aContactEntity() = ContactWithFixedIdEntity(
+    contactId = 1L,
+    title = "Mr",
+    firstName = "John",
+    middleNames = null,
+    lastName = "Smith",
+    dateOfBirth = null,
+    isDeceased = false,
+    deceasedDate = null,
+    createdBy = aUsername,
+    createdTime = aDateTime,
+    updatedTime = aDateTime,
+    updatedBy = aUsername,
+  )
+
+  private fun phoneNumbers() = listOf(
+    MigratePhoneNumber(phoneId = 1L, number = "11111", extension = "1", type = CodedValue("HOME", "Home"))
+      .also {
+        it.createDateTime = aDateTime
+        it.createUsername = aUsername
+      },
+    MigratePhoneNumber(phoneId = 2L, number = "22222", extension = "2", type = CodedValue("WORK", "Work"))
+      .also {
+        it.createDateTime = aDateTime
+        it.createUsername = aUsername
+      },
+  )
+
+  private fun addresses() = listOf(
+    MigrateAddress(
+      addressId = 1L,
+      type = CodedValue("HOME", "Home"),
+      premise = "10",
+      street = "Dublin Road",
+      postCode = "D1 1DN",
+      primaryAddress = true,
+    )
+      .also {
+        it.createDateTime = aDateTime
+        it.createUsername = aUsername
+      },
+    MigrateAddress(
+      addressId = 2L,
+      type = CodedValue("WORK", "Work"),
+      premise = "11",
+      street = "Dublin Road",
+      postCode = "D1 2DN",
+    )
+      .also {
+        it.createDateTime = aDateTime
+        it.createUsername = aUsername
+      },
+  )
+
+  private fun emails() = listOf(
+    MigrateEmailAddress(emailAddressId = 1L, email = "a@.com").also {
+      it.createDateTime = aDateTime
+      it.createUsername = aUsername
+    },
+    MigrateEmailAddress(emailAddressId = 2L, email = "b@b.com").also {
+      it.createDateTime = aDateTime
+      it.createUsername = aUsername
+    },
+  )
+
+  private fun restrictions() = listOf(
+    MigrateRestriction(
+      id = 1L,
+      type = CodedValue("PREINF", "Prior information"),
+      comment = "Active",
+      effectiveDate = LocalDate.now(),
+      expiryDate = LocalDate.now().plusDays(30),
     ).also {
       it.createDateTime = aDateTime
       it.createUsername = aUsername
-      it.modifyDateTime = aDateTime
-      it.modifyUsername = aUsername
-    }
+    },
+    MigrateRestriction(
+      id = 2L,
+      type = CodedValue("CHILD", "Child restrictions"),
+      comment = "Expired",
+      effectiveDate = LocalDate.now().minusDays(30),
+      expiryDate = LocalDate.now().minusDays(1),
+    ).also {
+      it.createDateTime = aDateTime
+      it.createUsername = aUsername
+    },
+  )
 
-  private fun aContactEntity() =
-    ContactWithFixedIdEntity(
-      contactId = 1L,
-      title = "Mr",
-      firstName = "John",
-      middleNames = null,
-      lastName = "Smith",
-      dateOfBirth = null,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = aUsername,
-      createdTime = aDateTime,
-      updatedTime = aDateTime,
-      updatedBy = aUsername,
-    )
-
-  private fun phoneNumbers() =
-    listOf(
-      MigratePhoneNumber(phoneId = 1L, number = "11111", extension = "1", type = CodedValue("HOME", "Home"))
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
-      MigratePhoneNumber(phoneId = 2L, number = "22222", extension = "2", type = CodedValue("WORK", "Work"))
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
-    )
-
-  private fun addresses() =
-    listOf(
-      MigrateAddress(
-        addressId = 1L,
-        type = CodedValue("HOME", "Home"),
-        premise = "10",
-        street = "Dublin Road",
-        postCode = "D1 1DN",
-        primaryAddress = true,
-      )
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
-      MigrateAddress(
-        addressId = 2L,
-        type = CodedValue("WORK", "Work"),
-        premise = "11",
-        street = "Dublin Road",
-        postCode = "D1 2DN",
-      )
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
-    )
-
-  private fun emails() =
-    listOf(
-      MigrateEmailAddress(emailAddressId = 1L, email = "a@.com").also {
+  private fun employments() = listOf(
+    MigrateEmployment(sequence = 1L, corporate = Corporate(id = 123L), active = true)
+      .also {
         it.createDateTime = aDateTime
         it.createUsername = aUsername
       },
-      MigrateEmailAddress(emailAddressId = 2L, email = "b@b.com").also {
+    MigrateEmployment(sequence = 2L, corporate = Corporate(id = 321L), active = false)
+      .also {
         it.createDateTime = aDateTime
         it.createUsername = aUsername
       },
-    )
+  )
 
-  private fun restrictions() =
-    listOf(
-      MigrateRestriction(
-        id = 1L,
-        type = CodedValue("PREINF", "Prior information"),
-        comment = "Active",
-        effectiveDate = LocalDate.now(),
-        expiryDate = LocalDate.now().plusDays(30),
-      ).also {
-        it.createDateTime = aDateTime
-        it.createUsername = aUsername
-      },
-      MigrateRestriction(
-        id = 2L,
-        type = CodedValue("CHILD", "Child restrictions"),
-        comment = "Expired",
-        effectiveDate = LocalDate.now().minusDays(30),
-        expiryDate = LocalDate.now().minusDays(1),
-      ).also {
-        it.createDateTime = aDateTime
-        it.createUsername = aUsername
-      },
-    )
+  private fun relationships() = listOf(
+    MigrateRelationship(
+      id = 1L,
+      contactType = CodedValue("S", "Social"),
+      relationshipType = CodedValue("BRO", "Brother"),
+      currentTerm = true,
+      active = true,
+      expiryDate = null,
+      approvedVisitor = true,
+      nextOfKin = true,
+      emergencyContact = true,
+      comment = "Visits regularly",
+      prisonerNumber = "A1234AA",
+      restrictions = emptyList(),
+    ).also {
+      it.createDateTime = aDateTime
+      it.createUsername = aUsername
+    },
+    MigrateRelationship(
+      id = 2L,
+      contactType = CodedValue("O", "Official"),
+      relationshipType = CodedValue("ILP", "In Loco Parentis"),
+      currentTerm = true,
+      active = false,
+      expiryDate = LocalDate.now().minusDays(10),
+      approvedVisitor = false,
+      nextOfKin = false,
+      emergencyContact = false,
+      comment = "Used to visit but no more",
+      prisonerNumber = "A1234AA",
+      restrictions = emptyList(),
+    ).also {
+      it.createDateTime = aDateTime
+      it.createUsername = aUsername
+    },
+  )
 
-  private fun employments() =
-    listOf(
-      MigrateEmployment(sequence = 1L, corporate = Corporate(id = 123L), active = true)
-        .also {
+  private fun relationshipsWithRestrictions() = listOf(
+    MigrateRelationship(
+      id = 11L,
+      contactType = CodedValue("S", "Social"),
+      relationshipType = CodedValue("BRO", "Brother"),
+      currentTerm = true,
+      active = true,
+      expiryDate = null,
+      approvedVisitor = true,
+      nextOfKin = true,
+      emergencyContact = true,
+      comment = "Visits regularly",
+      prisonerNumber = "A1234AA",
+      restrictions = listOf(
+        MigratePrisonerContactRestriction(
+          id = 20L,
+          restrictionType = CodedValue("NONCON", "No contact"),
+          comment = "This person is not allowed to visit",
+          startDate = LocalDate.now().minusDays(30),
+          expiryDate = LocalDate.now().plusDays(10),
+        ).also {
           it.createDateTime = aDateTime
           it.createUsername = aUsername
         },
-      MigrateEmployment(sequence = 2L, corporate = Corporate(id = 321L), active = false)
-        .also {
+        MigratePrisonerContactRestriction(
+          id = 21L,
+          restrictionType = CodedValue("CLOSED", "Closed visit"),
+          comment = "This person must be accompanied during visits",
+          startDate = LocalDate.now().minusDays(30),
+          expiryDate = LocalDate.now().plusDays(10),
+        ).also {
           it.createDateTime = aDateTime
           it.createUsername = aUsername
         },
+      ),
     )
-
-  private fun relationships() =
-    listOf(
-      MigrateRelationship(
-        id = 1L,
-        contactType = CodedValue("S", "Social"),
-        relationshipType = CodedValue("BRO", "Brother"),
-        currentTerm = true,
-        active = true,
-        expiryDate = null,
-        approvedVisitor = true,
-        nextOfKin = true,
-        emergencyContact = true,
-        comment = "Visits regularly",
-        prisonerNumber = "A1234AA",
-        restrictions = emptyList(),
-      ).also {
+      .also {
         it.createDateTime = aDateTime
         it.createUsername = aUsername
       },
-      MigrateRelationship(
-        id = 2L,
-        contactType = CodedValue("O", "Official"),
-        relationshipType = CodedValue("ILP", "In Loco Parentis"),
-        currentTerm = true,
-        active = false,
-        expiryDate = LocalDate.now().minusDays(10),
-        approvedVisitor = false,
-        nextOfKin = false,
-        emergencyContact = false,
-        comment = "Used to visit but no more",
-        prisonerNumber = "A1234AA",
-        restrictions = emptyList(),
-      ).also {
-        it.createDateTime = aDateTime
-        it.createUsername = aUsername
-      },
-    )
-
-  private fun relationshipsWithRestrictions() =
-    listOf(
-      MigrateRelationship(
-        id = 11L,
-        contactType = CodedValue("S", "Social"),
-        relationshipType = CodedValue("BRO", "Brother"),
-        currentTerm = true,
-        active = true,
-        expiryDate = null,
-        approvedVisitor = true,
-        nextOfKin = true,
-        emergencyContact = true,
-        comment = "Visits regularly",
-        prisonerNumber = "A1234AA",
-        restrictions = listOf(
-          MigratePrisonerContactRestriction(
-            id = 20L,
-            restrictionType = CodedValue("NONCON", "No contact"),
-            comment = "This person is not allowed to visit",
-            startDate = LocalDate.now().minusDays(30),
-            expiryDate = LocalDate.now().plusDays(10),
-          ).also {
-            it.createDateTime = aDateTime
-            it.createUsername = aUsername
-          },
-          MigratePrisonerContactRestriction(
-            id = 21L,
-            restrictionType = CodedValue("CLOSED", "Closed visit"),
-            comment = "This person must be accompanied during visits",
-            startDate = LocalDate.now().minusDays(30),
-            expiryDate = LocalDate.now().plusDays(10),
-          ).also {
-            it.createDateTime = aDateTime
-            it.createUsername = aUsername
-          },
-        ),
-      )
-        .also {
-          it.createDateTime = aDateTime
-          it.createUsername = aUsername
-        },
-    )
+  )
 
   private fun identifiers() = listOf(
     MigrateIdentifier(sequence = 1L, type = CodedValue("DL", "Driving Licence"), identifier = "DL1", issuedAuthority = "DVLA")

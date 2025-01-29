@@ -4,9 +4,7 @@ import java.time.LocalDate
 
 object PNCValidator {
 
-  fun isValid(pnc: String): Boolean {
-    return PNCIdentifier.from(pnc).valid
-  }
+  fun isValid(pnc: String): Boolean = PNCIdentifier.from(pnc).valid
 
   /**
    * The following was lifted straight from hmpps-person-record's PNC data model
@@ -17,9 +15,7 @@ object PNCValidator {
     val valid: Boolean
       get() = pncId.isNotEmpty()
 
-    override fun toString(): String {
-      return pncId
-    }
+    override fun toString(): String = pncId
 
     companion object {
 
@@ -33,12 +29,10 @@ object PNCValidator {
       private const val LONG_PNC_ID_LENGTH = 10
       private const val CENTURY = 100
 
-      fun from(inputPncId: String? = EMPTY_PNC): PNCIdentifier {
-        return when {
-          inputPncId.isNullOrEmpty() -> PNCIdentifier(EMPTY_PNC)
-          isExpectedFormat(inputPncId) -> toCanonicalForm(inputPncId)
-          else -> PNCIdentifier(EMPTY_PNC)
-        }
+      fun from(inputPncId: String? = EMPTY_PNC): PNCIdentifier = when {
+        inputPncId.isNullOrEmpty() -> PNCIdentifier(EMPTY_PNC)
+        isExpectedFormat(inputPncId) -> toCanonicalForm(inputPncId)
+        else -> PNCIdentifier(EMPTY_PNC)
       }
 
       private fun isExpectedFormat(pnc: String): Boolean = pnc.matches(PNC_REGEX)
@@ -71,26 +65,18 @@ object PNCValidator {
 
       private fun isShortFormFormat(pnc: String): Boolean = pnc.length < LONG_PNC_ID_LENGTH
 
-      private fun isYearThisCentury(year: Int): Boolean {
-        return year in 0..currentYearLastTwoDigits()
-      }
+      private fun isYearThisCentury(year: Int): Boolean = year in 0..currentYearLastTwoDigits()
 
-      private fun isYearLastCentury(year: Int): Boolean {
-        return year in currentYearLastTwoDigits() + 1..<CENTURY
-      }
+      private fun isYearLastCentury(year: Int): Boolean = year in currentYearLastTwoDigits() + 1..<CENTURY
 
       private fun currentYearLastTwoDigits(): Int = LocalDate.now().year % CENTURY
 
-      private fun formatYear(prefix: String, year: Int): String {
-        return prefix + year.toString().padStart(2, '0')
-      }
+      private fun formatYear(prefix: String, year: Int): String = prefix + year.toString().padStart(2, '0')
 
-      private fun getYearFromLastTwoDigits(year: Int): String {
-        return when {
-          isYearThisCentury(year) -> formatYear("20", year)
-          isYearLastCentury(year) -> formatYear("19", year)
-          else -> throw IllegalArgumentException("Could not get year from digits provided")
-        }
+      private fun getYearFromLastTwoDigits(year: Int): String = when {
+        isYearThisCentury(year) -> formatYear("20", year)
+        isYearLastCentury(year) -> formatYear("19", year)
+        else -> throw IllegalArgumentException("Could not get year from digits provided")
       }
     }
   }
@@ -110,8 +96,7 @@ object PNCValidator {
       return modulus == checkChar
     }
 
-    private fun padSerialNumber(serialNumber: String): String =
-      serialNumber.padStart(PNCIdentifier.SERIAL_NUM_LENGTH, '0')
+    private fun padSerialNumber(serialNumber: String): String = serialNumber.padStart(PNCIdentifier.SERIAL_NUM_LENGTH, '0')
 
     companion object {
       private const val VALID_LETTERS = "ZABCDEFGHJKLMNPQRTUVWXY"

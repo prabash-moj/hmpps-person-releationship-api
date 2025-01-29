@@ -51,8 +51,7 @@ class EmploymentSyncController(
   )
   @AuthApiResponses
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
-  fun syncGetEmploymentById(@PathVariable employmentId: Long): SyncEmployment =
-    syncFacade.getEmploymentById(employmentId)
+  fun syncGetEmploymentById(@PathVariable employmentId: Long): SyncEmployment = syncFacade.getEmploymentById(employmentId)
 
   @DeleteMapping(path = ["/employment/{employmentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -101,9 +100,7 @@ class EmploymentSyncController(
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun syncCreateEmployment(
     @RequestBody employmentRequest: SyncCreateEmploymentRequest,
-  ): SyncEmployment {
-    return syncFacade.createEmployment(employmentRequest)
-  }
+  ): SyncEmployment = syncFacade.createEmployment(employmentRequest)
 
   @PutMapping(path = ["/employment/{employmentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
@@ -134,7 +131,5 @@ class EmploymentSyncController(
   fun syncUpdateEmployment(
     @PathVariable employmentId: Long,
     @RequestBody employment: SyncUpdateEmploymentRequest,
-  ): SyncEmployment {
-    return syncFacade.updateEmployment(employmentId, employment)
-  }
+  ): SyncEmployment = syncFacade.updateEmployment(employmentId, employment)
 }

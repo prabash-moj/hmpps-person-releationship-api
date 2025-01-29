@@ -331,22 +331,20 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   }
   companion object {
     @JvmStatic
-    fun referenceTypeNotFound(): List<Arguments> {
-      return listOf(
-        Arguments.of(
-          "No reference data found for groupCode: CITY and code: INVALID",
-          aMinimalAddressRequest().copy(cityCode = "INVALID"),
-        ),
-        Arguments.of(
-          "No reference data found for groupCode: COUNTY and code: INVALID",
-          aMinimalAddressRequest().copy(countyCode = "INVALID"),
-        ),
-        Arguments.of(
-          "No reference data found for groupCode: COUNTRY and code: INVALID",
-          aMinimalAddressRequest().copy(countryCode = "INVALID"),
-        ),
-      )
-    }
+    fun referenceTypeNotFound(): List<Arguments> = listOf(
+      Arguments.of(
+        "No reference data found for groupCode: CITY and code: INVALID",
+        aMinimalAddressRequest().copy(cityCode = "INVALID"),
+      ),
+      Arguments.of(
+        "No reference data found for groupCode: COUNTY and code: INVALID",
+        aMinimalAddressRequest().copy(countyCode = "INVALID"),
+      ),
+      Arguments.of(
+        "No reference data found for groupCode: COUNTRY and code: INVALID",
+        aMinimalAddressRequest().copy(countryCode = "INVALID"),
+      ),
+    )
 
     private fun assertEqualsExcludingTimestamps(address: ContactAddressResponse, request: CreateContactAddressRequest) {
       with(address) {

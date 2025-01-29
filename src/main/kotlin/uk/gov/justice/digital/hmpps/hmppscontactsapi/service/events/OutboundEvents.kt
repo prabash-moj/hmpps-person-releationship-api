@@ -8,282 +8,251 @@ import java.time.LocalDateTime
  */
 enum class OutboundEvent(val eventType: String) {
   CONTACT_CREATED("contacts-api.contact.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact has been created",
+    )
   },
   CONTACT_UPDATED("contacts-api.contact.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact has been updated",
+    )
   },
   CONTACT_DELETED("contacts-api.contact.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact has been deleted",
+    )
   },
   CONTACT_ADDRESS_CREATED("contacts-api.contact-address.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact address has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact address has been created",
+    )
   },
   CONTACT_ADDRESS_UPDATED("contacts-api.contact-address.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact address has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact address has been updated",
+    )
   },
   CONTACT_ADDRESS_DELETED("contacts-api.contact-address.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact address has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact address has been deleted",
+    )
   },
   CONTACT_ADDRESS_PHONE_CREATED("contacts-api.contact-address-phone.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact address phone number has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact address phone number has been created",
+    )
   },
   CONTACT_ADDRESS_PHONE_UPDATED("contacts-api.contact-address-phone.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact address phone number has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact address phone number has been updated",
+    )
   },
   CONTACT_ADDRESS_PHONE_DELETED("contacts-api.contact-address-phone.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact address phone number has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact address phone number has been deleted",
+    )
   },
   CONTACT_PHONE_CREATED("contacts-api.contact-phone.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact phone number has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact phone number has been created",
+    )
   },
   CONTACT_PHONE_UPDATED("contacts-api.contact-phone.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact phone number has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact phone number has been updated",
+    )
   },
   CONTACT_PHONE_DELETED("contacts-api.contact-phone.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact phone number has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact phone number has been deleted",
+    )
   },
   CONTACT_EMAIL_CREATED("contacts-api.contact-email.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact email address has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact email address has been created",
+    )
   },
   CONTACT_EMAIL_UPDATED("contacts-api.contact-email.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact email address has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact email address has been updated",
+    )
   },
   CONTACT_EMAIL_DELETED("contacts-api.contact-email.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact email address has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact email address has been deleted",
+    )
   },
   CONTACT_IDENTITY_CREATED("contacts-api.contact-identity.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact proof of identity has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact proof of identity has been created",
+    )
   },
   CONTACT_IDENTITY_UPDATED("contacts-api.contact-identity.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact proof of identity has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact proof of identity has been updated",
+    )
   },
   CONTACT_IDENTITY_DELETED("contacts-api.contact-identity.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact proof of identity has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact proof of identity has been deleted",
+    )
   },
   CONTACT_RESTRICTION_CREATED("contacts-api.contact-restriction.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact restriction has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact restriction has been created",
+    )
   },
   CONTACT_RESTRICTION_UPDATED("contacts-api.contact-restriction.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact restriction has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact restriction has been updated",
+    )
   },
   CONTACT_RESTRICTION_DELETED("contacts-api.contact-restriction.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A contact restriction has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A contact restriction has been deleted",
+    )
   },
   PRISONER_CONTACT_CREATED("contacts-api.prisoner-contact.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A prisoner contact has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A prisoner contact has been created",
+    )
   },
   PRISONER_CONTACT_UPDATED("contacts-api.prisoner-contact.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A prisoner contact has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A prisoner contact has been updated",
+    )
   },
   PRISONER_CONTACT_DELETED("contacts-api.prisoner-contact.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A prisoner contact has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A prisoner contact has been deleted",
+    )
   },
   PRISONER_CONTACT_RESTRICTION_CREATED("contacts-api.prisoner-contact-restriction.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A prisoner contact restriction has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A prisoner contact restriction has been created",
+    )
   },
   PRISONER_CONTACT_RESTRICTION_UPDATED("contacts-api.prisoner-contact-restriction.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A prisoner contact restriction has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A prisoner contact restriction has been updated",
+    )
   },
   PRISONER_CONTACT_RESTRICTION_DELETED("contacts-api.prisoner-contact-restriction.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "A prisoner contact restriction has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "A prisoner contact restriction has been deleted",
+    )
   },
   ORGANISATION_CREATED("contacts-api.organisation.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        description = "An organisation has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      description = "An organisation has been created",
+    )
   },
   EMPLOYMENT_CREATED("contacts-api.employment.created") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "An employment has been created",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "An employment has been created",
+    )
   },
   EMPLOYMENT_UPDATED("contacts-api.employment.updated") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "An employment has been updated",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "An employment has been updated",
+    )
   },
   EMPLOYMENT_DELETED("contacts-api.employment.deleted") {
-    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) =
-      OutboundHMPPSDomainEvent(
-        eventType = eventType,
-        additionalInformation = additionalInformation,
-        personReference = personReference,
-        description = "An employment has been deleted",
-      )
+    override fun event(additionalInformation: AdditionalInformation, personReference: PersonReference?) = OutboundHMPPSDomainEvent(
+      eventType = eventType,
+      additionalInformation = additionalInformation,
+      personReference = personReference,
+      description = "An employment has been deleted",
+    )
   },
   ;
 

@@ -241,15 +241,13 @@ class UpdateContactEmailIntegrationTest : PostgresIntegrationTestBase() {
 
   companion object {
     @JvmStatic
-    fun allFieldConstraintViolations(): List<Arguments> {
-      return listOf(
-        Arguments.of("emailAddress must be <= 240 characters", aMinimalRequest().copy(emailAddress = "".padStart(241))),
-        Arguments.of(
-          "updatedBy must be <= 100 characters",
-          aMinimalRequest().copy(updatedBy = "".padStart(101)),
-        ),
-      )
-    }
+    fun allFieldConstraintViolations(): List<Arguments> = listOf(
+      Arguments.of("emailAddress must be <= 240 characters", aMinimalRequest().copy(emailAddress = "".padStart(241))),
+      Arguments.of(
+        "updatedBy must be <= 100 characters",
+        aMinimalRequest().copy(updatedBy = "".padStart(101)),
+      ),
+    )
 
     private fun aMinimalRequest() = UpdateEmailRequest(
       emailAddress = "updated@example.com",

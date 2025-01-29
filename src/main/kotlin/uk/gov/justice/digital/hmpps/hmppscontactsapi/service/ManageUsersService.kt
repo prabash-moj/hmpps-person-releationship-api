@@ -6,7 +6,5 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 
 @Service
 class ManageUsersService(private val manageUsersClient: ManageUsersApiClient) {
-  fun getUserByUsername(username: String): User? {
-    return manageUsersClient.getUserByUsername(username)
-  }
+  fun getUserByUsername(username: String): User? = manageUsersClient.getUserByUsername(username)
 }

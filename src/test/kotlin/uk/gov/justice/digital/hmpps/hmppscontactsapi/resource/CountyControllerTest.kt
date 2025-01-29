@@ -65,6 +65,5 @@ class CountyControllerTest {
     verify(countyService).getCountyByNomisCode(nomisCode)
   }
 
-  private fun getCountry(countyId: Long) =
-    County(countyId = countyId, nomisCode = "GB", nomisDescription = "United Kingdom", displaySequence = 99)
+  private fun getCountry(countyId: Long) = County(countyId = countyId, nomisCode = "GB", nomisDescription = "United Kingdom", displaySequence = 99)
 }

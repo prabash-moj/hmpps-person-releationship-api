@@ -161,19 +161,17 @@ class GetContactLinkedPrisonerIntegrationTest : PostgresIntegrationTestBase() {
     )
   }
 
-  private fun addRelationship(prisoner: Prisoner, relationshipCode: String): PrisonerContactRelationshipDetails {
-    return testAPIClient.addAContactRelationship(
-      AddContactRelationshipRequest(
-        contactId = savedContactId,
-        ContactRelationship(
-          prisonerNumber = prisoner.prisonerNumber,
-          relationshipToPrisoner = relationshipCode,
-          isNextOfKin = true,
-          relationshipType = "S",
-          isEmergencyContact = true,
-        ),
-        createdBy = "created",
+  private fun addRelationship(prisoner: Prisoner, relationshipCode: String): PrisonerContactRelationshipDetails = testAPIClient.addAContactRelationship(
+    AddContactRelationshipRequest(
+      contactId = savedContactId,
+      ContactRelationship(
+        prisonerNumber = prisoner.prisonerNumber,
+        relationshipToPrisoner = relationshipCode,
+        isNextOfKin = true,
+        relationshipType = "S",
+        isEmergencyContact = true,
       ),
-    )
-  }
+      createdBy = "created",
+    ),
+  )
 }

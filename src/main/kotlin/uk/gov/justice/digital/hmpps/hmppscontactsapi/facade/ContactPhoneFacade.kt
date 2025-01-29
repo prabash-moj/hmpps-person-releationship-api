@@ -14,28 +14,22 @@ class ContactPhoneFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun create(contactId: Long, request: CreatePhoneRequest): ContactPhoneDetails {
-    return contactPhoneService.create(contactId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_PHONE_CREATED,
-        identifier = it.contactPhoneId,
-        contactId = contactId,
-      )
-    }
+  fun create(contactId: Long, request: CreatePhoneRequest): ContactPhoneDetails = contactPhoneService.create(contactId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_PHONE_CREATED,
+      identifier = it.contactPhoneId,
+      contactId = contactId,
+    )
   }
 
-  fun get(contactId: Long, contactPhoneId: Long): ContactPhoneDetails? {
-    return contactPhoneService.get(contactId, contactPhoneId)
-  }
+  fun get(contactId: Long, contactPhoneId: Long): ContactPhoneDetails? = contactPhoneService.get(contactId, contactPhoneId)
 
-  fun update(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails {
-    return contactPhoneService.update(contactId, contactPhoneId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_PHONE_UPDATED,
-        identifier = contactPhoneId,
-        contactId = contactId,
-      )
-    }
+  fun update(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails = contactPhoneService.update(contactId, contactPhoneId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_PHONE_UPDATED,
+      identifier = contactPhoneId,
+      contactId = contactId,
+    )
   }
 
   fun delete(contactId: Long, contactPhoneId: Long) {

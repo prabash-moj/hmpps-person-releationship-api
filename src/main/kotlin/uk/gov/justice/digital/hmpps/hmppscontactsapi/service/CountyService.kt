@@ -11,14 +11,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.CountyRepository
 class CountyService(private val countyRepository: CountyRepository) {
 
   @Transactional(readOnly = true)
-  fun getCountyById(id: Long): County =
-    countyRepository.findByCountyId(id)
-      .orElseThrow { EntityNotFoundException("County with id $id not found") }.toModel()
+  fun getCountyById(id: Long): County = countyRepository.findByCountyId(id)
+    .orElseThrow { EntityNotFoundException("County with id $id not found") }.toModel()
 
   @Transactional(readOnly = true)
-  fun getCountyByNomisCode(code: String): County =
-    countyRepository.findByNomisCode(code)
-      .orElseThrow { EntityNotFoundException("County with nomis code $code not found") }.toModel()
+  fun getCountyByNomisCode(code: String): County = countyRepository.findByNomisCode(code)
+    .orElseThrow { EntityNotFoundException("County with nomis code $code not found") }.toModel()
 
   @Transactional(readOnly = true)
   fun getAllCounties(): List<County> = countyRepository.findAll().toModel()

@@ -75,12 +75,10 @@ class OrganisationService(
     id: Long,
     organisationAddressPhoneNumbers: List<OrganisationPhoneDetailsEntity>,
     organisationAddressPhones: List<OrganisationAddressPhoneEntity>,
-  ): List<OrganisationAddressDetails> =
-    organisationAddressRepository.findByOrganisationId(id)
-      .map { address -> address.toModel(organisationAddressPhones.map { addressPhoneEntity -> addressPhoneEntity to organisationAddressPhoneNumbers.find { it.organisationPhoneId == addressPhoneEntity.organisationPhoneId }!! }) }
+  ): List<OrganisationAddressDetails> = organisationAddressRepository.findByOrganisationId(id)
+    .map { address -> address.toModel(organisationAddressPhones.map { addressPhoneEntity -> addressPhoneEntity to organisationAddressPhoneNumbers.find { it.organisationPhoneId == addressPhoneEntity.organisationPhoneId }!! }) }
 
-  fun search(request: OrganisationSearchRequest, pageable: Pageable): Page<OrganisationSummary> =
-    organisationSearchRepository.search(request, pageable).toModel()
+  fun search(request: OrganisationSearchRequest, pageable: Pageable): Page<OrganisationSummary> = organisationSearchRepository.search(request, pageable).toModel()
 
   @Transactional
   fun create(request: CreateOrganisationRequest): OrganisationDetails {

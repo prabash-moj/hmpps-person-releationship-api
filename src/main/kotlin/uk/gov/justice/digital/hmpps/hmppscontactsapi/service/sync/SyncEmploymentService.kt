@@ -24,11 +24,9 @@ class SyncEmploymentService(
     return employment.toResponse()
   }
 
-  fun createEmployment(request: SyncCreateEmploymentRequest): SyncEmployment {
-    return employmentRepository
-      .saveAndFlush(request.toEntity())
-      .toResponse()
-  }
+  fun createEmployment(request: SyncCreateEmploymentRequest): SyncEmployment = employmentRepository
+    .saveAndFlush(request.toEntity())
+    .toResponse()
 
   fun updateEmployment(employmentId: Long, request: SyncUpdateEmploymentRequest): SyncEmployment {
     val employment = employmentRepository.findById(employmentId)

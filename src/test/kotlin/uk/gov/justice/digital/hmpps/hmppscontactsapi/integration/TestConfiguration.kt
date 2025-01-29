@@ -9,7 +9,5 @@ class TestConfiguration {
 
   @Primary
   @Bean
-  fun stubOutboundEventsPublisher(): StubOutboundEventsPublisher {
-    return StubOutboundEventsPublisher()
-  }
+  fun stubOutboundEventsPublisher(): StubOutboundEventsPublisher = StubOutboundEventsPublisher()
 }

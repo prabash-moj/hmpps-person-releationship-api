@@ -229,20 +229,18 @@ class SyncContactEmailIntegrationTest : PostgresIntegrationTestBase() {
       )
     }
 
-    private fun updateContactEmailRequest(contactId: Long) =
-      SyncUpdateContactEmailRequest(
-        contactId = contactId,
-        emailAddress = "test@test.co.uk",
-        updatedBy = "UPDATE",
-        updatedTime = LocalDateTime.now(),
-      )
+    private fun updateContactEmailRequest(contactId: Long) = SyncUpdateContactEmailRequest(
+      contactId = contactId,
+      emailAddress = "test@test.co.uk",
+      updatedBy = "UPDATE",
+      updatedTime = LocalDateTime.now(),
+    )
 
-    private fun createContactEmailRequest(contactId: Long) =
-      SyncCreateContactEmailRequest(
-        contactId = contactId,
-        emailAddress = "test@test.co.uk",
-        createdBy = "CREATE",
-      )
+    private fun createContactEmailRequest(contactId: Long) = SyncCreateContactEmailRequest(
+      contactId = contactId,
+      emailAddress = "test@test.co.uk",
+      createdBy = "CREATE",
+    )
   }
 
   private fun aMinimalCreateContactRequest() = CreateContactRequest(

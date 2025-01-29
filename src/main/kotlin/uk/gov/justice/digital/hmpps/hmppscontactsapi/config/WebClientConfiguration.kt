@@ -25,10 +25,8 @@ class WebClientConfiguration(
   fun prisonerSearchApiHealthWebClient() = builder.healthWebClient(prisonerSearchBaseUri, healthTimeout)
 
   @Bean
-  fun prisonerSearchApiWebClient(authorizedClientManager: OAuth2AuthorizedClientManager) =
-    builder.authorisedWebClient(authorizedClientManager, "prisoner-search-api", prisonerSearchBaseUri, timeout)
+  fun prisonerSearchApiWebClient(authorizedClientManager: OAuth2AuthorizedClientManager) = builder.authorisedWebClient(authorizedClientManager, "prisoner-search-api", prisonerSearchBaseUri, timeout)
 
   @Bean
-  fun manageUsersApiWebClient(authorizedClientManager: OAuth2AuthorizedClientManager) =
-    builder.authorisedWebClient(authorizedClientManager, "manage-users-api", manageUsersBaseUri, timeout)
+  fun manageUsersApiWebClient(authorizedClientManager: OAuth2AuthorizedClientManager) = builder.authorisedWebClient(authorizedClientManager, "manage-users-api", manageUsersBaseUri, timeout)
 }

@@ -175,23 +175,22 @@ class OrganisationMigrationService(
     ),
   )
 
-  private fun createOrganisation(request: MigrateOrganisationRequest) =
-    organisationRepository.saveAndFlush(
-      OrganisationWithFixedIdEntity(
-        request.nomisCorporateId,
-        organisationName = request.organisationName,
-        programmeNumber = request.programmeNumber,
-        vatNumber = request.vatNumber,
-        caseloadId = request.caseloadId,
-        comments = request.comments,
-        active = request.active,
-        deactivatedDate = request.deactivatedDate,
-        createdBy = request.createUsername ?: "MIGRATION",
-        createdTime = request.createDateTime ?: LocalDateTime.now(),
-        updatedBy = request.modifyUsername,
-        updatedTime = request.modifyDateTime,
-      ),
-    )
+  private fun createOrganisation(request: MigrateOrganisationRequest) = organisationRepository.saveAndFlush(
+    OrganisationWithFixedIdEntity(
+      request.nomisCorporateId,
+      organisationName = request.organisationName,
+      programmeNumber = request.programmeNumber,
+      vatNumber = request.vatNumber,
+      caseloadId = request.caseloadId,
+      comments = request.comments,
+      active = request.active,
+      deactivatedDate = request.deactivatedDate,
+      createdBy = request.createUsername ?: "MIGRATION",
+      createdTime = request.createDateTime ?: LocalDateTime.now(),
+      updatedBy = request.modifyUsername,
+      updatedTime = request.modifyDateTime,
+    ),
+  )
 
   private fun createOrganisationType(
     organisation: OrganisationWithFixedIdEntity,

@@ -287,20 +287,18 @@ class UpdateContactIdentityIntegrationTest : PostgresIntegrationTestBase() {
 
   companion object {
     @JvmStatic
-    fun allFieldConstraintViolations(): List<Arguments> {
-      return listOf(
-        Arguments.of("identityType must be <= 20 characters", aMinimalRequest().copy(identityType = "".padStart(21))),
-        Arguments.of("identityValue must be <= 20 characters", aMinimalRequest().copy(identityValue = "".padStart(21))),
-        Arguments.of(
-          "issuingAuthority must be <= 40 characters",
-          aMinimalRequest().copy(issuingAuthority = "".padStart(41)),
-        ),
-        Arguments.of(
-          "updatedBy must be <= 100 characters",
-          aMinimalRequest().copy(updatedBy = "".padStart(101)),
-        ),
-      )
-    }
+    fun allFieldConstraintViolations(): List<Arguments> = listOf(
+      Arguments.of("identityType must be <= 20 characters", aMinimalRequest().copy(identityType = "".padStart(21))),
+      Arguments.of("identityValue must be <= 20 characters", aMinimalRequest().copy(identityValue = "".padStart(21))),
+      Arguments.of(
+        "issuingAuthority must be <= 40 characters",
+        aMinimalRequest().copy(issuingAuthority = "".padStart(41)),
+      ),
+      Arguments.of(
+        "updatedBy must be <= 100 characters",
+        aMinimalRequest().copy(updatedBy = "".padStart(101)),
+      ),
+    )
 
     private fun aMinimalRequest() = UpdateIdentityRequest(
       identityType = "DL",

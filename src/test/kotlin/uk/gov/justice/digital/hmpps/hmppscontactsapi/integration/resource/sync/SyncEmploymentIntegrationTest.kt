@@ -226,23 +226,21 @@ class SyncEmploymentIntegrationTest : PostgresIntegrationTestBase() {
     }
   }
 
-  private fun updateEmploymentRequest(employment: SyncEmployment) =
-    SyncUpdateEmploymentRequest(
-      organisationId = employment.organisationId,
-      contactId = employment.contactId,
-      active = false,
-      updatedBy = "UPDATER",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updateEmploymentRequest(employment: SyncEmployment) = SyncUpdateEmploymentRequest(
+    organisationId = employment.organisationId,
+    contactId = employment.contactId,
+    active = false,
+    updatedBy = "UPDATER",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun createSyncEmploymentRequest(organisationId: Long = 2L, contactId: Long = 3L) =
-    SyncCreateEmploymentRequest(
-      organisationId = organisationId,
-      contactId = contactId,
-      active = true,
-      createdBy = "CREATOR",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun createSyncEmploymentRequest(organisationId: Long = 2L, contactId: Long = 3L) = SyncCreateEmploymentRequest(
+    organisationId = organisationId,
+    contactId = contactId,
+    active = true,
+    createdBy = "CREATOR",
+    createdTime = LocalDateTime.now(),
+  )
 
   private fun createEmployment(): SyncEmployment {
     val organisationId = createOrganisation()
@@ -315,15 +313,14 @@ class SyncEmploymentIntegrationTest : PostgresIntegrationTestBase() {
     return response.id
   }
 
-  private fun employmentSyncResponse() =
-    SyncEmployment(
-      employmentId = 2L,
-      organisationId = 2L,
-      contactId = 2L,
-      active = true,
-      createdBy = "CREATOR",
-      createdTime = LocalDateTime.now(),
-      updatedBy = null,
-      updatedTime = null,
-    )
+  private fun employmentSyncResponse() = SyncEmployment(
+    employmentId = 2L,
+    organisationId = 2L,
+    contactId = 2L,
+    active = true,
+    createdBy = "CREATOR",
+    createdTime = LocalDateTime.now(),
+    updatedBy = null,
+    updatedTime = null,
+  )
 }

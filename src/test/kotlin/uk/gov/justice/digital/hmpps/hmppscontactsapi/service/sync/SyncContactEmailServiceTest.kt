@@ -149,42 +149,38 @@ class SyncContactEmailServiceTest {
     }
   }
 
-  private fun updateContactEmailRequest(contactId: Long = 1L) =
-    SyncUpdateContactEmailRequest(
-      contactId = contactId,
-      emailAddress = "test@test.com",
-      updatedBy = "TEST",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updateContactEmailRequest(contactId: Long = 1L) = SyncUpdateContactEmailRequest(
+    contactId = contactId,
+    emailAddress = "test@test.com",
+    updatedBy = "TEST",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun createContactEmailRequest() =
-    SyncCreateContactEmailRequest(
-      contactId = 1L,
-      emailAddress = "test@test.com",
-      createdBy = "TEST",
-    )
+  private fun createContactEmailRequest() = SyncCreateContactEmailRequest(
+    contactId = 1L,
+    emailAddress = "test@test.com",
+    createdBy = "TEST",
+  )
 
-  private fun contactEntity(contactId: Long = 1L) =
-    ContactEntity(
-      contactId = contactId,
-      title = "Mr",
-      firstName = "John",
-      middleNames = null,
-      lastName = "Smith",
-      dateOfBirth = null,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactEntity(contactId: Long = 1L) = ContactEntity(
+    contactId = contactId,
+    title = "Mr",
+    firstName = "John",
+    middleNames = null,
+    lastName = "Smith",
+    dateOfBirth = null,
+    isDeceased = false,
+    deceasedDate = null,
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun contactEmailEntity() =
-    ContactEmailEntity(
-      contactEmailId = 1L,
-      contactId = 1L,
-      emailAddress = "test@test.com",
-      createdBy = "TEST",
-    )
+  private fun contactEmailEntity() = ContactEmailEntity(
+    contactEmailId = 1L,
+    contactId = 1L,
+    emailAddress = "test@test.com",
+    createdBy = "TEST",
+  )
 
   private fun SyncUpdateContactEmailRequest.toEntity(contactEmailId: Long = 1L): ContactEmailEntity {
     val updatedBy = this.updatedBy

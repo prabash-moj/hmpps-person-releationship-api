@@ -256,25 +256,23 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : PostgresIntegrationT
       )
     }
 
-    private fun updatePrisonerContactRestrictionRequest() =
-      SyncUpdatePrisonerContactRestrictionRequest(
-        restrictionType = "PREINF",
-        startDate = LocalDate.of(2024, 1, 1),
-        expiryDate = LocalDate.of(2024, 12, 31),
-        comments = "Restriction due to ongoing investigation",
-        updatedBy = "UpdatedUser",
-        updatedTime = LocalDateTime.now(),
-      )
+    private fun updatePrisonerContactRestrictionRequest() = SyncUpdatePrisonerContactRestrictionRequest(
+      restrictionType = "PREINF",
+      startDate = LocalDate.of(2024, 1, 1),
+      expiryDate = LocalDate.of(2024, 12, 31),
+      comments = "Restriction due to ongoing investigation",
+      updatedBy = "UpdatedUser",
+      updatedTime = LocalDateTime.now(),
+    )
 
-    private fun createPrisonerContactRestrictionRequest() =
-      SyncCreatePrisonerContactRestrictionRequest(
-        prisonerContactId = 1L,
-        restrictionType = "PREINF",
-        startDate = LocalDate.of(2024, 1, 1),
-        expiryDate = LocalDate.of(2024, 12, 31),
-        comments = "Restriction due to ongoing investigation",
-        createdBy = "admin",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createPrisonerContactRestrictionRequest() = SyncCreatePrisonerContactRestrictionRequest(
+      prisonerContactId = 1L,
+      restrictionType = "PREINF",
+      startDate = LocalDate.of(2024, 1, 1),
+      expiryDate = LocalDate.of(2024, 12, 31),
+      comments = "Restriction due to ongoing investigation",
+      createdBy = "admin",
+      createdTime = LocalDateTime.now(),
+    )
   }
 }

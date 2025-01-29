@@ -70,9 +70,7 @@ class ContactGlobalRestrictionController(
       description = "The id of the contact",
       example = "123456",
     ) contactId: Long,
-  ): List<ContactRestrictionDetails> {
-    return restrictionsFacade.getGlobalRestrictionsForContact(contactId)
-  }
+  ): List<ContactRestrictionDetails> = restrictionsFacade.getGlobalRestrictionsForContact(contactId)
 
   @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -160,7 +158,5 @@ class ContactGlobalRestrictionController(
       example = "123456",
     ) contactRestrictionId: Long,
     @Valid @RequestBody request: UpdateContactRestrictionRequest,
-  ): ContactRestrictionDetails {
-    return restrictionsFacade.updateContactGlobalRestriction(contactId, contactRestrictionId, request)
-  }
+  ): ContactRestrictionDetails = restrictionsFacade.updateContactGlobalRestriction(contactId, contactRestrictionId, request)
 }

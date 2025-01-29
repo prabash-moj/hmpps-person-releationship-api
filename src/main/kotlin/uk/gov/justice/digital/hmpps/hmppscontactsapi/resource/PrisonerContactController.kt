@@ -151,9 +151,7 @@ class PrisonerContactController(
   @ResponseStatus(HttpStatus.CREATED)
   fun addContactRelationship(
     @Valid @RequestBody relationshipRequest: AddContactRelationshipRequest,
-  ): PrisonerContactRelationshipDetails {
-    return contactFacade.addContactRelationship(relationshipRequest)
-  }
+  ): PrisonerContactRelationshipDetails = contactFacade.addContactRelationship(relationshipRequest)
 
   @Operation(
     summary = "Get the prisoner contact restrictions",
@@ -288,7 +286,5 @@ class PrisonerContactController(
       example = "123456",
     ) prisonerContactRestrictionId: Long,
     @Valid @RequestBody request: UpdatePrisonerContactRestrictionRequest,
-  ): PrisonerContactRestrictionDetails {
-    return prisonerContactRestrictionsFacade.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, request)
-  }
+  ): PrisonerContactRestrictionDetails = prisonerContactRestrictionsFacade.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, request)
 }

@@ -15,24 +15,20 @@ class ContactEmailFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun create(contactId: Long, request: CreateEmailRequest): ContactEmailDetails {
-    return contactEmailService.create(contactId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_EMAIL_CREATED,
-        identifier = it.contactEmailId,
-        contactId = contactId,
-      )
-    }
+  fun create(contactId: Long, request: CreateEmailRequest): ContactEmailDetails = contactEmailService.create(contactId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_EMAIL_CREATED,
+      identifier = it.contactEmailId,
+      contactId = contactId,
+    )
   }
 
-  fun update(contactId: Long, contactEmailId: Long, request: UpdateEmailRequest): ContactEmailDetails {
-    return contactEmailService.update(contactId, contactEmailId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_EMAIL_UPDATED,
-        identifier = contactEmailId,
-        contactId = contactId,
-      )
-    }
+  fun update(contactId: Long, contactEmailId: Long, request: UpdateEmailRequest): ContactEmailDetails = contactEmailService.update(contactId, contactEmailId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_EMAIL_UPDATED,
+      identifier = contactEmailId,
+      contactId = contactId,
+    )
   }
 
   fun delete(contactId: Long, contactEmailId: Long) {
@@ -45,7 +41,5 @@ class ContactEmailFacade(
     }
   }
 
-  fun get(contactId: Long, contactEmailId: Long): ContactEmailDetails {
-    return contactEmailService.get(contactId, contactEmailId) ?: throw EntityNotFoundException("Contact email with id ($contactEmailId) not found for contact ($contactId)")
-  }
+  fun get(contactId: Long, contactEmailId: Long): ContactEmailDetails = contactEmailService.get(contactId, contactEmailId) ?: throw EntityNotFoundException("Contact email with id ($contactEmailId) not found for contact ($contactId)")
 }

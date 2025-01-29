@@ -242,26 +242,24 @@ class SyncContactRestrictionIntegrationTest : PostgresIntegrationTestBase() {
       )
     }
 
-    private fun updateContactRestrictionRequest(contactId: Long) =
-      SyncUpdateContactRestrictionRequest(
-        contactId = contactId,
-        restrictionType = "RESTRICTION",
-        startDate = LocalDate.of(1982, 6, 15),
-        expiryDate = LocalDate.of(1988, 6, 15),
-        comments = "N/A",
-        updatedBy = "UPDATE",
-        updatedTime = LocalDateTime.now(),
-      )
+    private fun updateContactRestrictionRequest(contactId: Long) = SyncUpdateContactRestrictionRequest(
+      contactId = contactId,
+      restrictionType = "RESTRICTION",
+      startDate = LocalDate.of(1982, 6, 15),
+      expiryDate = LocalDate.of(1988, 6, 15),
+      comments = "N/A",
+      updatedBy = "UPDATE",
+      updatedTime = LocalDateTime.now(),
+    )
 
-    private fun createContactRestrictionRequest(contactId: Long) =
-      SyncCreateContactRestrictionRequest(
-        contactId = contactId,
-        restrictionType = "NEW",
-        startDate = LocalDate.of(1982, 6, 15),
-        expiryDate = LocalDate.of(2025, 6, 15),
-        comments = "N/A",
-        createdBy = "CREATE",
-      )
+    private fun createContactRestrictionRequest(contactId: Long) = SyncCreateContactRestrictionRequest(
+      contactId = contactId,
+      restrictionType = "NEW",
+      startDate = LocalDate.of(1982, 6, 15),
+      expiryDate = LocalDate.of(2025, 6, 15),
+      comments = "N/A",
+      createdBy = "CREATE",
+    )
   }
 
   private fun aMinimalCreateContactRequest() = CreateContactRequest(

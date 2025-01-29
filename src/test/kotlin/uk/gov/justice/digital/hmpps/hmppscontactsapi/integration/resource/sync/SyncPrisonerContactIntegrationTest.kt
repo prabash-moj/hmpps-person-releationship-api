@@ -281,40 +281,38 @@ class SyncPrisonerContactIntegrationTest : PostgresIntegrationTestBase() {
       )
     }
 
-    private fun updatePrisonerContactRequest() =
-      SyncUpdatePrisonerContactRequest(
-        contactId = 1L,
-        prisonerNumber = "A1234BC",
-        contactType = "O",
-        relationshipType = "LAW",
-        nextOfKin = true,
-        emergencyContact = false,
-        comments = "Updated relationship type to family",
-        active = true,
-        approvedVisitor = true,
-        currentTerm = true,
-        expiryDate = LocalDate.of(2025, 12, 31),
-        createdAtPrison = "LONDN",
-        updatedBy = "UpdatedUser",
-        updatedTime = LocalDateTime.now(),
-      )
+    private fun updatePrisonerContactRequest() = SyncUpdatePrisonerContactRequest(
+      contactId = 1L,
+      prisonerNumber = "A1234BC",
+      contactType = "O",
+      relationshipType = "LAW",
+      nextOfKin = true,
+      emergencyContact = false,
+      comments = "Updated relationship type to family",
+      active = true,
+      approvedVisitor = true,
+      currentTerm = true,
+      expiryDate = LocalDate.of(2025, 12, 31),
+      createdAtPrison = "LONDN",
+      updatedBy = "UpdatedUser",
+      updatedTime = LocalDateTime.now(),
+    )
 
-    private fun createPrisonerContactRequest() =
-      SyncCreatePrisonerContactRequest(
-        contactId = 1L,
-        prisonerNumber = "A1234BC",
-        contactType = "S",
-        relationshipType = "FRI",
-        nextOfKin = true,
-        emergencyContact = false,
-        comments = "Create relationship",
-        active = true,
-        approvedVisitor = true,
-        currentTerm = true,
-        expiryDate = LocalDate.of(2025, 12, 31),
-        createdAtPrison = "LONDN",
-        createdBy = "adminUser",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createPrisonerContactRequest() = SyncCreatePrisonerContactRequest(
+      contactId = 1L,
+      prisonerNumber = "A1234BC",
+      contactType = "S",
+      relationshipType = "FRI",
+      nextOfKin = true,
+      emergencyContact = false,
+      comments = "Create relationship",
+      active = true,
+      approvedVisitor = true,
+      currentTerm = true,
+      expiryDate = LocalDate.of(2025, 12, 31),
+      createdAtPrison = "LONDN",
+      createdBy = "adminUser",
+      createdTime = LocalDateTime.now(),
+    )
   }
 }

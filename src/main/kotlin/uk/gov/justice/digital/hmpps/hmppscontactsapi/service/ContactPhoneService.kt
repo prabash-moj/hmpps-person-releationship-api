@@ -45,9 +45,7 @@ class ContactPhoneService(
     return created.toDomainWithType(type)
   }
 
-  fun get(contactId: Long, contactPhoneId: Long): ContactPhoneDetails? {
-    return contactPhoneDetailsRepository.findByContactIdAndContactPhoneId(contactId, contactPhoneId)?.toModel()
-  }
+  fun get(contactId: Long, contactPhoneId: Long): ContactPhoneDetails? = contactPhoneDetailsRepository.findByContactIdAndContactPhoneId(contactId, contactPhoneId)?.toModel()
 
   @Transactional
   fun update(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails {

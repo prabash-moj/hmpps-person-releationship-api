@@ -16,24 +16,18 @@ class EmploymentFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun patchEmployments(contactId: Long, request: PatchEmploymentsRequest): List<EmploymentDetails> {
-    return employmentService.patchEmployments(contactId, request).also { result ->
-      result.createdIds.onEach { outboundEventsService.send(OutboundEvent.EMPLOYMENT_CREATED, it, contactId = contactId, source = Source.DPS) }
-      result.updatedIds.onEach { outboundEventsService.send(OutboundEvent.EMPLOYMENT_UPDATED, it, contactId = contactId, source = Source.DPS) }
-      result.deletedIds.onEach { outboundEventsService.send(OutboundEvent.EMPLOYMENT_DELETED, it, contactId = contactId, source = Source.DPS) }
-    }.employmentsAfterUpdate
+  fun patchEmployments(contactId: Long, request: PatchEmploymentsRequest): List<EmploymentDetails> = employmentService.patchEmployments(contactId, request).also { result ->
+    result.createdIds.onEach { outboundEventsService.send(OutboundEvent.EMPLOYMENT_CREATED, it, contactId = contactId, source = Source.DPS) }
+    result.updatedIds.onEach { outboundEventsService.send(OutboundEvent.EMPLOYMENT_UPDATED, it, contactId = contactId, source = Source.DPS) }
+    result.deletedIds.onEach { outboundEventsService.send(OutboundEvent.EMPLOYMENT_DELETED, it, contactId = contactId, source = Source.DPS) }
+  }.employmentsAfterUpdate
+
+  fun createEmployment(contactId: Long, request: CreateEmploymentRequest): EmploymentDetails = employmentService.createEmployment(contactId, request).also { result ->
+    outboundEventsService.send(OutboundEvent.EMPLOYMENT_CREATED, result.employmentId, contactId = contactId, source = Source.DPS)
   }
 
-  fun createEmployment(contactId: Long, request: CreateEmploymentRequest): EmploymentDetails {
-    return employmentService.createEmployment(contactId, request).also { result ->
-      outboundEventsService.send(OutboundEvent.EMPLOYMENT_CREATED, result.employmentId, contactId = contactId, source = Source.DPS)
-    }
-  }
-
-  fun updateEmployment(contactId: Long, employmentId: Long, request: UpdateEmploymentRequest): EmploymentDetails {
-    return employmentService.updateEmployment(contactId, employmentId, request).also {
-      outboundEventsService.send(OutboundEvent.EMPLOYMENT_UPDATED, employmentId, contactId = contactId, source = Source.DPS)
-    }
+  fun updateEmployment(contactId: Long, employmentId: Long, request: UpdateEmploymentRequest): EmploymentDetails = employmentService.updateEmployment(contactId, employmentId, request).also {
+    outboundEventsService.send(OutboundEvent.EMPLOYMENT_UPDATED, employmentId, contactId = contactId, source = Source.DPS)
   }
 
   fun deleteEmployment(contactId: Long, employmentId: Long) {
@@ -42,7 +36,5 @@ class EmploymentFacade(
     }
   }
 
-  fun getEmployment(contactId: Long, employmentId: Long): EmploymentDetails {
-    return employmentService.getEmployment(contactId, employmentId)
-  }
+  fun getEmployment(contactId: Long, employmentId: Long): EmploymentDetails = employmentService.getEmployment(contactId, employmentId)
 }

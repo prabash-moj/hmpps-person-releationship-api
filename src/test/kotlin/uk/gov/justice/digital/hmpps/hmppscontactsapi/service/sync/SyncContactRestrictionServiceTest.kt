@@ -200,55 +200,51 @@ class SyncContactRestrictionServiceTest {
     contactId: Long = 1L,
     startDate: LocalDate? = LocalDate.of(1980, 2, 1),
     expiryDate: LocalDate? = LocalDate.of(2025, 2, 1),
-  ) =
-    SyncUpdateContactRestrictionRequest(
-      contactId = contactId,
-      restrictionType = "DRIVING",
-      startDate = startDate,
-      expiryDate = expiryDate,
-      comments = "N/A",
-      updatedBy = "TEST",
-      updatedTime = LocalDateTime.now(),
-    )
+  ) = SyncUpdateContactRestrictionRequest(
+    contactId = contactId,
+    restrictionType = "DRIVING",
+    startDate = startDate,
+    expiryDate = expiryDate,
+    comments = "N/A",
+    updatedBy = "TEST",
+    updatedTime = LocalDateTime.now(),
+  )
 
   private fun createContactRestrictionRequest(
     startDate: LocalDate? = LocalDate.of(1980, 2, 1),
     expiryDate: LocalDate? = LocalDate.of(2025, 2, 1),
-  ) =
-    SyncCreateContactRestrictionRequest(
-      contactId = 1L,
-      restrictionType = "DRIVING",
-      startDate = startDate,
-      expiryDate = expiryDate,
-      comments = "N/A",
-      createdBy = "TEST",
-    )
+  ) = SyncCreateContactRestrictionRequest(
+    contactId = 1L,
+    restrictionType = "DRIVING",
+    startDate = startDate,
+    expiryDate = expiryDate,
+    comments = "N/A",
+    createdBy = "TEST",
+  )
 
-  private fun contactEntity(contactId: Long = 1L) =
-    ContactEntity(
-      contactId = contactId,
-      title = "Mr",
-      firstName = "John",
-      middleNames = null,
-      lastName = "Smith",
-      dateOfBirth = null,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactEntity(contactId: Long = 1L) = ContactEntity(
+    contactId = contactId,
+    title = "Mr",
+    firstName = "John",
+    middleNames = null,
+    lastName = "Smith",
+    dateOfBirth = null,
+    isDeceased = false,
+    deceasedDate = null,
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun contactRestrictionEntity() =
-    ContactRestrictionEntity(
-      contactRestrictionId = 1L,
-      contactId = 1L,
-      restrictionType = "DRIVING",
-      startDate = LocalDate.of(1980, 2, 1),
-      expiryDate = LocalDate.of(2025, 2, 1),
-      comments = "N/A",
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactRestrictionEntity() = ContactRestrictionEntity(
+    contactRestrictionId = 1L,
+    contactId = 1L,
+    restrictionType = "DRIVING",
+    startDate = LocalDate.of(1980, 2, 1),
+    expiryDate = LocalDate.of(2025, 2, 1),
+    comments = "N/A",
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
   private fun SyncUpdateContactRestrictionRequest.toEntity(contactRestrictionId: Long = 1L): ContactRestrictionEntity {
     val updatedBy = this.updatedBy

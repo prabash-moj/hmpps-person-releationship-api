@@ -33,25 +33,24 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.updatedTime).isEqualTo(contactEntity.updatedTime)
   }
 
-  private fun contactEntity(languageCode: String?) =
-    ContactEntity(
-      contactId = 1L,
-      title = "MR",
-      firstName = "John",
-      lastName = "Doe",
-      middleNames = "A B",
-      dateOfBirth = LocalDate.of(1980, 1, 1),
-      createdBy = "system",
-      isDeceased = false,
-      deceasedDate = null,
-      createdTime = LocalDateTime.now(),
-      staffFlag = false,
-      gender = "M",
-      domesticStatus = "S",
-      languageCode = languageCode,
-      interpreterRequired = false,
-      remitterFlag = false,
-      updatedBy = "admin",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun contactEntity(languageCode: String?) = ContactEntity(
+    contactId = 1L,
+    title = "MR",
+    firstName = "John",
+    lastName = "Doe",
+    middleNames = "A B",
+    dateOfBirth = LocalDate.of(1980, 1, 1),
+    createdBy = "system",
+    isDeceased = false,
+    deceasedDate = null,
+    createdTime = LocalDateTime.now(),
+    staffFlag = false,
+    gender = "M",
+    domesticStatus = "S",
+    languageCode = languageCode,
+    interpreterRequired = false,
+    remitterFlag = false,
+    updatedBy = "admin",
+    updatedTime = LocalDateTime.now(),
+  )
 }

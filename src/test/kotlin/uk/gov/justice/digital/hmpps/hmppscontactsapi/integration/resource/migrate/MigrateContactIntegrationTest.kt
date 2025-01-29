@@ -225,80 +225,73 @@ class MigrateContactIntegrationTest : PostgresIntegrationTestBase() {
     it.modifyDateTime = aDateTime
   }
 
-  private fun phoneNumbers() =
-    listOf(
-      MigratePhoneNumber(phoneId = 101L, number = "11111", extension = "1", type = CodedValue("HOME", "Home")),
-      MigratePhoneNumber(phoneId = 102L, number = "22222", extension = "2", type = CodedValue("WORK", "Work")),
-    )
+  private fun phoneNumbers() = listOf(
+    MigratePhoneNumber(phoneId = 101L, number = "11111", extension = "1", type = CodedValue("HOME", "Home")),
+    MigratePhoneNumber(phoneId = 102L, number = "22222", extension = "2", type = CodedValue("WORK", "Work")),
+  )
 
-  private fun addresses() =
-    listOf(
-      MigrateAddress(
-        addressId = 201L,
-        type = CodedValue("HOME", "Home"),
-        premise = "10",
-        street = "Dublin Road",
-        postCode = "D1 1DN",
-        primaryAddress = true,
+  private fun addresses() = listOf(
+    MigrateAddress(
+      addressId = 201L,
+      type = CodedValue("HOME", "Home"),
+      premise = "10",
+      street = "Dublin Road",
+      postCode = "D1 1DN",
+      primaryAddress = true,
+    ),
+    MigrateAddress(
+      addressId = 202L,
+      type = CodedValue("WORK", "Work"),
+      premise = "11",
+      street = "Dublin Road",
+      postCode = "D1 2DN",
+    ),
+  )
+
+  private fun addressesWithPhones() = listOf(
+    MigrateAddress(
+      addressId = 201L,
+      type = CodedValue("HOME", "Home"),
+      premise = "10",
+      street = "Dublin Road",
+      postCode = "D1 1DN",
+      primaryAddress = true,
+      phoneNumbers = listOf(
+        MigratePhoneNumber(phoneId = 101L, number = "11111", extension = "1", type = CodedValue("HOME", "Home")),
+        MigratePhoneNumber(phoneId = 102L, number = "22222", extension = "2", type = CodedValue("WORK", "Work")),
       ),
-      MigrateAddress(
-        addressId = 202L,
-        type = CodedValue("WORK", "Work"),
-        premise = "11",
-        street = "Dublin Road",
-        postCode = "D1 2DN",
-      ),
-    )
+    ),
+  )
 
-  private fun addressesWithPhones() =
-    listOf(
-      MigrateAddress(
-        addressId = 201L,
-        type = CodedValue("HOME", "Home"),
-        premise = "10",
-        street = "Dublin Road",
-        postCode = "D1 1DN",
-        primaryAddress = true,
-        phoneNumbers = listOf(
-          MigratePhoneNumber(phoneId = 101L, number = "11111", extension = "1", type = CodedValue("HOME", "Home")),
-          MigratePhoneNumber(phoneId = 102L, number = "22222", extension = "2", type = CodedValue("WORK", "Work")),
-        ),
-      ),
-    )
+  private fun emails() = listOf(
+    MigrateEmailAddress(emailAddressId = 301L, email = "a@.com"),
+    MigrateEmailAddress(emailAddressId = 302L, email = "b@b.com"),
+  )
 
-  private fun emails() =
-    listOf(
-      MigrateEmailAddress(emailAddressId = 301L, email = "a@.com"),
-      MigrateEmailAddress(emailAddressId = 302L, email = "b@b.com"),
-    )
+  private fun restrictions() = listOf(
+    MigrateRestriction(
+      id = 401L,
+      type = CodedValue("CHILD", "Desc"),
+      comment = "Active",
+      effectiveDate = LocalDate.now(),
+      expiryDate = LocalDate.now().plusDays(30),
+    ),
+    MigrateRestriction(
+      id = 402L,
+      type = CodedValue("PREINF", "Desc"),
+      comment = "Expired",
+      effectiveDate = LocalDate.now().minusDays(30),
+      expiryDate = LocalDate.now().minusDays(1),
+    ),
+  )
 
-  private fun restrictions() =
-    listOf(
-      MigrateRestriction(
-        id = 401L,
-        type = CodedValue("CHILD", "Desc"),
-        comment = "Active",
-        effectiveDate = LocalDate.now(),
-        expiryDate = LocalDate.now().plusDays(30),
-      ),
-      MigrateRestriction(
-        id = 402L,
-        type = CodedValue("PREINF", "Desc"),
-        comment = "Expired",
-        effectiveDate = LocalDate.now().minusDays(30),
-        expiryDate = LocalDate.now().minusDays(1),
-      ),
-    )
+  private fun identifiers() = listOf(
+    MigrateIdentifier(sequence = 601L, type = CodedValue("DL", "Driving Licence"), identifier = "DL1", issuedAuthority = "DVLA"),
+    MigrateIdentifier(sequence = 602L, type = CodedValue("PASS", "Passport"), identifier = "PASS1", issuedAuthority = "UKBORDER"),
+  )
 
-  private fun identifiers() =
-    listOf(
-      MigrateIdentifier(sequence = 601L, type = CodedValue("DL", "Driving Licence"), identifier = "DL1", issuedAuthority = "DVLA"),
-      MigrateIdentifier(sequence = 602L, type = CodedValue("PASS", "Passport"), identifier = "PASS1", issuedAuthority = "UKBORDER"),
-    )
-
-  private fun employments() =
-    listOf(
-      MigrateEmployment(sequence = 501L, corporate = Corporate(id = 123L), active = true),
-      MigrateEmployment(sequence = 502L, corporate = Corporate(id = 124L), active = false),
-    )
+  private fun employments() = listOf(
+    MigrateEmployment(sequence = 501L, corporate = Corporate(id = 123L), active = true),
+    MigrateEmployment(sequence = 502L, corporate = Corporate(id = 124L), active = false),
+  )
 }

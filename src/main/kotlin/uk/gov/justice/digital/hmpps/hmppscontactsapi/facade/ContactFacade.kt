@@ -29,27 +29,25 @@ class ContactFacade(
     private val logger = LoggerFactory.getLogger(this::class.java)
   }
 
-  fun createContact(request: CreateContactRequest): ContactCreationResult {
-    return contactService.createContact(request)
-      .also { creationResult ->
-        // Send the contact created event
-        outboundEventsService.send(
-          outboundEvent = OutboundEvent.CONTACT_CREATED,
-          identifier = creationResult.createdContact.id,
-          contactId = creationResult.createdContact.id,
-        )
+  fun createContact(request: CreateContactRequest): ContactCreationResult = contactService.createContact(request)
+    .also { creationResult ->
+      // Send the contact created event
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_CREATED,
+        identifier = creationResult.createdContact.id,
+        contactId = creationResult.createdContact.id,
+      )
 
-        // Send the prisons contact created event
-        creationResult.createdRelationship?.let {
-          outboundEventsService.send(
-            outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
-            identifier = it.prisonerContactId,
-            contactId = creationResult.createdContact.id,
-            noms = request.relationship?.prisonerNumber.let { request.relationship!!.prisonerNumber },
-          )
-        }
+      // Send the prisons contact created event
+      creationResult.createdRelationship?.let {
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
+          identifier = it.prisonerContactId,
+          contactId = creationResult.createdContact.id,
+          noms = request.relationship?.prisonerNumber.let { request.relationship!!.prisonerNumber },
+        )
       }
-  }
+    }
 
   fun addContactRelationship(request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
     val createdRelationship = contactService.addContactRelationship(request)
@@ -62,25 +60,19 @@ class ContactFacade(
     return createdRelationship
   }
 
-  fun patch(id: Long, request: PatchContactRequest): PatchContactResponse {
-    return contactPatchService.patch(id, request)
-      .also {
-        logger.info("Send patch domain event to {} {} ", OutboundEvent.CONTACT_UPDATED, id)
-        outboundEventsService.send(
-          outboundEvent = OutboundEvent.CONTACT_UPDATED,
-          identifier = id,
-          contactId = id,
-        )
-      }
-  }
+  fun patch(id: Long, request: PatchContactRequest): PatchContactResponse = contactPatchService.patch(id, request)
+    .also {
+      logger.info("Send patch domain event to {} {} ", OutboundEvent.CONTACT_UPDATED, id)
+      outboundEventsService.send(
+        outboundEvent = OutboundEvent.CONTACT_UPDATED,
+        identifier = id,
+        contactId = id,
+      )
+    }
 
-  fun getContact(id: Long): ContactDetails? {
-    return contactService.getContact(id)
-  }
+  fun getContact(id: Long): ContactDetails? = contactService.getContact(id)
 
-  fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearchResultItem> {
-    return contactService.searchContacts(pageable, request)
-  }
+  fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearchResultItem> = contactService.searchContacts(pageable, request)
 
   fun patchRelationship(prisonerContactId: Long, request: UpdateRelationshipRequest) {
     contactService.updateContactRelationship(prisonerContactId, request)

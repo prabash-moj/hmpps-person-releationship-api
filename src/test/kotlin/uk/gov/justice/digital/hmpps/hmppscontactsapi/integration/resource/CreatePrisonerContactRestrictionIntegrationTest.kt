@@ -251,15 +251,13 @@ class CreatePrisonerContactRestrictionIntegrationTest : PostgresIntegrationTestB
 
   companion object {
     @JvmStatic
-    fun allFieldConstraintViolations(): List<Arguments> {
-      return listOf(
-        Arguments.of("comments must be <= 240 characters", aMinimalRequest().copy(comments = "".padStart(241))),
-        Arguments.of(
-          "createdBy must be <= 100 characters",
-          aMinimalRequest().copy(createdBy = "".padStart(101)),
-        ),
-      )
-    }
+    fun allFieldConstraintViolations(): List<Arguments> = listOf(
+      Arguments.of("comments must be <= 240 characters", aMinimalRequest().copy(comments = "".padStart(241))),
+      Arguments.of(
+        "createdBy must be <= 100 characters",
+        aMinimalRequest().copy(createdBy = "".padStart(101)),
+      ),
+    )
 
     private fun aMinimalRequest() = CreatePrisonerContactRestrictionRequest(
       restrictionType = "BAN",

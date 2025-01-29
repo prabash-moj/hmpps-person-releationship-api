@@ -15,29 +15,23 @@ class ContactIdentityFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun create(contactId: Long, request: CreateIdentityRequest): ContactIdentityDetails {
-    return contactIdentityService.create(contactId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_IDENTITY_CREATED,
-        identifier = it.contactIdentityId,
-        contactId = contactId,
-      )
-    }
+  fun create(contactId: Long, request: CreateIdentityRequest): ContactIdentityDetails = contactIdentityService.create(contactId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_IDENTITY_CREATED,
+      identifier = it.contactIdentityId,
+      contactId = contactId,
+    )
   }
 
-  fun update(contactId: Long, contactIdentityId: Long, request: UpdateIdentityRequest): ContactIdentityDetails {
-    return contactIdentityService.update(contactId, contactIdentityId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_IDENTITY_UPDATED,
-        identifier = contactIdentityId,
-        contactId = contactId,
-      )
-    }
+  fun update(contactId: Long, contactIdentityId: Long, request: UpdateIdentityRequest): ContactIdentityDetails = contactIdentityService.update(contactId, contactIdentityId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_IDENTITY_UPDATED,
+      identifier = contactIdentityId,
+      contactId = contactId,
+    )
   }
 
-  fun get(contactId: Long, contactIdentityId: Long): ContactIdentityDetails {
-    return contactIdentityService.get(contactId, contactIdentityId) ?: throw EntityNotFoundException("Contact identity with id ($contactIdentityId) not found for contact ($contactId)")
-  }
+  fun get(contactId: Long, contactIdentityId: Long): ContactIdentityDetails = contactIdentityService.get(contactId, contactIdentityId) ?: throw EntityNotFoundException("Contact identity with id ($contactIdentityId) not found for contact ($contactId)")
 
   fun delete(contactId: Long, contactIdentityId: Long) {
     contactIdentityService.delete(contactId, contactIdentityId).also {

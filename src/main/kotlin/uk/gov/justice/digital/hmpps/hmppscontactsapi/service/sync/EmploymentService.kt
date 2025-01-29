@@ -71,11 +71,10 @@ class EmploymentService(
     )
   }
 
-  fun getEmploymentDetails(contactId: Long) =
-    employmentRepository.findByContactId(contactId).map { employment ->
-      val org = organisationService.getOrganisationSummaryById(employment.organisationId)
-      createEmploymentDetails(employment, org)
-    }
+  fun getEmploymentDetails(contactId: Long) = employmentRepository.findByContactId(contactId).map { employment ->
+    val org = organisationService.getOrganisationSummaryById(employment.organisationId)
+    createEmploymentDetails(employment, org)
+  }
 
   fun getEmployment(contactId: Long, employmentId: Long): EmploymentDetails {
     validateContactExists(contactId)
@@ -128,14 +127,10 @@ class EmploymentService(
       .orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
   }
 
-  private fun validateEmploymentExists(employmentId: Long): EmploymentEntity {
-    return employmentRepository.findById(employmentId)
-      .orElseThrow { EntityNotFoundException("Employment ($employmentId) not found") }!!
-  }
+  private fun validateEmploymentExists(employmentId: Long): EmploymentEntity = employmentRepository.findById(employmentId)
+    .orElseThrow { EntityNotFoundException("Employment ($employmentId) not found") }!!
 
-  private fun validateOrganisationExists(organisationId: Long): OrganisationSummary {
-    return organisationService.getOrganisationSummaryById(organisationId)
-  }
+  private fun validateOrganisationExists(organisationId: Long): OrganisationSummary = organisationService.getOrganisationSummaryById(organisationId)
 
   private fun createEmploymentDetails(
     employment: EmploymentEntity,

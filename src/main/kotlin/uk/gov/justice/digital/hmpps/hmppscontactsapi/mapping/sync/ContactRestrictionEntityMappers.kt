@@ -4,20 +4,18 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEn
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
 
-fun ContactRestrictionEntity.toModel(): SyncContactRestriction {
-  return SyncContactRestriction(
-    contactRestrictionId = this.contactRestrictionId,
-    contactId = this.contactId!!,
-    restrictionType = this.restrictionType,
-    startDate = this.startDate,
-    expiryDate = this.expiryDate,
-    comments = this.comments,
-    createdBy = this.createdBy,
-    createdTime = this.createdTime,
-    updatedBy = this.updatedBy,
-    updatedTime = this.updatedTime,
-  )
-}
+fun ContactRestrictionEntity.toModel(): SyncContactRestriction = SyncContactRestriction(
+  contactRestrictionId = this.contactRestrictionId,
+  contactId = this.contactId!!,
+  restrictionType = this.restrictionType,
+  startDate = this.startDate,
+  expiryDate = this.expiryDate,
+  comments = this.comments,
+  createdBy = this.createdBy,
+  createdTime = this.createdTime,
+  updatedBy = this.updatedBy,
+  updatedTime = this.updatedTime,
+)
 
 fun List<ContactRestrictionEntity>.toModel() = map { it.toModel() }
 

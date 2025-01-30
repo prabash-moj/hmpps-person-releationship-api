@@ -185,61 +185,55 @@ class SyncContactIdentityServiceTest {
     }
   }
 
-  private fun updateContactIdentityRequest(contactId: Long = 1L, issuingAuthority: String? = "UKBORDER") =
-    SyncUpdateContactIdentityRequest(
-      contactId = contactId,
-      identityType = "PASS",
-      identityValue = "PP87878787878",
-      issuingAuthority = issuingAuthority,
-      updatedBy = "TEST",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updateContactIdentityRequest(contactId: Long = 1L, issuingAuthority: String? = "UKBORDER") = SyncUpdateContactIdentityRequest(
+    contactId = contactId,
+    identityType = "PASS",
+    identityValue = "PP87878787878",
+    issuingAuthority = issuingAuthority,
+    updatedBy = "TEST",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun createContactIdentityRequest() =
-    SyncCreateContactIdentityRequest(
-      contactId = 1L,
-      identityType = "PASS",
-      identityValue = "PP87878787878",
-      issuingAuthority = "UKBORDER",
-      createdBy = "TEST",
-    )
+  private fun createContactIdentityRequest() = SyncCreateContactIdentityRequest(
+    contactId = 1L,
+    identityType = "PASS",
+    identityValue = "PP87878787878",
+    issuingAuthority = "UKBORDER",
+    createdBy = "TEST",
+  )
 
-  private fun contactEntity(contactId: Long = 1L) =
-    ContactEntity(
-      contactId = contactId,
-      title = "Mr",
-      firstName = "John",
-      middleNames = null,
-      lastName = "Smith",
-      dateOfBirth = null,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactEntity(contactId: Long = 1L) = ContactEntity(
+    contactId = contactId,
+    title = "Mr",
+    firstName = "John",
+    middleNames = null,
+    lastName = "Smith",
+    dateOfBirth = null,
+    isDeceased = false,
+    deceasedDate = null,
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun contactIdentityEntity() =
-    ContactIdentityEntity(
-      contactIdentityId = 1L,
-      contactId = 1L,
-      identityType = "PASS",
-      identityValue = "PP87878787878",
-      issuingAuthority = "UKBORDER",
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactIdentityEntity() = ContactIdentityEntity(
+    contactIdentityId = 1L,
+    contactId = 1L,
+    identityType = "PASS",
+    identityValue = "PP87878787878",
+    issuingAuthority = "UKBORDER",
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun SyncUpdateContactIdentityRequest.toEntity(contactIdentityId: Long = 1L, issuingAuthority: String? = "UKBORDER"): ContactIdentityEntity {
-    return ContactIdentityEntity(
-      contactIdentityId = contactIdentityId,
-      contactId = this.contactId,
-      identityType = this.identityType,
-      identityValue = this.identityValue,
-      issuingAuthority = issuingAuthority,
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-      updatedBy = this.updatedBy,
-      updatedTime = this.updatedTime,
-    )
-  }
+  private fun SyncUpdateContactIdentityRequest.toEntity(contactIdentityId: Long = 1L, issuingAuthority: String? = "UKBORDER"): ContactIdentityEntity = ContactIdentityEntity(
+    contactIdentityId = contactIdentityId,
+    contactId = this.contactId,
+    identityType = this.identityType,
+    identityValue = this.identityValue,
+    issuingAuthority = issuingAuthority,
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+    updatedBy = this.updatedBy,
+    updatedTime = this.updatedTime,
+  )
 }

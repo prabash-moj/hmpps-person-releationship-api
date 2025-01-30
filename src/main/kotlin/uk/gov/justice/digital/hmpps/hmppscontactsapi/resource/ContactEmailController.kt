@@ -119,9 +119,7 @@ class ContactEmailController(private val contactEmailFacade: ContactEmailFacade)
       example = "987654",
     ) contactEmailId: Long,
     @Valid @RequestBody request: UpdateEmailRequest,
-  ): ResponseEntity<Any> {
-    return ResponseEntity.ok(contactEmailFacade.update(contactId, contactEmailId, request))
-  }
+  ): ResponseEntity<Any> = ResponseEntity.ok(contactEmailFacade.update(contactId, contactEmailId, request))
 
   @GetMapping("/{contactEmailId}")
   @Operation(
@@ -159,9 +157,7 @@ class ContactEmailController(private val contactEmailFacade: ContactEmailFacade)
       description = "The id of the contact email",
       example = "987654",
     ) contactEmailId: Long,
-  ): ResponseEntity<Any> {
-    return ResponseEntity.ok(contactEmailFacade.get(contactId, contactEmailId))
-  }
+  ): ResponseEntity<Any> = ResponseEntity.ok(contactEmailFacade.get(contactId, contactEmailId))
 
   @DeleteMapping("/{contactEmailId}")
   @Operation(

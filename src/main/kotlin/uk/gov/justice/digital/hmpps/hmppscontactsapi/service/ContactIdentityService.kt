@@ -64,9 +64,7 @@ class ContactIdentityService(
     return updated.toDomainWithType(type)
   }
 
-  fun get(contactId: Long, contactIdentityId: Long): ContactIdentityDetails? {
-    return contactIdentityDetailsRepository.findByContactIdAndContactIdentityId(contactId, contactIdentityId)?.toModel()
-  }
+  fun get(contactId: Long, contactIdentityId: Long): ContactIdentityDetails? = contactIdentityDetailsRepository.findByContactIdAndContactIdentityId(contactId, contactIdentityId)?.toModel()
 
   @Transactional
   fun delete(contactId: Long, contactIdentityId: Long) {

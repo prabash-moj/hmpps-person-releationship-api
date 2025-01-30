@@ -940,103 +940,97 @@ class ContactAddressServiceTest {
   }
 }
 
-private fun updateContactAddressRequest() =
-  UpdateContactAddressRequest(
-    addressType = "HOME",
-    primaryAddress = true,
-    property = "13",
-    street = "Main Street",
-    area = "Dodworth",
-    cityCode = "CVNTRY",
-    countyCode = "WARWKS",
-    postcode = "CV4 9NJ",
-    countryCode = "UK",
-    updatedBy = "TEST",
-  )
+private fun updateContactAddressRequest() = UpdateContactAddressRequest(
+  addressType = "HOME",
+  primaryAddress = true,
+  property = "13",
+  street = "Main Street",
+  area = "Dodworth",
+  cityCode = "CVNTRY",
+  countyCode = "WARWKS",
+  postcode = "CV4 9NJ",
+  countryCode = "UK",
+  updatedBy = "TEST",
+)
 
-private fun patchContactAddressRequest() =
-  PatchContactAddressRequest(
-    addressType = JsonNullable.of("HOME"),
-    primaryAddress = JsonNullable.of(false),
-    flat = JsonNullable.of("13"),
-    property = JsonNullable.of("13"),
-    street = JsonNullable.of("Main Street"),
-    area = JsonNullable.of("Dodworth"),
-    cityCode = JsonNullable.of("CVNTRY"),
-    countyCode = JsonNullable.of("WARWKS"),
-    postcode = JsonNullable.of("CV4 9NJ"),
-    countryCode = JsonNullable.of("UK"),
-    verified = JsonNullable.of(false),
-    mailFlag = JsonNullable.of(false),
-    startDate = JsonNullable.of(LocalDate.of(2000, 12, 25)),
-    endDate = JsonNullable.of(LocalDate.of(2001, 12, 25)),
-    noFixedAddress = JsonNullable.of(false),
-    comments = JsonNullable.of("UK"),
-    updatedBy = "System",
-  )
+private fun patchContactAddressRequest() = PatchContactAddressRequest(
+  addressType = JsonNullable.of("HOME"),
+  primaryAddress = JsonNullable.of(false),
+  flat = JsonNullable.of("13"),
+  property = JsonNullable.of("13"),
+  street = JsonNullable.of("Main Street"),
+  area = JsonNullable.of("Dodworth"),
+  cityCode = JsonNullable.of("CVNTRY"),
+  countyCode = JsonNullable.of("WARWKS"),
+  postcode = JsonNullable.of("CV4 9NJ"),
+  countryCode = JsonNullable.of("UK"),
+  verified = JsonNullable.of(false),
+  mailFlag = JsonNullable.of(false),
+  startDate = JsonNullable.of(LocalDate.of(2000, 12, 25)),
+  endDate = JsonNullable.of(LocalDate.of(2001, 12, 25)),
+  noFixedAddress = JsonNullable.of(false),
+  comments = JsonNullable.of("UK"),
+  updatedBy = "System",
+)
 
-private fun createContactAddressRequest() =
-  CreateContactAddressRequest(
-    addressType = "HOME",
-    primaryAddress = true,
-    property = "13",
-    street = "Main Street",
-    area = "Dodworth",
-    cityCode = "CVNTRY",
-    countyCode = "WARWKS",
-    postcode = "CV4 9NJ",
-    countryCode = "UK",
-    createdBy = "TEST",
-  )
+private fun createContactAddressRequest() = CreateContactAddressRequest(
+  addressType = "HOME",
+  primaryAddress = true,
+  property = "13",
+  street = "Main Street",
+  area = "Dodworth",
+  cityCode = "CVNTRY",
+  countyCode = "WARWKS",
+  postcode = "CV4 9NJ",
+  countryCode = "UK",
+  createdBy = "TEST",
+)
 
-private fun contactEntity(contactId: Long = 1L) =
-  ContactEntity(
-    contactId = contactId,
-    title = "Mr",
-    firstName = "John",
-    middleNames = null,
-    lastName = "Smith",
-    dateOfBirth = null,
-    isDeceased = false,
-    deceasedDate = null,
-    createdBy = "TEST",
-  )
+private fun contactEntity(contactId: Long = 1L) = ContactEntity(
+  contactId = contactId,
+  title = "Mr",
+  firstName = "John",
+  middleNames = null,
+  lastName = "Smith",
+  dateOfBirth = null,
+  isDeceased = false,
+  deceasedDate = null,
+  createdBy = "TEST",
+)
 
-private fun contactAddressEntity(contactId: Long = 1L, contactAddressId: Long = 1L, primaryAddress: Boolean = true) =
-  ContactAddressEntity(
-    contactAddressId = contactAddressId,
-    contactId = contactId,
-    addressType = "HOME",
-    primaryAddress = primaryAddress,
-    flat = "1B",
-    property = "Mason House",
-    street = "Main Street",
-    area = "Howarth",
-    cityCode = "LEEDS",
-    countyCode = "YORKS",
-    postCode = "LS13 4KD",
-    countryCode = "UK",
-    createdBy = "TEST",
-    createdTime = LocalDateTime.now(),
-  )
+private fun contactAddressEntity(contactId: Long = 1L, contactAddressId: Long = 1L, primaryAddress: Boolean = true) = ContactAddressEntity(
+  contactAddressId = contactAddressId,
+  contactId = contactId,
+  addressType = "HOME",
+  primaryAddress = primaryAddress,
+  flat = "1B",
+  property = "Mason House",
+  street = "Main Street",
+  area = "Howarth",
+  cityCode = "LEEDS",
+  countyCode = "YORKS",
+  postCode = "LS13 4KD",
+  countryCode = "UK",
+  createdBy = "TEST",
+  createdTime = LocalDateTime.now(),
+)
 
-private fun CreateContactAddressRequest.toEntity(contactId: Long, contactAddressId: Long = 0) =
-  ContactAddressEntity(
-    contactAddressId = contactAddressId,
-    contactId = contactId,
-    addressType = this.addressType,
-    primaryAddress = this.primaryAddress,
-    flat = this.flat,
-    property = this.property,
-    street = this.street,
-    area = this.area,
-    cityCode = this.cityCode,
-    countyCode = this.countyCode,
-    postCode = this.postcode,
-    countryCode = this.countryCode,
-    createdBy = this.createdBy,
-    createdTime = LocalDateTime.now(),
-  )
+private fun CreateContactAddressRequest.toEntity(contactId: Long, contactAddressId: Long = 0) = ContactAddressEntity(
+  contactAddressId = contactAddressId,
+  contactId = contactId,
+  addressType = this.addressType,
+  primaryAddress = this.primaryAddress,
+  flat = this.flat,
+  property = this.property,
+  street = this.street,
+  area = this.area,
+  cityCode = this.cityCode,
+  countyCode = this.countyCode,
+  postCode = this.postcode,
+  countryCode = this.countryCode,
+  createdBy = this.createdBy,
+  createdTime = LocalDateTime.now(),
+)
 
 private fun UpdateContactAddressRequest.toEntity(contactId: Long, contactAddressId: Long = 1L): ContactAddressEntity {
   val updatedBy = this.updatedBy

@@ -71,16 +71,15 @@ class LanguageIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(languageReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Language::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Language::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -138,16 +137,15 @@ class LanguageIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(languageReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Language::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Language::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -205,16 +203,15 @@ class LanguageIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(languageReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Language::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Language::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -272,16 +269,15 @@ class LanguageIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(languageReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Language::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Language::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -343,15 +339,14 @@ class LanguageIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(languageReferences).hasSizeGreaterThan(10)
     }
 
-    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Language::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getLanguageReferenceData(url: String, role: String): MutableList<Language> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Language::class.java)
+      .returnResult().responseBody!!
   }
 }

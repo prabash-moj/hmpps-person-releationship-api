@@ -72,13 +72,10 @@ class ContactService(
     )
   }
 
-  fun getContact(id: Long): ContactDetails? {
-    return contactRepository.findById(id).getOrNull()
-      ?.let { enrichContact(it) }
-  }
+  fun getContact(id: Long): ContactDetails? = contactRepository.findById(id).getOrNull()
+    ?.let { enrichContact(it) }
 
-  fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearchResultItem> =
-    contactSearchRepository.searchContacts(request, pageable).toModel()
+  fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearchResultItem> = contactSearchRepository.searchContacts(request, pageable).toModel()
 
   @Transactional
   fun addContactRelationship(request: AddContactRelationshipRequest): PrisonerContactRelationshipDetails {
@@ -341,26 +338,24 @@ class ContactService(
     }
   }
 
-  private fun enrichRelationship(relationship: PrisonerContactEntity): PrisonerContactRelationshipDetails {
-    return PrisonerContactRelationshipDetails(
-      prisonerContactId = relationship.prisonerContactId,
-      contactId = relationship.contactId,
-      prisonerNumber = relationship.prisonerNumber,
-      relationshipType = relationship.relationshipType,
-      relationshipTypeDescription = referenceCodeService.getReferenceDataByGroupAndCode(
-        ReferenceCodeGroup.RELATIONSHIP_TYPE,
-        relationship.relationshipType,
-      )?.description ?: relationship.relationshipType,
-      relationshipToPrisonerCode = relationship.relationshipToPrisoner,
-      relationshipToPrisonerDescription = referenceCodeService.getReferenceDataByGroupAndCode(
-        referenceCodeGroupForRelationshipType(relationship.relationshipType),
-        relationship.relationshipToPrisoner,
-      )?.description ?: relationship.relationshipToPrisoner,
-      emergencyContact = relationship.emergencyContact,
-      nextOfKin = relationship.nextOfKin,
-      isRelationshipActive = relationship.active,
-      isApprovedVisitor = relationship.approvedVisitor,
-      comments = relationship.comments,
-    )
-  }
+  private fun enrichRelationship(relationship: PrisonerContactEntity): PrisonerContactRelationshipDetails = PrisonerContactRelationshipDetails(
+    prisonerContactId = relationship.prisonerContactId,
+    contactId = relationship.contactId,
+    prisonerNumber = relationship.prisonerNumber,
+    relationshipType = relationship.relationshipType,
+    relationshipTypeDescription = referenceCodeService.getReferenceDataByGroupAndCode(
+      ReferenceCodeGroup.RELATIONSHIP_TYPE,
+      relationship.relationshipType,
+    )?.description ?: relationship.relationshipType,
+    relationshipToPrisonerCode = relationship.relationshipToPrisoner,
+    relationshipToPrisonerDescription = referenceCodeService.getReferenceDataByGroupAndCode(
+      referenceCodeGroupForRelationshipType(relationship.relationshipType),
+      relationship.relationshipToPrisoner,
+    )?.description ?: relationship.relationshipToPrisoner,
+    emergencyContact = relationship.emergencyContact,
+    nextOfKin = relationship.nextOfKin,
+    isRelationshipActive = relationship.active,
+    isApprovedVisitor = relationship.approvedVisitor,
+    comments = relationship.comments,
+  )
 }

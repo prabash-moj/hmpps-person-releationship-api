@@ -523,14 +523,13 @@ class RestrictionsServiceTest {
     private fun aCreateGlobalRestrictionRequest(
       startDate: LocalDate = LocalDate.of(2020, 1, 1),
       expiryDate: LocalDate? = LocalDate.of(2022, 2, 2),
-    ): CreateContactRestrictionRequest =
-      CreateContactRestrictionRequest(
-        restrictionType = "BAN",
-        startDate = startDate,
-        expiryDate = expiryDate,
-        comments = "Some comments",
-        createdBy = "created",
-      )
+    ): CreateContactRestrictionRequest = CreateContactRestrictionRequest(
+      restrictionType = "BAN",
+      startDate = startDate,
+      expiryDate = expiryDate,
+      comments = "Some comments",
+      createdBy = "created",
+    )
   }
 
   @Nested
@@ -663,14 +662,13 @@ class RestrictionsServiceTest {
     private fun anUpdateGlobalRestrictionRequest(
       startDate: LocalDate = LocalDate.of(1990, 1, 1),
       expiryDate: LocalDate? = LocalDate.of(1992, 2, 2),
-    ): UpdateContactRestrictionRequest =
-      UpdateContactRestrictionRequest(
-        restrictionType = "CCTV",
-        startDate = startDate,
-        expiryDate = expiryDate,
-        comments = "Updated comments",
-        updatedBy = "updated",
-      )
+    ): UpdateContactRestrictionRequest = UpdateContactRestrictionRequest(
+      restrictionType = "CCTV",
+      startDate = startDate,
+      expiryDate = expiryDate,
+      comments = "Updated comments",
+      updatedBy = "updated",
+    )
   }
 
   @Nested
@@ -755,14 +753,13 @@ class RestrictionsServiceTest {
       verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "BAN", allowInactive = false)
     }
 
-    private fun aCreatePrisonerContactRestrictionRequest(): CreatePrisonerContactRestrictionRequest =
-      CreatePrisonerContactRestrictionRequest(
-        restrictionType = "BAN",
-        startDate = LocalDate.of(2020, 1, 1),
-        expiryDate = LocalDate.of(2022, 2, 2),
-        comments = "Some comments",
-        createdBy = "created",
-      )
+    private fun aCreatePrisonerContactRestrictionRequest(): CreatePrisonerContactRestrictionRequest = CreatePrisonerContactRestrictionRequest(
+      restrictionType = "BAN",
+      startDate = LocalDate.of(2020, 1, 1),
+      expiryDate = LocalDate.of(2022, 2, 2),
+      comments = "Some comments",
+      createdBy = "created",
+    )
   }
 
   @Nested
@@ -885,13 +882,12 @@ class RestrictionsServiceTest {
       verify(referenceCodeService).validateReferenceCode(ReferenceCodeGroup.RESTRICTION, "CCTV", allowInactive = true)
     }
 
-    private fun anUpdatePrisonerContactRestrictionRequest(): UpdatePrisonerContactRestrictionRequest =
-      UpdatePrisonerContactRestrictionRequest(
-        restrictionType = "CCTV",
-        startDate = LocalDate.of(1990, 1, 1),
-        expiryDate = LocalDate.of(1992, 2, 2),
-        comments = "Updated comments",
-        updatedBy = "updated",
-      )
+    private fun anUpdatePrisonerContactRestrictionRequest(): UpdatePrisonerContactRestrictionRequest = UpdatePrisonerContactRestrictionRequest(
+      restrictionType = "CCTV",
+      startDate = LocalDate.of(1990, 1, 1),
+      expiryDate = LocalDate.of(1992, 2, 2),
+      comments = "Updated comments",
+      updatedBy = "updated",
+    )
   }
 }

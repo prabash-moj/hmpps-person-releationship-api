@@ -287,20 +287,18 @@ class UpdateContactPhoneIntegrationTest : PostgresIntegrationTestBase() {
 
   companion object {
     @JvmStatic
-    fun allFieldConstraintViolations(): List<Arguments> {
-      return listOf(
-        Arguments.of("phoneType must be <= 12 characters", aMinimalRequest().copy(phoneType = "".padStart(13))),
-        Arguments.of("phoneNumber must be <= 240 characters", aMinimalRequest().copy(phoneNumber = "".padStart(241))),
-        Arguments.of(
-          "extNumber must be <= 7 characters",
-          aMinimalRequest().copy(extNumber = "".padStart(8)),
-        ),
-        Arguments.of(
-          "updatedBy must be <= 100 characters",
-          aMinimalRequest().copy(updatedBy = "".padStart(101)),
-        ),
-      )
-    }
+    fun allFieldConstraintViolations(): List<Arguments> = listOf(
+      Arguments.of("phoneType must be <= 12 characters", aMinimalRequest().copy(phoneType = "".padStart(13))),
+      Arguments.of("phoneNumber must be <= 240 characters", aMinimalRequest().copy(phoneNumber = "".padStart(241))),
+      Arguments.of(
+        "extNumber must be <= 7 characters",
+        aMinimalRequest().copy(extNumber = "".padStart(8)),
+      ),
+      Arguments.of(
+        "updatedBy must be <= 100 characters",
+        aMinimalRequest().copy(updatedBy = "".padStart(101)),
+      ),
+    )
 
     private fun aMinimalRequest() = UpdatePhoneRequest(
       phoneType = "MOB",

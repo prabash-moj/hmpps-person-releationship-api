@@ -15,36 +15,30 @@ class PrisonerContactRestrictionsFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun getPrisonerContactRestrictions(prisonerContactId: Long): PrisonerContactRestrictionsResponse {
-    return restrictionsService.getPrisonerContactRestrictions(prisonerContactId)
-  }
+  fun getPrisonerContactRestrictions(prisonerContactId: Long): PrisonerContactRestrictionsResponse = restrictionsService.getPrisonerContactRestrictions(prisonerContactId)
 
   fun createPrisonerContactRestriction(
     prisonerContactId: Long,
     request: CreatePrisonerContactRestrictionRequest,
-  ): PrisonerContactRestrictionDetails {
-    return restrictionsService.createPrisonerContactRestriction(prisonerContactId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
-        identifier = it.prisonerContactRestrictionId,
-        contactId = it.contactId,
-        noms = it.prisonerNumber,
-      )
-    }
+  ): PrisonerContactRestrictionDetails = restrictionsService.createPrisonerContactRestriction(prisonerContactId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
+      identifier = it.prisonerContactRestrictionId,
+      contactId = it.contactId,
+      noms = it.prisonerNumber,
+    )
   }
 
   fun updatePrisonerContactRestriction(
     prisonerContactId: Long,
     prisonerContactRestrictionId: Long,
     request: UpdatePrisonerContactRestrictionRequest,
-  ): PrisonerContactRestrictionDetails {
-    return restrictionsService.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
-        identifier = prisonerContactRestrictionId,
-        contactId = it.contactId,
-        noms = it.prisonerNumber,
-      )
-    }
+  ): PrisonerContactRestrictionDetails = restrictionsService.updatePrisonerContactRestriction(prisonerContactId, prisonerContactRestrictionId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+      identifier = prisonerContactRestrictionId,
+      contactId = it.contactId,
+      noms = it.prisonerNumber,
+    )
   }
 }

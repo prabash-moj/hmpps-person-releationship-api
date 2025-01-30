@@ -11,6 +11,5 @@ import uk.gov.justice.hmpps.sqs.HmppsQueueService
 class EventConfiguration {
 
   @Bean
-  fun outboundEventsPublisher(hmppsQueueService: HmppsQueueService, mapper: ObjectMapper, features: FeatureSwitches): OutboundEventsPublisher =
-    HmppsQueueOutboundEventsPublisher(hmppsQueueService, mapper, features)
+  fun outboundEventsPublisher(hmppsQueueService: HmppsQueueService, mapper: ObjectMapper, features: FeatureSwitches): OutboundEventsPublisher = HmppsQueueOutboundEventsPublisher(hmppsQueueService, mapper, features)
 }

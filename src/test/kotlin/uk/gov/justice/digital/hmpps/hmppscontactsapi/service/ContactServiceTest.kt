@@ -1282,29 +1282,27 @@ class ContactServiceTest {
       }
     }
 
-    private fun createPrisonerContact(): PrisonerContactEntity {
-      return PrisonerContactEntity(
-        prisonerContactId = prisonerContactId,
-        contactId = 1L,
-        prisonerNumber = "A1234BC",
-        relationshipType = "S",
-        relationshipToPrisoner = "BRO",
-        nextOfKin = true,
-        emergencyContact = true,
-        approvedVisitor = true,
-        active = true,
-        currentTerm = true,
-        comments = "Updated relationship type to Brother",
-        createdBy = "TEST",
-        createdTime = LocalDateTime.now(),
-      ).apply {
-        approvedBy = "officer456"
-        approvedTime = LocalDateTime.now()
-        expiryDate = LocalDate.of(2025, 12, 31)
-        createdAtPrison = "LONDON"
-        updatedBy = "adminUser"
-        updatedTime = LocalDateTime.now()
-      }
+    private fun createPrisonerContact(): PrisonerContactEntity = PrisonerContactEntity(
+      prisonerContactId = prisonerContactId,
+      contactId = 1L,
+      prisonerNumber = "A1234BC",
+      relationshipType = "S",
+      relationshipToPrisoner = "BRO",
+      nextOfKin = true,
+      emergencyContact = true,
+      approvedVisitor = true,
+      active = true,
+      currentTerm = true,
+      comments = "Updated relationship type to Brother",
+      createdBy = "TEST",
+      createdTime = LocalDateTime.now(),
+    ).apply {
+      approvedBy = "officer456"
+      approvedTime = LocalDateTime.now()
+      expiryDate = LocalDate.of(2025, 12, 31)
+      createdAtPrison = "LONDON"
+      updatedBy = "adminUser"
+      updatedTime = LocalDateTime.now()
     }
 
     private fun PrisonerContactEntity.assertUnchangedFields() {
@@ -1319,16 +1317,14 @@ class ContactServiceTest {
       assertThat(createdAtPrison).isEqualTo("LONDON")
     }
 
-    private fun updateRelationshipRequest(): UpdateRelationshipRequest {
-      return UpdateRelationshipRequest(
-        relationshipToPrisoner = JsonNullable.of("MOT"),
-        isEmergencyContact = JsonNullable.of(true),
-        isNextOfKin = JsonNullable.of(true),
-        isRelationshipActive = JsonNullable.of(false),
-        comments = JsonNullable.of("Foo"),
-        updatedBy = "Admin",
-      )
-    }
+    private fun updateRelationshipRequest(): UpdateRelationshipRequest = UpdateRelationshipRequest(
+      relationshipToPrisoner = JsonNullable.of("MOT"),
+      isEmergencyContact = JsonNullable.of(true),
+      isNextOfKin = JsonNullable.of(true),
+      isRelationshipActive = JsonNullable.of(false),
+      comments = JsonNullable.of("Foo"),
+      updatedBy = "Admin",
+    )
   }
 
   private fun createContactEntity() = ContactEntity(

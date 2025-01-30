@@ -4,28 +4,26 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithFixedIdEn
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 
-fun ContactWithFixedIdEntity.mapEntityToSyncResponse(): SyncContact {
-  return SyncContact(
-    id = this.contactId,
-    title = this.title,
-    firstName = this.firstName,
-    lastName = this.lastName,
-    middleName = this.middleNames,
-    dateOfBirth = this.dateOfBirth,
-    createdBy = this.createdBy,
-    createdTime = this.createdTime,
-    isStaff = this.staffFlag,
-    remitter = this.remitterFlag,
-    deceasedFlag = this.isDeceased,
-    deceasedDate = this.deceasedDate,
-    gender = this.gender,
-    domesticStatus = this.domesticStatus,
-    languageCode = this.languageCode,
-    interpreterRequired = this.interpreterRequired,
-    updatedBy = this.updatedBy,
-    updatedTime = this.updatedTime,
-  )
-}
+fun ContactWithFixedIdEntity.mapEntityToSyncResponse(): SyncContact = SyncContact(
+  id = this.contactId,
+  title = this.title,
+  firstName = this.firstName,
+  lastName = this.lastName,
+  middleName = this.middleNames,
+  dateOfBirth = this.dateOfBirth,
+  createdBy = this.createdBy,
+  createdTime = this.createdTime,
+  isStaff = this.staffFlag,
+  remitter = this.remitterFlag,
+  deceasedFlag = this.isDeceased,
+  deceasedDate = this.deceasedDate,
+  gender = this.gender,
+  domesticStatus = this.domesticStatus,
+  languageCode = this.languageCode,
+  interpreterRequired = this.interpreterRequired,
+  updatedBy = this.updatedBy,
+  updatedTime = this.updatedTime,
+)
 
 fun SyncCreateContactRequest.mapSyncRequestToEntity() = ContactWithFixedIdEntity(
   contactId = this.personId,

@@ -217,48 +217,43 @@ class SyncContactAddressPhoneServiceTest {
     }
   }
 
-  private fun createContactAddressPhoneRequest() =
-    SyncCreateContactAddressPhoneRequest(
-      contactAddressId = 3L,
-      phoneType = "MOB",
-      phoneNumber = "0909 111222",
-      createdBy = "CREATOR",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun createContactAddressPhoneRequest() = SyncCreateContactAddressPhoneRequest(
+    contactAddressId = 3L,
+    phoneType = "MOB",
+    phoneNumber = "0909 111222",
+    createdBy = "CREATOR",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun updateContactAddressPhoneRequest() =
-    SyncUpdateContactAddressPhoneRequest(
-      phoneType = "MOB",
-      phoneNumber = "0909 111222",
-      updatedBy = "UPDATER",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updateContactAddressPhoneRequest() = SyncUpdateContactAddressPhoneRequest(
+    phoneType = "MOB",
+    phoneNumber = "0909 111222",
+    updatedBy = "UPDATER",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun contactAddressPhoneEntity() =
-    ContactAddressPhoneEntity(
-      contactAddressPhoneId = 4L,
-      contactAddressId = 3L,
-      contactPhoneId = 2L,
-      contactId = 1L,
-      createdBy = "CREATOR",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactAddressPhoneEntity() = ContactAddressPhoneEntity(
+    contactAddressPhoneId = 4L,
+    contactAddressId = 3L,
+    contactPhoneId = 2L,
+    contactId = 1L,
+    createdBy = "CREATOR",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun contactAddressEntity() =
-    ContactAddressEntity(
-      contactAddressId = 3L,
-      contactId = 1L,
-      createdBy = "CREATOR",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactAddressEntity() = ContactAddressEntity(
+    contactAddressId = 3L,
+    contactId = 1L,
+    createdBy = "CREATOR",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun contactPhoneEntity() =
-    ContactPhoneEntity(
-      contactPhoneId = 2L,
-      contactId = 1L,
-      phoneType = "MOB",
-      phoneNumber = "0909 111222",
-      createdBy = "CREATOR",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactPhoneEntity() = ContactPhoneEntity(
+    contactPhoneId = 2L,
+    contactId = 1L,
+    phoneType = "MOB",
+    phoneNumber = "0909 111222",
+    createdBy = "CREATOR",
+    createdTime = LocalDateTime.now(),
+  )
 }

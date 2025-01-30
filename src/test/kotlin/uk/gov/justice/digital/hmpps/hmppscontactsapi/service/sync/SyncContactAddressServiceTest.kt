@@ -187,86 +187,81 @@ class SyncContactAddressServiceTest {
     }
   }
 
-  private fun updateContactAddressRequest(contactId: Long = 1L) =
-    SyncUpdateContactAddressRequest(
-      contactId = contactId,
-      addressType = "HOME",
-      primaryAddress = true,
-      property = "13",
-      street = "Main Street",
-      area = "Dodworth",
-      cityCode = "CVNTRY",
-      countyCode = "WARWKS",
-      postcode = "CV4 9NJ",
-      countryCode = "UK",
-      updatedBy = "TEST",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updateContactAddressRequest(contactId: Long = 1L) = SyncUpdateContactAddressRequest(
+    contactId = contactId,
+    addressType = "HOME",
+    primaryAddress = true,
+    property = "13",
+    street = "Main Street",
+    area = "Dodworth",
+    cityCode = "CVNTRY",
+    countyCode = "WARWKS",
+    postcode = "CV4 9NJ",
+    countryCode = "UK",
+    updatedBy = "TEST",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun createContactAddressRequest() =
-    SyncCreateContactAddressRequest(
-      contactId = 1L,
-      addressType = "HOME",
-      primaryAddress = true,
-      property = "13",
-      street = "Main Street",
-      area = "Dodworth",
-      cityCode = "CVNTRY",
-      countyCode = "WARWKS",
-      postcode = "CV4 9NJ",
-      countryCode = "UK",
-      createdBy = "TEST",
-    )
+  private fun createContactAddressRequest() = SyncCreateContactAddressRequest(
+    contactId = 1L,
+    addressType = "HOME",
+    primaryAddress = true,
+    property = "13",
+    street = "Main Street",
+    area = "Dodworth",
+    cityCode = "CVNTRY",
+    countyCode = "WARWKS",
+    postcode = "CV4 9NJ",
+    countryCode = "UK",
+    createdBy = "TEST",
+  )
 
-  private fun contactEntity(contactId: Long = 1L) =
-    ContactEntity(
-      contactId = contactId,
-      title = "Mr",
-      firstName = "John",
-      middleNames = null,
-      lastName = "Smith",
-      dateOfBirth = null,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactEntity(contactId: Long = 1L) = ContactEntity(
+    contactId = contactId,
+    title = "Mr",
+    firstName = "John",
+    middleNames = null,
+    lastName = "Smith",
+    dateOfBirth = null,
+    isDeceased = false,
+    deceasedDate = null,
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun contactAddressEntity() =
-    ContactAddressEntity(
-      contactAddressId = 1L,
-      contactId = 1L,
-      addressType = "HOME",
-      primaryAddress = true,
-      flat = "1B",
-      property = "Mason House",
-      street = "Main Street",
-      area = "Howarth",
-      cityCode = "LEEDS",
-      countyCode = "YORKS",
-      postCode = "LS13 4KD",
-      countryCode = "UK",
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactAddressEntity() = ContactAddressEntity(
+    contactAddressId = 1L,
+    contactId = 1L,
+    addressType = "HOME",
+    primaryAddress = true,
+    flat = "1B",
+    property = "Mason House",
+    street = "Main Street",
+    area = "Howarth",
+    cityCode = "LEEDS",
+    countyCode = "YORKS",
+    postCode = "LS13 4KD",
+    countryCode = "UK",
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun SyncCreateContactAddressRequest.toEntity(contactAddressId: Long = 0) =
-    ContactAddressEntity(
-      contactAddressId = contactAddressId,
-      contactId = this.contactId,
-      addressType = this.addressType,
-      primaryAddress = this.primaryAddress,
-      flat = this.flat,
-      property = this.property,
-      street = this.street,
-      area = this.area,
-      cityCode = this.cityCode,
-      countyCode = this.countyCode,
-      postCode = this.postcode,
-      countryCode = this.countryCode,
-      createdBy = this.createdBy,
-      createdTime = LocalDateTime.now(),
-    )
+  private fun SyncCreateContactAddressRequest.toEntity(contactAddressId: Long = 0) = ContactAddressEntity(
+    contactAddressId = contactAddressId,
+    contactId = this.contactId,
+    addressType = this.addressType,
+    primaryAddress = this.primaryAddress,
+    flat = this.flat,
+    property = this.property,
+    street = this.street,
+    area = this.area,
+    cityCode = this.cityCode,
+    countyCode = this.countyCode,
+    postCode = this.postcode,
+    countryCode = this.countryCode,
+    createdBy = this.createdBy,
+    createdTime = LocalDateTime.now(),
+  )
 
   private fun SyncUpdateContactAddressRequest.toEntity(contactAddressId: Long = 1L): ContactAddressEntity {
     val updatedBy = this.updatedBy

@@ -292,40 +292,38 @@ class SyncContactIntegrationTest : PostgresIntegrationTestBase() {
       )
     }
 
-    private fun updateContactRequest() =
-      SyncUpdateContactRequest(
-        title = "MR",
-        firstName = "John",
-        lastName = "Doe",
-        middleName = "William",
-        dateOfBirth = LocalDate.of(1980, 1, 1),
-        isStaff = false,
-        deceasedFlag = false,
-        deceasedDate = null,
-        gender = "M",
-        domesticStatus = "S",
-        languageCode = "EN",
-        interpreterRequired = true,
-        updatedBy = "UPDATE",
-        updatedTime = LocalDateTime.now(),
-      )
+    private fun updateContactRequest() = SyncUpdateContactRequest(
+      title = "MR",
+      firstName = "John",
+      lastName = "Doe",
+      middleName = "William",
+      dateOfBirth = LocalDate.of(1980, 1, 1),
+      isStaff = false,
+      deceasedFlag = false,
+      deceasedDate = null,
+      gender = "M",
+      domesticStatus = "S",
+      languageCode = "EN",
+      interpreterRequired = true,
+      updatedBy = "UPDATE",
+      updatedTime = LocalDateTime.now(),
+    )
 
-    private fun createSyncContactRequest(personId: Long = 0L) =
-      SyncCreateContactRequest(
-        personId = personId,
-        firstName = "John",
-        title = "MR",
-        lastName = "Doe",
-        middleName = "William",
-        dateOfBirth = LocalDate.of(1980, 1, 1),
-        createdBy = "JD000001",
-        isStaff = false,
-        deceasedFlag = false,
-        deceasedDate = null,
-        gender = "M",
-        domesticStatus = "S",
-        languageCode = "EN",
-        interpreterRequired = false,
-      )
+    private fun createSyncContactRequest(personId: Long = 0L) = SyncCreateContactRequest(
+      personId = personId,
+      firstName = "John",
+      title = "MR",
+      lastName = "Doe",
+      middleName = "William",
+      dateOfBirth = LocalDate.of(1980, 1, 1),
+      createdBy = "JD000001",
+      isStaff = false,
+      deceasedFlag = false,
+      deceasedDate = null,
+      gender = "M",
+      domesticStatus = "S",
+      languageCode = "EN",
+      interpreterRequired = false,
+    )
   }
 }

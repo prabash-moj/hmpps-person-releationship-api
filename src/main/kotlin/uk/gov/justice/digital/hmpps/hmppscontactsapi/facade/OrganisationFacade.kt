@@ -17,19 +17,14 @@ class OrganisationFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun create(request: CreateOrganisationRequest): OrganisationDetails {
-    return organisationService.create(request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.ORGANISATION_CREATED,
-        identifier = it.organisationId,
-      )
-    }
+  fun create(request: CreateOrganisationRequest): OrganisationDetails = organisationService.create(request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.ORGANISATION_CREATED,
+      identifier = it.organisationId,
+    )
   }
 
-  fun getOrganisationById(organisationId: Long): OrganisationDetails {
-    return organisationService.getOrganisationById(organisationId)
-  }
+  fun getOrganisationById(organisationId: Long): OrganisationDetails = organisationService.getOrganisationById(organisationId)
 
-  fun search(request: OrganisationSearchRequest, pageable: Pageable): Page<OrganisationSummary> =
-    organisationService.search(request, pageable)
+  fun search(request: OrganisationSearchRequest, pageable: Pageable): Page<OrganisationSummary> = organisationService.search(request, pageable)
 }

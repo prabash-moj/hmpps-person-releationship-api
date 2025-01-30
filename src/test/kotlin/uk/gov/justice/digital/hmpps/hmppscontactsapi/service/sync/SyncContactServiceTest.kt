@@ -155,61 +155,58 @@ class SyncContactServiceTest {
     }
   }
 
-  private fun updateContactRequest() =
-    SyncUpdateContactRequest(
-      title = "Mr",
-      firstName = "John",
-      lastName = "Doe",
-      middleName = "William",
-      dateOfBirth = LocalDate.of(1980, 1, 1),
-      isStaff = false,
-      deceasedFlag = false,
-      deceasedDate = null,
-      gender = "M",
-      domesticStatus = "S",
-      languageCode = "EN",
-      interpreterRequired = false,
-      updatedBy = "Admin",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updateContactRequest() = SyncUpdateContactRequest(
+    title = "Mr",
+    firstName = "John",
+    lastName = "Doe",
+    middleName = "William",
+    dateOfBirth = LocalDate.of(1980, 1, 1),
+    isStaff = false,
+    deceasedFlag = false,
+    deceasedDate = null,
+    gender = "M",
+    domesticStatus = "S",
+    languageCode = "EN",
+    interpreterRequired = false,
+    updatedBy = "Admin",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun createSyncContactRequest(personId: Long) =
-    SyncCreateContactRequest(
-      personId = personId,
-      title = "Mr",
-      firstName = "John",
-      lastName = "Doe",
-      middleName = "William",
-      dateOfBirth = LocalDate.of(1980, 1, 1),
-      createdBy = "JD000001",
-      createdTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0),
-      isStaff = false,
-      deceasedFlag = false,
-      deceasedDate = null,
-      gender = "M",
-      domesticStatus = "S",
-      languageCode = "EN",
-      interpreterRequired = false,
-    )
+  private fun createSyncContactRequest(personId: Long) = SyncCreateContactRequest(
+    personId = personId,
+    title = "Mr",
+    firstName = "John",
+    lastName = "Doe",
+    middleName = "William",
+    dateOfBirth = LocalDate.of(1980, 1, 1),
+    createdBy = "JD000001",
+    createdTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0),
+    isStaff = false,
+    deceasedFlag = false,
+    deceasedDate = null,
+    gender = "M",
+    domesticStatus = "S",
+    languageCode = "EN",
+    interpreterRequired = false,
+  )
 
-  private fun contactEntity() =
-    ContactWithFixedIdEntity(
-      contactId = 1L,
-      title = "Mr",
-      firstName = "John",
-      middleNames = null,
-      lastName = "Smith",
-      dateOfBirth = null,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-      staffFlag = false,
-      gender = "M",
-      domesticStatus = "S",
-      languageCode = "EN",
-      interpreterRequired = false,
-    )
+  private fun contactEntity() = ContactWithFixedIdEntity(
+    contactId = 1L,
+    title = "Mr",
+    firstName = "John",
+    middleNames = null,
+    lastName = "Smith",
+    dateOfBirth = null,
+    isDeceased = false,
+    deceasedDate = null,
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+    staffFlag = false,
+    gender = "M",
+    domesticStatus = "S",
+    languageCode = "EN",
+    interpreterRequired = false,
+  )
 
   private fun SyncUpdateContactRequest.toEntity(contactId: Long = 1L): ContactWithFixedIdEntity {
     val updatedBy = this.updatedBy

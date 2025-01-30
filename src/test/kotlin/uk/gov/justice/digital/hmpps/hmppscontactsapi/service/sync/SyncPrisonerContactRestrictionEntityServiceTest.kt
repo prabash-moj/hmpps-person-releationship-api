@@ -220,60 +220,56 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
     }
   }
 
-  private fun updatePrisonerContactRestrictionRequest() =
-    SyncUpdatePrisonerContactRestrictionRequest(
-      restrictionType = "NONCON",
-      startDate = LocalDate.of(2024, 1, 1),
-      expiryDate = LocalDate.of(2024, 12, 31),
-      comments = "Restriction due to ongoing investigation",
-      updatedBy = "editor",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updatePrisonerContactRestrictionRequest() = SyncUpdatePrisonerContactRestrictionRequest(
+    restrictionType = "NONCON",
+    startDate = LocalDate.of(2024, 1, 1),
+    expiryDate = LocalDate.of(2024, 12, 31),
+    comments = "Restriction due to ongoing investigation",
+    updatedBy = "editor",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun createPrisonerContactRestrictionRequest() =
-    SyncCreatePrisonerContactRestrictionRequest(
-      prisonerContactId = 2L,
-      restrictionType = "NONCON",
-      startDate = LocalDate.of(2024, 1, 1),
-      expiryDate = LocalDate.of(2024, 12, 31),
-      comments = "Restriction due to ongoing investigation",
-      createdBy = "admin",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun createPrisonerContactRestrictionRequest() = SyncCreatePrisonerContactRestrictionRequest(
+    prisonerContactId = 2L,
+    restrictionType = "NONCON",
+    startDate = LocalDate.of(2024, 1, 1),
+    expiryDate = LocalDate.of(2024, 12, 31),
+    comments = "Restriction due to ongoing investigation",
+    createdBy = "admin",
+    createdTime = LocalDateTime.now(),
+  )
 
   private fun prisonerContactRestrictionEntity(
     updatedBy: String? = "editor",
     updatedTime: LocalDateTime? = LocalDateTime.now(),
-  ) =
-    PrisonerContactRestrictionEntity(
-      prisonerContactRestrictionId = 3L,
-      prisonerContactId = 2L,
-      restrictionType = "NONCON",
-      startDate = LocalDate.of(2024, 1, 1),
-      expiryDate = LocalDate.of(2024, 12, 31),
-      comments = "Restriction due to ongoing investigation",
-      createdBy = "admin",
-      createdTime = LocalDateTime.now(),
-      updatedBy = updatedBy,
-      updatedTime = updatedTime,
-    )
+  ) = PrisonerContactRestrictionEntity(
+    prisonerContactRestrictionId = 3L,
+    prisonerContactId = 2L,
+    restrictionType = "NONCON",
+    startDate = LocalDate.of(2024, 1, 1),
+    expiryDate = LocalDate.of(2024, 12, 31),
+    comments = "Restriction due to ongoing investigation",
+    createdBy = "admin",
+    createdTime = LocalDateTime.now(),
+    updatedBy = updatedBy,
+    updatedTime = updatedTime,
+  )
 
-  private fun prisonerContactEntity() =
-    PrisonerContactEntity(
-      prisonerContactId = 2L,
-      contactId = 1L,
-      prisonerNumber = "A1234AA",
-      relationshipType = "S",
-      active = true,
-      currentTerm = true,
-      approvedVisitor = true,
-      nextOfKin = true,
-      emergencyContact = true,
-      relationshipToPrisoner = "MOT",
-      comments = "Restriction due to ongoing investigation",
-      createdBy = "admin",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun prisonerContactEntity() = PrisonerContactEntity(
+    prisonerContactId = 2L,
+    contactId = 1L,
+    prisonerNumber = "A1234AA",
+    relationshipType = "S",
+    active = true,
+    currentTerm = true,
+    approvedVisitor = true,
+    nextOfKin = true,
+    emergencyContact = true,
+    relationshipToPrisoner = "MOT",
+    comments = "Restriction due to ongoing investigation",
+    createdBy = "admin",
+    createdTime = LocalDateTime.now(),
+  )
 
   private fun SyncUpdatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestrictionEntity {
     val updatedBy = this.updatedBy

@@ -468,48 +468,44 @@ class UpdateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
 
   companion object {
     @JvmStatic
-    fun allFieldConstraintViolations(): List<Arguments> {
-      return listOf(
-        Arguments.of(
-          "addressType must be <= 12 characters",
-          aMinimalUpdateAddressRequest().copy(addressType = "".padStart(13)),
-        ),
-        Arguments.of(
-          "cityCode must be <= 12 characters",
-          aMinimalUpdateAddressRequest().copy(cityCode = "".padStart(13)),
-        ),
-        Arguments.of(
-          "countyCode must be <= 12 characters",
-          aMinimalUpdateAddressRequest().copy(countyCode = "".padStart(13)),
-        ),
-        Arguments.of(
-          "countryCode must be <= 12 characters",
-          aMinimalUpdateAddressRequest().copy(countryCode = "".padStart(13)),
-        ),
-        Arguments.of(
-          "updatedBy must be <= 100 characters",
-          aMinimalUpdateAddressRequest().copy(updatedBy = "".padStart(101)),
-        ),
-      )
-    }
+    fun allFieldConstraintViolations(): List<Arguments> = listOf(
+      Arguments.of(
+        "addressType must be <= 12 characters",
+        aMinimalUpdateAddressRequest().copy(addressType = "".padStart(13)),
+      ),
+      Arguments.of(
+        "cityCode must be <= 12 characters",
+        aMinimalUpdateAddressRequest().copy(cityCode = "".padStart(13)),
+      ),
+      Arguments.of(
+        "countyCode must be <= 12 characters",
+        aMinimalUpdateAddressRequest().copy(countyCode = "".padStart(13)),
+      ),
+      Arguments.of(
+        "countryCode must be <= 12 characters",
+        aMinimalUpdateAddressRequest().copy(countryCode = "".padStart(13)),
+      ),
+      Arguments.of(
+        "updatedBy must be <= 100 characters",
+        aMinimalUpdateAddressRequest().copy(updatedBy = "".padStart(101)),
+      ),
+    )
 
     @JvmStatic
-    fun referenceTypeNotFound(): List<Arguments> {
-      return listOf(
-        Arguments.of(
-          "No reference data found for groupCode: CITY and code: INVALID",
-          aMinimalUpdateAddressRequest().copy(cityCode = "INVALID"),
-        ),
-        Arguments.of(
-          "No reference data found for groupCode: COUNTY and code: INVALID",
-          aMinimalUpdateAddressRequest().copy(countyCode = "INVALID"),
-        ),
-        Arguments.of(
-          "No reference data found for groupCode: COUNTRY and code: INVALID",
-          aMinimalUpdateAddressRequest().copy(countryCode = "INVALID"),
-        ),
-      )
-    }
+    fun referenceTypeNotFound(): List<Arguments> = listOf(
+      Arguments.of(
+        "No reference data found for groupCode: CITY and code: INVALID",
+        aMinimalUpdateAddressRequest().copy(cityCode = "INVALID"),
+      ),
+      Arguments.of(
+        "No reference data found for groupCode: COUNTY and code: INVALID",
+        aMinimalUpdateAddressRequest().copy(countyCode = "INVALID"),
+      ),
+      Arguments.of(
+        "No reference data found for groupCode: COUNTRY and code: INVALID",
+        aMinimalUpdateAddressRequest().copy(countryCode = "INVALID"),
+      ),
+    )
 
     private fun aMinimalUpdateAddressRequest() = UpdateContactAddressRequest(
       addressType = "HOME",

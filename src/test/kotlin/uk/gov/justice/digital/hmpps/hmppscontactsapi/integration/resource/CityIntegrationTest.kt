@@ -68,16 +68,15 @@ class CityIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(cityReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCityReferenceData(url: String): MutableList<City> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(City::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCityReferenceData(url: String): MutableList<City> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(City::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -131,16 +130,15 @@ class CityIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(cityReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCityReferenceData(url: String): MutableList<City> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(City::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCityReferenceData(url: String): MutableList<City> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(City::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -199,15 +197,14 @@ class CityIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(cityReferences).hasSizeGreaterThan(10)
     }
 
-    private fun WebTestClient.getCityReferenceData(url: String): MutableList<City> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(City::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCityReferenceData(url: String): MutableList<City> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(City::class.java)
+      .returnResult().responseBody!!
   }
 }

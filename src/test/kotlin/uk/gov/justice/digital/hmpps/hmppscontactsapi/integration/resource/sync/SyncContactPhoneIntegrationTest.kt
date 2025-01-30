@@ -237,24 +237,22 @@ class SyncContactPhoneIntegrationTest : PostgresIntegrationTestBase() {
       )
     }
 
-    private fun updateContactPhoneRequest(contactId: Long) =
-      SyncUpdateContactPhoneRequest(
-        contactId = contactId,
-        phoneType = "Mobile",
-        phoneNumber = "555-1234",
-        extNumber = "101",
-        updatedBy = "UPDATE",
-        updatedTime = LocalDateTime.now(),
-      )
+    private fun updateContactPhoneRequest(contactId: Long) = SyncUpdateContactPhoneRequest(
+      contactId = contactId,
+      phoneType = "Mobile",
+      phoneNumber = "555-1234",
+      extNumber = "101",
+      updatedBy = "UPDATE",
+      updatedTime = LocalDateTime.now(),
+    )
 
-    private fun createContactPhoneRequest(contactId: Long) =
-      SyncCreateContactPhoneRequest(
-        contactId = contactId,
-        phoneType = "Mobile",
-        phoneNumber = "555-1234",
-        extNumber = "101",
-        createdBy = "CREATE",
-      )
+    private fun createContactPhoneRequest(contactId: Long) = SyncCreateContactPhoneRequest(
+      contactId = contactId,
+      phoneType = "Mobile",
+      phoneNumber = "555-1234",
+      extNumber = "101",
+      createdBy = "CREATE",
+    )
   }
 
   private fun aMinimalCreateContactRequest() = CreateContactRequest(

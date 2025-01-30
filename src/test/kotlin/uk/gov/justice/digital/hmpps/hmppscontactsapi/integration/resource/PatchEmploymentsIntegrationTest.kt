@@ -7,15 +7,14 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.EmploymentEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.OrganisationWithFixedIdEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.SecureAPIIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchEmploymentsNewEmployment
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchEmploymentsRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchEmploymentsUpdateEmployment
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.EmploymentRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.OrganisationWithFixedIdRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.EmploymentInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
@@ -23,14 +22,13 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.time.LocalDateTime
 
-class PatchEmploymentsIntegrationTest : PostgresIntegrationTestBase() {
+class PatchEmploymentsIntegrationTest : SecureAPIIntegrationTestBase() {
   private var savedContactId = 0L
+
+  override val allowedRoles: Set<String> = setOf("ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW")
 
   @Autowired
   private lateinit var employmentRepository: EmploymentRepository
-
-  @Autowired
-  private lateinit var organisationRepository: OrganisationWithFixedIdRepository
 
   private lateinit var employmentToRemainUntouched: EmploymentEntity
   private lateinit var employmentToBeUpdated: EmploymentEntity
@@ -45,11 +43,11 @@ class PatchEmploymentsIntegrationTest : PostgresIntegrationTestBase() {
         createdBy = "created",
       ),
     ).id
-    createOrg(123)
-    createOrg(456)
-    createOrg(789)
-    createOrg(555)
-    createOrg(999)
+    stubOrganisation(123)
+    stubOrganisation(456)
+    stubOrganisation(789)
+    stubOrganisation(555)
+    stubOrganisation(999)
     employmentToRemainUntouched = employmentRepository.saveAndFlush(
       EmploymentEntity(
         employmentId = 0,
@@ -88,56 +86,11 @@ class PatchEmploymentsIntegrationTest : PostgresIntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should return unauthorized if no token`() {
-    webTestClient.patch()
-      .uri("/contact/123456/employment")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .bodyValue(aMinimalRequest())
-      .exchange()
-      .expectStatus()
-      .isUnauthorized
-  }
-
-  @Test
-  fun `should return forbidden if no role`() {
-    webTestClient.patch()
-      .uri("/contact/123456/employment")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .bodyValue(aMinimalRequest())
-      .headers(setAuthorisation())
-      .exchange()
-      .expectStatus()
-      .isForbidden
-  }
-
-  @Test
-  fun `should return forbidden if wrong role`() {
-    webTestClient.patch()
-      .uri("/contact/123456/employment")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .bodyValue(aMinimalRequest())
-      .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
-      .exchange()
-      .expectStatus()
-      .isForbidden
-  }
-
-  @Test
-  fun `should return forbidden if read only role`() {
-    webTestClient.patch()
-      .uri("/contact/123456/employment")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .bodyValue(aMinimalRequest())
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS__R")))
-      .exchange()
-      .expectStatus()
-      .isForbidden
-  }
+  override fun baseRequestBuilder(): WebTestClient.RequestHeadersSpec<*> = webTestClient.patch()
+    .uri("/contact/123456/employment")
+    .accept(MediaType.APPLICATION_JSON)
+    .contentType(MediaType.APPLICATION_JSON)
+    .bodyValue(aMinimalRequest())
 
   @Test
   fun `should return bad request when request is empty`() {
@@ -156,6 +109,19 @@ class PatchEmploymentsIntegrationTest : PostgresIntegrationTestBase() {
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
+  }
+
+  @Test
+  fun `should return 404 when contact does not exist`() {
+    webTestClient.patch()
+      .uri("/contact/-999/employment")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(aMinimalRequest())
+      .exchange()
+      .expectStatus()
+      .isNotFound
   }
 
   @Test
@@ -372,22 +338,4 @@ class PatchEmploymentsIntegrationTest : PostgresIntegrationTestBase() {
     deleteEmployments = emptyList(),
     requestedBy = "REQUESTED",
   )
-
-  private fun createOrg(id: Long) {
-    val entity = OrganisationWithFixedIdEntity(
-      id,
-      organisationName = "Name of $id",
-      programmeNumber = null,
-      vatNumber = null,
-      caseloadId = null,
-      comments = null,
-      active = true,
-      deactivatedDate = null,
-      createdBy = "Created by",
-      createdTime = LocalDateTime.now(),
-      updatedBy = null,
-      updatedTime = null,
-    )
-    organisationRepository.saveAndFlush(entity)
-  }
 }

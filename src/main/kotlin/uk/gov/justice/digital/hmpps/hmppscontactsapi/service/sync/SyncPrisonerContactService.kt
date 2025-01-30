@@ -23,9 +23,7 @@ class SyncPrisonerContactService(
     return contactEntity.toResponse()
   }
 
-  fun createPrisonerContact(request: SyncCreatePrisonerContactRequest): SyncPrisonerContact {
-    return prisonerContactRepository.saveAndFlush(request.toEntity()).toResponse()
-  }
+  fun createPrisonerContact(request: SyncCreatePrisonerContactRequest): SyncPrisonerContact = prisonerContactRepository.saveAndFlush(request.toEntity()).toResponse()
 
   fun updatePrisonerContact(prisonerContactId: Long, request: SyncUpdatePrisonerContactRequest): SyncPrisonerContact {
     val contact = prisonerContactRepository.findById(prisonerContactId)

@@ -488,104 +488,98 @@ class PatchContactAddressIntegrationTest : PostgresIntegrationTestBase() {
 
   companion object {
     @JvmStatic
-    fun allFieldConstraintViolations(): List<Arguments> {
-      return listOf(
-        Arguments.of(
-          "addressType must be <= 12 characters",
-          aMinimalPatchAddressRequest().copy(addressType = JsonNullable.of("".padStart(13))),
-        ),
-        Arguments.of(
-          "cityCode must be <= 12 characters",
-          aMinimalPatchAddressRequest().copy(cityCode = JsonNullable.of("".padStart(13))),
-        ),
-        Arguments.of(
-          "countyCode must be <= 12 characters",
-          aMinimalPatchAddressRequest().copy(countyCode = JsonNullable.of("".padStart(13))),
-        ),
-        Arguments.of(
-          "countryCode must be <= 12 characters",
-          aMinimalPatchAddressRequest().copy(countryCode = JsonNullable.of("".padStart(13))),
-        ),
-        Arguments.of(
-          "updatedBy must be <= 100 characters",
-          aMinimalPatchAddressRequest().copy(updatedBy = "".padStart(101)),
-        ),
-      )
-    }
+    fun allFieldConstraintViolations(): List<Arguments> = listOf(
+      Arguments.of(
+        "addressType must be <= 12 characters",
+        aMinimalPatchAddressRequest().copy(addressType = JsonNullable.of("".padStart(13))),
+      ),
+      Arguments.of(
+        "cityCode must be <= 12 characters",
+        aMinimalPatchAddressRequest().copy(cityCode = JsonNullable.of("".padStart(13))),
+      ),
+      Arguments.of(
+        "countyCode must be <= 12 characters",
+        aMinimalPatchAddressRequest().copy(countyCode = JsonNullable.of("".padStart(13))),
+      ),
+      Arguments.of(
+        "countryCode must be <= 12 characters",
+        aMinimalPatchAddressRequest().copy(countryCode = JsonNullable.of("".padStart(13))),
+      ),
+      Arguments.of(
+        "updatedBy must be <= 100 characters",
+        aMinimalPatchAddressRequest().copy(updatedBy = "".padStart(101)),
+      ),
+    )
 
     @JvmStatic
-    fun referenceTypeNotFound(): List<Arguments> {
-      return listOf(
-        Arguments.of(
-          "No reference data found for groupCode: CITY and code: INVALID",
-          aMinimalPatchAddressRequest().copy(cityCode = JsonNullable.of("INVALID")),
-        ),
-        Arguments.of(
-          "No reference data found for groupCode: COUNTY and code: INVALID",
-          aMinimalPatchAddressRequest().copy(countyCode = JsonNullable.of("INVALID")),
-        ),
-        Arguments.of(
-          "No reference data found for groupCode: COUNTRY and code: INVALID",
-          aMinimalPatchAddressRequest().copy(countryCode = JsonNullable.of("INVALID")),
-        ),
-      )
-    }
+    fun referenceTypeNotFound(): List<Arguments> = listOf(
+      Arguments.of(
+        "No reference data found for groupCode: CITY and code: INVALID",
+        aMinimalPatchAddressRequest().copy(cityCode = JsonNullable.of("INVALID")),
+      ),
+      Arguments.of(
+        "No reference data found for groupCode: COUNTY and code: INVALID",
+        aMinimalPatchAddressRequest().copy(countyCode = JsonNullable.of("INVALID")),
+      ),
+      Arguments.of(
+        "No reference data found for groupCode: COUNTRY and code: INVALID",
+        aMinimalPatchAddressRequest().copy(countryCode = JsonNullable.of("INVALID")),
+      ),
+    )
 
     @JvmStatic
-    fun setNullOnGivenField(): List<Arguments> {
-      return listOf(
+    fun setNullOnGivenField(): List<Arguments> = listOf(
 
-        Arguments.of(
-          "addressType",
-          aMinimalPatchAddressRequest().copy(addressType = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "flat",
-          aMinimalPatchAddressRequest().copy(flat = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "property",
-          aMinimalPatchAddressRequest().copy(property = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "street",
-          aMinimalPatchAddressRequest().copy(street = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "area",
-          aMinimalPatchAddressRequest().copy(area = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "cityCode",
-          aMinimalPatchAddressRequest().copy(cityCode = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "countyCode",
-          aMinimalPatchAddressRequest().copy(countyCode = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "countryCode",
-          aMinimalPatchAddressRequest().copy(countryCode = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "postcode",
-          aMinimalPatchAddressRequest().copy(postcode = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "startDate",
-          aMinimalPatchAddressRequest().copy(startDate = JsonNullable.of(null)),
-        ),
-        Arguments.of(
-          "endDate",
-          aMinimalPatchAddressRequest().copy(endDate = JsonNullable.of(null)),
-        ),
+      Arguments.of(
+        "addressType",
+        aMinimalPatchAddressRequest().copy(addressType = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "flat",
+        aMinimalPatchAddressRequest().copy(flat = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "property",
+        aMinimalPatchAddressRequest().copy(property = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "street",
+        aMinimalPatchAddressRequest().copy(street = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "area",
+        aMinimalPatchAddressRequest().copy(area = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "cityCode",
+        aMinimalPatchAddressRequest().copy(cityCode = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "countyCode",
+        aMinimalPatchAddressRequest().copy(countyCode = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "countryCode",
+        aMinimalPatchAddressRequest().copy(countryCode = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "postcode",
+        aMinimalPatchAddressRequest().copy(postcode = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "startDate",
+        aMinimalPatchAddressRequest().copy(startDate = JsonNullable.of(null)),
+      ),
+      Arguments.of(
+        "endDate",
+        aMinimalPatchAddressRequest().copy(endDate = JsonNullable.of(null)),
+      ),
 
-        Arguments.of(
-          "comments",
-          aMinimalPatchAddressRequest().copy(comments = JsonNullable.of(null)),
-        ),
-      )
-    }
+      Arguments.of(
+        "comments",
+        aMinimalPatchAddressRequest().copy(comments = JsonNullable.of(null)),
+      ),
+    )
 
     private fun aMinimalPatchAddressRequest() = PatchContactAddressRequest(
       updatedBy = "updated",

@@ -71,16 +71,15 @@ class CountryIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(countryReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Country::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Country::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -138,16 +137,15 @@ class CountryIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(countryReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Country::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Country::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -205,16 +203,15 @@ class CountryIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(countryReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Country::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Country::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -272,16 +269,15 @@ class CountryIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(countryReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Country::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Country::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -345,15 +341,14 @@ class CountryIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(countryReferences).hasSizeGreaterThan(10)
     }
 
-    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(Country::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCountryReferenceData(url: String, role: String): MutableList<Country> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(Country::class.java)
+      .returnResult().responseBody!!
   }
 }

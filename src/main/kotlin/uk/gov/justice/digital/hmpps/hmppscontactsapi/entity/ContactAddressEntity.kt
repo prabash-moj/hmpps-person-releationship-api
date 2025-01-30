@@ -70,7 +70,5 @@ data class ContactAddressEntity(
     return contactAddressId == other.contactAddressId
   }
 
-  override fun hashCode(): Int {
-    return contactAddressId.hashCode()
-  }
+  override fun hashCode(): Int = contactAddressId.hashCode()
 }

@@ -4,10 +4,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createEmploymentDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.internal.PatchEmploymentResult
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchEmploymentsRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmploymentRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
@@ -77,6 +80,65 @@ class EmploymentFacadeTest {
     verify(outboundEventsService).send(
       outboundEvent = OutboundEvent.EMPLOYMENT_DELETED,
       identifier = 6,
+      contactId = contactId,
+      noms = "",
+      source = Source.DPS,
+    )
+  }
+
+  @Test
+  fun `create employment should send event for created employment id`() {
+    val expectedEmploymentDetails = createEmploymentDetails(id = 765)
+    val contactId = 123L
+    val request = CreateEmploymentRequest(999, true, "USER")
+
+    whenever(employmentService.createEmployment(contactId, request)).thenReturn(expectedEmploymentDetails)
+
+    val result = facade.createEmployment(contactId, request)
+
+    assertThat(result).isEqualTo(expectedEmploymentDetails)
+    verify(outboundEventsService).send(
+      outboundEvent = OutboundEvent.EMPLOYMENT_CREATED,
+      identifier = 765,
+      contactId = contactId,
+      noms = "",
+      source = Source.DPS,
+    )
+  }
+
+  @Test
+  fun `update employment should send event for updated employment id`() {
+    val employmentId = 456L
+    val expectedEmploymentDetails = createEmploymentDetails(id = employmentId)
+    val contactId = 123L
+    val request = UpdateEmploymentRequest(999, true, "USER")
+
+    whenever(employmentService.updateEmployment(contactId, employmentId, request)).thenReturn(expectedEmploymentDetails)
+
+    val result = facade.updateEmployment(contactId, employmentId, request)
+
+    assertThat(result).isEqualTo(expectedEmploymentDetails)
+    verify(outboundEventsService).send(
+      outboundEvent = OutboundEvent.EMPLOYMENT_UPDATED,
+      identifier = employmentId,
+      contactId = contactId,
+      noms = "",
+      source = Source.DPS,
+    )
+  }
+
+  @Test
+  fun `delete employment should send event for deleted employment id`() {
+    val employmentId = 456L
+    val contactId = 123L
+
+    doNothing().whenever(employmentService).deleteEmployment(contactId, employmentId)
+
+    facade.deleteEmployment(contactId, employmentId)
+
+    verify(outboundEventsService).send(
+      outboundEvent = OutboundEvent.EMPLOYMENT_DELETED,
+      identifier = employmentId,
       contactId = contactId,
       noms = "",
       source = Source.DPS,

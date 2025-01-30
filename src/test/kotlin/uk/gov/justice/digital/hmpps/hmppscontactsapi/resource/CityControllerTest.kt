@@ -64,6 +64,5 @@ class CityControllerTest {
     verify(cityService).getCityByNomisCode(nomisCode)
   }
 
-  private fun getMockCity(cityId: Long) =
-    City(cityId = cityId, nomisCode = "GB", displaySequence = 99, nomisDescription = "United Kingdom")
+  private fun getMockCity(cityId: Long) = City(cityId = cityId, nomisCode = "GB", displaySequence = 99, nomisDescription = "United Kingdom")
 }

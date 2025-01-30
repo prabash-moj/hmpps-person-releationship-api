@@ -4,19 +4,17 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactIdentityEntit
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
 
-fun ContactIdentityEntity.toModel(): SyncContactIdentity {
-  return SyncContactIdentity(
-    contactIdentityId = this.contactIdentityId,
-    contactId = this.contactId!!,
-    identityType = this.identityType,
-    identityValue = this.identityValue!!,
-    issuingAuthority = this.issuingAuthority,
-    createdBy = this.createdBy,
-    createdTime = this.createdTime,
-    updatedBy = this.updatedBy,
-    updatedTime = this.updatedTime,
-  )
-}
+fun ContactIdentityEntity.toModel(): SyncContactIdentity = SyncContactIdentity(
+  contactIdentityId = this.contactIdentityId,
+  contactId = this.contactId!!,
+  identityType = this.identityType,
+  identityValue = this.identityValue!!,
+  issuingAuthority = this.issuingAuthority,
+  createdBy = this.createdBy,
+  createdTime = this.createdTime,
+  updatedBy = this.updatedBy,
+  updatedTime = this.updatedTime,
+)
 
 fun List<ContactIdentityEntity>.toModel() = map { it.toModel() }
 

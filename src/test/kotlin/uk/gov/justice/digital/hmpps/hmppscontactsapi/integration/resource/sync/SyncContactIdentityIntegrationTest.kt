@@ -243,24 +243,22 @@ class SyncContactIdentityIntegrationTest : PostgresIntegrationTestBase() {
       )
     }
 
-    private fun updateContactIdentityRequest(contactId: Long, issuingAuthority: String? = "UKBORDER") =
-      SyncUpdateContactIdentityRequest(
-        contactId = contactId,
-        identityType = "PASS",
-        identityValue = "PP87878787878",
-        issuingAuthority = issuingAuthority,
-        updatedBy = "UPDATE",
-        updatedTime = LocalDateTime.now(),
-      )
+    private fun updateContactIdentityRequest(contactId: Long, issuingAuthority: String? = "UKBORDER") = SyncUpdateContactIdentityRequest(
+      contactId = contactId,
+      identityType = "PASS",
+      identityValue = "PP87878787878",
+      issuingAuthority = issuingAuthority,
+      updatedBy = "UPDATE",
+      updatedTime = LocalDateTime.now(),
+    )
 
-    private fun createContactIdentityRequest(contactId: Long, issuingAuthority: String? = "UKBORDER") =
-      SyncCreateContactIdentityRequest(
-        contactId = contactId,
-        identityType = "PASS",
-        identityValue = "PP87878787878",
-        issuingAuthority = issuingAuthority,
-        createdBy = "CREATE",
-      )
+    private fun createContactIdentityRequest(contactId: Long, issuingAuthority: String? = "UKBORDER") = SyncCreateContactIdentityRequest(
+      contactId = contactId,
+      identityType = "PASS",
+      identityValue = "PP87878787878",
+      issuingAuthority = issuingAuthority,
+      createdBy = "CREATE",
+    )
   }
 
   private fun aMinimalCreateContactRequest() = CreateContactRequest(

@@ -71,16 +71,15 @@ class CountyIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(countyReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(County::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(County::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -138,16 +137,15 @@ class CountyIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(countyReferences).hasSize(1)
     }
 
-    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(County::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(County::class.java)
+      .returnResult().responseBody!!
   }
 
   @Nested
@@ -207,15 +205,14 @@ class CountyIntegrationTest : PostgresIntegrationTestBase() {
       assertThat(countyReferences).hasSizeGreaterThan(10)
     }
 
-    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> =
-      get()
-        .uri(url)
-        .headers(setAuthorisation(roles = listOf(role)))
-        .exchange()
-        .expectStatus()
-        .isOk
-        .expectHeader().contentType(MediaType.APPLICATION_JSON)
-        .expectBodyList(County::class.java)
-        .returnResult().responseBody!!
+    private fun WebTestClient.getCountyReferenceData(url: String, role: String): MutableList<County> = get()
+      .uri(url)
+      .headers(setAuthorisation(roles = listOf(role)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBodyList(County::class.java)
+      .returnResult().responseBody!!
   }
 }

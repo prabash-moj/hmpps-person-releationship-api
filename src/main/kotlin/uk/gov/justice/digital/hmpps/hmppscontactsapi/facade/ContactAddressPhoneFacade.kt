@@ -14,26 +14,22 @@ class ContactAddressPhoneFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun create(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneDetails {
-    return contactAddressPhoneService.create(contactId, contactAddressId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
-        identifier = it.contactAddressPhoneId,
-        secondIdentifier = it.contactAddressId,
-        contactId = contactId,
-      )
-    }
+  fun create(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneDetails = contactAddressPhoneService.create(contactId, contactAddressId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_CREATED,
+      identifier = it.contactAddressPhoneId,
+      secondIdentifier = it.contactAddressId,
+      contactId = contactId,
+    )
   }
 
-  fun update(contactId: Long, contactAddressPhoneId: Long, request: UpdateContactAddressPhoneRequest): ContactAddressPhoneDetails {
-    return contactAddressPhoneService.update(contactId, contactAddressPhoneId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
-        identifier = it.contactAddressPhoneId,
-        secondIdentifier = it.contactAddressId,
-        contactId = contactId,
-      )
-    }
+  fun update(contactId: Long, contactAddressPhoneId: Long, request: UpdateContactAddressPhoneRequest): ContactAddressPhoneDetails = contactAddressPhoneService.update(contactId, contactAddressPhoneId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_ADDRESS_PHONE_UPDATED,
+      identifier = it.contactAddressPhoneId,
+      secondIdentifier = it.contactAddressId,
+      contactId = contactId,
+    )
   }
 
   fun delete(contactId: Long, contactAddressPhoneId: Long) {

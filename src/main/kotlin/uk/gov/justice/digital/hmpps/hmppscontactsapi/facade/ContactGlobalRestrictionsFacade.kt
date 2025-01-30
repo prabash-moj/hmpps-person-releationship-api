@@ -14,34 +14,28 @@ class ContactGlobalRestrictionsFacade(
   private val outboundEventsService: OutboundEventsService,
 ) {
 
-  fun getGlobalRestrictionsForContact(contactId: Long): List<ContactRestrictionDetails> {
-    return restrictionsService.getGlobalRestrictionsForContact(contactId)
-  }
+  fun getGlobalRestrictionsForContact(contactId: Long): List<ContactRestrictionDetails> = restrictionsService.getGlobalRestrictionsForContact(contactId)
 
   fun createContactGlobalRestriction(
     contactId: Long,
     request: CreateContactRestrictionRequest,
-  ): ContactRestrictionDetails {
-    return restrictionsService.createContactGlobalRestriction(contactId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_RESTRICTION_CREATED,
-        identifier = it.contactRestrictionId,
-        contactId = contactId,
-      )
-    }
+  ): ContactRestrictionDetails = restrictionsService.createContactGlobalRestriction(contactId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+      identifier = it.contactRestrictionId,
+      contactId = contactId,
+    )
   }
 
   fun updateContactGlobalRestriction(
     contactId: Long,
     contactRestrictionId: Long,
     request: UpdateContactRestrictionRequest,
-  ): ContactRestrictionDetails {
-    return restrictionsService.updateContactGlobalRestriction(contactId, contactRestrictionId, request).also {
-      outboundEventsService.send(
-        outboundEvent = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
-        identifier = contactRestrictionId,
-        contactId = contactId,
-      )
-    }
+  ): ContactRestrictionDetails = restrictionsService.updateContactGlobalRestriction(contactId, contactRestrictionId, request).also {
+    outboundEventsService.send(
+      outboundEvent = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
+      identifier = contactRestrictionId,
+      contactId = contactId,
+    )
   }
 }

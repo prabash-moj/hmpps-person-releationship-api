@@ -192,65 +192,62 @@ class SyncPrisonerContactServiceTest {
     }
   }
 
-  private fun updatePrisonerContactRequest() =
-    SyncUpdatePrisonerContactRequest(
-      contactId = 12345L,
-      prisonerNumber = "A1234BC",
-      contactType = "O",
-      relationshipType = "LAW",
-      nextOfKin = true,
-      emergencyContact = false,
-      comments = "Updated prison location",
-      active = true,
-      approvedVisitor = true,
-      currentTerm = true,
-      expiryDate = LocalDate.of(2025, 12, 31),
-      createdAtPrison = "HMP Wales",
-      updatedBy = "adminUser",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updatePrisonerContactRequest() = SyncUpdatePrisonerContactRequest(
+    contactId = 12345L,
+    prisonerNumber = "A1234BC",
+    contactType = "O",
+    relationshipType = "LAW",
+    nextOfKin = true,
+    emergencyContact = false,
+    comments = "Updated prison location",
+    active = true,
+    approvedVisitor = true,
+    currentTerm = true,
+    expiryDate = LocalDate.of(2025, 12, 31),
+    createdAtPrison = "HMP Wales",
+    updatedBy = "adminUser",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun createPrisonerContactRequest() =
-    SyncCreatePrisonerContactRequest(
-      contactId = 12345L,
-      prisonerNumber = "A1234BC",
-      contactType = "S",
-      relationshipType = "FRI",
-      nextOfKin = true,
-      emergencyContact = false,
-      comments = "Updated relationship type to family",
-      active = true,
-      approvedVisitor = true,
-      currentTerm = true,
-      expiryDate = LocalDate.of(2025, 12, 31),
-      createdAtPrison = "LONDN",
-      createdBy = "adminUser",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun createPrisonerContactRequest() = SyncCreatePrisonerContactRequest(
+    contactId = 12345L,
+    prisonerNumber = "A1234BC",
+    contactType = "S",
+    relationshipType = "FRI",
+    nextOfKin = true,
+    emergencyContact = false,
+    comments = "Updated relationship type to family",
+    active = true,
+    approvedVisitor = true,
+    currentTerm = true,
+    expiryDate = LocalDate.of(2025, 12, 31),
+    createdAtPrison = "LONDN",
+    createdBy = "adminUser",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun contactEntity() =
-    PrisonerContactEntity(
-      prisonerContactId = 1L,
-      contactId = 12345L,
-      prisonerNumber = "A1234BC",
-      relationshipType = "S",
-      relationshipToPrisoner = "Family",
-      nextOfKin = true,
-      emergencyContact = false,
-      approvedVisitor = true,
-      active = true,
-      currentTerm = true,
-      comments = "Updated relationship type to family",
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    ).also {
-      it.approvedBy = "officer456"
-      it.approvedTime = LocalDateTime.now()
-      it.expiryDate = LocalDate.of(2025, 12, 31)
-      it.createdAtPrison = "LONDN"
-      it.updatedBy = "adminUser"
-      it.updatedTime = LocalDateTime.now()
-    }
+  private fun contactEntity() = PrisonerContactEntity(
+    prisonerContactId = 1L,
+    contactId = 12345L,
+    prisonerNumber = "A1234BC",
+    relationshipType = "S",
+    relationshipToPrisoner = "Family",
+    nextOfKin = true,
+    emergencyContact = false,
+    approvedVisitor = true,
+    active = true,
+    currentTerm = true,
+    comments = "Updated relationship type to family",
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  ).also {
+    it.approvedBy = "officer456"
+    it.approvedTime = LocalDateTime.now()
+    it.expiryDate = LocalDate.of(2025, 12, 31)
+    it.createdAtPrison = "LONDN"
+    it.updatedBy = "adminUser"
+    it.updatedTime = LocalDateTime.now()
+  }
 
   private fun SyncUpdatePrisonerContactRequest.toEntity(): PrisonerContactEntity {
     val updatedBy = this.updatedBy

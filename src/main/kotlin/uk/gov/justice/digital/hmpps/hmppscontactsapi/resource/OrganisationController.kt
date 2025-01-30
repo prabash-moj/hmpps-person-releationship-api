@@ -61,8 +61,7 @@ class OrganisationController(private val organisationFacade: OrganisationFacade)
     ],
   )
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN', 'ROLE_CONTACTS__R', 'ROLE_CONTACTS__RW')")
-  fun getOrganisationById(@PathVariable organisationId: Long): OrganisationDetails =
-    organisationFacade.getOrganisationById(organisationId)
+  fun getOrganisationById(@PathVariable organisationId: Long): OrganisationDetails = organisationFacade.getOrganisationById(organisationId)
 
   @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(
@@ -91,10 +90,8 @@ class OrganisationController(private val organisationFacade: OrganisationFacade)
   @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN','ROLE_CONTACTS__RW')")
   fun createOrganisation(
     @Valid @RequestBody request: CreateOrganisationRequest,
-  ): ResponseEntity<OrganisationDetails> {
-    return organisationFacade.create(request)
-      .let { ResponseEntity.status(HttpStatus.CREATED).body(it) }
-  }
+  ): ResponseEntity<OrganisationDetails> = organisationFacade.create(request)
+    .let { ResponseEntity.status(HttpStatus.CREATED).body(it) }
 
   @GetMapping("/search")
   @Operation(

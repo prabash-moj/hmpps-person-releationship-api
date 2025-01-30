@@ -45,6 +45,5 @@ class HmppsQueueOutboundEventsPublisher(
     log.info("Ignoring publishing of event $event (feature switched off)")
   }
 
-  private fun metaData(payload: OutboundHMPPSDomainEvent) =
-    mapOf("eventType" to MessageAttributeValue.builder().dataType("String").stringValue(payload.eventType).build())
+  private fun metaData(payload: OutboundHMPPSDomainEvent) = mapOf("eventType" to MessageAttributeValue.builder().dataType("String").stringValue(payload.eventType).build())
 }

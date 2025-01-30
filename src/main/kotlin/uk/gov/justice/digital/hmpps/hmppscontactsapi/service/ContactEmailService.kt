@@ -56,9 +56,7 @@ class ContactEmailService(
     return updated.toDomainWithType()
   }
 
-  fun get(contactId: Long, contactEmailId: Long): ContactEmailDetails? {
-    return contactEmailRepository.findByContactIdAndContactEmailId(contactId, contactEmailId)?.toModel()
-  }
+  fun get(contactId: Long, contactEmailId: Long): ContactEmailDetails? = contactEmailRepository.findByContactIdAndContactEmailId(contactId, contactEmailId)?.toModel()
 
   @Transactional
   fun delete(contactId: Long, contactEmailId: Long) {

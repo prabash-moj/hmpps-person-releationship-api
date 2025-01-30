@@ -114,11 +114,9 @@ class ContactPhoneController(private val contactPhoneFacade: ContactPhoneFacade)
       description = "The id of the contact phone",
       example = "987654",
     ) contactPhoneId: Long,
-  ): ResponseEntity<Any> {
-    return contactPhoneFacade.get(contactId, contactPhoneId)
-      ?.let { ResponseEntity.ok(it) }
-      ?: throw EntityNotFoundException("Contact phone with id ($contactPhoneId) not found for contact ($contactId)")
-  }
+  ): ResponseEntity<Any> = contactPhoneFacade.get(contactId, contactPhoneId)
+    ?.let { ResponseEntity.ok(it) }
+    ?: throw EntityNotFoundException("Contact phone with id ($contactPhoneId) not found for contact ($contactId)")
 
   @PutMapping("/{contactPhoneId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
   @Operation(

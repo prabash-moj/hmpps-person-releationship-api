@@ -196,33 +196,30 @@ class SyncFacadeTest {
       verify(outboundEventsService, never()).send(any(), any(), any(), any(), any(), any())
     }
 
-    private fun createSyncContactRequest(personId: Long) =
-      SyncCreateContactRequest(
-        personId = personId,
-        firstName = "John",
-        lastName = "Doe",
-        dateOfBirth = LocalDate.of(1980, 1, 1),
-        createdBy = "ANYONE",
-      )
+    private fun createSyncContactRequest(personId: Long) = SyncCreateContactRequest(
+      personId = personId,
+      firstName = "John",
+      lastName = "Doe",
+      dateOfBirth = LocalDate.of(1980, 1, 1),
+      createdBy = "ANYONE",
+    )
 
-    private fun contactResponse(contactId: Long) =
-      SyncContact(
-        id = contactId,
-        firstName = "John",
-        lastName = "Doe",
-        createdBy = "ANYONE",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun contactResponse(contactId: Long) = SyncContact(
+      id = contactId,
+      firstName = "John",
+      lastName = "Doe",
+      createdBy = "ANYONE",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
 
-    private fun updateContactSyncRequest() =
-      SyncUpdateContactRequest(
-        firstName = "John",
-        lastName = "Doe",
-        updatedBy = "ANYONE",
-        updatedTime = LocalDateTime.now(),
-      )
+    private fun updateContactSyncRequest() = SyncUpdateContactRequest(
+      firstName = "John",
+      lastName = "Doe",
+      updatedBy = "ANYONE",
+      updatedTime = LocalDateTime.now(),
+    )
   }
 
   @Nested
@@ -284,35 +281,32 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactPhoneRequest() =
-      SyncCreateContactPhoneRequest(
-        contactId = 1L,
-        phoneType = "MOB",
-        phoneNumber = "0909 111222",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createContactPhoneRequest() = SyncCreateContactPhoneRequest(
+      contactId = 1L,
+      phoneType = "MOB",
+      phoneNumber = "0909 111222",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updateContactPhoneRequest() =
-      SyncUpdateContactPhoneRequest(
-        contactId = 2L,
-        phoneType = "MOB",
-        phoneNumber = "0909 111222",
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun contactPhoneResponse(contactId: Long, contactPhoneId: Long) =
-      SyncContactPhone(
-        contactPhoneId = contactPhoneId,
-        contactId = contactId,
-        phoneType = "MOB",
-        phoneNumber = "0909 111222",
-        extNumber = null,
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updateContactPhoneRequest() = SyncUpdateContactPhoneRequest(
+      contactId = 2L,
+      phoneType = "MOB",
+      phoneNumber = "0909 111222",
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun contactPhoneResponse(contactId: Long, contactPhoneId: Long) = SyncContactPhone(
+      contactPhoneId = contactPhoneId,
+      contactId = contactId,
+      phoneType = "MOB",
+      phoneNumber = "0909 111222",
+      extNumber = null,
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 
   @Nested
@@ -374,31 +368,28 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactEmailRequest() =
-      SyncCreateContactEmailRequest(
-        contactId = 1L,
-        emailAddress = "0909 111222",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createContactEmailRequest() = SyncCreateContactEmailRequest(
+      contactId = 1L,
+      emailAddress = "0909 111222",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updateContactEmailRequest() =
-      SyncUpdateContactEmailRequest(
-        contactId = 2L,
-        emailAddress = "test@test.com",
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun contactEmailResponse(contactId: Long, contactEmailId: Long) =
-      SyncContactEmail(
-        contactEmailId = contactEmailId,
-        contactId = contactId,
-        emailAddress = "test@test.com",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updateContactEmailRequest() = SyncUpdateContactEmailRequest(
+      contactId = 2L,
+      emailAddress = "test@test.com",
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun contactEmailResponse(contactId: Long, contactEmailId: Long) = SyncContactEmail(
+      contactEmailId = contactEmailId,
+      contactId = contactId,
+      emailAddress = "test@test.com",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 
   @Nested
@@ -460,37 +451,34 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactIdentityRequest() =
-      SyncCreateContactIdentityRequest(
-        contactId = 1L,
-        identityType = "PASS",
-        identityValue = "PW12345678",
-        issuingAuthority = "Passport Office",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createContactIdentityRequest() = SyncCreateContactIdentityRequest(
+      contactId = 1L,
+      identityType = "PASS",
+      identityValue = "PW12345678",
+      issuingAuthority = "Passport Office",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updateContactIdentityRequest() =
-      SyncUpdateContactIdentityRequest(
-        contactId = 2L,
-        identityType = "PASS",
-        identityValue = "PW12345678",
-        issuingAuthority = "Passport Office",
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun contactIdentityResponse(contactId: Long, contactIdentityId: Long) =
-      SyncContactIdentity(
-        contactIdentityId = contactIdentityId,
-        contactId = contactId,
-        identityType = "PASS",
-        identityValue = "PW12345678",
-        issuingAuthority = "Passport Office",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updateContactIdentityRequest() = SyncUpdateContactIdentityRequest(
+      contactId = 2L,
+      identityType = "PASS",
+      identityValue = "PW12345678",
+      issuingAuthority = "Passport Office",
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun contactIdentityResponse(contactId: Long, contactIdentityId: Long) = SyncContactIdentity(
+      contactIdentityId = contactIdentityId,
+      contactId = contactId,
+      identityType = "PASS",
+      identityValue = "PW12345678",
+      issuingAuthority = "Passport Office",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 
   @Nested
@@ -552,40 +540,37 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactRestrictionRequest() =
-      SyncCreateContactRestrictionRequest(
-        contactId = 2L,
-        restrictionType = "BAN",
-        startDate = LocalDate.now().minusDays(10),
-        expiryDate = LocalDate.now().plusDays(10),
-        comments = "Comment",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createContactRestrictionRequest() = SyncCreateContactRestrictionRequest(
+      contactId = 2L,
+      restrictionType = "BAN",
+      startDate = LocalDate.now().minusDays(10),
+      expiryDate = LocalDate.now().plusDays(10),
+      comments = "Comment",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updateContactRestrictionRequest() =
-      SyncUpdateContactRestrictionRequest(
-        contactId = 2L,
-        restrictionType = "BAN",
-        startDate = LocalDate.now().minusDays(10),
-        expiryDate = LocalDate.now().plusDays(10),
-        comments = "Comment",
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun contactRestrictionResponse(contactId: Long, contactRestrictionId: Long) =
-      SyncContactRestriction(
-        contactRestrictionId = contactRestrictionId,
-        contactId = contactId,
-        restrictionType = "BAN",
-        startDate = LocalDate.now().minusDays(10),
-        expiryDate = LocalDate.now().plusDays(10),
-        comments = "Comment",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updateContactRestrictionRequest() = SyncUpdateContactRestrictionRequest(
+      contactId = 2L,
+      restrictionType = "BAN",
+      startDate = LocalDate.now().minusDays(10),
+      expiryDate = LocalDate.now().plusDays(10),
+      comments = "Comment",
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun contactRestrictionResponse(contactId: Long, contactRestrictionId: Long) = SyncContactRestriction(
+      contactRestrictionId = contactRestrictionId,
+      contactId = contactId,
+      restrictionType = "BAN",
+      startDate = LocalDate.now().minusDays(10),
+      expiryDate = LocalDate.now().plusDays(10),
+      comments = "Comment",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 
   @Nested
@@ -647,45 +632,42 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactAddressRequest() =
-      SyncCreateContactAddressRequest(
-        contactId = 1L,
-        addressType = "HOME",
-        property = "24",
-        street = "Acacia Avenue",
-        area = "Dunstan",
-        comments = "Comment",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createContactAddressRequest() = SyncCreateContactAddressRequest(
+      contactId = 1L,
+      addressType = "HOME",
+      property = "24",
+      street = "Acacia Avenue",
+      area = "Dunstan",
+      comments = "Comment",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updateContactAddressRequest() =
-      SyncUpdateContactAddressRequest(
-        contactId = 2L,
-        primaryAddress = false,
-        addressType = "HOME",
-        property = "24",
-        street = "Acacia Avenue",
-        area = "Dunstan",
-        comments = "Comment",
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun contactAddressResponse(contactId: Long, contactAddressId: Long) =
-      SyncContactAddress(
-        contactAddressId = contactAddressId,
-        contactId = contactId,
-        primaryAddress = false,
-        addressType = "HOME",
-        property = "24",
-        street = "Acacia Avenue",
-        area = "Dunstan",
-        comments = "Comment",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updateContactAddressRequest() = SyncUpdateContactAddressRequest(
+      contactId = 2L,
+      primaryAddress = false,
+      addressType = "HOME",
+      property = "24",
+      street = "Acacia Avenue",
+      area = "Dunstan",
+      comments = "Comment",
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun contactAddressResponse(contactId: Long, contactAddressId: Long) = SyncContactAddress(
+      contactAddressId = contactAddressId,
+      contactId = contactId,
+      primaryAddress = false,
+      addressType = "HOME",
+      property = "24",
+      street = "Acacia Avenue",
+      area = "Dunstan",
+      comments = "Comment",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 
   @Nested
@@ -750,38 +732,35 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createContactAddressPhoneRequest() =
-      SyncCreateContactAddressPhoneRequest(
-        contactAddressId = 3L,
-        phoneType = "MOB",
-        phoneNumber = "0909 111222",
-        extNumber = null,
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createContactAddressPhoneRequest() = SyncCreateContactAddressPhoneRequest(
+      contactAddressId = 3L,
+      phoneType = "MOB",
+      phoneNumber = "0909 111222",
+      extNumber = null,
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updateContactAddressPhoneRequest() =
-      SyncUpdateContactAddressPhoneRequest(
-        phoneType = "MOB",
-        phoneNumber = "0909 111222",
-        extNumber = null,
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun contactAddressPhoneResponse() =
-      SyncContactAddressPhone(
-        contactAddressPhoneId = 4L,
-        contactAddressId = 3L,
-        contactPhoneId = 2L,
-        contactId = 1L,
-        phoneType = "MOB",
-        phoneNumber = "0909 111222",
-        extNumber = null,
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updateContactAddressPhoneRequest() = SyncUpdateContactAddressPhoneRequest(
+      phoneType = "MOB",
+      phoneNumber = "0909 111222",
+      extNumber = null,
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun contactAddressPhoneResponse() = SyncContactAddressPhone(
+      contactAddressPhoneId = 4L,
+      contactAddressId = 3L,
+      contactPhoneId = 2L,
+      contactId = 1L,
+      phoneType = "MOB",
+      phoneNumber = "0909 111222",
+      extNumber = null,
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 
   @Nested
@@ -846,55 +825,52 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createPrisonerContactRequest() =
-      SyncCreatePrisonerContactRequest(
-        contactId = 1L,
-        contactType = "S",
-        relationshipType = "MOT",
-        prisonerNumber = "A1234AA",
-        approvedVisitor = false,
-        nextOfKin = false,
-        emergencyContact = false,
-        comments = "Comment",
-        active = true,
-        currentTerm = true,
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createPrisonerContactRequest() = SyncCreatePrisonerContactRequest(
+      contactId = 1L,
+      contactType = "S",
+      relationshipType = "MOT",
+      prisonerNumber = "A1234AA",
+      approvedVisitor = false,
+      nextOfKin = false,
+      emergencyContact = false,
+      comments = "Comment",
+      active = true,
+      currentTerm = true,
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updatePrisonerContactRequest() =
-      SyncUpdatePrisonerContactRequest(
-        contactId = 2L,
-        contactType = "S",
-        relationshipType = "MOT",
-        prisonerNumber = "A1234AA",
-        approvedVisitor = false,
-        nextOfKin = false,
-        emergencyContact = false,
-        comments = "Comment",
-        active = true,
-        currentTerm = true,
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun prisonerContactResponse(contactId: Long, prisonerContactId: Long) =
-      SyncPrisonerContact(
-        id = prisonerContactId,
-        contactId = contactId,
-        contactType = "S",
-        relationshipType = "MOT",
-        prisonerNumber = "A1234AA",
-        approvedVisitor = false,
-        nextOfKin = false,
-        emergencyContact = false,
-        comments = "Comment",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        active = true,
-        currentTerm = true,
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updatePrisonerContactRequest() = SyncUpdatePrisonerContactRequest(
+      contactId = 2L,
+      contactType = "S",
+      relationshipType = "MOT",
+      prisonerNumber = "A1234AA",
+      approvedVisitor = false,
+      nextOfKin = false,
+      emergencyContact = false,
+      comments = "Comment",
+      active = true,
+      currentTerm = true,
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun prisonerContactResponse(contactId: Long, prisonerContactId: Long) = SyncPrisonerContact(
+      id = prisonerContactId,
+      contactId = contactId,
+      contactType = "S",
+      relationshipType = "MOT",
+      prisonerNumber = "A1234AA",
+      approvedVisitor = false,
+      nextOfKin = false,
+      emergencyContact = false,
+      comments = "Comment",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      active = true,
+      currentTerm = true,
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 
   @Nested
@@ -959,41 +935,38 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createPrisonerContactRestrictionRequest() =
-      SyncCreatePrisonerContactRestrictionRequest(
-        prisonerContactId = 2L,
-        restrictionType = "BAN",
-        startDate = LocalDate.now().minusDays(10),
-        expiryDate = LocalDate.now().plusDays(10),
-        comments = "Not allowed to visit. Ever.",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createPrisonerContactRestrictionRequest() = SyncCreatePrisonerContactRestrictionRequest(
+      prisonerContactId = 2L,
+      restrictionType = "BAN",
+      startDate = LocalDate.now().minusDays(10),
+      expiryDate = LocalDate.now().plusDays(10),
+      comments = "Not allowed to visit. Ever.",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updatePrisonerContactRestrictionRequest() =
-      SyncUpdatePrisonerContactRestrictionRequest(
-        restrictionType = "BAN",
-        startDate = LocalDate.now().minusDays(10),
-        expiryDate = LocalDate.now().plusDays(10),
-        comments = "Not allowed to visit. Ever.",
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun prisonerContactRestrictionResponse() =
-      SyncPrisonerContactRestriction(
-        prisonerContactRestrictionId = 3L,
-        prisonerContactId = 2L,
-        contactId = 1L,
-        prisonerNumber = "A1234AA",
-        restrictionType = "BAN",
-        startDate = LocalDate.now().minusDays(10),
-        expiryDate = LocalDate.now().plusDays(10),
-        comments = "Not allowed to visit. Ever.",
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updatePrisonerContactRestrictionRequest() = SyncUpdatePrisonerContactRestrictionRequest(
+      restrictionType = "BAN",
+      startDate = LocalDate.now().minusDays(10),
+      expiryDate = LocalDate.now().plusDays(10),
+      comments = "Not allowed to visit. Ever.",
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun prisonerContactRestrictionResponse() = SyncPrisonerContactRestriction(
+      prisonerContactRestrictionId = 3L,
+      prisonerContactId = 2L,
+      contactId = 1L,
+      prisonerNumber = "A1234AA",
+      restrictionType = "BAN",
+      startDate = LocalDate.now().minusDays(10),
+      expiryDate = LocalDate.now().plusDays(10),
+      comments = "Not allowed to visit. Ever.",
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 
   @Nested
@@ -1055,33 +1028,30 @@ class SyncFacadeTest {
       )
     }
 
-    private fun createEmploymentSyncRequest() =
-      SyncCreateEmploymentRequest(
-        organisationId = 2L,
-        contactId = 2L,
-        active = true,
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-      )
+    private fun createEmploymentSyncRequest() = SyncCreateEmploymentRequest(
+      organisationId = 2L,
+      contactId = 2L,
+      active = true,
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+    )
 
-    private fun updateEmploymentRequest() =
-      SyncUpdateEmploymentRequest(
-        organisationId = 2L,
-        contactId = 2L,
-        active = true,
-        updatedBy = "UPDATER",
-        updatedTime = LocalDateTime.now(),
-      )
-    private fun employmentSyncResponse() =
-      SyncEmployment(
-        employmentId = 2L,
-        organisationId = 2L,
-        contactId = 2L,
-        active = true,
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
-        updatedBy = null,
-        updatedTime = null,
-      )
+    private fun updateEmploymentRequest() = SyncUpdateEmploymentRequest(
+      organisationId = 2L,
+      contactId = 2L,
+      active = true,
+      updatedBy = "UPDATER",
+      updatedTime = LocalDateTime.now(),
+    )
+    private fun employmentSyncResponse() = SyncEmployment(
+      employmentId = 2L,
+      organisationId = 2L,
+      contactId = 2L,
+      active = true,
+      createdBy = "CREATOR",
+      createdTime = LocalDateTime.now(),
+      updatedBy = null,
+      updatedTime = null,
+    )
   }
 }

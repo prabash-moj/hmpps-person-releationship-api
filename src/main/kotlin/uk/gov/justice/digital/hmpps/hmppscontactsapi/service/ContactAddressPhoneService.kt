@@ -126,34 +126,29 @@ class ContactAddressPhoneService(
     }
   }
 
-  private fun validatePhoneExists(contactPhoneId: Long): ContactPhoneEntity =
-    contactPhoneRepository.findById(contactPhoneId)
-      .orElseThrow { EntityNotFoundException("Contact phone ($contactPhoneId) not found") }
+  private fun validatePhoneExists(contactPhoneId: Long): ContactPhoneEntity = contactPhoneRepository.findById(contactPhoneId)
+    .orElseThrow { EntityNotFoundException("Contact phone ($contactPhoneId) not found") }
 
-  private fun validateContactExists(contactId: Long): ContactEntity =
-    contactRepository.findById(contactId).orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
+  private fun validateContactExists(contactId: Long): ContactEntity = contactRepository.findById(contactId).orElseThrow { EntityNotFoundException("Contact ($contactId) not found") }
 
-  private fun validateContactAddressExists(contactAddressId: Long): ContactAddressEntity =
-    contactAddressRepository.findById(contactAddressId)
-      .orElseThrow { EntityNotFoundException("Contact address ($contactAddressId) not found") }
+  private fun validateContactAddressExists(contactAddressId: Long): ContactAddressEntity = contactAddressRepository.findById(contactAddressId)
+    .orElseThrow { EntityNotFoundException("Contact address ($contactAddressId) not found") }
 
-  private fun validateContactAddressPhoneExists(contactAddressPhoneId: Long): ContactAddressPhoneEntity =
-    contactAddressPhoneRepository.findById(contactAddressPhoneId)
-      .orElseThrow { EntityNotFoundException("Contact address phone ($contactAddressPhoneId) not found") }
+  private fun validateContactAddressPhoneExists(contactAddressPhoneId: Long): ContactAddressPhoneEntity = contactAddressPhoneRepository.findById(contactAddressPhoneId)
+    .orElseThrow { EntityNotFoundException("Contact address phone ($contactAddressPhoneId) not found") }
 
-  private fun ContactAddressPhoneEntity.toModel(phone: ContactPhoneEntity, type: ReferenceCode?) =
-    ContactAddressPhoneDetails(
-      contactAddressPhoneId = this.contactAddressPhoneId,
-      contactPhoneId = this.contactPhoneId,
-      contactAddressId = this.contactAddressId,
-      contactId = this.contactId,
-      phoneType = phone.phoneType,
-      phoneTypeDescription = type?.description ?: phone.phoneType,
-      phoneNumber = phone.phoneNumber,
-      extNumber = phone.extNumber,
-      createdBy = this.createdBy,
-      createdTime = this.createdTime,
-      updatedBy = this.updatedBy,
-      updatedTime = this.updatedTime,
-    )
+  private fun ContactAddressPhoneEntity.toModel(phone: ContactPhoneEntity, type: ReferenceCode?) = ContactAddressPhoneDetails(
+    contactAddressPhoneId = this.contactAddressPhoneId,
+    contactPhoneId = this.contactPhoneId,
+    contactAddressId = this.contactAddressId,
+    contactId = this.contactId,
+    phoneType = phone.phoneType,
+    phoneTypeDescription = type?.description ?: phone.phoneType,
+    phoneNumber = phone.phoneNumber,
+    extNumber = phone.extNumber,
+    createdBy = this.createdBy,
+    createdTime = this.createdTime,
+    updatedBy = this.updatedBy,
+    updatedTime = this.updatedTime,
+  )
 }

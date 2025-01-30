@@ -119,9 +119,7 @@ class ContactIdentityController(private val contactIdentityFacade: ContactIdenti
       example = "987654",
     ) contactIdentityId: Long,
     @Valid @RequestBody request: UpdateIdentityRequest,
-  ): ResponseEntity<Any> {
-    return ResponseEntity.ok(contactIdentityFacade.update(contactId, contactIdentityId, request))
-  }
+  ): ResponseEntity<Any> = ResponseEntity.ok(contactIdentityFacade.update(contactId, contactIdentityId, request))
 
   @GetMapping("/{contactIdentityId}")
   @Operation(
@@ -159,9 +157,7 @@ class ContactIdentityController(private val contactIdentityFacade: ContactIdenti
       description = "The id of the contact identity",
       example = "987654",
     ) contactIdentityId: Long,
-  ): ResponseEntity<Any> {
-    return ResponseEntity.ok(contactIdentityFacade.get(contactId, contactIdentityId))
-  }
+  ): ResponseEntity<Any> = ResponseEntity.ok(contactIdentityFacade.get(contactId, contactIdentityId))
 
   @DeleteMapping("/{contactIdentityId}")
   @Operation(

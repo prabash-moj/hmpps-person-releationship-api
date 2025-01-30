@@ -288,41 +288,39 @@ class SyncContactAddressIntegrationTest : PostgresIntegrationTestBase() {
       )
     }
 
-    private fun updateContactAddressRequest(contactId: Long, verified: Boolean = false) =
-      SyncUpdateContactAddressRequest(
-        contactId = contactId,
-        addressType = "WORK",
-        primaryAddress = false,
-        flat = "2B",
-        property = "14",
-        street = "Main Street",
-        area = "Dodworth",
-        cityCode = "CVNTRY",
-        countyCode = "WARWKS",
-        postcode = "CV4 9NJ",
-        countryCode = "UK",
-        comments = "Updated comments",
-        updatedBy = "UPDATE",
-        updatedTime = LocalDateTime.now(),
-        verified = verified,
-      )
+    private fun updateContactAddressRequest(contactId: Long, verified: Boolean = false) = SyncUpdateContactAddressRequest(
+      contactId = contactId,
+      addressType = "WORK",
+      primaryAddress = false,
+      flat = "2B",
+      property = "14",
+      street = "Main Street",
+      area = "Dodworth",
+      cityCode = "CVNTRY",
+      countyCode = "WARWKS",
+      postcode = "CV4 9NJ",
+      countryCode = "UK",
+      comments = "Updated comments",
+      updatedBy = "UPDATE",
+      updatedTime = LocalDateTime.now(),
+      verified = verified,
+    )
 
-    private fun createContactAddressRequest(contactId: Long) =
-      SyncCreateContactAddressRequest(
-        contactId = contactId,
-        addressType = "HOME",
-        primaryAddress = false,
-        flat = "1B",
-        property = "13",
-        street = "Main Street",
-        area = "Dodworth",
-        cityCode = "CVNTRY",
-        countyCode = "WARWKS",
-        postcode = "CV4 9NJ",
-        countryCode = "UK",
-        comments = "Some comments",
-        createdBy = "CREATE",
-      )
+    private fun createContactAddressRequest(contactId: Long) = SyncCreateContactAddressRequest(
+      contactId = contactId,
+      addressType = "HOME",
+      primaryAddress = false,
+      flat = "1B",
+      property = "13",
+      street = "Main Street",
+      area = "Dodworth",
+      cityCode = "CVNTRY",
+      countyCode = "WARWKS",
+      postcode = "CV4 9NJ",
+      countryCode = "UK",
+      comments = "Some comments",
+      createdBy = "CREATE",
+    )
   }
 
   private fun aMinimalCreateContactRequest() = CreateContactRequest(

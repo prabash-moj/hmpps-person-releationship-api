@@ -162,49 +162,45 @@ class SyncContactPhoneServiceTest {
     }
   }
 
-  private fun updateContactPhoneRequest(contactId: Long = 1L) =
-    SyncUpdateContactPhoneRequest(
-      contactId = contactId,
-      phoneType = "Mobile",
-      phoneNumber = "555-1234",
-      extNumber = "101",
-      updatedBy = "TEST",
-      updatedTime = LocalDateTime.now(),
-    )
+  private fun updateContactPhoneRequest(contactId: Long = 1L) = SyncUpdateContactPhoneRequest(
+    contactId = contactId,
+    phoneType = "Mobile",
+    phoneNumber = "555-1234",
+    extNumber = "101",
+    updatedBy = "TEST",
+    updatedTime = LocalDateTime.now(),
+  )
 
-  private fun createContactPhoneRequest() =
-    SyncCreateContactPhoneRequest(
-      contactId = 1L,
-      phoneType = "Mobile",
-      phoneNumber = "555-1234",
-      extNumber = "101",
-      createdBy = "TEST",
-    )
+  private fun createContactPhoneRequest() = SyncCreateContactPhoneRequest(
+    contactId = 1L,
+    phoneType = "Mobile",
+    phoneNumber = "555-1234",
+    extNumber = "101",
+    createdBy = "TEST",
+  )
 
-  private fun contactEntity(contactId: Long = 1L) =
-    ContactEntity(
-      contactId = contactId,
-      title = "Mr",
-      firstName = "John",
-      middleNames = null,
-      lastName = "Smith",
-      dateOfBirth = null,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactEntity(contactId: Long = 1L) = ContactEntity(
+    contactId = contactId,
+    title = "Mr",
+    firstName = "John",
+    middleNames = null,
+    lastName = "Smith",
+    dateOfBirth = null,
+    isDeceased = false,
+    deceasedDate = null,
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
-  private fun contactPhoneEntity() =
-    ContactPhoneEntity(
-      contactPhoneId = 1L,
-      contactId = 1L,
-      phoneType = "Mobile",
-      phoneNumber = "555-1234",
-      extNumber = "101",
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    )
+  private fun contactPhoneEntity() = ContactPhoneEntity(
+    contactPhoneId = 1L,
+    contactId = 1L,
+    phoneType = "Mobile",
+    phoneNumber = "555-1234",
+    extNumber = "101",
+    createdBy = "TEST",
+    createdTime = LocalDateTime.now(),
+  )
 
   private fun SyncUpdateContactPhoneRequest.toEntity(contactPhoneId: Long = 1L): ContactPhoneEntity {
     val updatedBy = this.updatedBy

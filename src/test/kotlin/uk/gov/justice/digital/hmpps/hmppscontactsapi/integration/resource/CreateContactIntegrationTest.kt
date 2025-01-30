@@ -203,27 +203,25 @@ class CreateContactIntegrationTest : PostgresIntegrationTestBase() {
 
   companion object {
     @JvmStatic
-    fun allFieldConstraintViolations(): List<Arguments> {
-      return listOf(
-        Arguments.of("title must be <= 12 characters", aMinimalCreateContactRequest().copy(title = "".padStart(13))),
-        Arguments.of(
-          "lastName must be <= 35 characters",
-          aMinimalCreateContactRequest().copy(lastName = "".padStart(36)),
-        ),
-        Arguments.of(
-          "firstName must be <= 35 characters",
-          aMinimalCreateContactRequest().copy(firstName = "".padStart(36)),
-        ),
-        Arguments.of(
-          "middleNames must be <= 35 characters",
-          aMinimalCreateContactRequest().copy(middleNames = "".padStart(36)),
-        ),
-        Arguments.of(
-          "createdBy must be <= 100 characters",
-          aMinimalCreateContactRequest().copy(createdBy = "".padStart(101)),
-        ),
-      )
-    }
+    fun allFieldConstraintViolations(): List<Arguments> = listOf(
+      Arguments.of("title must be <= 12 characters", aMinimalCreateContactRequest().copy(title = "".padStart(13))),
+      Arguments.of(
+        "lastName must be <= 35 characters",
+        aMinimalCreateContactRequest().copy(lastName = "".padStart(36)),
+      ),
+      Arguments.of(
+        "firstName must be <= 35 characters",
+        aMinimalCreateContactRequest().copy(firstName = "".padStart(36)),
+      ),
+      Arguments.of(
+        "middleNames must be <= 35 characters",
+        aMinimalCreateContactRequest().copy(middleNames = "".padStart(36)),
+      ),
+      Arguments.of(
+        "createdBy must be <= 100 characters",
+        aMinimalCreateContactRequest().copy(createdBy = "".padStart(101)),
+      ),
+    )
 
     private fun aMinimalCreateContactRequest() = CreateContactRequest(
       lastName = "last",

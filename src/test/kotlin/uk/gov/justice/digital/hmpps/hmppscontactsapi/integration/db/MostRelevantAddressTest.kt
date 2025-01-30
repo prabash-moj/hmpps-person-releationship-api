@@ -70,34 +70,33 @@ class MostRelevantAddressTest : PostgresIntegrationTestBase() {
     assertThat(contacts.content[0].flat).isEqualTo(case.expectedAddressIndex?.toString())
   }
 
-  private fun createAddresses(case: Case) =
-    case.specs.map { spec ->
-      val contactAddressEntity = addressRepository.saveAndFlush(
-        ContactAddressEntity(
-          contactAddressId = 0,
-          contactId = savedContactId,
-          addressType = "HOME",
-          primaryAddress = spec.primary,
-          flat = spec.index.toString(),
-          property = "Property",
-          street = "Street",
-          area = "Area",
-          cityCode = "CITY",
-          countyCode = "COUNTY",
-          postCode = "POSTCODE",
-          countryCode = "COUNTRY",
-          verified = false,
-          mailFlag = spec.mail,
-          startDate = spec.startDate,
-          endDate = spec.endDate,
-          noFixedAddress = false,
-          comments = null,
-          createdBy = "USER",
-          createdTime = spec.created,
-        ),
-      )
-      CreatedAddress(contactAddressEntity.contactAddressId, spec)
-    }
+  private fun createAddresses(case: Case) = case.specs.map { spec ->
+    val contactAddressEntity = addressRepository.saveAndFlush(
+      ContactAddressEntity(
+        contactAddressId = 0,
+        contactId = savedContactId,
+        addressType = "HOME",
+        primaryAddress = spec.primary,
+        flat = spec.index.toString(),
+        property = "Property",
+        street = "Street",
+        area = "Area",
+        cityCode = "CITY",
+        countyCode = "COUNTY",
+        postCode = "POSTCODE",
+        countryCode = "COUNTRY",
+        verified = false,
+        mailFlag = spec.mail,
+        startDate = spec.startDate,
+        endDate = spec.endDate,
+        noFixedAddress = false,
+        comments = null,
+        createdBy = "USER",
+        createdTime = spec.created,
+      ),
+    )
+    CreatedAddress(contactAddressEntity.contactAddressId, spec)
+  }
 
   companion object {
 

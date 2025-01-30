@@ -52,15 +52,14 @@ fun ContactRelationship.toEntity(
   createdBy,
 )
 
-fun CreateContactRequest.toModel() =
-  newContact(
-    title = this.title,
-    lastName = this.lastName,
-    firstName = this.firstName,
-    middleNames = this.middleNames,
-    dateOfBirth = this.dateOfBirth,
-    createdBy = this.createdBy,
-  )
+fun CreateContactRequest.toModel() = newContact(
+  title = this.title,
+  lastName = this.lastName,
+  firstName = this.firstName,
+  middleNames = this.middleNames,
+  dateOfBirth = this.dateOfBirth,
+  createdBy = this.createdBy,
+)
 
 private fun newContact(
   title: String?,
@@ -69,28 +68,26 @@ private fun newContact(
   middleNames: String?,
   dateOfBirth: LocalDate?,
   createdBy: String,
-): ContactEntity {
-  return ContactEntity(
-    contactId = null,
-    title = title,
-    firstName = firstName,
-    lastName = lastName,
-    middleNames = middleNames,
-    dateOfBirth = dateOfBirth,
-    isDeceased = false,
-    deceasedDate = null,
-    createdBy = createdBy,
-    createdTime = LocalDateTime.now(),
-    staffFlag = false,
-    remitterFlag = false,
-    gender = null,
-    domesticStatus = null,
-    languageCode = null,
-    interpreterRequired = false,
-    updatedBy = null,
-    updatedTime = null,
-  )
-}
+): ContactEntity = ContactEntity(
+  contactId = null,
+  title = title,
+  firstName = firstName,
+  lastName = lastName,
+  middleNames = middleNames,
+  dateOfBirth = dateOfBirth,
+  isDeceased = false,
+  deceasedDate = null,
+  createdBy = createdBy,
+  createdTime = LocalDateTime.now(),
+  staffFlag = false,
+  remitterFlag = false,
+  gender = null,
+  domesticStatus = null,
+  languageCode = null,
+  interpreterRequired = false,
+  updatedBy = null,
+  updatedTime = null,
+)
 
 private fun newPrisonerContact(
   contactId: Long,
@@ -101,20 +98,18 @@ private fun newPrisonerContact(
   emergencyContact: Boolean,
   comments: String?,
   createdBy: String,
-): PrisonerContactEntity {
-  return PrisonerContactEntity(
-    0,
-    contactId = contactId,
-    prisonerNumber = prisonerNumber,
-    relationshipType = relationshipType,
-    relationshipToPrisoner = relationshipToPrisoner,
-    nextOfKin = nextOfKin,
-    emergencyContact = emergencyContact,
-    comments = comments,
-    createdBy = createdBy,
-    createdTime = LocalDateTime.now(),
-    active = true,
-    approvedVisitor = false,
-    currentTerm = true,
-  )
-}
+): PrisonerContactEntity = PrisonerContactEntity(
+  0,
+  contactId = contactId,
+  prisonerNumber = prisonerNumber,
+  relationshipType = relationshipType,
+  relationshipToPrisoner = relationshipToPrisoner,
+  nextOfKin = nextOfKin,
+  emergencyContact = emergencyContact,
+  comments = comments,
+  createdBy = createdBy,
+  createdTime = LocalDateTime.now(),
+  active = true,
+  approvedVisitor = false,
+  currentTerm = true,
+)

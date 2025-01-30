@@ -137,59 +137,57 @@ class ContactMigrationService(
     )
   }
 
-  fun extractAndSavePhones(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactPhoneEntity>> =
-    req.phoneNumbers.map { requestPhone ->
-      Pair(
-        requestPhone.phoneId,
-        contactPhoneRepository.save(
-          ContactPhoneEntity(
-            contactPhoneId = 0L,
-            contactId = contactId,
-            phoneType = requestPhone.type.code,
-            phoneNumber = requestPhone.number,
-            extNumber = requestPhone.extension,
-            createdBy = requestPhone.createUsername ?: "MIGRATION",
-            createdTime = requestPhone.createDateTime ?: LocalDateTime.now(),
-            updatedBy = requestPhone.modifyUsername,
-            updatedTime = requestPhone.modifyDateTime,
-          ),
+  fun extractAndSavePhones(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactPhoneEntity>> = req.phoneNumbers.map { requestPhone ->
+    Pair(
+      requestPhone.phoneId,
+      contactPhoneRepository.save(
+        ContactPhoneEntity(
+          contactPhoneId = 0L,
+          contactId = contactId,
+          phoneType = requestPhone.type.code,
+          phoneNumber = requestPhone.number,
+          extNumber = requestPhone.extension,
+          createdBy = requestPhone.createUsername ?: "MIGRATION",
+          createdTime = requestPhone.createDateTime ?: LocalDateTime.now(),
+          updatedBy = requestPhone.modifyUsername,
+          updatedTime = requestPhone.modifyDateTime,
         ),
-      )
-    }
+      ),
+    )
+  }
 
-  fun extractAndSaveAddresses(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactAddressEntity>> =
-    req.addresses.map { addr ->
-      Pair(
-        addr.addressId,
-        contactAddressRepository.save(
-          ContactAddressEntity(
-            contactAddressId = 0L,
-            contactId = contactId,
-            addressType = addr.type?.code,
-            primaryAddress = addr.primaryAddress,
-            flat = addr.flat,
-            property = addr.premise,
-            street = addr.street,
-            area = addr.locality,
-            cityCode = addr.city?.code,
-            countyCode = addr.county?.code,
-            postCode = addr.postCode,
-            countryCode = addr.country?.code,
-            verified = addr.validatedPAF,
-            mailFlag = addr.mailAddress,
-            startDate = addr.startDate,
-            endDate = addr.endDate,
-            noFixedAddress = addr.noFixedAddress,
-            comments = addr.comment,
-            createdBy = addr.createUsername ?: "MIGRATION",
-            createdTime = addr.createDateTime ?: LocalDateTime.now(),
-          ).also {
-            it.updatedBy = addr.modifyUsername
-            it.updatedTime = addr.modifyDateTime
-          },
-        ),
-      )
-    }
+  fun extractAndSaveAddresses(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactAddressEntity>> = req.addresses.map { addr ->
+    Pair(
+      addr.addressId,
+      contactAddressRepository.save(
+        ContactAddressEntity(
+          contactAddressId = 0L,
+          contactId = contactId,
+          addressType = addr.type?.code,
+          primaryAddress = addr.primaryAddress,
+          flat = addr.flat,
+          property = addr.premise,
+          street = addr.street,
+          area = addr.locality,
+          cityCode = addr.city?.code,
+          countyCode = addr.county?.code,
+          postCode = addr.postCode,
+          countryCode = addr.country?.code,
+          verified = addr.validatedPAF,
+          mailFlag = addr.mailAddress,
+          startDate = addr.startDate,
+          endDate = addr.endDate,
+          noFixedAddress = addr.noFixedAddress,
+          comments = addr.comment,
+          createdBy = addr.createUsername ?: "MIGRATION",
+          createdTime = addr.createDateTime ?: LocalDateTime.now(),
+        ).also {
+          it.updatedBy = addr.modifyUsername
+          it.updatedTime = addr.modifyDateTime
+        },
+      ),
+    )
+  }
 
   fun extractAndSaveAddressPhones(
     req: MigrateContactRequest,
@@ -237,89 +235,85 @@ class ContactMigrationService(
     return phones
   }
 
-  fun extractAndSaveEmails(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactEmailEntity>> =
-    req.emailAddresses.map { requestEmail ->
-      Pair(
-        requestEmail.emailAddressId,
-        contactEmailRepository.save(
-          ContactEmailEntity(
-            contactEmailId = 0L,
-            contactId = contactId,
-            emailAddress = requestEmail.email,
-            createdBy = requestEmail.createUsername ?: "MIGRATION",
-            createdTime = requestEmail.createDateTime ?: LocalDateTime.now(),
-            updatedBy = requestEmail.modifyUsername,
-            updatedTime = requestEmail.modifyDateTime,
-          ),
+  fun extractAndSaveEmails(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactEmailEntity>> = req.emailAddresses.map { requestEmail ->
+    Pair(
+      requestEmail.emailAddressId,
+      contactEmailRepository.save(
+        ContactEmailEntity(
+          contactEmailId = 0L,
+          contactId = contactId,
+          emailAddress = requestEmail.email,
+          createdBy = requestEmail.createUsername ?: "MIGRATION",
+          createdTime = requestEmail.createDateTime ?: LocalDateTime.now(),
+          updatedBy = requestEmail.modifyUsername,
+          updatedTime = requestEmail.modifyDateTime,
         ),
-      )
-    }
+      ),
+    )
+  }
 
-  fun extractAndSaveIdentities(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactIdentityEntity>> =
-    req.identifiers.map { requestIdentifier ->
-      Pair(
-        requestIdentifier.sequence,
-        contactIdentityRepository.save(
-          ContactIdentityEntity(
-            contactIdentityId = 0L,
-            contactId = contactId,
-            identityType = requestIdentifier.type.code,
-            identityValue = requestIdentifier.identifier,
-            issuingAuthority = requestIdentifier.issuedAuthority,
-            createdBy = requestIdentifier.createUsername ?: "MIGRATION",
-            createdTime = requestIdentifier.createDateTime ?: LocalDateTime.now(),
-            updatedBy = requestIdentifier.modifyUsername,
-            updatedTime = requestIdentifier.modifyDateTime,
-          ),
+  fun extractAndSaveIdentities(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactIdentityEntity>> = req.identifiers.map { requestIdentifier ->
+    Pair(
+      requestIdentifier.sequence,
+      contactIdentityRepository.save(
+        ContactIdentityEntity(
+          contactIdentityId = 0L,
+          contactId = contactId,
+          identityType = requestIdentifier.type.code,
+          identityValue = requestIdentifier.identifier,
+          issuingAuthority = requestIdentifier.issuedAuthority,
+          createdBy = requestIdentifier.createUsername ?: "MIGRATION",
+          createdTime = requestIdentifier.createDateTime ?: LocalDateTime.now(),
+          updatedBy = requestIdentifier.modifyUsername,
+          updatedTime = requestIdentifier.modifyDateTime,
         ),
-      )
-    }
+      ),
+    )
+  }
 
   fun extractAndSaveRestrictions(
     req: MigrateContactRequest,
     contactId: Long,
-  ): List<Pair<Long, ContactRestrictionEntity>> =
-    req.restrictions.map { restriction ->
-      Pair(
-        restriction.id,
-        contactRestrictionRepository.save(
-          ContactRestrictionEntity(
-            contactRestrictionId = 0L,
-            contactId = contactId,
-            restrictionType = restriction.type.code,
-            startDate = restriction.effectiveDate,
-            expiryDate = restriction.expiryDate,
-            comments = restriction.comment,
-            createdBy = restriction.createUsername ?: "MIGRATION",
-            createdTime = restriction.createDateTime ?: LocalDateTime.now(),
-            updatedBy = restriction.modifyUsername,
-            updatedTime = restriction.modifyDateTime,
-          ),
+  ): List<Pair<Long, ContactRestrictionEntity>> = req.restrictions.map { restriction ->
+    Pair(
+      restriction.id,
+      contactRestrictionRepository.save(
+        ContactRestrictionEntity(
+          contactRestrictionId = 0L,
+          contactId = contactId,
+          restrictionType = restriction.type.code,
+          startDate = restriction.effectiveDate,
+          expiryDate = restriction.expiryDate,
+          comments = restriction.comment,
+          createdBy = restriction.createUsername ?: "MIGRATION",
+          createdTime = restriction.createDateTime ?: LocalDateTime.now(),
+          updatedBy = restriction.modifyUsername,
+          updatedTime = restriction.modifyDateTime,
         ),
-      )
-    }
+      ),
+    )
+  }
 
   fun extractAndSaveEmployments(
     req: MigrateContactRequest,
     contactId: Long,
-  ): List<Pair<Long, EmploymentEntity>> =
-    req.employments.map { employment ->
-      Pair(
-        employment.sequence,
-        employmentRepository.save(
-          EmploymentEntity(
-            employmentId = 0L,
-            contactId = contactId,
-            organisationId = employment.corporate.id,
-            active = employment.active,
-            createdBy = employment.createUsername ?: "MIGRATION",
-            createdTime = employment.createDateTime ?: LocalDateTime.now(),
-            updatedBy = employment.modifyUsername,
-            updatedTime = employment.modifyDateTime,
-          ),
+  ): List<Pair<Long, EmploymentEntity>> = req.employments.map { employment ->
+    Pair(
+      employment.sequence,
+      employmentRepository.save(
+        EmploymentEntity(
+          employmentId = 0L,
+          contactId = contactId,
+          organisationId = employment.corporate.id,
+          active = employment.active,
+          createdBy = employment.createUsername ?: "MIGRATION",
+          createdTime = employment.createDateTime ?: LocalDateTime.now(),
+          updatedBy = employment.modifyUsername,
+          updatedTime = employment.modifyDateTime,
         ),
-      )
-    }
+      ),
+    )
+  }
 
   fun buildAddressesAndPhonesResponse(
     addresses: List<Pair<Long, ContactAddressEntity>>,
@@ -351,33 +345,32 @@ class ContactMigrationService(
     }
   }.flatten()
 
-  fun extractAndSavePrisonerContacts(req: MigrateContactRequest, contactId: Long) =
-    req.contacts.map { relationship ->
-      Pair(
-        relationship.id,
-        prisonerContactRepository.save(
-          PrisonerContactEntity(
-            prisonerContactId = 0L,
-            contactId = contactId,
-            prisonerNumber = relationship.prisonerNumber,
-            relationshipType = relationship.contactType.code,
-            relationshipToPrisoner = relationship.relationshipType.code,
-            nextOfKin = relationship.nextOfKin,
-            emergencyContact = relationship.emergencyContact,
-            comments = relationship.comment,
-            active = relationship.active,
-            approvedVisitor = relationship.approvedVisitor,
-            currentTerm = relationship.currentTerm,
-            createdBy = relationship.createUsername ?: "MIGRATION",
-            createdTime = relationship.createDateTime ?: LocalDateTime.now(),
-          ).also {
-            it.updatedBy = relationship.modifyUsername
-            it.updatedTime = relationship.modifyDateTime
-            it.expiryDate = relationship.expiryDate
-          },
-        ),
-      )
-    }
+  fun extractAndSavePrisonerContacts(req: MigrateContactRequest, contactId: Long) = req.contacts.map { relationship ->
+    Pair(
+      relationship.id,
+      prisonerContactRepository.save(
+        PrisonerContactEntity(
+          prisonerContactId = 0L,
+          contactId = contactId,
+          prisonerNumber = relationship.prisonerNumber,
+          relationshipType = relationship.contactType.code,
+          relationshipToPrisoner = relationship.relationshipType.code,
+          nextOfKin = relationship.nextOfKin,
+          emergencyContact = relationship.emergencyContact,
+          comments = relationship.comment,
+          active = relationship.active,
+          approvedVisitor = relationship.approvedVisitor,
+          currentTerm = relationship.currentTerm,
+          createdBy = relationship.createUsername ?: "MIGRATION",
+          createdTime = relationship.createDateTime ?: LocalDateTime.now(),
+        ).also {
+          it.updatedBy = relationship.modifyUsername
+          it.updatedTime = relationship.modifyDateTime
+          it.expiryDate = relationship.expiryDate
+        },
+      ),
+    )
+  }
 
   fun extractAndSavePrisonerContactRestrictions(
     req: MigrateContactRequest,
